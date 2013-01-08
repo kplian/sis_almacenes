@@ -64,7 +64,7 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 mode:'remote',
                 pageSize:10,
                 queryDelay:1000,
-                width:261,
+                anchor:'100%',
                 gwidth:110,
                 minChars:2,
                 renderer:function (value, p, record){return String.format('{0}', record.data['desc_clasificacion']);}
@@ -73,7 +73,7 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
             type:'ComboBox',
             id_grupo:0,
             filters:{   
-                        pfiltro:'nombre',
+                        pfiltro:'cla.nombre',
                         type:'string'
                     },
            
@@ -85,13 +85,13 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 name: 'codigo_largo',
                 fieldLabel: 'Codigo Clasificacion',
                 allowBlank: false,
-                anchor: '80%',
+                width: '100%',
                 gwidth: 110,
                 maxLength:50,
                 disabled:true
             },
             type:'TextField',
-            filters:{pfiltro:'codigo_largo',type:'string'},
+            filters:{pfiltro:'cla.codigo_largo',type:'string'},
             id_grupo:1,
             grid:true,
             form:true
@@ -101,7 +101,7 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 name: 'nombre',
                 fieldLabel: 'Nombre',
                 allowBlank: false,
-                anchor: '80%',
+                width: '100%',
                 gwidth: 100,
                 maxLength:25
             },
@@ -116,7 +116,7 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 name: 'descripcion',
                 fieldLabel: 'Descripcion',
                 allowBlank: true,
-                anchor: '80%',
+                width: '100%',
                 gwidth: 100,
                 maxLength:100
             },
@@ -131,7 +131,7 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 name: 'palabras_clave',
                 fieldLabel: 'Palabra clave',
                 allowBlank: true,
-                anchor: '80%',
+                width: '100%',
                 gwidth: 80,
                 maxLength:25
             },
@@ -146,7 +146,7 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 name: 'codigo_fabrica',
                 fieldLabel: 'Codigo de fabrica',
                 allowBlank: true,
-                anchor: '80%',
+                width: '100%',
                 gwidth: 100,
                 maxLength:10
             },
@@ -161,7 +161,7 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 name: 'observaciones',
                 fieldLabel: 'Observaciones',
                 allowBlank: true,
-                anchor: '80%',
+                width: '100%',
                 gwidth: 100,
                 maxLength: 100              
             },
@@ -176,9 +176,9 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 name: 'numero_serie',
                 fieldLabel: 'Serie del item',
                 allowBlank: true,
-                anchor: '80%',
+                width: '100%',
                 gwidth: 90,
-                maxLength:10
+                maxLength:20
             },
             type:'TextField',
             filters:{pfiltro:'item.numero_serie',type:'string'},
@@ -208,7 +208,8 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
         direction: 'ASC'
     },
     bdel:true,
-    bsave:true
+    bsave:false,
+	fwidth:400,
     }
 )
 </script>       

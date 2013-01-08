@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.ft_item_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -165,8 +167,8 @@ BEGIN
         begin
             --Sentencia de la consulta de conteo de registros
             v_consulta:='select count(item.id_item)
-                        from alm.titem item
-                        where ';
+                        from alm.titem item, alm.tclasificacion cla
+                        where item.id_clasificacion = cla.id_clasificacion and ';
            
             --Definicion de la respuesta           
             v_consulta:=v_consulta||v_parametros.filtro;
