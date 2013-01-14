@@ -45,8 +45,7 @@ CREATE TABLE alm.titem (
     codigo_fabrica varchar(100),
     observaciones varchar(1000),
     numero_serie varchar(100),
-    CONSTRAINT pk_titem__id_item
-    PRIMARY KEY (id_item);
+    CONSTRAINT pk_titem__id_item PRIMARY KEY (id_item)
 )
 INHERITS (pxp.tbase) WITHOUT OIDS;
 
@@ -60,8 +59,7 @@ CREATE TABLE alm.talmacen_stock (
     cantidad_min numeric(18,2),
     cantidad_alerta_amarilla numeric(18,2),
     cantidad_alerta_roja numeric(18,2),
-    CONSTRAINT pk_talmacen_stock__id_almacen_stock
-    PRIMARY KEY (id_almacen_stock);
+    CONSTRAINT pk_talmacen_stock__id_almacen_stock PRIMARY KEY (id_almacen_stock)
 )
 INHERITS (pxp.tbase) WITHOUT OIDS;
 
@@ -92,8 +90,7 @@ CREATE TABLE alm.tmovimiento (
     descripcion varchar(1000),
     observaciones varchar(1000),
     estado_mov varchar(10),
-    CONSTRAINT pk_tmovimiento__id_movimiento
-    PRIMARY KEY (id_movimiento)
+    CONSTRAINT pk_tmovimiento__id_movimiento PRIMARY KEY (id_movimiento)
 )
 INHERITS (pxp.tbase) WITHOUT OIDS;
 
@@ -107,8 +104,7 @@ CREATE TABLE alm.tmovimiento_det (
     cantidad numeric(18,6),
     costo_unitario numeric(18,6),
     fecha_caducidad date,
-    CONSTRAINT pk_tmovimiento_det__id_movimiento_det
-    PRIMARY KEY (id_movimiento_det)
+    CONSTRAINT pk_tmovimiento_det__id_movimiento_det PRIMARY KEY (id_movimiento_det)
 )
 INHERITS (pxp.tbase) WITHOUT OIDS;
 
