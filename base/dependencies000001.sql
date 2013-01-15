@@ -65,7 +65,7 @@ add CONSTRAINT fk_talmacen__id_almacen FOREIGN KEY (id_almacen)
     NOT DEFERRABLE; 
   
 
-ALTER TABLE alm.talmacen
+ALTER TABLE alm.talmacen_correlativo
 add CONSTRAINT fk_tmovimiento_tipo__id_movimiento_tipo FOREIGN KEY (id_movimiento_tipo)
     REFERENCES alm.tmovimiento_tipo(id_movimiento_tipo)
     ON DELETE NO ACTION
