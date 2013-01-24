@@ -25,6 +25,7 @@ class MODItem extends MODbase{
         $this->captura('desc_clasificacion','varchar');
         $this->captura('codigo_largo','varchar');
         $this->captura('nombre','varchar');
+        $this->captura('codigo','varchar');
         $this->captura('descripcion','varchar');
         $this->captura('palabras_clave','varchar');
         $this->captura('codigo_fabrica','varchar');
@@ -51,6 +52,7 @@ class MODItem extends MODbase{
         $this->captura('desc_clasificacion','varchar');
         $this->captura('codigo_largo','varchar');
         $this->captura('nombre','varchar');
+        $this->captura('codigo','varchar');
         $this->captura('descripcion','varchar');
         $this->captura('palabras_clave','varchar');
         $this->captura('codigo_fabrica','varchar');
@@ -72,7 +74,7 @@ class MODItem extends MODbase{
                 
         //Define los parametros para la funcion
         $this->setParametro('id_clasificacion','id_clasificacion','integer');
-        $this->setParametro('codigo_largo','codigo_largo','varchar');
+        $this->setParametro('codigo','codigo','varchar');
         $this->setParametro('nombre','nombre','varchar');
         $this->setParametro('descripcion','descripcion','varchar');
         $this->setParametro('palabras_clave','palabras_clave','varchar');
@@ -98,6 +100,7 @@ class MODItem extends MODbase{
         $this->setParametro('id_clasificacion','id_clasificacion','integer');
         $this->setParametro('codigo_largo','codigo_largo','varchar');
         $this->setParametro('nombre','nombre','varchar');
+        $this->setParametro('codigo','codigo','varchar');
         $this->setParametro('descripcion','descripcion','varchar');     
         $this->setParametro('palabras_clave','palabras_clave','varchar');
         $this->setParametro('codigo_fabrica','codigo_fabrica','varchar');

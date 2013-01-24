@@ -52,13 +52,15 @@ BEGIN
                         cla.nombre as desc_clasificacion,
                         cla.codigo_largo,
                         item.nombre,
+                        item.codigo,
                         item.descripcion,
                         item.palabras_clave,
                         item.codigo_fabrica,
                         item.observaciones,
                         item.numero_serie                       
-                        from alm.titem item, alm.tclasificacion cla
-                        where item.id_clasificacion = cla.id_clasificacion and ';
+                        from alm.titem item
+                        left join alm.tclasificacion cla on cla.id_clasificacion=item.id_clasificacion
+                        where ';
            
             --Definicion de la respuesta
             v_consulta:=v_consulta||v_parametros.filtro;

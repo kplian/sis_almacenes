@@ -55,10 +55,10 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 valueField: 'id_clasificacion',
                 displayField: 'nombre',
                 gdisplayField:'desc_clasificacion',//dibuja el campo extra de la consulta al hacer un inner join con orra tabla
-                tpl:'<tpl for="."><div class="x-combo-list-item"><p>{nombre}</p></div></tpl>',
-                hiddenName: 'id_clasificacion',
+                //tpl:'<tpl for="."><div class="x-combo-list-item"><p>{nombre}</p></div></tpl>',
+                //hiddenName: 'id_clasificacion',
                 forceSelection:true,
-                typeAhead: true,
+                typeAhead: false,
                 triggerAction: 'all',
                 lazyRender:true,
                 mode:'remote',
@@ -88,7 +88,8 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
                 width: '100%',
                 gwidth: 110,
                 maxLength:50,
-                disabled:true
+                disabled:true,
+                inputType:'hidden',
             },
             type:'TextField',
             filters:{pfiltro:'cla.codigo_largo',type:'string'},
@@ -107,6 +108,21 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
             },
             type:'TextField',
             filters:{pfiltro:'item.nombre',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+        {
+            config:{
+                name: 'codigo',
+                fieldLabel: 'Codigo',
+                allowBlank: false,
+                width: '100%',
+                gwidth: 100,
+                maxLength:20
+            },
+            type:'TextField',
+            filters:{pfiltro:'item.codigo',type:'string'},
             id_grupo:1,
             grid:true,
             form:true
@@ -196,6 +212,7 @@ Phx.vista.Item=Ext.extend(Phx.gridInterfaz,{
         {name:'id_item'},
         {name: 'desc_clasificacion',type:'string'},
         {name:'codigo_largo', type: 'string'},
+        {name:'codigo', type: 'string'},
         {name:'nombre', type: 'string'},
         {name:'descripcion', type: 'string'},
         {name:'palabras_clave', type: 'string'},
