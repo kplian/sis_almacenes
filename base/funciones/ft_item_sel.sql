@@ -72,7 +72,7 @@ BEGIN
                        
         end;
     /*********************************   
-     #TRANSACCION:  'SAL_ITEM_SEL'
+     #TRANSACCION:  'SAL_ARB_SEL'
      #DESCRIPCION:    Consulta de datos
      #AUTOR:        Gonzalo Sarmiento   
      #FECHA:        20-09-2012

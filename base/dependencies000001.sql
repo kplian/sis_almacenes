@@ -73,3 +73,11 @@ add CONSTRAINT fk_tmovimiento_tipo__id_movimiento_tipo FOREIGN KEY (id_movimient
     NOT DEFERRABLE;
     
 /***********************************F-DEP-RCM-ALM-0-11/01/2013*****************************************/
+
+/***********************************I-DEP-RCM-ALM-0-11/01/2013*****************************************/
+ALTER TABLE alm.talmacen_correlativo
+  DROP CONSTRAINT fk_tmovimiento_tipo__id_movimiento_tipo RESTRICT;
+  
+ALTER TABLE alm.talmacen
+  DROP COLUMN id_almacen_usuario;
+/***********************************F-DEP-RCM-ALM-0-11/01/2013*****************************************/
