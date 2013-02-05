@@ -111,5 +111,18 @@ class MODItem extends MODbase {
 
         return $this->respuesta;
     }
+    
+    function generarCodigosPorClasificacion() {
+        $this->procedimiento = 'alm.ft_item_ime';
+        $this->transaccion = 'SAL_GENCODES_MOD';
+        $this->tipo_procedimiento = 'IME';
+
+        $this->setParametro('id_clasificacion', 'id_clasificacion', 'int4');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
 }
 ?>

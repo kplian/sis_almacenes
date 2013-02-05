@@ -17,6 +17,11 @@ class ACTItem extends ACTbase {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODItem', 'listarItem');
         } else {
+            if ($this->objParam->getParametro('id_clasificacion') != null) {
+                $this->objParam->addFiltro(" item.id_clasificacion = ".$this->objParam->getParametro('id_clasificacion'));
+            } elseif($this->objParam->getParametro('id_item') != null) {
+                $this->objParam->addFiltro(" item.id_item = ".$this->objParam->getParametro('id_item'));
+            }
             $this->objFunc = $this->create('MODItem');
             $this->res = $this->objFunc->listarItem();
         }
@@ -45,6 +50,12 @@ class ACTItem extends ACTbase {
     function eliminarItem() {
         $this->objFunc = $this->create('MODItem');
         $this->res = $this->objFunc->eliminarItem();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+    
+    function generarCodigosPorClasificacion() {
+        $this->objFunc = $this->create('MODItem');
+        $this->res = $this->objFunc->generarCodigosItems();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 }

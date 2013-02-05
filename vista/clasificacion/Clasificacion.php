@@ -14,6 +14,15 @@ header("content-type:text/javascript; charset=UTF-8");
             this.maestro=config.maestro;
             Phx.vista.Clasificacion.superclass.constructor.call(this,config);
             this.init();
+            this.tbar.items.get('b-new-'+this.idContenedor).disable();
+            this.addButton('btnGenerarCodigos',
+            {
+                text: 'Generar Códigos',
+                iconCls: 'blist',
+                disabled: true,
+                handler: this.btnGenerarCodigosHandler,
+                tooltip: '<b>Actividades</b><br/>Generar Códigos de los materiales'
+            });
         },
         Atributos:[
         {
@@ -113,33 +122,43 @@ header("content-type:text/javascript; charset=UTF-8");
     fheight: 250,
     preparaMenu: function(n) {
         Phx.vista.Clasificacion.superclass.preparaMenu.call(this,n);
-        if(n.attributes.tipo_nodo == 'hijo' || n.attributes.tipo_nodo == 'raiz' || n.attributes.id == 'id') {
-            this.tbar.items.get('b-new-'+this.idContenedor).enable();
-            this.tbar.items.get('b-edit-'+this.idContenedor).enable();
-            this.tbar.items.get('b-del-'+this.idContenedor).enable();
-        }
-        else {
-            this.tbar.items.get('b-new-'+this.idContenedor).disable();
-            this.tbar.items.get('b-edit-'+this.idContenedor).disable();
-            this.tbar.items.get('b-del-'+this.idContenedor).disable();
-        }
-    },
-    EnableSelect: function(n) {
-        var nivel = n.getDepth();
-        var direc = this.getNombrePadre(n);
-        if(direc) {
-            Phx.vista.Clasificacion.superclass.EnableSelect.call(this,n);
+        if(n.attributes.tipo_nodo == 'raiz' || n.attributes.tipo_nodo == 'hijo') {
+            this.getBoton('new').enable();
+            this.getBoton('edit').enable();
+            this.getBoton('del').enable();
+            this.getBoton('btnGenerarCodigos').enable();
+        } else if (n.attributes.tipo_nodo == undefined) {
+            this.getBoton('new').enable();
+            this.getBoton('edit').disable();
+            this.getBoton('del').disable();
+            this.getBoton('btnGenerarCodigos').disable();
         } else {
-            this.tbar.items.get('b-new-'+this.idContenedor).enable();
-            this.tbar.items.get('b-edit-'+this.idContenedor).disable();
-            this.tbar.items.get('b-del-'+this.idContenedor).disable();
-        }
-    },
+            this.getBoton('new').disable();
+            this.getBoton('edit').disable();
+            this.getBoton('del').disable();
+            this.getBoton('btnGenerarCodigos').disable();
+        }    },
+    btnGenerarCodigosHandler: function() {
+        var node = this.sm.getSelectedNode();
+        var data = node.attributes;
+        //nodo raiz del tipo TUC
+        // if(data && (data.tipo_nodo == 'raiz' || data.tipo_nodo == 'hijo')){
+            // Phx.CP.loadingShow();
+            // Ext.Ajax.request({
+                // url:'../../sis_mantenimiento/control/UniCons/setBlockUnblockUniCons',
+                // params:{'id_uni_cons':data.id_uni_cons,estado:est},
+                // success:this.successBU,
+                // argument: {node:node.parentNode},
+                // failure: this.conexionFailure,
+                // timeout:this.timeout,
+                // scope:this
+            // });
+        // }    },
     getNombrePadre:function(n) {
         var direc;
         var padre = n.parentNode;
         if(padre) {
-            if(padre.attributes.id!='id') {
+            if(padre.attributes.id != 'id') {
                direc = n.attributes.nombre +' - '+ this.getNombrePadre(padre);
                return direc;
             } else {
@@ -149,7 +168,13 @@ header("content-type:text/javascript; charset=UTF-8");
         else {
             return undefined;
         }
-     }
+    },
+    south: {
+        url:'../../../sis_almacenes/vista/item/Item.php',
+        title: 'Materiales',
+        height: 300,
+        cls: 'Item'
+    }
 });
 </script>       
         

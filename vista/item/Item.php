@@ -15,12 +15,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.maestro = config.maestro;
 			Phx.vista.Item.superclass.constructor.call(this, config);
 			this.init();
-			this.load({
-				params : {
-					start : 0,
-					limit : 50
-				}
-			})
+			this.tbar.items.get('b-new-' + this.idContenedor).hide();
+			this.grid.getTopToolbar().disable();
+			this.grid.getBottomToolbar().disable();
+			this.store.removeAll();
 		},
 		Atributos : [{
 			config : {
@@ -32,49 +30,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : true
 		}, {
 			config : {
+				labelSerparator : '',
+				inputType : 'hidden',
 				name : 'id_clasificacion',
-				fieldLabel : 'Clasificación',
-				allowBlank : true,
-				emptyText : 'Clasificación...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_almacenes/control/Clasificacion/listarClasificacion',
-					id : 'id_clasificacion',
-					root : 'datos',
-					sortInfo : {
-						field : 'nombre',
-						direction : 'ASC'
-					},
-					totalProperty : 'total',
-					fields : ['id_clasificacion', 'nombre', 'codigo_largo'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'codigo_largo'
-					}
-				}),
-				valueField : 'id_clasificacion',
-				displayField : 'nombre',
-				gdisplayField : 'desc_clasificacion', //dibuja el campo extra de la consulta al hacer un inner join con orra tabla
-				forceSelection : true,
-				typeAhead : false,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '100%',
-				gwidth : 110,
-				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['desc_clasificacion']);
-				}
 			},
-			type : 'ComboBox',
-			id_grupo : 0,
-			filters : {
-				pfiltro : 'cla.nombre',
-				type : 'string'
-			},
-			grid : true,
+			type : 'Field',
 			form : true
 		}, {
 			config : {
@@ -102,7 +62,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				allowBlank : false,
 				width : '100%',
 				gwidth : 100,
-				maxLength : 25
+				maxLength : 250
 			},
 			type : 'TextField',
 			filters : {
@@ -181,23 +141,23 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : true,
 			form : true
 		}, {
-            config : {
-                name : 'numero_serie',
-                fieldLabel : 'No. de Serie',
-                allowBlank : true,
-                width : '100%',
-                gwidth : 90,
-                maxLength : 20
-            },
-            type : 'TextField',
-            filters : {
-                pfiltro : 'item.numero_serie',
-                type : 'string'
-            },
-            id_grupo : 1,
-            grid : true,
-            form : true
-        }, {
+			config : {
+				name : 'numero_serie',
+				fieldLabel : 'No. de Serie',
+				allowBlank : true,
+				width : '100%',
+				gwidth : 90,
+				maxLength : 20
+			},
+			type : 'TextField',
+			filters : {
+				pfiltro : 'item.numero_serie',
+				type : 'string'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : true
+		}, {
 			config : {
 				name : 'observaciones',
 				fieldLabel : 'Observaciones',
@@ -223,8 +183,8 @@ header("content-type: text/javascript; charset=UTF-8");
 		fields : [{
 			name : 'id_item'
 		}, {
-            name : 'id_clasificacion'
-        }, {
+			name : 'id_clasificacion'
+		}, {
 			name : 'desc_clasificacion',
 			type : 'string'
 		}, {
@@ -259,5 +219,43 @@ header("content-type: text/javascript; charset=UTF-8");
 		bdel : true,
 		bsave : false,
 		fwidth : 400,
-	})
+		loadValoresIniciales : function() {
+			Phx.vista.Item.superclass.loadValoresIniciales.call(this);
+			this.getComponente('id_clasificacion').setValue(this.maestro.id_clasificacion);
+		},
+		onReloadPage : function(m) {
+			this.maestro = m;
+			var myParams = {
+				start : 0,
+				limit : 50
+			};
+			if (this.maestro.tipo_nodo == 'raiz' || this.maestro.tipo_nodo == 'hijo') {
+				myParams.id_clasificacion = this.maestro.id_clasificacion;
+				this.tbar.items.get('b-new-' + this.idContenedor).show();
+			} else if (this.maestro.tipo_nodo == 'item') {
+				myParams.id_item = this.maestro.id_item;
+				this.tbar.items.get('b-new-' + this.idContenedor).hide();
+			} else {
+				this.tbar.items.get('b-new-' + this.idContenedor).hide();
+			}
+			this.load({
+				params : myParams
+			});
+		},
+		perparaMenu : function(n) {
+			Phx.vista.Item.superclass.perparaMenu.call(this, n);
+			if (this.maestro.tipo_nodo == undefined) {
+				this.tbar.items.get('b-new-' + this.idContenedor).disable();
+			}
+		},
+		successSave : function(resp) {
+			Phx.vista.Item.superclass.successSave.call(this, resp);
+			var selectedNode = Phx.CP.getPagina(this.idContenedorPadre).sm.getSelectedNode();
+			if (!selectedNode.leaf) {
+				selectedNode.reload();
+			} else {
+				selectedNode.parentNode.reload();
+			}
+		}
+	}); 
 </script>
