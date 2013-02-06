@@ -117,16 +117,16 @@ BEGIN
                 	item.id_item,
                     item.id_clasificacion,
                     cla.nombre as desc_clasificacion,
-                    cla.codigo_largo,
                     item.nombre,
+                    item.codigo,
                     item.descripcion,
                     item.palabras_clave,
                     item.codigo_fabrica,
                     item.observaciones,
-                    item.numero_serie                       
-                from alm.titem item, alm.tclasificacion cla
-                where item.estado_reg = ''activo'' and item.id_clasificacion = cla.id_clasificacion 
-                and cla.id_clasificacion_fk is not NULL and ';
+                    item.numero_serie
+                from alm.titem item
+                inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
+                where item.estado_reg = ''activo'' and ';
            
             --Definicion de la respuesta
             v_consulta:=v_consulta||v_parametros.filtro;
@@ -151,9 +151,9 @@ BEGIN
             --Sentencia de la consulta de conteo de registros
             v_consulta:='
             	select count(item.id_item)
-                from alm.titem item, alm.tclasificacion cla
-                where item.estado_reg = ''activo'' and item.id_clasificacion = cla.id_clasificacion 
-                and cla.id_clasificacion_fk is not NULL and ';
+                from alm.titem item
+                inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
+                where item.estado_reg = ''activo'' and ';
            
             --Definicion de la respuesta           
             v_consulta:=v_consulta||v_parametros.filtro;

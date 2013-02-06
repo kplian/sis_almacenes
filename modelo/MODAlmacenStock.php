@@ -30,9 +30,9 @@ class MODAlmacenStock extends MODbase{
         $this->captura('cantidad_min','numeric');
         $this->captura('cantidad_alerta_amarilla','numeric');
         $this->captura('cantidad_alerta_roja','numeric');
-        $this->captura('id_usuario_reg','integer');
+        $this->captura('usr_reg','varchar');
         $this->captura('fecha_reg','timestamp');
-        $this->captura('id_usuario_mod','integer');
+        $this->captura('usr_mod','varchar');
         $this->captura('fecha_mod','timestamp');
         
         //Ejecuta la instruccion

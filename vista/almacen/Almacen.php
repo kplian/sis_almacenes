@@ -122,7 +122,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			},
 			type : 'DateField',
 			filters : {
-				pfiltro : 'cencos.fecha_reg',
+				pfiltro : 'alm.fecha_reg',
 				type : 'date'
 			},
 			id_grupo : 1,
@@ -158,7 +158,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			},
 			type : 'DateField',
 			filters : {
-				pfiltro : 'cencos.fecha_mod',
+				pfiltro : 'alm.fecha_mod',
 				type : 'date'
 			},
 			id_grupo : 1,

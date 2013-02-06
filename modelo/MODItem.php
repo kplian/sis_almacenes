@@ -42,7 +42,6 @@ class MODItem extends MODbase {
         $this->captura('id_item', 'integer');
         $this->captura('id_clasificacion', 'integer');
         $this->captura('desc_clasificacion', 'varchar');
-        $this->captura('codigo_largo', 'varchar');
         $this->captura('nombre', 'varchar');
         $this->captura('codigo', 'varchar');
         $this->captura('descripcion', 'varchar');

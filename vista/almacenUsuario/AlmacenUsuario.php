@@ -58,6 +58,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			type : 'ComboBox',
 			id_grupo : 1,
+			filters : {
+                pfiltro : 'tipo',
+                type : 'string'
+            },
 			form : true,
 			grid : true
 		}, {
@@ -102,7 +106,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			type : 'ComboBox',
 			id_grupo : 0,
 			filters : {
-				pfiltro : 'cuenta',
+				pfiltro : 'usualm.cuenta',
 				type : 'string'
 			},
 			grid : true,
