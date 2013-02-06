@@ -142,3 +142,11 @@ ALTER TABLE alm.titem
 ALTER TABLE alm.tclasificacion
   ADD COLUMN estado VARCHAR(20);
 /***********************************F-SCP-AAO-ALM-16_2-05/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-12-06/02/2013****************************************/
+ALTER TABLE alm.talmacen_usuario
+  ADD COLUMN tipo VARCHAR(20);
+
+ALTER TABLE alm.talmacen_usuario
+  ADD COLUMN id_almacen INTEGER;
+/***********************************F-SCP-AAO-ALM-12-06/02/2013****************************************/

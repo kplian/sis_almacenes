@@ -81,3 +81,12 @@ ALTER TABLE alm.talmacen_correlativo
 ALTER TABLE alm.talmacen
   DROP COLUMN id_almacen_usuario;
 /***********************************F-DEP-AAO-ALM-6-04/02/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-12-06/02/2013*****************************************/
+ALTER TABLE alm.talmacen_usuario
+  ADD CONSTRAINT fk_talmacen_usuario__id_almacen FOREIGN KEY (id_almacen)
+    REFERENCES alm.talmacen(id_almacen)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-AAO-ALM-12-06/02/2013*****************************************/

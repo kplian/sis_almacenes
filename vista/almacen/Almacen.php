@@ -29,11 +29,12 @@ header("content-type:text/javascript; charset=UTF-8");
 			});
 		},
 		onBtnAlmacenUsuario : function() {
+		    var rec=this.sm.getSelected();
 			Phx.CP.loadWindows('../../../sis_almacenes/vista/almacenUsuario/AlmacenUsuario.php', 'Personal del Almacén', {
 				modal : true,
-				width : 600,
-				height : 300
-			}, '', this.idContenedor, 'AlmacenUsuario');
+				width : 800,
+				height : 400,
+			}, rec.data, this.idContenedor, 'AlmacenUsuario');
 		},
 		Atributos : [{
 			config : {
