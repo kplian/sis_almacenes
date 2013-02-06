@@ -15,14 +15,6 @@ header("content-type:text/javascript; charset=UTF-8");
             Phx.vista.Clasificacion.superclass.constructor.call(this,config);
             this.init();
             this.tbar.items.get('b-new-'+this.idContenedor).disable();
-            this.addButton('btnGenerarCodigos',
-            {
-                text: 'Generar Códigos',
-                iconCls: 'blist',
-                disabled: true,
-                handler: this.btnGenerarCodigosHandler,
-                tooltip: '<b>Actividades</b><br/>Generar Códigos de los materiales'
-            });
         },
         Atributos:[
         {
@@ -126,34 +118,15 @@ header("content-type:text/javascript; charset=UTF-8");
             this.getBoton('new').enable();
             this.getBoton('edit').enable();
             this.getBoton('del').enable();
-            this.getBoton('btnGenerarCodigos').enable();
         } else if (n.attributes.tipo_nodo == undefined) {
             this.getBoton('new').enable();
             this.getBoton('edit').disable();
             this.getBoton('del').disable();
-            this.getBoton('btnGenerarCodigos').disable();
         } else {
             this.getBoton('new').disable();
             this.getBoton('edit').disable();
             this.getBoton('del').disable();
-            this.getBoton('btnGenerarCodigos').disable();
         }    },
-    btnGenerarCodigosHandler: function() {
-        var node = this.sm.getSelectedNode();
-        var data = node.attributes;
-        //nodo raiz del tipo TUC
-        // if(data && (data.tipo_nodo == 'raiz' || data.tipo_nodo == 'hijo')){
-            // Phx.CP.loadingShow();
-            // Ext.Ajax.request({
-                // url:'../../sis_mantenimiento/control/UniCons/setBlockUnblockUniCons',
-                // params:{'id_uni_cons':data.id_uni_cons,estado:est},
-                // success:this.successBU,
-                // argument: {node:node.parentNode},
-                // failure: this.conexionFailure,
-                // timeout:this.timeout,
-                // scope:this
-            // });
-        // }    },
     getNombrePadre:function(n) {
         var direc;
         var padre = n.parentNode;

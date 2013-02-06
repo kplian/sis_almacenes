@@ -53,9 +53,9 @@ class ACTItem extends ACTbase {
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
     
-    function generarCodigosPorClasificacion() {
+    function generarCodigoItem() {
         $this->objFunc = $this->create('MODItem');
-        $this->res = $this->objFunc->generarCodigosItems();
+        $this->res = $this->objFunc->generarCodigoItem();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 }

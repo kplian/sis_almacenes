@@ -38,8 +38,9 @@ class ACTClasificacion extends ACTbase {
         array_push($arreglo, array('nombre' => 'id', 'valor' => 'id_clasificacion'));
         array_push($arreglo, array('nombre' => 'id_p', 'valor' => 'id_clasificacion_fk'));
 
-        array_push($arreglo, array('nombre' => 'text', 'valor' => 'nombre'));
+        array_push($arreglo, array('nombre' => 'text', 'valores' => '[#codigo_largo#]-#nombre#'));
         array_push($arreglo, array('nombre' => 'cls', 'valor' => 'descripcion'));
+        array_push($arreglo, array('nombre' => 'qtip', 'valores' => '<b>#codigo_largo#</b><br/>#nombre#'));
 
         /*se anade un nivel al arbol incluyendo con tipo de nivel carpeta con su arreglo de equivalencias
          es importante que entre los resultados devueltos por la base exista la variable\
@@ -57,9 +58,9 @@ class ACTClasificacion extends ACTbase {
         array_push($arreglo, array('nombre' => 'id', 'valor' => 'id_clasificacion'));
         array_push($arreglo, array('nombre' => 'id_p', 'valor' => 'id_clasificacion_fk'));
 
-        array_push($arreglo, array('nombre' => 'text', 'valores' => '#nombre#'));
+        array_push($arreglo, array('nombre' => 'text', 'valores' => '[#codigo#]-#nombre#'));
         array_push($arreglo, array('nombre' => 'cls', 'valor' => 'nombre'));
-        array_push($arreglo, array('nombre' => 'qtip', 'valores' => '#nombre#'));
+        array_push($arreglo, array('nombre' => 'qtip', 'valores' => '<b>#codigo#</b><br/>#nombre#'));
         $this->res->addNivelArbol('tipo_nodo', 'item', array('leaf' => true, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo);
 
         //Se imprime el arbol en formato JSON

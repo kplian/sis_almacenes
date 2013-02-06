@@ -19,6 +19,14 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.grid.getTopToolbar().disable();
 			this.grid.getBottomToolbar().disable();
 			this.store.removeAll();
+			this.addButton('btnGenerarCodigos',
+            {
+                text: 'Generar Código',
+                iconCls: 'blist',
+                disabled: true,
+                handler: this.btnGenerarCodigosHandler,
+                tooltip: '<b>Actividades</b><br/>Generar Código del item'
+            });
 		},
 		Atributos : [{
 			config : {
@@ -88,7 +96,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			id_grupo : 1,
 			grid : true,
-			form : true
+			form : false
 		}, {
 			config : {
 				name : 'descripcion',
@@ -224,6 +232,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.getComponente('id_clasificacion').setValue(this.maestro.id_clasificacion);
 		},
 		onReloadPage : function(m) {
+		    this.getBoton('btnGenerarCodigos').disable();
 			this.maestro = m;
 			var myParams = {
 				start : 0,
@@ -242,11 +251,13 @@ header("content-type: text/javascript; charset=UTF-8");
 				params : myParams
 			});
 		},
-		perparaMenu : function(n) {
-			Phx.vista.Item.superclass.perparaMenu.call(this, n);
-			if (this.maestro.tipo_nodo == undefined) {
-				this.tbar.items.get('b-new-' + this.idContenedor).disable();
-			}
+		preparaMenu : function(n) {
+			Phx.vista.Item.superclass.preparaMenu.call(this, n);
+			this.getBoton('btnGenerarCodigos').enable();
+		},
+		liberaMenu: function(n) {
+		    Phx.vista.Item.superclass.liberaMenu.call(this, n);
+		    this.getBoton('btnGenerarCodigos').enable();
 		},
 		successSave : function(resp) {
 			Phx.vista.Item.superclass.successSave.call(this, resp);
@@ -256,6 +267,29 @@ header("content-type: text/javascript; charset=UTF-8");
 			} else {
 				selectedNode.parentNode.reload();
 			}
-		}
+		},
+		btnGenerarCodigosHandler: function() {
+            var rec = this.sm.getSelected();
+            var data = rec.data;
+            var global = this;
+            Ext.Msg.confirm('Confirmación',
+                '¿Está seguro de generar el código para este item?', 
+                function(btn) {
+                    if (btn == "yes") {
+                        Ext.Ajax.request({
+                            url:'../../sis_almacenes/control/Item/generarCodigoItem',
+                            params: {
+                                'id_item': data.id_item, 
+                                'id_clasificacion': data.id_clasificacion
+                            },
+                            success: global.successSave,
+                            failure: global.conexionFailure,
+                            timeout: global.timeout,
+                            scope: global
+                    });
+                    }
+                }
+            );
+        }
 	}); 
 </script>
