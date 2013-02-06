@@ -19,22 +19,27 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.grid.getTopToolbar().disable();
 			this.grid.getBottomToolbar().disable();
 			this.store.removeAll();
-			this.addButton('btnGenerarCodigo',
-            {
-                text: 'Generar Código',
-                iconCls: 'bok',
-                disabled: true,
-                handler: this.btnGenerarCodigoHandler,
-                tooltip: '<b>Actividades</b><br/>Generar Código del item'
-            });
-            this.addButton('btnVerReemplazos',
-            {
-                text: 'Ver Reemplazos',
-                iconCls: 'bengineadd',
-                disabled: true,
-                handler: this.onBtnVerReemplazos,
-                tooltip: '<b>Actividades</b><br/>Generar Código del item'
-            });
+			this.addButton('btnGenerarCodigo', {
+				text : 'Generar Código',
+				iconCls : 'bok',
+				disabled : true,
+				handler : this.btnGenerarCodigoHandler,
+				tooltip : '<b>Actividades</b><br/>Generar Código del item'
+			});
+			this.addButton('btnVerReemplazos', {
+				text : 'Ver Reemplazos',
+				iconCls : 'bengineadd',
+				disabled : true,
+				handler : this.onBtnVerReemplazos,
+				tooltip : '<b>Actividades</b><br/>Ver los Items de Reemplazo del item seleccionado'
+			});
+			this.addButton('btnVerArchivos', {
+				text : 'Ver Archivos',
+				iconCls : 'bdocuments',
+				disabled : true,
+				handler : this.onBtnVerArchivos,
+				tooltip : '<b>Actividades</b><br/>Ver los archivos asociados al item seleccionado'
+			});
 		},
 		Atributos : [{
 			config : {
@@ -213,11 +218,11 @@ header("content-type: text/javascript; charset=UTF-8");
 		loadValoresIniciales : function() {
 			Phx.vista.Item.superclass.loadValoresIniciales.call(this);
 			if (this.maestro.id_clasificacion != undefined) {
-			    this.getComponente('id_clasificacion').setValue(this.maestro.id_clasificacion);
+				this.getComponente('id_clasificacion').setValue(this.maestro.id_clasificacion);
 			}
 		},
 		onReloadPage : function(m) {
-		    this.getBoton('btnGenerarCodigo').disable();
+			this.getBoton('btnGenerarCodigo').disable();
 			this.maestro = m;
 			var myParams = {
 				start : 0,
@@ -230,7 +235,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				myParams.id_item = this.maestro.id_item;
 				this.tbar.items.get('b-new-' + this.idContenedor).hide();
 			} else {
-			    this.tbar.items.get('b-new-' + this.idContenedor).show();
+				this.tbar.items.get('b-new-' + this.idContenedor).show();
 				myParams.id_clasificacion = 'null';
 			}
 			this.load({
@@ -241,70 +246,70 @@ header("content-type: text/javascript; charset=UTF-8");
 			Phx.vista.Item.superclass.preparaMenu.call(this, n);
 			var selectedRow = this.sm.getSelected();
 			this.getBoton('btnVerReemplazos').enable();
-			if(selectedRow.data.id_clasificacion != null && selectedRow.data.codigo == "") {
-			    this.getBoton('btnGenerarCodigo').enable();
+			this.getBoton('btnVerArchivos').enable();
+			if (selectedRow.data.id_clasificacion != null && selectedRow.data.codigo == "") {
+				this.getBoton('btnGenerarCodigo').enable();
 			} else {
-			    this.getBoton('btnGenerarCodigo').disable();
+				this.getBoton('btnGenerarCodigo').disable();
 			}
 		},
-		liberaMenu: function(n) {
-		    Phx.vista.Item.superclass.liberaMenu.call(this, n);
-		    this.getBoton('btnGenerarCodigo').disable();
-		    this.getBoton('btnVerReemplazos').disable();
+		liberaMenu : function(n) {
+			Phx.vista.Item.superclass.liberaMenu.call(this, n);
+			this.getBoton('btnGenerarCodigo').disable();
+			this.getBoton('btnVerReemplazos').disable();
+			this.getBoton('btnVerArchivos').disable();
 		},
 		successSave : function(resp) {
 			Phx.vista.Item.superclass.successSave.call(this, resp);
 			this.actualizarNodosClasificacion();
 		},
 		successDel : function(resp) {
-		    Phx.vista.Item.superclass.successDel.call(this, resp);
-		    this.actualizarNodosClasificacion();
+			Phx.vista.Item.superclass.successDel.call(this, resp);
+			this.actualizarNodosClasificacion();
 		},
-		actualizarNodosClasificacion : function () {
-		    var selectedNode = Phx.CP.getPagina(this.idContenedorPadre).sm.getSelectedNode();
-            if (!selectedNode.leaf) {
-                selectedNode.attributes.estado = 'restringido';
-                selectedNode.reload();
-            } else {
-                selectedNode.parentNode.attributes.estado = 'restringido';
-                selectedNode.parentNode.reload();
-            }
+		actualizarNodosClasificacion : function() {
+			var selectedNode = Phx.CP.getPagina(this.idContenedorPadre).sm.getSelectedNode();
+			if (!selectedNode.leaf) {
+				selectedNode.attributes.estado = 'restringido';
+				selectedNode.reload();
+			} else {
+				selectedNode.parentNode.attributes.estado = 'restringido';
+				selectedNode.parentNode.reload();
+			}
 		},
-		btnGenerarCodigoHandler: function() {
-            var rec = this.sm.getSelected();
-            var data = rec.data;
-            var global = this;
-            Ext.Msg.confirm('Confirmación',
-                '¿Está seguro de generar el código para este item?', 
-                function(btn) {
-                    if (btn == "yes") {
-                        Ext.Ajax.request({
-                            url:'../../sis_almacenes/control/Item/generarCodigoItem',
-                            params: {
-                                'id_item': data.id_item, 
-                                'id_clasificacion': data.id_clasificacion
-                            },
-                            success: global.successSave,
-                            failure: global.conexionFailure,
-                            timeout: global.timeout,
-                            scope: global
-                    });
-                    }
-                }
-            );
-        },
-        onBtnVerReemplazos: function() {
-            var rec=this.sm.getSelected();
-            Phx.CP.loadWindows('../../../sis_almacenes/vista/itemReemplazo/ItemReemplazo.php',
-                'Items de Reemplazo',
-                {
-                    width:800,
-                    height:400
-                },
-                rec.data,
-                this.idContenedor,
-                'ItemReemplazo'
-            );
-        }
+		btnGenerarCodigoHandler : function() {
+			var rec = this.sm.getSelected();
+			var data = rec.data;
+			var global = this;
+			Ext.Msg.confirm('Confirmación', '¿Está seguro de generar el código para este item?', function(btn) {
+				if (btn == "yes") {
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Item/generarCodigoItem',
+						params : {
+							'id_item' : data.id_item,
+							'id_clasificacion' : data.id_clasificacion
+						},
+						success : global.successSave,
+						failure : global.conexionFailure,
+						timeout : global.timeout,
+						scope : global
+					});
+				}
+			});
+		},
+		onBtnVerReemplazos : function() {
+			var rec = this.sm.getSelected();
+			Phx.CP.loadWindows('../../../sis_almacenes/vista/itemReemplazo/ItemReemplazo.php', 'Items de Reemplazo', {
+				width : 800,
+				height : 400
+			}, rec.data, this.idContenedor, 'ItemReemplazo');
+		},
+		onBtnVerArchivos : function() {
+			var rec = this.sm.getSelected();
+			Phx.CP.loadWindows('../../../sis_almacenes/vista/itemArchivo/ItemArchivo.php', 'Archivos del Item', {
+				width : 800,
+				height : 400
+			}, rec.data, this.idContenedor, 'ItemArchivo');
+		}
 	}); 
 </script>

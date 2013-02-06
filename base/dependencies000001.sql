@@ -107,3 +107,12 @@ ALTER TABLE alm.titem_reemplazo
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-AAO-ALM-14-06/02/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-15-06/02/2013*****************************************/
+ALTER TABLE alm.titem_archivo
+  ADD CONSTRAINT fk_titem_archivo__id_item FOREIGN KEY (id_item)
+    REFERENCES alm.titem(id_item)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-AAO-ALM-15-06/02/2013*****************************************/

@@ -163,3 +163,19 @@ WITHOUT OIDS;
 ALTER TABLE alm.titem_reemplazo
   OWNER TO postgres;
 /***********************************F-SCP-AAO-ALM-14-06/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-15-06/02/2013****************************************/
+CREATE TABLE alm.titem_archivo (
+  id_item_archivo SERIAL NOT NULL, 
+  nombre VARCHAR(50), 
+  descripcion VARCHAR(150), 
+  extension VARCHAR(10), 
+  archivo BYTEA, 
+  id_item INTEGER,
+  PRIMARY KEY(id_item_archivo)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.titem_archivo
+  OWNER TO postgres;
+/***********************************F-SCP-AAO-ALM-15-06/02/2013****************************************/
