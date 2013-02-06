@@ -90,3 +90,20 @@ ALTER TABLE alm.talmacen_usuario
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-AAO-ALM-12-06/02/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-14-06/02/2013*****************************************/
+ALTER TABLE alm.titem_reemplazo
+  ADD CONSTRAINT fk_titem_reemplazo__id_item FOREIGN KEY (id_item)
+    REFERENCES alm.titem(id_item)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+--------------- SQL ---------------
+ALTER TABLE alm.titem_reemplazo
+  ADD CONSTRAINT fk_titem_reemplazo__id_item_r FOREIGN KEY (id_item_r)
+    REFERENCES alm.titem(id_item)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-AAO-ALM-14-06/02/2013*****************************************/

@@ -22,9 +22,17 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.addButton('btnGenerarCodigo',
             {
                 text: 'Generar Código',
-                iconCls: 'blist',
+                iconCls: 'bok',
                 disabled: true,
                 handler: this.btnGenerarCodigoHandler,
+                tooltip: '<b>Actividades</b><br/>Generar Código del item'
+            });
+            this.addButton('btnVerReemplazos',
+            {
+                text: 'Ver Reemplazos',
+                iconCls: 'bengineadd',
+                disabled: true,
+                handler: this.onBtnVerReemplazos,
                 tooltip: '<b>Actividades</b><br/>Generar Código del item'
             });
 		},
@@ -232,6 +240,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		preparaMenu : function(n) {
 			Phx.vista.Item.superclass.preparaMenu.call(this, n);
 			var selectedRow = this.sm.getSelected();
+			this.getBoton('btnVerReemplazos').enable();
 			if(selectedRow.data.id_clasificacion != null && selectedRow.data.codigo == "") {
 			    this.getBoton('btnGenerarCodigo').enable();
 			} else {
@@ -241,6 +250,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		liberaMenu: function(n) {
 		    Phx.vista.Item.superclass.liberaMenu.call(this, n);
 		    this.getBoton('btnGenerarCodigo').disable();
+		    this.getBoton('btnVerReemplazos').disable();
 		},
 		successSave : function(resp) {
 			Phx.vista.Item.superclass.successSave.call(this, resp);
@@ -281,6 +291,19 @@ header("content-type: text/javascript; charset=UTF-8");
                     });
                     }
                 }
+            );
+        },
+        onBtnVerReemplazos: function() {
+            var rec=this.sm.getSelected();
+            Phx.CP.loadWindows('../../../sis_almacenes/vista/itemReemplazo/ItemReemplazo.php',
+                'Items de Reemplazo',
+                {
+                    width:800,
+                    height:400
+                },
+                rec.data,
+                this.idContenedor,
+                'ItemReemplazo'
             );
         }
 	}); 

@@ -150,3 +150,16 @@ ALTER TABLE alm.talmacen_usuario
 ALTER TABLE alm.talmacen_usuario
   ADD COLUMN id_almacen INTEGER;
 /***********************************F-SCP-AAO-ALM-12-06/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-14-06/02/2013****************************************/
+CREATE TABLE alm.titem_reemplazo (
+  id_item_reemplazo SERIAL NOT NULL, 
+  id_item INTEGER,
+  id_item_r INTEGER,
+  PRIMARY KEY(id_item_reemplazo)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.titem_reemplazo
+  OWNER TO postgres;
+/***********************************F-SCP-AAO-ALM-14-06/02/2013****************************************/
