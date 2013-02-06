@@ -257,14 +257,17 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		liberaMenu: function(n) {
 		    Phx.vista.Item.superclass.liberaMenu.call(this, n);
-		    this.getBoton('btnGenerarCodigos').enable();
+		    this.getBoton('btnGenerarCodigos').disable();
 		},
 		successSave : function(resp) {
 			Phx.vista.Item.superclass.successSave.call(this, resp);
 			var selectedNode = Phx.CP.getPagina(this.idContenedorPadre).sm.getSelectedNode();
+			console.log(resp);
 			if (!selectedNode.leaf) {
+			    selectedNode.attributes.estado = 'restringido';
 				selectedNode.reload();
 			} else {
+			    selectedNode.parentNode.attributes.estado = 'restringido';
 				selectedNode.parentNode.reload();
 			}
 		},

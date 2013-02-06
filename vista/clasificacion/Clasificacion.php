@@ -89,8 +89,18 @@ header("content-type:text/javascript; charset=UTF-8");
     id_nodo:'id_clasificacion',
     id_nodo_p:'id_clasificacion_fk',
     onButtonNew: function() {
-        var nodo = this.sm.getSelectedNode();           
         Phx.vista.Clasificacion.superclass.onButtonNew.call(this);
+        this.getComponente('codigo').enable();
+    },
+    onButtonEdit: function() {
+        Phx.vista.Clasificacion.superclass.onButtonEdit.call(this);
+        var nodo = this.sm.getSelectedNode();
+        if (nodo.attributes != undefined && nodo.attributes.estado == 'restringido') {
+            this.getComponente('codigo').disable();
+        } else {
+            console.log('entra al else');
+            this.getComponente('codigo').enable();
+        }
     },
     fields: [
         {name: 'id', type: 'numeric'},
@@ -141,6 +151,11 @@ header("content-type:text/javascript; charset=UTF-8");
         else {
             return undefined;
         }
+    },
+    successSave : function(resp) {
+        Phx.vista.Clasificacion.superclass.successSave.call(this, resp);
+        var selectedNode = this.sm.getSelectedNode();
+        selectedNode.attributes.estado = 'restringido';
     },
     south: {
         url:'../../../sis_almacenes/vista/item/Item.php',

@@ -137,3 +137,8 @@ WITHOUT OIDS;
 ALTER TABLE alm.titem
   ADD COLUMN num_por_clasificacion INTEGER;
 /***********************************F-SCP-AAO-ALM-16-05/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-16_2-05/02/2013****************************************/
+ALTER TABLE alm.tclasificacion
+  ADD COLUMN estado VARCHAR(20);
+/***********************************F-SCP-AAO-ALM-16_2-05/02/2013****************************************/
