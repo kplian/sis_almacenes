@@ -53,7 +53,7 @@ class MODClasificacion extends MODbase {
 
         if ($this->respuesta->getTipo() == 'ERROR') {
             return $this->respuesta;
-        } elseif ($id_padre != '%') {
+        } else {
             $this->procedimiento = 'alm.ft_item_sel';
             $this->transaccion = 'SAL_ARB_SEL';
             $this->tipo_procedimiento = 'SEL';

@@ -19,12 +19,12 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.grid.getTopToolbar().disable();
 			this.grid.getBottomToolbar().disable();
 			this.store.removeAll();
-			this.addButton('btnGenerarCodigos',
+			this.addButton('btnGenerarCodigo',
             {
                 text: 'Generar Código',
                 iconCls: 'blist',
                 disabled: true,
-                handler: this.btnGenerarCodigosHandler,
+                handler: this.btnGenerarCodigoHandler,
                 tooltip: '<b>Actividades</b><br/>Generar Código del item'
             });
 		},
@@ -46,30 +46,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : true
 		}, {
 			config : {
-				name : 'codigo_largo',
-				fieldLabel : 'Código Clasificación',
-				allowBlank : false,
-				width : '100%',
-				gwidth : 110,
-				maxLength : 50,
-				disabled : true,
-				inputType : 'hidden',
-			},
-			type : 'TextField',
-			filters : {
-				pfiltro : 'cla.codigo_largo',
-				type : 'string'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : true
-		}, {
-			config : {
 				name : 'nombre',
 				fieldLabel : 'Nombre',
 				allowBlank : false,
 				width : '100%',
-				gwidth : 100,
+				gwidth : 150,
 				maxLength : 250
 			},
 			type : 'TextField',
@@ -86,7 +67,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				fieldLabel : 'Código',
 				allowBlank : false,
 				width : '100%',
-				gwidth : 100,
+				gwidth : 150,
 				maxLength : 20
 			},
 			type : 'TextField',
@@ -103,7 +84,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				fieldLabel : 'Descripción',
 				allowBlank : true,
 				width : '100%',
-				gwidth : 100,
+				gwidth : 150,
 				maxLength : 100
 			},
 			type : 'TextField',
@@ -193,12 +174,6 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			name : 'id_clasificacion'
 		}, {
-			name : 'desc_clasificacion',
-			type : 'string'
-		}, {
-			name : 'codigo_largo',
-			type : 'string'
-		}, {
 			name : 'codigo',
 			type : 'string'
 		}, {
@@ -229,10 +204,12 @@ header("content-type: text/javascript; charset=UTF-8");
 		fwidth : 400,
 		loadValoresIniciales : function() {
 			Phx.vista.Item.superclass.loadValoresIniciales.call(this);
-			this.getComponente('id_clasificacion').setValue(this.maestro.id_clasificacion);
+			if (this.maestro.id_clasificacion != undefined) {
+			    this.getComponente('id_clasificacion').setValue(this.maestro.id_clasificacion);
+			}
 		},
 		onReloadPage : function(m) {
-		    this.getBoton('btnGenerarCodigos').disable();
+		    this.getBoton('btnGenerarCodigo').disable();
 			this.maestro = m;
 			var myParams = {
 				start : 0,
@@ -245,7 +222,8 @@ header("content-type: text/javascript; charset=UTF-8");
 				myParams.id_item = this.maestro.id_item;
 				this.tbar.items.get('b-new-' + this.idContenedor).hide();
 			} else {
-				this.tbar.items.get('b-new-' + this.idContenedor).hide();
+			    this.tbar.items.get('b-new-' + this.idContenedor).show();
+				myParams.id_clasificacion = 'null';
 			}
 			this.load({
 				params : myParams
@@ -253,25 +231,36 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		preparaMenu : function(n) {
 			Phx.vista.Item.superclass.preparaMenu.call(this, n);
-			this.getBoton('btnGenerarCodigos').enable();
+			var selectedRow = this.sm.getSelected();
+			if(selectedRow.data.id_clasificacion != null && selectedRow.data.codigo == "") {
+			    this.getBoton('btnGenerarCodigo').enable();
+			} else {
+			    this.getBoton('btnGenerarCodigo').disable();
+			}
 		},
 		liberaMenu: function(n) {
 		    Phx.vista.Item.superclass.liberaMenu.call(this, n);
-		    this.getBoton('btnGenerarCodigos').disable();
+		    this.getBoton('btnGenerarCodigo').disable();
 		},
 		successSave : function(resp) {
 			Phx.vista.Item.superclass.successSave.call(this, resp);
-			var selectedNode = Phx.CP.getPagina(this.idContenedorPadre).sm.getSelectedNode();
-			console.log(resp);
-			if (!selectedNode.leaf) {
-			    selectedNode.attributes.estado = 'restringido';
-				selectedNode.reload();
-			} else {
-			    selectedNode.parentNode.attributes.estado = 'restringido';
-				selectedNode.parentNode.reload();
-			}
+			this.actualizarNodosClasificacion();
 		},
-		btnGenerarCodigosHandler: function() {
+		successDel : function(resp) {
+		    Phx.vista.Item.superclass.successDel.call(this, resp);
+		    this.actualizarNodosClasificacion();
+		},
+		actualizarNodosClasificacion : function () {
+		    var selectedNode = Phx.CP.getPagina(this.idContenedorPadre).sm.getSelectedNode();
+            if (!selectedNode.leaf) {
+                selectedNode.attributes.estado = 'restringido';
+                selectedNode.reload();
+            } else {
+                selectedNode.parentNode.attributes.estado = 'restringido';
+                selectedNode.parentNode.reload();
+            }
+		},
+		btnGenerarCodigoHandler: function() {
             var rec = this.sm.getSelected();
             var data = rec.data;
             var global = this;

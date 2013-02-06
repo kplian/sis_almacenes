@@ -17,9 +17,13 @@ class ACTItem extends ACTbase {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODItem', 'listarItem');
         } else {
-            if ($this->objParam->getParametro('id_clasificacion') != null) {
+            if($this->objParam->getParametro('id_clasificacion') == 'null') {
+                $this->objParam->addFiltro(" item.id_clasificacion is null");
+            }
+            elseif ($this->objParam->getParametro('id_clasificacion') != null) {
                 $this->objParam->addFiltro(" item.id_clasificacion = ".$this->objParam->getParametro('id_clasificacion'));
-            } elseif($this->objParam->getParametro('id_item') != null) {
+            } 
+            elseif($this->objParam->getParametro('id_item') != null) {
                 $this->objParam->addFiltro(" item.id_item = ".$this->objParam->getParametro('id_item'));
             }
             $this->objFunc = $this->create('MODItem');
