@@ -123,6 +123,19 @@ class MODClasificacion extends MODbase {
 
         return $this->respuesta;
     }
+    
+    function cambiarEstadoClasificacion() {
+        $this->procedimiento = 'alm.ft_clasificacion_ime';
+        $this->transaccion = 'SAL_ESTCLA_MOD';
+        $this->tipo_procedimiento = 'IME';
 
+        $this->setParametro('id_clasificacion', 'id_clasificacion', 'int4');
+        $this->setParametro('estado', 'estado', 'varchar');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
 }
 ?>
