@@ -25,6 +25,7 @@ class MODAlmacen extends MODbase {
         $this->captura('fecha_mod', 'timestamp');
         $this->captura('usr_reg', 'varchar');
         $this->captura('usr_mod', 'varchar');
+        $this->captura('estado', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -75,6 +76,18 @@ class MODAlmacen extends MODbase {
 
         return $this->respuesta;
     }
+    
+    function switchEstadoAlmacen() {
+        $this->procedimiento = 'alm.ft_almacen_ime';
+        $this->transaccion = 'SAL_SWEST_MOD';
+        $this->tipo_procedimiento = 'IME';
 
+        $this->setParametro('id_almacen', 'id_almacen', 'integer');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
 }
 ?>

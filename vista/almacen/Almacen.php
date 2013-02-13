@@ -27,14 +27,41 @@ header("content-type:text/javascript; charset=UTF-8");
 				handler : this.onBtnAlmacenUsuario,
 				tooltip : '<b>Personal del Almacén</b>'
 			});
+
+			this.addButton('btnSwitchEstado', {
+				text : 'Inactivar',
+				iconCls : 'bcancel',
+				disabled : true,
+				handler : this.onBtnSwitchEstado,
+				tooltip : '<b>Activar o Inactivar Almacen</b>'
+			});
 		},
 		onBtnAlmacenUsuario : function() {
-		    var rec=this.sm.getSelected();
+			var rec = this.sm.getSelected();
 			Phx.CP.loadWindows('../../../sis_almacenes/vista/almacenUsuario/AlmacenUsuario.php', 'Personal del Almacén', {
 				modal : true,
 				width : 800,
 				height : 400,
 			}, rec.data, this.idContenedor, 'AlmacenUsuario');
+		},
+		onBtnSwitchEstado : function() {
+			var rec = this.sm.getSelected();
+			var data = rec.data;
+			var global = this;
+			Ext.Msg.confirm('Confirmación', '¿Está seguro de activar/inactivar este almacén?', function(btn) {
+				if (btn == "yes") {
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Almacen/switchEstadoAlmacen',
+						params : {
+							'id_almacen' : data.id_almacen
+						},
+						success : global.successSave,
+						failure : global.conexionFailure,
+						timeout : global.timeout,
+						scope : global
+					});
+				}
+			});
 		},
 		Atributos : [{
 			config : {
@@ -44,6 +71,31 @@ header("content-type:text/javascript; charset=UTF-8");
 			},
 			type : 'Field',
 			form : true
+		}, {
+			config : {
+				name : 'estado',
+				fieldLabel : 'Estado',
+				allowBlank : false,
+				anchor : '100%',
+				gwidth : 70,
+				maxLength : 10,
+				renderer : function (value, e) {
+				    var result;
+				    if(value == "activo") {
+                        result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_ok.png' align='center' width='18' height='18' title='Activo'/></div>";
+                    } else if(value == 'inactivo') {
+                        result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_cancel.png' align='center' width='18' height='18' title='Inactivo'/></div>";
+                    }
+                    return result;
+				}
+			},
+			type : 'TextField',
+			filters : {
+				type : 'string'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : false
 		}, {
 			config : {
 				name : 'codigo',
@@ -195,6 +247,9 @@ header("content-type:text/javascript; charset=UTF-8");
 		}, {
 			name : 'usr_mod',
 			type : 'string'
+		}, {
+			name : 'estado',
+			type : 'string'
 		}],
 		sortInfo : {
 			field : 'id_almacen',
@@ -212,10 +267,22 @@ header("content-type:text/javascript; charset=UTF-8");
 		preparaMenu : function(tb) {
 			Phx.vista.Almacen.superclass.preparaMenu.call(this, tb);
 			this.getBoton('btnAlmacenUsuario').enable();
+			var btnSwitchEstado = this.getBoton('btnSwitchEstado');
+			var rec = this.sm.getSelected();
+			var data = rec.data;
+			if (data.estado == 'inactivo') {
+				btnSwitchEstado.setIconClass('bok');
+				btnSwitchEstado.setText('Activar');
+			} else {
+				btnSwitchEstado.setIconClass('bcancel');
+				btnSwitchEstado.setText('Inactivar');
+			}
+			btnSwitchEstado.enable();
 		},
 		liberaMenu : function() {
 			Phx.vista.Almacen.superclass.liberaMenu.call(this);
 			this.getBoton('btnAlmacenUsuario').disable();
+			this.getBoton('btnSwitchEstado').disable();
 		}
 	}); 
 </script>
