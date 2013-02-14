@@ -191,3 +191,18 @@ ALTER TABLE alm.talmacen
 ALTER TABLE alm.tmovimiento_tipo
   ADD COLUMN tipo VARCHAR(25);
 /***********************************F-SCP-AAO-ALM-19-13/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-24-14/02/2013****************************************/
+
+CREATE TABLE alm.tmetodo_val (
+  id_metodo_val SERIAL NOT NULL, 
+  codigo VARCHAR(20), 
+  nombre VARCHAR(50), 
+  descripcion VARCHAR(150), 
+  PRIMARY KEY(id_metodo_val)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.talmacen_stock
+  ADD COLUMN id_metodo_val INTEGER;
+/***********************************F-SCP-AAO-ALM-24-14/02/2013****************************************/

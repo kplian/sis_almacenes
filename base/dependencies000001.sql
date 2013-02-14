@@ -116,3 +116,12 @@ ALTER TABLE alm.titem_archivo
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-AAO-ALM-15-06/02/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-24-14/02/2013*****************************************/
+ALTER TABLE alm.talmacen_stock
+  ADD CONSTRAINT fk_talmacen_stock__id_metodo_val FOREIGN KEY (id_metodo_val)
+    REFERENCES alm.tmetodo_val(id_metodo_val)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-AAO-ALM-24-14/02/2013*****************************************/

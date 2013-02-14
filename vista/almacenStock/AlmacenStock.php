@@ -4,7 +4,6 @@
  *@file AlmacenStock.php
  *@author  Gonzalo Sarmiento
  *@date 01-10-2012
- *@description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  */
 
 header("content-type: text/javascript; charset=UTF-8");
@@ -17,8 +16,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			Phx.vista.AlmacenStock.superclass.constructor.call(this, config);
 			this.init();
 			this.grid.getTopToolbar().disable();
-            this.grid.getBottomToolbar().disable();
-            this.store.removeAll();
+			this.grid.getBottomToolbar().disable();
+			this.store.removeAll();
 		},
 		Atributos : [{
 			config : {
@@ -84,7 +83,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			type : 'TrigguerCombo',
 			id_grupo : 0,
 			filters : {
-				pfiltro : 'nombre',
+				pfiltro : 'item.nombre',
 				type : 'string'
 			},
 			grid : true,
@@ -107,23 +106,23 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : true,
 			form : true
 		}, {
-            config : {
-                name : 'cantidad_alerta_roja',
-                fieldLabel : 'Cant. alerta roja',
-                allowBlank : false,
-                anchor : '100%',
-                gwidth : 100,
-                maxLength : 10
-            },
-            type : 'NumberField',
-            filters : {
-                pfiltro : 'almitem.cantidad_alerta_roja',
-                type : 'numeric'
-            },
-            id_grupo : 1,
-            grid : true,
-            form : true
-        }, {
+			config : {
+				name : 'cantidad_alerta_roja',
+				fieldLabel : 'Cant. alerta roja',
+				allowBlank : false,
+				anchor : '100%',
+				gwidth : 100,
+				maxLength : 10
+			},
+			type : 'NumberField',
+			filters : {
+				pfiltro : 'almitem.cantidad_alerta_roja',
+				type : 'numeric'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : true
+		}, {
 			config : {
 				name : 'cantidad_alerta_amarilla',
 				fieldLabel : 'Cant. alerta amarilla',
@@ -138,6 +137,54 @@ header("content-type: text/javascript; charset=UTF-8");
 				type : 'numeric'
 			},
 			id_grupo : 1,
+			grid : true,
+			form : true
+		}, {
+			config : {
+				name : 'id_metodo_val',
+				fieldLabel : 'Método Valoración',
+				allowBlank : false,
+				emptyText : 'Método...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_almacenes/control/MetodoVal/listarMetodoVal',
+					id : 'id_metodo_val',
+					root : 'datos',
+					sortInfo : {
+						field : 'nombre',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_metodo_val', 'codigo', 'nombre'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'meval.codigo#meval.nombre'
+					}
+				}),
+				valueField : 'id_metodo_val',
+				displayField : 'codigo',
+				gdisplayField : 'codigo_metodo_val',
+				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Código: {codigo}</p><p>Nombre: {nombre}</p></div></tpl>',
+				hiddenName : 'id_item',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '100%',
+				gwidth : 100,
+				minChars : 2,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['codigo_metodo_val']);
+				}
+			},
+			type : 'ComboBox',
+			id_grupo : 0,
+			filters : {
+				pfiltro : 'meval.codigo',
+				type : 'string'
+			},
 			grid : true,
 			form : true
 		}, {
@@ -164,6 +211,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			type : 'TextField',
 			id_grupo : 1,
+			filters : {
+				pfiltro : 'usu1.cuenta',
+				type : 'string'
+			},
 			grid : true,
 			form : false
 		}, {
@@ -192,6 +243,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			type : 'TextField',
 			id_grupo : 1,
+			filters : {
+				pfiltro : 'usu1.cuenta',
+				type : 'string'
+			},
 			grid : true,
 			form : false
 		}, {
@@ -242,6 +297,12 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			name : 'cantidad_alerta_roja',
 			type : 'numeric'
+		}, {
+			name : 'id_metodo_val',
+			type : 'numeric'
+		}, {
+			name : 'codigo_metodo_val',
+			type : 'string'
 		}, {
 			name : 'usr_reg',
 			type : 'string'

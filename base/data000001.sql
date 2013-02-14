@@ -183,3 +183,17 @@ select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','ingreso');
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','salida');
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','salida por transferencia');
 /***********************************F-DAT-AAO-ALM-19-13/02/2013*****************************************/
+
+/***********************************I-DAT-AAO-ALM-24-13/02/2013*****************************************/
+select pxp.f_insert_tgui ('Métodos de Valoracion', 'Métodos de Valoracion', 'MEVAL', 'si', 1, 'sis_almacenes/vista/metodoVal/MetodoVal.php', 3, '', 'MetodoVal', 'ALM');
+select pxp.f_insert_testructura_gui ('MEVAL', 'ALMAIN');
+
+INSERT INTO alm.tmetodo_val ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_metodo_val", "codigo", "nombre", "descripcion")
+VALUES (1, 1, E'2013-02-14 09:30:07.254', E'2013-02-14 09:32:41.473', E'activo', 2, E'UEPS', E'Ultimo en Entrar Primero en Salir', E'');
+
+INSERT INTO alm.tmetodo_val ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_metodo_val", "codigo", "nombre", "descripcion")
+VALUES (1, 1, E'2013-02-14 09:28:58.325', E'2013-02-14 09:32:45.920', E'activo', 1, E'PEPS', E'Primero en Entrar Primero en Salir', E'');
+
+INSERT INTO alm.tmetodo_val ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_metodo_val", "codigo", "nombre", "descripcion")
+VALUES (1, NULL, E'2013-02-14 10:21:20.660', E'2013-02-14 10:21:20.660', E'activo', 4, E'PP', E'Promedio Ponderado', E'');
+/***********************************F-DAT-AAO-ALM-24-13/02/2013*****************************************/
