@@ -30,7 +30,7 @@ header("content-type:text/javascript; charset=UTF-8");
 
 			this.addButton('btnSwitchEstado', {
 				text : 'Inactivar',
-				iconCls : 'bcancel',
+				iconCls : 'btag_deny',
 				disabled : true,
 				handler : this.onBtnSwitchEstado,
 				tooltip : '<b>Activar o Inactivar Almacen</b>'
@@ -79,14 +79,14 @@ header("content-type:text/javascript; charset=UTF-8");
 				anchor : '100%',
 				gwidth : 70,
 				maxLength : 10,
-				renderer : function (value, e) {
-				    var result;
-				    if(value == "activo") {
-                        result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_ok.png' align='center' width='18' height='18' title='Activo'/></div>";
-                    } else if(value == 'inactivo') {
-                        result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_cancel.png' align='center' width='18' height='18' title='Inactivo'/></div>";
-                    }
-                    return result;
+				renderer : function(value, e) {
+					var result;
+					if (value == "activo") {
+						result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_tag_accept.png' align='center' width='18' height='18' title='Activo'/></div>";
+					} else if (value == 'inactivo') {
+						result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_tag_deny.png' align='center' width='18' height='18' title='Inactivo'/></div>";
+					}
+					return result;
 				}
 			},
 			type : 'TextField',
@@ -271,10 +271,10 @@ header("content-type:text/javascript; charset=UTF-8");
 			var rec = this.sm.getSelected();
 			var data = rec.data;
 			if (data.estado == 'inactivo') {
-				btnSwitchEstado.setIconClass('bok');
+				btnSwitchEstado.setIconClass('btag_accept');
 				btnSwitchEstado.setText('Activar');
 			} else {
-				btnSwitchEstado.setIconClass('bcancel');
+				btnSwitchEstado.setIconClass('btag_deny');
 				btnSwitchEstado.setText('Inactivar');
 			}
 			btnSwitchEstado.enable();
