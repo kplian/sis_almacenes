@@ -185,3 +185,9 @@ ALTER TABLE alm.titem_archivo
 ALTER TABLE alm.talmacen
   ADD COLUMN estado VARCHAR(15);
 /***********************************F-SCP-AAO-ALM-23-13/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-19-13/02/2013****************************************/
+
+ALTER TABLE alm.tmovimiento_tipo
+  ADD COLUMN tipo VARCHAR(25);
+/***********************************F-SCP-AAO-ALM-19-13/02/2013****************************************/

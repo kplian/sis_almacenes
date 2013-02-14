@@ -174,3 +174,12 @@ select pxp.f_insert_tprocedimiento ('SAL_ALM_SEL', 'Consulta de datos
 
 
 /***********************************F-DAT-RCM-ALM-0-15/01/2013*****************************************/
+
+/***********************************I-DAT-AAO-ALM-19-13/02/2013*****************************************/
+select pxp.f_insert_tgui ('Tipos de Movimientos', 'Tipos de Movimientos', 'MOVTIP', 'si', 1, 'sis_almacenes/vista/movimientoTipo/MovimientoTipo.php', 3, '', 'MovimientoTipo', 'ALM');
+select pxp.f_insert_testructura_gui ('MOVTIP', 'ALMAIN');
+
+select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','ingreso');
+select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','salida');
+select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','salida por transferencia');
+/***********************************F-DAT-AAO-ALM-19-13/02/2013*****************************************/
