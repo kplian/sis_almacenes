@@ -1,4 +1,6 @@
-﻿CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_sel (
+--------------- SQL ---------------
+
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_sel (
   p_administrador integer,
   p_id_usuario integer,
   p_tabla varchar,
@@ -25,79 +27,72 @@ BEGIN
   v_parametros = pxp.f_get_record(p_tabla);
   
   /*********************************    
-     #TRANSACCION:  'SAL_MOV_DET_SEL'
+     #TRANSACCION:  'SAL_MOVDET_SEL'
      #DESCRIPCION:  Consulta de datos
-     #AUTOR:        Gonzalo Sarmiento    
-     #FECHA:        02-10-2012
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        19-02-2013
     ***********************************/ 
     
-  if(p_transaccion='SAL_MOV_DET_SEL') then
+	if(p_transaccion='SAL_MOVDET_SEL') then
   	begin
-    ---sentencia de la consulta----
-     v_consulta:='select 
-     				movdet.id_movimiento_det,
-                    movdet.id_movimiento,
-                    movdet.id_item,                    
-                    item.nombre as desc_item,
-                    movdet.cantidad,
-                    movdet.costo_unitario,
-                    movdet.fecha_caducidad,
-                    movdet.id_usuario_reg,
-                    movdet.fecha_reg,
-                    movdet.id_usuario_mod,
-                    movdet.fecha_mod
-                    from alm.tmovimiento_det movdet,alm.titem item
-                    where movdet.id_item = item.id_item and ';          
-	-----DEFINICION DE LA RESPUESTA-----
-     v_consulta:=v_consulta||v_parametros.filtro;
-            
-            if (pxp.f_existe_parametro(p_tabla,'id_movimiento')) then         
-                v_consulta:= v_consulta || ' and movdet.id_movimiento='||v_parametros.id_movimiento;
-            end if;
-            v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+    	v_consulta:='
+        	select 
+     			movdet.id_movimiento_det,
+                movdet.id_movimiento,
+                movdet.id_item,                    
+                item.nombre as nombre_item,
+                movdet.cantidad as cantidad_item,
+                movdet.costo_unitario,
+                movdet.fecha_caducidad,
+                usu1.cuenta as usr_reg,
+                movdet.fecha_reg,
+                usu2.cuenta as usr_mod,
+                movdet.fecha_mod
+            from alm.tmovimiento_det movdet
+            inner join alm.titem item on item.id_item = movdet.id_item
+            inner join segu.tusuario usu1 on usu1.id_usuario = movdet.id_usuario_reg
+            left join segu.tusuario usu2 on usu2.id_usuario = movdet.id_usuario_mod
+            where movdet.estado_reg = ''activo'' 
+            	and movdet.id_movimiento = ' || v_parametros.id_movimiento || ' and ';
 
+		v_consulta:=v_consulta||v_parametros.filtro;
+        v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 		
-			raise notice '%',v_consulta;
-            --Devuelve la respuesta
-            return v_consulta; 
+        return v_consulta; 
     end;
+    
   	/*********************************    
-     #TRANSACCION:  'SAL_MOV_DET_CONT'
-     #DESCRIPCION:   Conteo de registros
-     #AUTOR:        Gonzalo Sarmiento
-     #FECHA:        02-10-2012
+     #TRANSACCION:  'SAL_MOVDET_CONT'
+     #DESCRIPCION:  Conteo de registros
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        19-02-2013
     ***********************************/
 
-    elsif(p_transaccion='SAL_MOV_DET_CONT')then
+    elsif(p_transaccion='SAL_MOVDET_CONT')then
 
-        begin
-            --Sentencia de la consulta de conteo de registros
-            v_consulta:='select count(movdet.id_movimiento_det)
-                        from alm.tmovimiento_det movdet, alm.tmovimiento mov
-                        where movdet.id_movimiento = mov.id_movimiento and  ';
+    begin
+        v_consulta:= '
+            select count(movdet.id_movimiento_det)
+            from alm.tmovimiento_det movdet
+            inner join alm.titem item on item.id_item = movdet.id_item
+            inner join segu.tusuario usu1 on usu1.id_usuario = movdet.id_usuario_reg
+            left join segu.tusuario usu2 on usu2.id_usuario = movdet.id_usuario_mod
+            where movdet.estado_reg = ''activo'' 
+                and movdet.id_movimiento = ' || v_parametros.id_movimiento || ' and ';
             
-            --Definicion de la respuesta            
-            v_consulta:=v_consulta||v_parametros.filtro;
-            if (pxp.f_existe_parametro(p_tabla,'id_movimiento')) then         
-                v_consulta:= v_consulta || ' and movdet.id_movimiento='||v_parametros.id_movimiento;
-            end if;
-            --Devuelve la respuesta
-            return v_consulta;
-
-        end;
-                    
-    else
-                         
+        v_consulta:=v_consulta||v_parametros.filtro;
+        return v_consulta;
+    end;
+    else             
         raise exception 'Transaccion inexistente';
-                             
     end if;
   
 EXCEPTION
 	WHEN OTHERS THEN
             v_respuesta='';
-            v_respuesta = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
-            v_respuesta = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);
-            v_respuesta = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje',SQLERRM);
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'codigo_error',SQLSTATE);
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'procedimientos',v_nombre_funcion);
             raise exception '%',v_respuesta;
 END;
 $body$

@@ -493,7 +493,13 @@ header("content-type: text/javascript; charset=UTF-8");
 		bdel : true,
 		bsave : false,
 		fwidth : 420,
-		fheight : 450
+		fheight : 450,
+		south : {
+			url : '../../../sis_almacenes/vista/movimientoDetalle/MovimientoDetalle.php',
+			title : 'Detalle de Movimiento',
+			height : '50%',
+			cls : 'MovimientoDetalle'
+		}
 	})
 </script>
 
