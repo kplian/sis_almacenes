@@ -197,3 +197,8 @@ VALUES (1, 1, E'2013-02-14 09:28:58.325', E'2013-02-14 09:32:45.920', E'activo',
 INSERT INTO alm.tmetodo_val ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_metodo_val", "codigo", "nombre", "descripcion")
 VALUES (1, NULL, E'2013-02-14 10:21:20.660', E'2013-02-14 10:21:20.660', E'activo', 4, E'PP', E'Promedio Ponderado', E'');
 /***********************************F-DAT-AAO-ALM-24-13/02/2013*****************************************/
+
+/***********************************I-DAT-AAO-ALM-20-13/02/2013*****************************************/
+select pxp.f_insert_tgui ('Movimientos', 'Movimientos', 'MOV', 'si', 1, 'sis_almacenes/vista/movimiento/Movimiento.php', 3, '', 'Movimiento', 'ALM');
+select pxp.f_insert_testructura_gui ('MOV', 'ALMOVI');
+/***********************************F-DAT-AAO-ALM-20-13/02/2013*****************************************/

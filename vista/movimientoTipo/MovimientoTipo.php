@@ -74,7 +74,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				gdisplayField : 'tipo',
 				gwidth : 100,
 				baseParams : {
-					cod_subsistema : 'GEM',
+					cod_subsistema : 'ALM',
 					catalogo_tipo : 'tmovimiento_tipo_tipo'
 				}
 			},

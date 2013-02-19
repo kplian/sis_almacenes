@@ -206,3 +206,8 @@ WITHOUT OIDS;
 ALTER TABLE alm.talmacen_stock
   ADD COLUMN id_metodo_val INTEGER;
 /***********************************F-SCP-AAO-ALM-24-14/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-20-15/02/2013****************************************/
+ALTER TABLE alm.tmovimiento
+  RENAME COLUMN numero_mov TO codigo;
+/***********************************F-SCP-AAO-ALM-20-15/02/2013****************************************/

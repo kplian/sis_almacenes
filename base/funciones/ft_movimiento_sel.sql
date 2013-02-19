@@ -1,4 +1,6 @@
-﻿CREATE OR REPLACE FUNCTION alm.ft_movimiento_sel (
+--------------- SQL ---------------
+
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_sel (
   p_administrador integer,
   p_id_usuario integer,
   p_tabla varchar,
@@ -6,7 +8,7 @@
 )
 RETURNS varchar AS
 $body$
-/**************************************************************************
+/***************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_movimiento_sel
  DESCRIPCION:    Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'alm.tmovimiento'
@@ -31,37 +33,51 @@ BEGIN
      #FECHA:        02-12-2012
     ***********************************/
   
-  if(p_transaccion='SAL_MOV_SEL')then
+	if(p_transaccion='SAL_MOV_SEL')then
   	begin
-    	v_consulta:='select
-        	mov.id_movimiento,
-            mov.id_movimiento_tipo,
-            mov.id_almacen,
-            almo.nombre as nombre_origen,
-            mov.id_funcionario,
-            fun.desc_funcionario1,
-            mov.id_proveedor,
-            pro.desc_proveedor,
-            mov.id_almacen_dest,
-			almd.nombre as nombre_destino,
-            mov.fecha_mov,
-            mov.numero_mov,
-            mov.descripcion,
-            mov.observaciones,
-            mov.id_usuario_reg,
-            mov.fecha_reg,
-            mov.id_usuario_mod,
-            mov.fecha_mod,
-            mov.estado_mov
-            from alm.tmovimiento_tipo movtipo
-            INNER JOIN alm.tmovimiento mov on mov.id_movimiento_tipo = movtipo.id_movimiento_tipo
-            INNER JOIN alm.talmacen almo on almo.id_almacen= mov.id_almacen
-            LEFT JOIN alm.talmacen almd on almd.id_almacen= mov.id_almacen_dest
-			LEFT JOIN orga.vfuncionario fun on fun.id_funcionario=mov.id_funcionario
-			LEFT JOIN param.vproveedor pro on pro.id_proveedor=mov.id_proveedor
-            where movtipo.codigo='''||v_parametros.codigo||''' and ';
+    	v_consulta:='
+        	SELECT
+            	mov.id_movimiento,
+            	mov.id_movimiento_tipo,
+                movtip.nombre as nombre_movimiento_tipo,
+            	mov.id_funcionario,
+                person_fun.nombre_completo1::varchar as nombre_funcionario,
+            	mov.id_proveedor,
+                (case 
+                	when mov.id_proveedor is not null and pro.id_institucion is not null then
+                    	inst.nombre 
+                    when mov.id_proveedor is not null and pro.id_persona is not null then 
+                    	person.nombre_completo1
+            		else 
+                    	''''
+                end)::varchar as nombre_proveedor,
+                mov.id_almacen,
+                almo.nombre as nombre_almacen,
+            	mov.id_almacen_dest,
+                almd.nombre as nombre_almacen_destino,
+            	mov.fecha_mov,
+            	mov.codigo,
+            	mov.descripcion,
+            	mov.observaciones,
+            	mov.estado_mov,
+            	usu1.cuenta as usr_reg,
+            	mov.fecha_reg,
+            	usu2.cuenta as usr_mod,
+            	mov.fecha_mod
+            FROM alm.tmovimiento mov
+            INNER JOIN alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
+            LEFT JOIN orga.tfuncionario fun on fun.id_funcionario = mov.id_funcionario
+            LEFT JOIN segu.vpersona person_fun on person_fun.id_persona = fun.id_persona
+            LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
+            LEFT JOIN segu.vpersona person on person.id_persona = pro.id_persona
+            LEFT JOIN param.tinstitucion inst on inst.id_institucion = pro.id_institucion
+            INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
+            LEFT JOIN alm.talmacen almd on almd.id_almacen = mov.id_almacen_dest
+            INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
+            LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
+			WHERE mov.estado_reg = ''activo'' and ';
     	v_consulta:=v_consulta||v_parametros.filtro;
-        v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;        	
+        v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;
         return v_consulta;
     end;
   /*********************************   
@@ -72,10 +88,20 @@ BEGIN
     ***********************************/
   elsif(p_transaccion='SAL_MOV_CONT')then
     begin
-    	v_consulta:='select count(mov.id_movimiento)
-        			from alm.tmovimiento mov,alm.tmovimiento_tipo movtipo
-                    where movtipo.codigo= ''||v_parametros.codigo||'' and 
-                          movtipo.id_movimiento_tipo=mov.id_movimiento_tipo and ';
+    	v_consulta:='
+        	select count(mov.id_movimiento)
+        	FROM alm.tmovimiento mov
+            INNER JOIN alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
+            LEFT JOIN orga.tfuncionario fun on fun.id_funcionario = mov.id_funcionario
+            LEFT JOIN segu.vpersona person_fun on person_fun.id_persona = fun.id_persona
+            LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
+            LEFT JOIN segu.vpersona person on person.id_persona = pro.id_persona
+            LEFT JOIN param.tinstitucion inst on inst.id_institucion = pro.id_institucion
+            INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
+            LEFT JOIN alm.talmacen almd on almd.id_almacen = mov.id_almacen_dest
+            INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
+            LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
+			WHERE mov.estado_reg = ''activo'' and ';
         v_consulta:= v_consulta||v_parametros.filtro;
         return v_consulta;
      end;

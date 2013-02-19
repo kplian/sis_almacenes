@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.ft_movimiento_ime (
   p_administrador integer,
   p_id_usuario integer,
@@ -40,27 +42,35 @@ BEGIN
      #AUTOR:        Gonzalo Sarmiento   
      #FECHA:        03-10-2012
     ***********************************/
-  if(p_transaccion='SAL_MOV_INS')then
-  	begin    	
-		v_id_movimiento_tipo=(select id_movimiento_tipo from alm.tmovimiento_tipo 
-  						where codigo=v_parametros.codigo);    	
-		
-        v_num_mov = alm.f_get_num_mov(v_parametros.id_almacen,v_id_movimiento_tipo,v_parametros.fecha_mov);
-
-    	insert into alm.tmovimiento
-         			 (id_movimiento_tipo, id_almacen,
-                     id_funcionario, id_proveedor,
-                     id_almacen_dest, fecha_mov,
-                     numero_mov, descripcion,
-                     observaciones, id_usuario_reg,
-                     fecha_reg, estado_reg, estado_mov)
-                     values(v_id_movimiento_tipo,v_parametros.id_almacen,
-                     v_parametros.id_funcionario, v_parametros.id_proveedor,
-                     v_parametros.id_almacen_dest,v_parametros.fecha_mov,
-                     v_num_mov, v_parametros.descripcion,
-                     v_parametros.observaciones, p_id_usuario,
-                     now(),'activo', 'borrador')
-                     RETURNING id_movimiento into v_id_movimiento;
+	if(p_transaccion='SAL_MOV_INS') then
+	begin
+		insert into alm.tmovimiento (
+        	id_usuario_reg,
+            fecha_reg, 
+            estado_reg,
+            id_movimiento_tipo, 
+            id_almacen,
+            id_funcionario, 
+            id_proveedor,
+            id_almacen_dest, 
+            fecha_mov,
+            descripcion,
+            observaciones,
+            estado_mov
+        ) values (
+        	p_id_usuario,
+            now(),
+            'activo',
+        	v_parametros.id_movimiento_tipo,
+            v_parametros.id_almacen,
+            v_parametros.id_funcionario, 
+            v_parametros.id_proveedor,
+            v_parametros.id_almacen_dest,
+            v_parametros.fecha_mov,
+            v_parametros.descripcion,
+            v_parametros.observaciones,
+            'borrador'
+        ) RETURNING id_movimiento into v_id_movimiento;
 
         v_respuesta =pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento almacenado correctamente');
         v_respuesta =pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_id_movimiento::varchar);
@@ -74,19 +84,19 @@ BEGIN
      #FECHA:        03-10-2012
     ***********************************/    	 
         		
-  elseif(p_transaccion='SAL_MOV_MOD')then
+	elseif(p_transaccion='SAL_MOV_MOD')then
   	begin
     	update alm.tmovimiento set       			 
-        			 id_almacen=v_parametros.id_almacen,
-                     id_funcionario=v_parametros.id_funcionario,
-                     id_proveedor=v_parametros.id_proveedor,
-                     id_almacen_dest=v_parametros.id_almacen_dest,
-                     fecha_mov=v_parametros.fecha_mov,
-                     numero_mov=v_parametros.numero_mov,
-                     descripcion=v_parametros.descripcion,
-                     observaciones=v_parametros.observaciones,
-                     id_usuario_mod=p_id_usuario,
-                     fecha_mod=now()
+        	id_usuario_mod = p_id_usuario,
+            fecha_mod = now(),
+            id_movimiento_tipo = v_parametros.id_movimiento_tipo,
+        	id_almacen = v_parametros.id_almacen,
+            id_funcionario = v_parametros.id_funcionario,
+            id_proveedor = v_parametros.id_proveedor,
+            id_almacen_dest = v_parametros.id_almacen_dest,
+            fecha_mov = v_parametros.fecha_mov,
+            descripcion = v_parametros.descripcion,
+            observaciones = v_parametros.observaciones
         where id_movimiento = v_parametros.id_movimiento;
         
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento modificado con exito');
@@ -109,6 +119,8 @@ BEGIN
 
         return v_respuesta;
     end;
+    
+    --TODO: para otro issue revisar esta funcion
   elseif(p_transaccion='SAL_MOV_FIN')then
   	begin
 
