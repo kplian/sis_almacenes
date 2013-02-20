@@ -21,6 +21,9 @@ header("content-type: text/javascript; charset=UTF-8");
 					limit : 50
 				}
 			});
+
+			this.getComponente('tipo').on('select', this.onTipoSelect, this);
+			this.getComponente('id_movimiento_tipo').on('select', this.onMovimientoTipoSelect, this);
 		},
 		Atributos : [{
 			config : {
@@ -30,6 +33,26 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			type : 'Field',
 			form : true
+		}, {
+			config : {
+				name : 'tipo',
+				fieldLabel : 'Tipo',
+				allowBlank : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'local',
+				store : new Ext.data.ArrayStore({
+					fields : ['codigo', 'nombre'],
+					data : [['ingreso', 'Ingreso'], ['salida', 'Salida']]
+				}),
+				anchor : '100%',
+				valueField : 'codigo',
+				displayField : 'nombre'
+			},
+			type : 'ComboBox',
+			id_grupo : 1,
+			form : true,
+			grid : false
 		}, {
 			config : {
 				name : 'id_movimiento_tipo',
@@ -145,6 +168,7 @@ header("content-type: text/javascript; charset=UTF-8");
 						par_filtro : 'desc_proveedor'
 					}
 				}),
+				hidden : true,
 				valueField : 'id_proveedor',
 				displayField : 'desc_proveedor',
 				gdisplayField : 'nombre_proveedor',
@@ -156,7 +180,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				mode : 'remote',
 				pageSize : 10,
 				queryDelay : 1000,
-				anchor : '100%',
+				anchor : '99%',
 				enableMultiSelect : true,
 				renderer : function(value, p, record) {
 					return String.format('{0}', record.data['nombre_proveedor']);
@@ -238,10 +262,11 @@ header("content-type: text/javascript; charset=UTF-8");
 						par_filtro : 'alm.nombre'
 					}
 				}),
+				hidden : true,
 				valueField : 'id_almacen',
 				displayField : 'nombre',
 				gdisplayField : 'nombre_almacen_destino',
-				hiddenName : 'id_almacen',
+				hiddenName : 'id_almacen_dest',
 				forceSelection : true,
 				typeAhead : false,
 				triggerAction : 'all',
@@ -249,7 +274,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				mode : 'remote',
 				pageSize : 10,
 				queryDelay : 1000,
-				anchor : '100%',
+				anchor : '99%',
 				gwidth : 100,
 				minChars : 2,
 				renderer : function(value, p, record) {
@@ -493,12 +518,33 @@ header("content-type: text/javascript; charset=UTF-8");
 		bdel : true,
 		bsave : false,
 		fwidth : 420,
-		fheight : 450,
+		fheight : 500,
 		south : {
 			url : '../../../sis_almacenes/vista/movimientoDetalle/MovimientoDetalle.php',
 			title : 'Detalle de Movimiento',
 			height : '50%',
 			cls : 'MovimientoDetalle'
+		},
+		onTipoSelect : function(e, component, index) {
+			if (e.value.indexOf('ingreso') != -1) {
+				this.getComponente('id_proveedor').setVisible(true);
+			} else {
+				this.getComponente('id_proveedor').setVisible(false);
+				
+			}
+			this.getComponente('id_almacen_dest').setVisible(false);
+			this.getComponente('id_movimiento_tipo').reset();
+			this.getComponente('id_movimiento_tipo').lastQuery = null;
+			this.getComponente('id_movimiento_tipo').store.baseParams.tipo = e.value;
+		},
+		onMovimientoTipoSelect : function(e, component, index) {
+			if (this.getComponente('tipo').value.indexOf('salida') != -1 && component.data.nombre.toLowerCase().indexOf('transferencia') != -1) {
+			    this.getComponente('id_almacen_dest').reset();
+			    this.getComponente('id_almacen_dest').lastQuery = null;
+				this.getComponente('id_almacen_dest').setVisible(true);
+			} else {
+				this.getComponente('id_almacen_dest').setVisible(false);
+			}
 		}
 	})
 </script>

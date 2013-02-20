@@ -16,6 +16,9 @@ class ACTMovimientoTipo extends ACTbase {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODMovimientoTipo', 'listarMovimientoTipo');
         } else {
+            if($this->objParam->getParametro('tipo') != null && $this->objParam->getParametro('tipo') != '') {
+                $this->objParam->addFiltro(" movtip.tipo like ''%".$this->objParam->getParametro('tipo')."%''");
+            }
             $this->objFunc = $this->create('MODMovimientoTipo');
             $this->res = $this->objFunc->listarMovimientoTipo();
         }

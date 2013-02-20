@@ -39,13 +39,6 @@ VALUES (1, NULL, E'2012-12-29 05:30:30.025', E'2012-12-29 05:30:30.025', E'activ
 
 
 -- Movimiento_tipo
-
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, 1, E'2013-02-19 19:01:02.292', E'2013-02-19 19:03:21.553', E'activo', 1, E'SALTRNSF', E'Salida por Transferencia', E'salida');
-
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-19 19:03:55.823', E'2013-02-19 19:03:55.823', E'activo', 2, E'INTRNSF', E'Ingreso por transferencia', E'ingreso');
-
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
 VALUES (1, NULL, E'2013-02-19 19:13:12.927', E'2013-02-19 19:13:12.927', E'activo', 3, E'INCOMP', E'Ingreso por Compra', E'ingreso');
 

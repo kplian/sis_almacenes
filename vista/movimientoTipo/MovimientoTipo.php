@@ -196,6 +196,17 @@ header("content-type:text/javascript; charset=UTF-8");
 		},
 		bdel : true,
 		fwidth : 420,
-		fheight : 230
+		fheight : 230,
+		preparaMenu : function(n) {
+			var tb = Phx.vista.MovimientoTipo.superclass.preparaMenu.call(this);
+			var data = this.getSelectedData();
+			console.log(data);
+			if (data.nombre.toLowerCase().indexOf('transferencia') != -1) {
+			    console.log('entra');
+			    this.getBoton('edit').setDisabled(true);
+                this.getBoton('del').setDisabled(true);
+			}
+			return tb;
+		}
 	}); 
 </script>
