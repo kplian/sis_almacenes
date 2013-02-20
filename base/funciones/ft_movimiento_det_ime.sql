@@ -23,6 +23,12 @@ DECLARE
   v_parametros  		record;
   v_respuesta 			varchar;
   v_id_movimiento_det	integer;
+  v_tipo_movimiento		varchar;
+  v_sum_ingresos		numeric;
+  v_sum_salidas			numeric;
+  v_existencias			numeric;
+  v_id_almacen			integer;
+  
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_det_ime';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -34,8 +40,23 @@ BEGIN
     ***********************************/
 	if(p_transaccion='SAL_MOVDET_INS') then
     begin
-    	insert into alm.tmovimiento_det(
-        	id_usuario_reg,
+    	--revisar q tipo de movimiento es: ingreso o salida
+    	select movtip.tipo, mov.id_almacen into v_tipo_movimiento, v_id_almacen
+        from alm.tmovimiento_tipo movtip
+        inner join alm.tmovimiento mov on mov.id_movimiento_tipo = movtip.id_movimiento_tipo
+        where mov.id_movimiento = v_parametros.id_movimiento;
+        
+        --si es salida, revisas las existencias, ingresos - salidas
+        if (v_tipo_movimiento like '%salida%') then
+        	v_existencias = alm.f_get_existencias_item(v_parametros.id_item, v_id_almacen);
+            
+            if (v_existencias < v_parametros.cantidad_item) then
+            	raise exception '%', 'No existen suficientes unidades de este item en el almacen seleccionado';
+            end if;
+        end if;
+        
+		insert into alm.tmovimiento_det(
+            id_usuario_reg,
             fecha_reg,
             estado_reg,
             id_movimiento,
@@ -43,8 +64,8 @@ BEGIN
             cantidad,
             costo_unitario,
             fecha_caducidad
-    	) VALUES (
-        	p_id_usuario,
+        ) VALUES (
+            p_id_usuario,
             now(),
             'activo',
             v_parametros.id_movimiento,
@@ -53,11 +74,11 @@ BEGIN
             v_parametros.costo_unitario,
             v_parametros.fecha_caducidad
         ) RETURNING id_movimiento_det into v_id_movimiento_det;
-  				
+              				
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Detalle de movimiento almacenado(a) con exito (id_movimiento_det'||v_id_movimiento_det||')');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_id_movimiento_det::varchar);
-
         return v_respuesta;
+		
     end;
     /*********************************    
      #TRANSACCION:  'SAL_MOVDET_MOD'

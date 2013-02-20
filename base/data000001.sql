@@ -181,7 +181,6 @@ select pxp.f_insert_testructura_gui ('MOVTIP', 'ALMAIN');
 
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','ingreso');
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','salida');
-select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','salida por transferencia');
 /***********************************F-DAT-AAO-ALM-19-13/02/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-24-13/02/2013*****************************************/

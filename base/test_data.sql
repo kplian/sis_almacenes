@@ -36,70 +36,42 @@ VALUES (1, NULL, '2012-11-13 11:38:14', '2012-11-13 11:38:14', 'activo', 5, 3, '
 INSERT INTO alm.titem ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_item", "id_clasificacion", "codigo", "nombre", "descripcion", "palabras_clave", "codigo_fabrica", "observaciones", "numero_serie")
 VALUES (1, NULL, E'2012-12-29 05:30:30.025', E'2012-12-29 05:30:30.025', E'activo', 7, 3, E'', E'Canon Ip1900', E'Impresora multicolor Canon IP 1900', E'IP1900', E'IP1900_s', E'color negro', E'asd579');
 
+
+
 -- Movimiento_tipo
-INSERT INTO alm.tmovimiento_tipo (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_tipo, codigo, nombre)
-VALUES (1, NULL, '2012-11-10 13:00:00', '2012-11-10 13:00:00', 'activo', 1, 'INGRESO', 'Ingreso de materiales a almacen');
 
-INSERT INTO alm.tmovimiento_tipo (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_tipo, codigo, nombre)
-VALUES (1, NULL, '2012-11-10 13:01:46', '2012-11-10 13:01:46', 'activo', 2, 'SALIDA', 'Salida de materiales');
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
+VALUES (1, 1, E'2013-02-19 19:01:02.292', E'2013-02-19 19:03:21.553', E'activo', 1, E'SALTRNSF', E'Salida por Transferencia', E'salida');
 
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
+VALUES (1, NULL, E'2013-02-19 19:03:55.823', E'2013-02-19 19:03:55.823', E'activo', 2, E'INTRNSF', E'Ingreso por transferencia', E'ingreso');
+
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
+VALUES (1, NULL, E'2013-02-19 19:13:12.927', E'2013-02-19 19:13:12.927', E'activo', 3, E'INCOMP', E'Ingreso por Compra', E'ingreso');
+
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
+VALUES (1, NULL, E'2013-02-19 19:13:26.057', E'2013-02-19 19:13:26.057', E'activo', 4, E'SALVENT', E'Salida por Venta', E'salida');
 
 -- Movimiento
-INSERT INTO alm.tmovimiento (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento, id_movimiento_tipo, id_almacen, id_funcionario, id_proveedor, id_almacen_dest, fecha_mov, codigo, descripcion, observaciones, estado_mov)
-VALUES (1, NULL, '2012-11-13 10:28:58', '2012-11-13 10:28:58', 'activo', 1, 1, 1, 1, 2, 1, '2012-11-13 12:00:00', 'ING001', 'Ingreso de Humidificados y cardiografos', NULL, 'borrador');
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
+VALUES (1, NULL, E'2013-02-19 19:16:25.017', E'2013-02-19 19:16:25.017', E'activo', 1, 3, 1, 4, 1, 1, E'2013-02-20 00:00:00', NULL, E'Alguna descripcion de la adquisición realizada', E'Ninguna', E'borrador');
 
-INSERT INTO alm.tmovimiento (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento, id_movimiento_tipo, id_almacen, id_funcionario, id_proveedor, id_almacen_dest, fecha_mov, codigo, descripcion, observaciones, estado_mov)
-VALUES (1, NULL, '2012-11-13 11:40:56', '2012-11-13 11:40:56', 'activo', 2, 1, 1, 1, 1, 1, '2012-11-13 11:44:02', 'ING002', 'Ingreso equipos de computacion', NULL, 'borrador');
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
+VALUES (1, NULL, E'2013-02-19 21:26:05.742', E'2013-02-19 21:26:05.742', E'activo', 2, 4, 2, 4, 1, NULL, E'2013-02-20 00:00:00', NULL, E'', E'', E'borrador');
 
-INSERT INTO alm.tmovimiento (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento, id_movimiento_tipo, id_almacen, id_funcionario, id_proveedor, id_almacen_dest, fecha_mov, codigo, descripcion, observaciones, estado_mov)
-VALUES (1, NULL, '2012-11-13 11:42:38', '2012-11-13 11:42:38', 'activo', 3, 1, 1, 1, 1, 2, '2012-11-13 11:47:16', 'ING003', 'Ingreso equipos de computacion', NULL, 'finalizado');
-
-INSERT INTO alm.tmovimiento (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento, id_movimiento_tipo, id_almacen, id_funcionario, id_proveedor, id_almacen_dest, fecha_mov, codigo, descripcion, observaciones, estado_mov)
-VALUES (1, NULL, '2012-11-13 11:51:08', '2012-11-13 11:51:08', 'activo', 4, 2, 1, 1, NULL, NULL, '2012-11-13 11:54:07', 'SAL001', 'Salida de equipos de computacion', NULL, 'finalizado');
-
-INSERT INTO alm.tmovimiento (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento, id_movimiento_tipo, id_almacen, id_funcionario, id_proveedor, id_almacen_dest, fecha_mov, codigo, descripcion, observaciones, estado_mov)
-VALUES (1, NULL, '2012-11-13 11:52:49', '2012-11-13 11:52:49', 'activo', 5, 2, 1, 1, NULL, NULL, '2012-11-13 11:55:34', 'SAL002', 'Salida de equipos medicos', NULL, 'borrador');
-
-INSERT INTO alm.tmovimiento (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento, id_movimiento_tipo, id_almacen, id_funcionario, id_proveedor, id_almacen_dest, fecha_mov, codigo, descripcion, observaciones, estado_mov)
-VALUES (1, NULL, '2012-11-13 11:40:56', '2012-11-13 11:40:56', 'activo', 6, 1, 1, 1, 1, 1, '2012-11-13 11:44:02', 'ING003', 'Ingreso equipos de red', NULL, 'borrador');
-
-INSERT INTO alm.tmovimiento (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento, id_movimiento_tipo, id_almacen, id_funcionario, id_proveedor, id_almacen_dest, fecha_mov, codigo, descripcion, observaciones, estado_mov)
-VALUES (1, NULL, '2012-11-13 11:52:49', '2012-11-13 11:52:49', 'activo', 7, 2, 1, 1, NULL, NULL, '2012-11-13 11:55:34', 'SAL003', 'Salida de equipo de red', NULL, 'borrador');
-
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
+VALUES (1, 1, E'2013-02-20 00:17:34.600', E'2013-02-20 00:19:41.139', E'activo', 3, 4, 1, 4, NULL, 2, E'2013-02-21 00:00:00', NULL, E'', E'', E'borrador');
 
 -- Movimiento_det
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:39:59', '2012-11-13 11:39:59', 'activo', 2, 1, 2, 5.000000, 20000.000000, NULL);
 
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 10:35:12', '2012-11-13 10:35:12', 'activo', 1, 1, 1, 10.000000, 2600.000000, NULL);
+INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "costo_unitario", "fecha_caducidad")
+VALUES (1, NULL, E'2013-02-19 19:33:25.293', E'2013-02-19 19:33:25.293', E'activo', 1, 1, 2, '12', '30', NULL);
 
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:46:00', '2012-11-13 11:46:00', 'activo', 3, 2, 3, 20.000000, 11000.000000, NULL);
+INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "costo_unitario", "fecha_caducidad")
+VALUES (1, NULL, E'2013-02-19 19:33:37.357', E'2013-02-19 19:33:37.357', E'activo', 2, 1, 3, '20', '15', NULL);
 
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:46:47', '2012-11-13 11:46:47', 'activo', 4, 2, 4, 4.000000, 3500.000000, NULL);
-
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:47:21', '2012-11-13 11:47:21', 'activo', 5, 3, 5, 10.000000, 21000.000000, NULL);
-
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:54:08', '2012-11-13 11:54:08', 'activo', 6, 4, 4, 2.000000, 3500.000000, NULL);
-
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:55:00', '2012-11-13 11:55:00', 'activo', 7, 4, 5, 1.000000, 21000.000000, NULL);
-
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:55:26', '2012-11-13 11:55:26', 'activo', 8, 5, 1, 4.000000, 2600.000000, NULL);
-
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:55:26', '2012-11-13 11:55:26', 'activo', 9, 5, 5, 1.000000, 20000.000000, NULL);
-
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:55:26', '2012-11-13 11:55:26', 'activo', 10, 6, 5, 2.000000, 20000.000000, NULL);
-
-INSERT INTO alm.tmovimiento_det (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_movimiento_det, id_movimiento, id_item, cantidad, costo_unitario, fecha_caducidad)
-VALUES (1, NULL, '2012-11-13 11:55:26', '2012-11-13 11:55:26', 'activo', 11, 7, 5, 1.000000, 21500.000000, NULL);
+INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "costo_unitario", "fecha_caducidad")
+VALUES (1, NULL, E'2013-02-20 00:19:52.213', E'2013-02-20 00:19:52.213', E'activo', 7, 3, 2, '12', '30', NULL);
 
 -- Actalizacion de Secuencias
 
