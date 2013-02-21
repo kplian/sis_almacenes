@@ -24,6 +24,14 @@ header("content-type: text/javascript; charset=UTF-8");
 
 			this.getComponente('tipo').on('select', this.onTipoSelect, this);
 			this.getComponente('id_movimiento_tipo').on('select', this.onMovimientoTipoSelect, this);
+
+			this.addButton('btnFinalizar', {
+				text : 'Finalizar',
+				iconCls : 'bchecklist',
+				disabled : true,
+				handler : this.onBtnFinalizar,
+				tooltip : '<b>Finalizar Movimiento</b>'
+			});
 		},
 		Atributos : [{
 			config : {
@@ -54,6 +62,23 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : true,
 			grid : false
 		}, {
+            config : {
+                name : 'estado_mov',
+                fieldLabel : 'Estado',
+                allowBlank : false,
+                anchor : '100%',
+                gwidth : 100,
+                maxLength : 10
+            },
+            type : 'TextField',
+            filters : {
+                pfiltro : 'mov.estado_mov',
+                type : 'string'
+            },
+            id_grupo : 1,
+            grid : true,
+            form : false
+        }, {
 			config : {
 				name : 'id_movimiento_tipo',
 				fieldLabel : 'Movimiento Tipo',
@@ -361,23 +386,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : true
 		}, {
 			config : {
-				name : 'estado_mov',
-				fieldLabel : 'Estado',
-				allowBlank : false,
-				anchor : '100%',
-				gwidth : 100,
-				maxLength : 10
-			},
-			type : 'TextField',
-			filters : {
-				pfiltro : 'mov.estado_mov',
-				type : 'string'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : false
-		}, {
-			config : {
 				name : 'usr_reg',
 				fieldLabel : 'Usuario reg.',
 				anchor : '80%',
@@ -451,6 +459,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'id_movimiento',
 			type : 'numeric'
 		}, {
+            name : 'tipo',
+            type : 'string'
+        }, {
 			name : 'id_movimiento_tipo',
 			type : 'numeric'
 		}, {
@@ -530,7 +541,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('id_proveedor').setVisible(true);
 			} else {
 				this.getComponente('id_proveedor').setVisible(false);
-				
+
 			}
 			this.getComponente('id_almacen_dest').setVisible(false);
 			this.getComponente('id_movimiento_tipo').reset();
@@ -539,12 +550,49 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		onMovimientoTipoSelect : function(e, component, index) {
 			if (this.getComponente('tipo').value.indexOf('salida') != -1 && component.data.nombre.toLowerCase().indexOf('transferencia') != -1) {
-			    this.getComponente('id_almacen_dest').reset();
-			    this.getComponente('id_almacen_dest').lastQuery = null;
+				this.getComponente('id_almacen_dest').reset();
+				this.getComponente('id_almacen_dest').lastQuery = null;
 				this.getComponente('id_almacen_dest').setVisible(true);
 			} else {
 				this.getComponente('id_almacen_dest').setVisible(false);
 			}
+		},
+		onBtnFinalizar : function() {
+			var rec = this.sm.getSelected();
+			var data = rec.data;
+			var global = this;
+			Ext.Msg.confirm('Confirmación', '¿Está seguro de Finalizar este movimiento?', function(btn) {
+				if (btn == "yes") {
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Movimiento/finalizarMovimiento',
+						params : {
+							'id_movimiento' : data.id_movimiento,
+							'id_almacen' : data.id_almacen,
+							'fecha_mov' : data.fecha_mov
+						},
+						success : global.successSave,
+						failure : global.conexionFailure,
+						timeout : global.timeout,
+						scope : global
+					});
+				}
+			});
+		},
+		preparaMenu : function(n) {
+			var tb = Phx.vista.Movimiento.superclass.preparaMenu.call(this);
+			var data = this.getSelectedData();
+			console.lo
+			if (data.estado_mov == 'finalizado') {
+			    this.getBoton('btnFinalizar').setDisabled(true);
+			} else {
+			    this.getBoton('btnFinalizar').setDisabled(false);
+			}
+			return tb;
+		},
+		liberaMenu : function() {
+			var tb = Phx.vista.Movimiento.superclass.liberaMenu.call(this);
+			this.getBoton('btnFinalizar').setDisabled(true);
+			return tb;
 		}
 	})
 </script>

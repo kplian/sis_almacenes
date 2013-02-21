@@ -10,12 +10,11 @@ VALUES (1, NULL, '2012-11-13 10:37:30', '2012-11-13 10:37:30', 'activo', 2, 1, '
 
 
 -- Almacen
-INSERT INTO alm.talmacen (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_almacen, codigo, nombre, localizacion)
-VALUES (1, NULL, '2012-11-13 09:16:48', '2012-11-13 09:16:48', 'activo', 1, 'ALM01', 'Almacen Cercado', NULL);
+INSERT INTO alm.talmacen ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_almacen", "codigo", "nombre", "localizacion", "estado")
+VALUES (1, 1, E'2012-11-13 09:16:48', E'2013-02-20 20:18:50.233', E'activo', 1, E'ALM01', E'Almacen Cercado', NULL, E'activo');
 
-INSERT INTO alm.talmacen (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_almacen, codigo, nombre, localizacion)
-VALUES (1, NULL, '2012-11-13 10:20:06', '2012-11-13 10:20:06', 'activo', 2, 'ALM02', 'Almacen Aduana Zofraco', NULL);
-
+INSERT INTO alm.talmacen ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_almacen", "codigo", "nombre", "localizacion", "estado")
+VALUES (1, 1, E'2012-11-13 10:20:06', E'2013-02-20 20:19:12.300', E'activo', 2, E'ALM02', E'Almacen Aduana Zofraco', NULL, E'inactivo');
 
 -- Item
 INSERT INTO alm.titem (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_item, id_clasificacion, codigo, nombre, descripcion, palabras_clave, codigo_fabrica, observaciones, numero_serie)

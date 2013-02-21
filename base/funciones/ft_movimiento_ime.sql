@@ -30,6 +30,7 @@ DECLARE
   v_consulta					varchar;
   v_detalle						record;
   v_num_mov						varchar;
+  v_estado_almacen				varchar;
 
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
@@ -120,19 +121,32 @@ BEGIN
         return v_respuesta;
     end;
     
-    --TODO: para otro issue revisar esta funcion
-  elseif(p_transaccion='SAL_MOV_FIN')then
+	elseif(p_transaccion='SAL_MOVFIN_MOD')then
   	begin
-
-        update alm.tmovimiento set
-        estado_mov='finalizado'
-        where id_movimiento=v_parametros.id_movimiento;
+		
+    	--verificar que el almacen esté activo.
+        select alma.estado into v_estado_almacen
+        from alm.talmacen alma
+        where alma.id_almacen = v_parametros.id_almacen;
         
-    	if(v_parametros.operacion='finalizarTransferencia')then
+        if (v_estado_almacen is null or v_estado_almacen = 'inactivo') then
+        	raise exception '%', 'El almacen seleccionado para este movimiento no se encuentra activo';
+        end if;
+        
+    	--TODO: revisar si el periodo esta abierto.
+        
+        
+		update alm.tmovimiento set
+        	estado_mov = 'finalizado'
+        where id_movimiento = v_parametros.id_movimiento;
+        
+        --TODO: Pendiente para el issue de transferencia
+        /*
+    	if(v_parametros.operacion = 'finalizarTransferencia')then
         	begin
             	select * into v_transferencia from alm.tmovimiento where id_movimiento=v_parametros.id_movimiento;
                 v_id_movimiento_tipo_ingreso=(select id_movimiento_tipo from alm.tmovimiento_tipo 
-  						where codigo='INGRESO');                        
+  						where codigo='INGRESO');
                 
                 v_id_movimiento_tipo_salida=(select id_movimiento_tipo from alm.tmovimiento_tipo 
   						where codigo='SALIDA');
@@ -201,6 +215,7 @@ BEGIN
            		END LOOP;
         	end;
         end if;
+        */
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento finalizado');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
         return v_respuesta;	
