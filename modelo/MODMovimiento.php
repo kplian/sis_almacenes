@@ -120,6 +120,19 @@ class MODMovimiento extends MODbase {
 
         return $this->respuesta;
     }
+    
+    function cancelarMovimiento() {
+        $this->procedimiento = 'alm.ft_movimiento_ime';
+        $this->transaccion = 'SAL_MOVCNL_MOD';
+        $this->tipo_procedimiento = 'IME';
+
+        $this->setParametro('id_movimiento', 'id_movimiento', 'integer');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
 
 }
 ?>

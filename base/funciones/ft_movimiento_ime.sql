@@ -29,8 +29,9 @@ DECLARE
   v_transferencia				record;
   v_consulta					varchar;
   v_detalle						record;
-  v_num_mov						varchar;
+  v_contador					numeric;
   v_estado_almacen				varchar;
+  v_estado_mov					varchar;
 
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
@@ -87,6 +88,15 @@ BEGIN
         		
 	elseif(p_transaccion='SAL_MOV_MOD')then
   	begin
+    	
+    	select mov.estado_mov into v_estado_mov
+        from alm.tmovimiento mov
+        where mov.id_movimiento = v_parametros.id_movimiento;
+        
+        if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
+        	raise exception '%', 'El movimiento actual no puede ser modificado';
+        end if;
+        
     	update alm.tmovimiento set       			 
         	id_usuario_mod = p_id_usuario,
             fecha_mod = now(),
@@ -112,6 +122,14 @@ BEGIN
     ***********************************/
   elseif(p_transaccion='SAL_MOV_ELI')then
   	begin
+    	select mov.estado_mov into v_estado_mov
+        from alm.tmovimiento mov
+        where mov.id_movimiento = v_parametros.id_movimiento;
+        
+        if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
+        	raise exception '%', 'El movimiento actual no puede ser eliminado';
+        end if;
+        
     	delete from alm.tmovimiento
         where id_movimiento=v_parametros.id_movimiento;
 
@@ -124,6 +142,16 @@ BEGIN
 	elseif(p_transaccion='SAL_MOVFIN_MOD')then
   	begin
 		
+    	--verificar que el movimiento tenga al menos un movimiento_detalle registrado.
+    	select count(movdet.id_movimiento_det) into v_contador
+        from alm.tmovimiento_det movdet
+        where movdet.estado_reg = 'activo' 
+        	and movdet.id_movimiento = v_parametros.id_movimiento;
+        
+        if (v_contador <= 0) then
+        	raise exception '%', 'El movimiento seleccionado debe tener al menos un item registrado en su detalle';
+        end if;
+        
     	--verificar que el almacen esté activo.
         select alma.estado into v_estado_almacen
         from alm.talmacen alma
@@ -219,6 +247,23 @@ BEGIN
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento finalizado');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
         return v_respuesta;	
+    end;
+	/*********************************   
+     #TRANSACCION:  'SAL_MOVCNL_MOD'
+     #DESCRIPCION:  Cancelacion de un movimiento
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        20-02-2013
+    ***********************************/
+	elseif (p_transaccion='SAL_MOVCNL_MOD') then
+  	begin
+    	update alm.tmovimiento set
+        	estado_mov = 'cancelado'
+        where id_movimiento = v_parametros.id_movimiento;
+
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento cancelado');
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
+
+        return v_respuesta;
     end;
   else
   	 raise exception 'Transaccion inexistente: %',p_transaccion;

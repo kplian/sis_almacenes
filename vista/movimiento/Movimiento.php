@@ -32,6 +32,14 @@ header("content-type: text/javascript; charset=UTF-8");
 				handler : this.onBtnFinalizar,
 				tooltip : '<b>Finalizar Movimiento</b>'
 			});
+
+			this.addButton('btnCancelar', {
+				text : 'Cancelar',
+				iconCls : 'bchecklist',
+				disabled : true,
+				handler : this.onBtnCancelar,
+				tooltip : '<b>Cancelar Movimiento</b>'
+			});
 		},
 		Atributos : [{
 			config : {
@@ -62,23 +70,23 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : true,
 			grid : false
 		}, {
-            config : {
-                name : 'estado_mov',
-                fieldLabel : 'Estado',
-                allowBlank : false,
-                anchor : '100%',
-                gwidth : 100,
-                maxLength : 10
-            },
-            type : 'TextField',
-            filters : {
-                pfiltro : 'mov.estado_mov',
-                type : 'string'
-            },
-            id_grupo : 1,
-            grid : true,
-            form : false
-        }, {
+			config : {
+				name : 'estado_mov',
+				fieldLabel : 'Estado',
+				allowBlank : false,
+				anchor : '100%',
+				gwidth : 100,
+				maxLength : 10
+			},
+			type : 'TextField',
+			filters : {
+				pfiltro : 'mov.estado_mov',
+				type : 'string'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : false
+		}, {
 			config : {
 				name : 'id_movimiento_tipo',
 				fieldLabel : 'Movimiento Tipo',
@@ -459,9 +467,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'id_movimiento',
 			type : 'numeric'
 		}, {
-            name : 'tipo',
-            type : 'string'
-        }, {
+			name : 'tipo',
+			type : 'string'
+		}, {
 			name : 'id_movimiento_tipo',
 			type : 'numeric'
 		}, {
@@ -582,10 +590,14 @@ header("content-type: text/javascript; charset=UTF-8");
 			var tb = Phx.vista.Movimiento.superclass.preparaMenu.call(this);
 			var data = this.getSelectedData();
 			console.lo
-			if (data.estado_mov == 'finalizado') {
-			    this.getBoton('btnFinalizar').setDisabled(true);
+			if (data.estado_mov == 'finalizado' || data.estado_mov == 'cancelado') {
+				this.getBoton('btnFinalizar').disable();
+				this.getBoton('btnCancelar').disable();
+				this.getBoton('edit').disable();
+				this.getBoton('del').disable();
 			} else {
-			    this.getBoton('btnFinalizar').setDisabled(false);
+				this.getBoton('btnFinalizar').enable();
+				this.getBoton('btnCancelar').enable();
 			}
 			return tb;
 		},
@@ -593,6 +605,32 @@ header("content-type: text/javascript; charset=UTF-8");
 			var tb = Phx.vista.Movimiento.superclass.liberaMenu.call(this);
 			this.getBoton('btnFinalizar').setDisabled(true);
 			return tb;
+		},
+		onBtnCancelar : function() {
+			var rec = this.sm.getSelected();
+			var data = rec.data;
+			var global = this;
+			Ext.Msg.confirm('Confirmación', '¿Está seguro de Cancelar este movimiento?', function(btn) {
+				if (btn == "yes") {
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Movimiento/cancelarMovimiento',
+						params : {
+							'id_movimiento' : data.id_movimiento
+						},
+						success : global.successSave,
+						failure : global.conexionFailure,
+						timeout : global.timeout,
+						scope : global
+					});
+				}
+			});
+		},
+		onButtonEdit : function() {
+			Phx.vista.Movimiento.superclass.onButtonEdit.call(this);
+			var rec = this.sm.getSelected();
+			var data = rec.data;
+			this.getComponente('tipo').disable();
+			this.getComponente('id_almacen').disable();
 		}
 	})
 </script>

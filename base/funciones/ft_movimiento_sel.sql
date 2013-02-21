@@ -38,6 +38,7 @@ BEGIN
     	v_consulta:='
         	SELECT
             	mov.id_movimiento,
+                movtip.tipo as tipo,
             	mov.id_movimiento_tipo,
                 movtip.nombre as nombre_movimiento_tipo,
             	mov.id_funcionario,

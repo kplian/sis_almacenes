@@ -44,6 +44,12 @@ class ACTMovimiento extends ACTbase {
         $this->res = $this->objFunc->finalizarMovimiento();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+    
+    function cancelarMovimiento() {
+        $this->objFunc = $this->create('MODMovimiento');
+        $this->res = $this->objFunc->cancelarMovimiento();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
 }
 ?>

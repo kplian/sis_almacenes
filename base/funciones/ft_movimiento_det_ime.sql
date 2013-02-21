@@ -28,6 +28,7 @@ DECLARE
   v_sum_salidas			numeric;
   v_existencias			numeric;
   v_id_almacen			integer;
+  v_estado_mov			varchar;
   
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_det_ime';
@@ -88,6 +89,15 @@ BEGIN
     ***********************************/
     elseif (p_transaccion='SAL_MOVDET_MOD') then
     begin
+    	
+    	select mov.estado_mov into v_estado_mov
+        from alm.tmovimiento mov
+        where mov.id_movimiento = v_parametros.id_movimiento;
+        
+        if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
+        	raise exception '%', 'El detalle de movimiento actual no puede ser modificado';
+        end if;
+        
     	update alm.tmovimiento_det set
             id_usuario_mod = p_id_usuario,
             fecha_mod = now(),
@@ -111,6 +121,16 @@ BEGIN
     ***********************************/
     elseif(p_transaccion='SAL_MOVDET_ELI')then
     begin
+    	
+    	select mov.estado_mov into v_estado_mov
+        from alm.tmovimiento mov
+        inner join alm.tmovimiento_det movdet on movdet.id_movimiento = mov.id_movimiento
+        where movdet.id_movimiento_det = v_parametros.id_movimiento_det;
+        
+        if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
+        	raise exception '%', 'El detalle de movimiento actual no puede ser eliminado';
+        end if;
+        
     	delete from alm.tmovimiento_det
         where id_movimiento_det = v_parametros.id_movimiento_det;
             

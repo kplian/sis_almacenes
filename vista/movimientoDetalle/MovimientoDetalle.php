@@ -242,7 +242,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		onReloadPage : function(m) {
 			this.maestro = m;
 			this.Atributos[1].valorInicial = this.maestro.id_movimiento;
-			if (this.maestro.estado_mov == 'finalizado') {
+			if (this.maestro.estado_mov == 'finalizado' || this.maestro.estado_mov == 'cancelado') {
 			    this.getBoton('edit').hide();
 			    this.getBoton('del').hide();
 			    this.getBoton('new').hide();
