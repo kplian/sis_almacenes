@@ -239,6 +239,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			direction : 'ASC'
 		},
 		bsave : false,
+		fwidth : 420,
+		fheight : 280,
 		onReloadPage : function(m) {
 			this.maestro = m;
 			this.Atributos[1].valorInicial = this.maestro.id_movimiento;

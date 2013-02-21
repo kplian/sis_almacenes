@@ -627,10 +627,13 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		onButtonEdit : function() {
 			Phx.vista.Movimiento.superclass.onButtonEdit.call(this);
-			var rec = this.sm.getSelected();
-			var data = rec.data;
 			this.getComponente('tipo').disable();
 			this.getComponente('id_almacen').disable();
+		},
+		onButtonNew : function() {
+		    Phx.vista.Movimiento.superclass.onButtonNew.call(this);
+			this.getComponente('tipo').enable();
+			this.getComponente('id_almacen').enable();
 		}
 	})
 </script>

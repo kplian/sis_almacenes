@@ -40,6 +40,7 @@ BEGIN
         and movdet.cantidad is not null
         and movdet.costo_unitario is not null
         and movdet.id_item = p_id_item
+        and mov.estado_mov in ('finalizado', 'borrador')
         and mov.id_almacen = p_id_almacen;
     
     select sum(movdet.cantidad) into v_salidas
@@ -51,6 +52,7 @@ BEGIN
         and movdet.cantidad is not null
         and movdet.costo_unitario is not null
         and movdet.id_item = p_id_item
+        and mov.estado_mov in ('finalizado', 'borrador')
         and mov.id_almacen = p_id_almacen;
     
     if (v_ingresos is null) then
