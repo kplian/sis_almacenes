@@ -23,13 +23,12 @@ DECLARE
   v_parametros  		record;
   v_respuesta 			varchar;
   v_id_movimiento_det_valorado	integer;
-  v_tipo_movimiento		varchar;
-  v_sum_ingresos		numeric;
-  v_sum_salidas			numeric;
-  v_existencias			numeric;
+  v_id_movimiento_det	integer;
+  v_cantidad_total		numeric;
   v_id_almacen			integer;
   v_estado_mov			varchar;
   v_id_item				integer;
+  v_cantidad_acumulado	integer;
   
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_det_valorado_ime';
@@ -43,7 +42,16 @@ BEGIN
 	if(p_transaccion='SAL_DETVAL_INS') then
     begin
     	
-        insert into alm.tmovimiento_det_valorado(
+    	select mov.estado_mov into v_estado_mov
+        from alm.tmovimiento mov
+        inner join alm.tmovimiento_det movdet on movdet.id_movimiento = mov.id_movimiento
+        where movdet.id_movimiento_det = v_parametros.id_movimiento_det;
+        
+        if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
+        	raise exception '%', 'No se pueden hacer modificaciones a las depencias del movimiento actual';
+        end if;
+    	
+        insert into alm.tmovimiento_det_valorado (
             id_usuario_reg,
             fecha_reg,
             estado_reg,
@@ -54,12 +62,26 @@ BEGIN
             p_id_usuario,
             now(),
             'activo',
-            v_parametros.id_movimiento,
+            v_parametros.id_movimiento_det,
             v_parametros.cantidad_item,
             v_parametros.costo_unitario
         ) RETURNING id_movimiento_det_valorado into v_id_movimiento_det_valorado;
-              				
-        v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Valorado del Detalle de movimiento almacenado(a) con exito (id_movimiento_det'||v_id_movimiento_det||')');
+        
+        
+        -- Se debe actualizar la cantidad total del detalle movimiento
+        
+        select sum(detval.cantidad) into v_cantidad_acumulado
+        from alm.tmovimiento_det_valorado detval
+        where detval.id_movimiento_det = v_parametros.id_movimiento_det
+        	and detval.estado_reg = 'activo';
+        
+        update alm.tmovimiento_det set
+            id_usuario_mod = p_id_usuario,
+            fecha_mod = now(),
+            cantidad = v_cantidad_acumulado
+        where id_movimiento_det = v_parametros.id_movimiento_det;
+        
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Valorado del Detalle de movimiento almacenado(a) con exito (id_movimiento_det'||v_id_movimiento_det_valorado||')');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_id_movimiento_det_valorado::varchar);
         return v_respuesta;
 		
@@ -85,12 +107,24 @@ BEGIN
     	update alm.tmovimiento_det_valorado set
             id_usuario_mod = p_id_usuario,
             fecha_mod = now(),
-            id_movimiento = v_parametros.id_movimiento,
-            id_item = v_parametros.id_item,
+            id_movimiento_det = v_parametros.id_movimiento_det,
             cantidad = v_parametros.cantidad_item,
-            costo_unitario = v_parametros.costo_unitario,
-            fecha_caducidad = v_parametros.fecha_caducidad
+            costo_unitario = v_parametros.costo_unitario
+        where id_movimiento_det_valorado = v_parametros.id_movimiento_det_valorado;
+        
+        -- Se debe actualizar la cantidad total del detalle movimiento
+        
+        select sum(detval.cantidad) into v_cantidad_acumulado
+        from alm.tmovimiento_det_valorado detval
+        where detval.id_movimiento_det = v_parametros.id_movimiento_det
+        	and detval.estado_reg = 'activo';
+        
+        update alm.tmovimiento_det set
+            id_usuario_mod = p_id_usuario,
+            fecha_mod = now(),
+            cantidad = v_cantidad_acumulado
         where id_movimiento_det = v_parametros.id_movimiento_det;
+        
         
         v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje','Valorador del Detalle de movimiento modificado con exito');
         v_respuesta = pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_parametros.id_movimiento_det_valorado::varchar);
@@ -106,10 +140,10 @@ BEGIN
     elseif(p_transaccion='SAL_DETVAL_ELI')then
     begin
     	
-    	select mov.estado_mov into v_estado_mov
+    	select mov.estado_mov, detval.id_movimiento_det into v_estado_mov, v_id_movimiento_det
         from alm.tmovimiento mov
         inner join alm.tmovimiento_det movdet on movdet.id_movimiento = mov.id_movimiento
-        inner join alm.tmovimiento_det_valorado on detval.id_movimiento_det = movdet.id_movimiento_det
+        inner join alm.tmovimiento_det_valorado detval on detval.id_movimiento_det = movdet.id_movimiento_det
         where detval.id_movimiento_det_valorado = v_parametros.id_movimiento_det_valorado;
         
         if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
@@ -118,7 +152,20 @@ BEGIN
         
     	delete from alm.tmovimiento_det_valorado
         where id_movimiento_det_valorado = v_parametros.id_movimiento_det_valorado;
-            
+        
+        -- Se debe actualizar la cantidad total del detalle movimiento
+        
+        select sum(detval.cantidad) into v_cantidad_acumulado
+        from alm.tmovimiento_det_valorado detval
+        where detval.id_movimiento_det = v_id_movimiento_det
+        	and detval.estado_reg = 'activo';
+        
+        update alm.tmovimiento_det set
+            id_usuario_mod = p_id_usuario,
+            fecha_mod = now(),
+            cantidad = v_cantidad_acumulado
+        where id_movimiento_det = v_id_movimiento_det;
+        
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Valorado del Detalle de movimiento eliminado correctamente');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_parametros.id_movimiento_det_valorado::varchar);
            

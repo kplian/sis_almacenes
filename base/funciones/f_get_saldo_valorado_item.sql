@@ -27,26 +27,24 @@ DECLARE
 BEGIN
     v_nombre_funcion = 'alm.f_get_saldo_valorado_item';
     
-    select sum(movdet.cantidad * movdet.costo_unitario) into v_ingresos
-    from alm.tmovimiento_det movdet
+    select sum(detval.cantidad * detval.costo_unitario) into v_ingresos
+    from alm.tmovimiento_det_valorado detval
+    inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
     inner join alm.tmovimiento mov on mov.id_movimiento = movdet.id_movimiento
     inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
     where movdet.estado_reg = 'activo'
-        and movtip.tipo like '%ingreso%'
-        and movdet.cantidad is not null
-        and movdet.costo_unitario is not null
+        and movtip.tipo = 'ingreso'
         and movdet.id_item = p_id_item
         and mov.estado_mov = 'finalizado'
         and mov.id_almacen = p_id_almacen;
     
-    select sum(movdet.cantidad * movdet.costo_unitario) into v_salidas
-    from alm.tmovimiento_det movdet
+    select sum(detval.cantidad * detval.costo_unitario) into v_salidas
+    from alm.tmovimiento_det_valorado detval
+    inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
     inner join alm.tmovimiento mov on mov.id_movimiento = movdet.id_movimiento
     inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
     where movdet.estado_reg = 'activo'
-        and movtip.tipo like '%salida%'
-        and movdet.cantidad is not null
-        and movdet.costo_unitario is not null
+        and movtip.tipo = 'salida'
         and movdet.id_item = p_id_item
         and mov.estado_mov = 'finalizado'
         and mov.id_almacen = p_id_almacen;

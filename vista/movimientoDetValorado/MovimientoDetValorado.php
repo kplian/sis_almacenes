@@ -37,59 +37,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : true
 		}, {
 			config : {
-				name : 'id_item',
-				fieldLabel : 'Item',
-				allowBlank : false,
-				emptyText : 'Item...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_almacenes/control/Item/listarItemNotBase',
-					id : 'id_item',
-					root : 'datos',
-					sortInfo : {
-						field : 'nombre',
-						direction : 'ASC'
-					},
-					totalProperty : 'total',
-					fields : ['id_item', 'nombre'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'nombre'
-					}
-				}),
-				valueField : 'id_item',
-				displayField : 'nombre',
-				gdisplayField : 'nombre_item',
-				//tpl : '<tpl for="."><div class="x-combo-list-item"><p>{nombre}</p> </div></tpl>',
-				hiddenName : 'id_item',
-				forceSelection : true,
-				typeAhead : true,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '100%',
-				gwidth : 100,
-				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_item']);
-				}
-			},
-			type : 'ComboBox',
-			id_grupo : 0,
-			filters : {
-				pfiltro : 'item.nombre',
-				type : 'string'
-			},
-			grid : true,
-			form : true
-		}, {
-			config : {
 				name : 'cantidad_item',
 				fieldLabel : 'Cantidad',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 70,
+				gwidth : 100,
 				maxLength : 6
 			},
 			type : 'NumberField',
@@ -105,7 +57,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				fieldLabel : 'Costo unitario',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 90,
+				gwidth : 100,
 				maxLength : 10
 			},
 			type : 'NumberField',
@@ -113,24 +65,6 @@ header("content-type: text/javascript; charset=UTF-8");
 				pfiltro : 'movdet.costo_unitario',
 				type : 'numeric'
 			},
-			grid : false,
-			form : true
-		}, {
-			config : {
-				name : 'fecha_caducidad',
-				fieldLabel : 'Fecha de caducidad',
-				allowBlank : true,
-				renderer : function(value, p, record) {
-					return value ? value.dateFormat('d/m/Y') : ''
-				},
-				format : 'Y-m-d'
-			},
-			type : 'DateField',
-			filters : {
-				pfiltro : 'movdet.fecha_caducidad',
-				type : 'date'
-			},
-			id_grupo : 1,
 			grid : true,
 			form : true
 		}, {
@@ -258,7 +192,42 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.grid.getBottomToolbar().disable();
 				this.store.removeAll();
 			}
-		}
+		},
+		successSave : function(resp) {
+			this.store.rejectChanges();
+			Phx.CP.loadingHide();
+			if (resp.argument && resp.argument.news) {
+				if (resp.argument.def == 'reset') {
+					this.form.getForm().reset();
+				}
+
+				this.loadValoresIniciales()
+			} else {
+				this.window.hide();
+			}
+			this.sm.clearSelections();
+			Phx.CP.getPagina(this.idContenedorPadre).reload();
+		},
+		successDel : function(resp) {
+			Phx.CP.loadingHide();
+			Phx.CP.getPagina(this.idContenedorPadre).reload();
+		},
+		onButtonEdit : function() {
+            Phx.vista.MovimientoDetValorado.superclass.onButtonEdit.call(this);
+            if (this.maestro.tipo == 'ingreso') {
+                this.getComponente('costo_unitario').setVisible(true);
+            } else {
+                this.getComponente('costo_unitario').setVisible(false);
+            }
+        },
+        onButtonNew : function() {
+            Phx.vista.MovimientoDetValorado.superclass.onButtonNew.call(this);
+            if (this.maestro.tipo == 'ingreso') {
+                this.getComponente('costo_unitario').setVisible(true);
+            } else {
+                this.getComponente('costo_unitario').setVisible(false);
+            }
+        }
 	})
 </script>
 

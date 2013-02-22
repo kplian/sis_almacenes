@@ -69,7 +69,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				pageSize : 10,
 				queryDelay : 1000,
 				anchor : '100%',
-				gwidth : 100,
+				gwidth : 170,
 				minChars : 2,
 				renderer : function(value, p, record) {
 					return String.format('{0}', record.data['nombre_item']);
@@ -86,10 +86,10 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			config : {
 				name : 'cantidad_item',
-				fieldLabel : 'Cantidad',
-				allowBlank : false,
+				fieldLabel : 'Cantidad Total',
+				allowBlank : true,
 				anchor : '100%',
-				gwidth : 70,
+				gwidth : 100,
 				maxLength : 6
 			},
 			type : 'NumberField',
@@ -274,12 +274,24 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		onButtonEdit : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonEdit.call(this);
-			this.getComponente('costo_unitario').disable();
+			this.getComponente('costo_unitario').setVisible(false);
+            this.getComponente('cantidad_item').setVisible(false);
 		},
 		onButtonNew : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonNew.call(this);
-			this.getComponente('costo_unitario').enable();
-		}
+			if (this.maestro.tipo == 'ingreso') {
+			    this.getComponente('costo_unitario').setVisible(true);
+			} else {
+			    this.getComponente('costo_unitario').setVisible(false);
+			}
+			this.getComponente('cantidad_item').setVisible(true);
+		},
+		preparaMenu : function(n) {
+            var tb = Phx.vista.MovimientoDetalle.superclass.preparaMenu.call(this);
+            var data = this.getSelectedData();
+            data.estado_mov = this.maestro.estado_mov;
+            data.tipo = this.maestro.tipo;            return tb;
+        }
 	})
 </script>
 

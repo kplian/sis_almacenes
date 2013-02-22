@@ -37,9 +37,7 @@ BEGIN
     inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
     where movdet.estado_reg = 'activo'
         and movtip.tipo like '%ingreso%'
-        and movdet.cantidad is not null
-        and movdet.costo_unitario is not null
-        and movdet.id_item = p_id_item
+		and movdet.id_item = p_id_item
         and mov.estado_mov = 'finalizado'
         and mov.id_almacen = p_id_almacen;
     
@@ -49,8 +47,6 @@ BEGIN
     inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
     where movdet.estado_reg = 'activo'
         and movtip.tipo like '%salida%'
-        and movdet.cantidad is not null
-        and movdet.costo_unitario is not null
         and movdet.id_item = p_id_item
         and mov.estado_mov = 'finalizado'
         and mov.id_almacen = p_id_almacen;

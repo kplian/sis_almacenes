@@ -589,7 +589,6 @@ header("content-type: text/javascript; charset=UTF-8");
 		preparaMenu : function(n) {
 			var tb = Phx.vista.Movimiento.superclass.preparaMenu.call(this);
 			var data = this.getSelectedData();
-			console.lo
 			if (data.estado_mov == 'finalizado' || data.estado_mov == 'cancelado') {
 				this.getBoton('btnFinalizar').disable();
 				this.getBoton('btnCancelar').disable();

@@ -36,11 +36,19 @@ BEGIN
   /*********************************    
      #TRANSACCION:  'SAL_MOVDET_INS'
      #DESCRIPCION:  Insercion de registros
-     #AUTOR:        Gonzalo Sarmiento  
-     #FECHA:        02-10-2012
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        21-02-2013
     ***********************************/
 	if(p_transaccion='SAL_MOVDET_INS') then
     begin
+    	select mov.estado_mov into v_estado_mov
+        from alm.tmovimiento mov
+        where mov.id_movimiento = v_parametros.id_movimiento;
+        
+        if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
+        	raise exception '%', 'No se pueden hacer modificaciones a las depencias del movimiento actual';
+        end if;
+    	
     	--revisar q tipo de movimiento es: ingreso o salida
     	select movtip.tipo, mov.id_almacen into v_tipo_movimiento, v_id_almacen
         from alm.tmovimiento_tipo movtip
@@ -48,13 +56,15 @@ BEGIN
         where mov.id_movimiento = v_parametros.id_movimiento;
         
         --si es salida, revisas las existencias, ingresos - salidas
-        if (v_tipo_movimiento like '%salida%') then
+        /*
+        if (v_tipo_movimiento = 'salida') then
         	v_existencias = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_id_almacen);
             
             if (v_existencias < v_parametros.cantidad_item) then
             	raise exception '%', 'No existen suficientes unidades de este item en el almacen seleccionado';
             end if;
         end if;
+        */
         
 		insert into alm.tmovimiento_det(
             id_usuario_reg,
@@ -73,7 +83,25 @@ BEGIN
             v_parametros.cantidad_item,
             v_parametros.fecha_caducidad
         ) RETURNING id_movimiento_det into v_id_movimiento_det;
-              				
+        
+        if (v_parametros.cantidad_item is not null) then
+            insert into alm.tmovimiento_det_valorado (
+                id_usuario_reg,
+                fecha_reg,
+                estado_reg,
+                id_movimiento_det,
+                cantidad,
+                costo_unitario
+            ) VALUES (
+                p_id_usuario,
+                now(),
+                'activo',
+                v_id_movimiento_det,
+                v_parametros.cantidad_item,
+                v_parametros.costo_unitario
+            );
+        end if;
+        
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Detalle de movimiento almacenado(a) con exito (id_movimiento_det'||v_id_movimiento_det||')');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_id_movimiento_det::varchar);
         return v_respuesta;
@@ -82,8 +110,8 @@ BEGIN
     /*********************************    
      #TRANSACCION:  'SAL_MOVDET_MOD'
      #DESCRIPCION:  Modificacion de registros
-     #AUTOR:        Gonzalo Sarmiento
-     #FECHA:        02-10-2012
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        21-02-2013
     ***********************************/
     elseif (p_transaccion='SAL_MOVDET_MOD') then
     begin
@@ -101,8 +129,6 @@ BEGIN
             fecha_mod = now(),
             id_movimiento = v_parametros.id_movimiento,
             id_item = v_parametros.id_item,
-            cantidad = v_parametros.cantidad_item,
-            costo_unitario = v_parametros.costo_unitario,
             fecha_caducidad = v_parametros.fecha_caducidad
         where id_movimiento_det = v_parametros.id_movimiento_det;
         
@@ -114,8 +140,8 @@ BEGIN
     /*********************************    
      #TRANSACCION:  'SAL_MOVDET_ELI'
      #DESCRIPCION:  Eliminacion de registros
-     #AUTOR:        Gonzalo Sarmiento 
-     #FECHA:        02-10-2012
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        21-02-2013
     ***********************************/
     elseif(p_transaccion='SAL_MOVDET_ELI')then
     begin
