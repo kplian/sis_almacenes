@@ -30,9 +30,12 @@ DECLARE
   v_consulta					varchar;
   v_detalle						record;
   v_contador					numeric;
+  v_contador_2					numeric;
   v_estado_almacen				varchar;
   v_estado_mov					varchar;
-
+  g_registros					record;
+  g_registros_2					record;
+  v_errores						varchar;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -120,7 +123,7 @@ BEGIN
      #AUTOR:        Gonzalo Sarmiento   
      #FECHA:        03-10-2012
     ***********************************/
-  elseif(p_transaccion='SAL_MOV_ELI')then
+  	elseif(p_transaccion='SAL_MOV_ELI')then
   	begin
     	select mov.estado_mov into v_estado_mov
         from alm.tmovimiento mov
@@ -138,20 +141,15 @@ BEGIN
 
         return v_respuesta;
     end;
-    
+    /*********************************   
+     #TRANSACCION:  'SAL_MOVFIN_MOD'
+     #DESCRIPCION:  Finalizacion de un movimiento
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        20-02-2013
+    ***********************************/
 	elseif(p_transaccion='SAL_MOVFIN_MOD')then
   	begin
-		
-    	--verificar que el movimiento tenga al menos un movimiento_detalle registrado.
-    	select count(movdet.id_movimiento_det) into v_contador
-        from alm.tmovimiento_det movdet
-        where movdet.estado_reg = 'activo' 
-        	and movdet.id_movimiento = v_parametros.id_movimiento;
-        
-        if (v_contador <= 0) then
-        	raise exception '%', 'El movimiento seleccionado debe tener al menos un item registrado en su detalle';
-        end if;
-        
+    
     	--verificar que el almacen esté activo.
         select alma.estado into v_estado_almacen
         from alm.talmacen alma
@@ -161,12 +159,73 @@ BEGIN
         	raise exception '%', 'El almacen seleccionado para este movimiento no se encuentra activo';
         end if;
         
-    	--TODO: revisar si el periodo esta abierto.
+        --TODO: revisar si el periodo esta abierto.
         
+        --buscamos errores en las dependencias del movimiento
+		v_errores := '';
+        v_contador = 0;
         
-		update alm.tmovimiento set
+        FOR g_registros in (
+			select 
+     			movdet.id_movimiento_det,
+                movdet.id_movimiento,
+                movdet.id_item,
+                item.nombre as nombre_item,
+                movdet.cantidad as cantidad_item
+            from alm.tmovimiento_det movdet
+            inner join alm.titem item on item.id_item = movdet.id_item
+            where movdet.estado_reg = 'activo'
+            	and movdet.id_movimiento = v_parametros.id_movimiento
+		) LOOP
+        	v_contador = v_contador + 1;
+        	if (g_registros.cantidad_item is null or g_registros.cantidad_item <= 0) then
+            	v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener cantidad total mayor a cero';
+            end if;
+            
+            v_contador_2 := 0;
+            
+            FOR g_registros_2 IN (
+            	select 
+                    detval.cantidad as cantidad_item,
+                    detval.costo_unitario
+                from alm.tmovimiento_det_valorado detval
+                inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
+                where detval.estado_reg = 'activo'
+                    and detval.id_movimiento_det = g_registros.id_movimiento_det 
+            ) LOOP
+            	v_contador_2 = v_contador_2 + 1;
+                if (g_registros_2.cantidad_item is null or g_registros_2.cantidad_item <= 0) THEN
+                	v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' no debe contener valorados con cantidad igual o menor que cero';
+                end if;
+                
+            END LOOP;
+            
+            if (v_contador_2 = 0) then
+            	v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener al menos una cantidad para valorar';
+            end if;
+        END LOOP;
+        
+        --verificar que el movimiento tenga al menos un movimiento_detalle registrado.
+        if (v_contador <= 0) then
+        	raise exception '%', 'El movimiento seleccionado debe tener al menos un item registrado en su detalle';
+        end if;
+        
+        --verificamos que el movimiento no tenga errores en sus dependencias
+        if (v_errores != '') then
+        	raise exception '%', 'El siguiente item: '|| g_registros.nombre_item || '; debe tener una cantidad total mayor a cero.';
+        end if;
+        
+    	update alm.tmovimiento set
         	estado_mov = 'finalizado'
         where id_movimiento = v_parametros.id_movimiento;
+        
+        update alm.tmovimiento_det_valorado detval set
+            aux_saldo = detval.cantidad * detval.costo_unitario
+        from alm.tmovimiento_det movdet
+        where detval.id_movimiento_det = movdet.id_movimiento_det
+            and movdet.id_movimiento = v_parametros.id_movimiento
+            and movdet.estado_reg = 'activo'
+            and detval.estado_reg = 'activo';
         
         --TODO: Pendiente para el issue de transferencia
         /*
