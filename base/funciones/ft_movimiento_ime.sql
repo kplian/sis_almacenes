@@ -36,6 +36,14 @@ DECLARE
   g_registros					record;
   g_registros_2					record;
   v_errores						varchar;
+  v_tipo_mov					varchar;
+  v_id_almacen					integer;
+  v_codigo_valoracion			varchar;
+  v_saldo_cantidad				numeric;
+  v_aux_integer					integer;
+  v_costo_valorado				numeric;
+  v_cantidad_valorada			numeric;
+  v_id_movimiento_det_val_desc 	integer;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -215,12 +223,103 @@ BEGIN
         	raise exception '%', 'El siguiente item: '|| g_registros.nombre_item || '; debe tener una cantidad total mayor a cero.';
         end if;
         
+        --Si el movimiento que se desea finalizar es una salida entonces se debe valorar los detalles.
+        select movtip.tipo, mov.id_almacen into v_tipo_mov, v_id_almacen
+        from alm.tmovimiento mov 
+        inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
+        where mov.id_movimiento = v_parametros.id_movimiento;
+        
+        if (v_tipo_mov = 'salida') then
+        	
+        	FOR g_registros IN (
+            	select 
+                	movdet.id_movimiento_det,
+                	movdet.id_item,
+                	movdet.cantidad,
+                    detval.id_movimiento_det_valorado
+                from alm.tmovimiento_det_valorado detval
+                inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
+                where movdet.id_movimiento = v_parametros.id_movimiento
+                	and movdet.estado_reg = 'activo'
+            ) LOOP
+            
+            	--obtener el codigo del metodo de valoracion
+                select metval.codigo into v_codigo_valoracion
+                from alm.talmacen_stock alstock
+                inner join alm.tmetodo_val metval on metval.id_metodo_val = alstock.id_metodo_val
+                where alstock.id_almacen = v_id_almacen
+                	and alstock.id_item = g_registros.id_item
+                    and alstock.estado_reg = 'activo';
+                
+                v_saldo_cantidad = g_registros.cantidad;
+                
+                -- TODO: por defecto valorar con Promedio Ponderado.
+
+                select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
+                    into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
+                from alm.f_get_valorado_item(g_registros.id_item, v_id_almacen, v_codigo_valoracion, v_saldo_cantidad);
+                
+                IF (v_codigo_valoracion = 'PEPS' or v_codigo_valoracion = 'UEPS') THEN
+                    --Se descuenta la cantidad valorada del detalle valorado que se utilizo en la valoracion
+                    update alm.tmovimiento_det_valorado detval set
+                        id_usuario_mod = p_id_usuario,
+                        fecha_mod = now(),
+                        aux_saldo_fisico = detval.aux_saldo_fisico - v_cantidad_valorada
+                    where detval.id_movimiento_det_valorado = v_id_movimiento_det_val_desc;
+                END IF;
+                
+                v_saldo_cantidad = v_saldo_cantidad - v_cantidad_valorada;
+                
+                update alm.tmovimiento_det_valorado set
+                    id_usuario_mod = p_id_usuario,
+                    fecha_mod = now(),
+                    cantidad = v_cantidad_valorada,
+                    costo_unitario = v_costo_valorado
+                where id_movimiento_det_valorado = g_registros.id_movimiento_det_valorado;
+                
+                --si todavia hay saldo que valorar
+                WHILE (v_saldo_cantidad > 0) LOOP
+                	select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
+                    	into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
+                    from alm.f_get_valorado_item(g_registros.id_item, v_id_almacen, v_codigo_valoracion, v_saldo_cantidad);
+                    
+                    --Se descuenta la cantidad valorada del detalle valorado que se utilizo en la valoracion
+                    update alm.tmovimiento_det_valorado detval set
+                        id_usuario_mod = p_id_usuario,
+                        fecha_mod = now(),
+                        aux_saldo_fisico = detval.aux_saldo_fisico - v_cantidad_valorada
+                    where detval.id_movimiento_det_valorado = v_id_movimiento_det_val_desc;
+                    
+                    --insertar un nuevo detalle valorado con la cantidad valorada y el costo unitario calculado
+                    insert into alm.tmovimiento_det_valorado (
+                        id_usuario_reg,
+                        fecha_reg,
+                        estado_reg,
+                        id_movimiento_det,
+                        cantidad,
+                        costo_unitario
+                    ) VALUES (
+                        p_id_usuario,
+                        now(),
+                        'activo',
+                        g_registros.id_movimiento_det,
+                        v_cantidad_valorada,
+                        v_costo_valorado
+                    );
+                    
+                    v_saldo_cantidad = v_saldo_cantidad - v_cantidad_valorada;
+                END LOOP;
+                
+            END LOOP;
+        
+        end if;
+        
     	update alm.tmovimiento set
         	estado_mov = 'finalizado'
         where id_movimiento = v_parametros.id_movimiento;
         
         update alm.tmovimiento_det_valorado detval set
-            aux_saldo = detval.cantidad * detval.costo_unitario
+            aux_saldo_fisico = detval.cantidad
         from alm.tmovimiento_det movdet
         where detval.id_movimiento_det = movdet.id_movimiento_det
             and movdet.id_movimiento = v_parametros.id_movimiento

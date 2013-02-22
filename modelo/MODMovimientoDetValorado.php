@@ -22,7 +22,7 @@ class MODMovimientoDetValorado extends MODbase {
 
         $this->captura('id_movimiento_det_valorado', 'int4');
         $this->captura('id_movimiento_det', 'int4');
-        $this->captura('cantidad_item', 'integer');
+        $this->captura('cantidad_item', 'numeric');
         $this->captura('costo_unitario', 'numeric');
         $this->captura('usr_reg', 'varchar');
         $this->captura('fecha_reg', 'timestamp');
@@ -41,7 +41,7 @@ class MODMovimientoDetValorado extends MODbase {
         $this->tipo_procedimiento = 'IME';
 
         $this->setParametro('id_movimiento_det', 'id_movimiento_det', 'integer');
-        $this->setParametro('cantidad_item', 'cantidad_item', 'integer');
+        $this->setParametro('cantidad_item', 'cantidad_item', 'numeric');
         $this->setParametro('costo_unitario', 'costo_unitario', 'numeric');
 
         $this->armarConsulta();
@@ -57,7 +57,7 @@ class MODMovimientoDetValorado extends MODbase {
 
         $this->setParametro('id_movimiento_det_valorado', 'id_movimiento_det_valorado', 'integer');
         $this->setParametro('id_movimiento_det', 'id_movimiento_det', 'integer');
-        $this->setParametro('cantidad_item', 'cantidad_item', 'integer');
+        $this->setParametro('cantidad_item', 'cantidad_item', 'numeric');
         $this->setParametro('costo_unitario', 'costo_unitario', 'numeric');
 
         $this->armarConsulta();

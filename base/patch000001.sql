@@ -219,9 +219,9 @@ ALTER TABLE alm.tmovimiento_det
 CREATE TABLE alm.tmovimiento_det_valorado (
   id_movimiento_det_valorado SERIAL NOT NULL, 
   id_movimiento_det INTEGER, 
-  cantidad INTEGER, 
+  cantidad NUMERIC(18,6), 
   costo_unitario NUMERIC(18,6), 
-  aux_saldo NUMERIC(18,6), 
+  aux_saldo_fisico NUMERIC(18,6),
   PRIMARY KEY(id_movimiento_det_valorado)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;

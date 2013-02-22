@@ -168,14 +168,19 @@ header("content-type: text/javascript; charset=UTF-8");
 		onReloadPage : function(m) {
 			this.maestro = m;
 			this.Atributos[1].valorInicial = this.maestro.id_movimiento_det;
+			
 			if (this.maestro.estado_mov == 'finalizado' || this.maestro.estado_mov == 'cancelado') {
 				this.getBoton('edit').hide();
 				this.getBoton('del').hide();
 				this.getBoton('new').hide();
 			} else {
+			    if (this.maestro.tipo =='salida') {
+                    this.getBoton('new').hide();
+                } else {
+                    this.getBoton('new').show();
+                } 
 				this.getBoton('edit').show();
 				this.getBoton('del').show();
-				this.getBoton('new').show();
 			}
 			if (m.id != 'id') {
 				this.store.baseParams = {
