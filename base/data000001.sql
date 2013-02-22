@@ -66,7 +66,8 @@ select pxp.f_insert_tfuncion ('alm.ft_movimiento_det_ime', 'Funcion para tabla  
 select pxp.f_insert_tfuncion ('alm.ft_movimiento_det_sel', 'Funcion para tabla     ', 'ALM');
 select pxp.f_insert_tfuncion ('alm.ft_almacen_stock_sel', 'Funcion para tabla     ', 'ALM');
 select pxp.f_insert_tfuncion ('alm.ft_almacen_stock_ime', 'Funcion para tabla     ', 'ALM');
-select pxp.f_insert_tfuncion ('alm.f_get_existencias_item', 'Funcion para tabla     ', 'ALM');
+select pxp.f_insert_tfuncion ('alm.f_get_saldo_fisico_item', 'Funcion para tabla     ', 'ALM');
+select pxp.f_insert_tfuncion ('alm.f_get_saldo_valorado_item', 'Funcion para tabla     ', 'ALM');
 select pxp.f_insert_tfuncion ('alm.f_get_correlativo', 'Funcion para tabla     ', 'ALM');
 select pxp.f_insert_tfuncion ('alm.ft_clasificacion_sel', 'Funcion para tabla     ', 'ALM');
 select pxp.f_insert_tfuncion ('alm.ft_clasificacion_ime', 'Funcion para tabla     ', 'ALM');

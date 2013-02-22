@@ -125,3 +125,12 @@ ALTER TABLE alm.talmacen_stock
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-AAO-ALM-24-14/02/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-25-21/02/2013*****************************************/
+ALTER TABLE alm.tmovimiento_det_valorado
+  ADD CONSTRAINT fk_tmovimiento_det_valorado__id_movimiento_det FOREIGN KEY (id_movimiento_det)
+    REFERENCES alm.tmovimiento_det(id_movimiento_det)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-AAO-ALM-25-21/02/2013*****************************************/

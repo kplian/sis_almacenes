@@ -1,6 +1,6 @@
 --------------- SQL ---------------
 
-CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_ime (
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_valorado_ime (
   p_administrador integer,
   p_id_usuario integer,
   p_tabla varchar,
@@ -10,10 +10,10 @@ RETURNS varchar AS
 $body$
 /**************************************************************************
  SISTEMA:		Almacenes
- FUNCION: 		alm.ft_movimiento_det_ime
+ FUNCION: 		alm.ft_movimiento_det_valorado_ime
  DESCRIPCION:   Funcion que gestiona las operaciones basicas (inserciones, modificaciones, eliminaciones de la tabla 'alm.tmovimiento_det'
- AUTOR: 		Gonzalo Sarmiento
- FECHA:	        02-10-2012
+ AUTOR: 		Ariel Ayaviri Omonte
+ FECHA:	        21-02-2013
  COMENTARIOS:	
 ***************************************************************************/
 
@@ -22,81 +22,67 @@ DECLARE
   v_consulta			varchar;
   v_parametros  		record;
   v_respuesta 			varchar;
-  v_id_movimiento_det	integer;
+  v_id_movimiento_det_valorado	integer;
   v_tipo_movimiento		varchar;
   v_sum_ingresos		numeric;
   v_sum_salidas			numeric;
   v_existencias			numeric;
   v_id_almacen			integer;
   v_estado_mov			varchar;
+  v_id_item				integer;
   
 BEGIN
-  v_nombre_funcion='alm.ft_movimiento_det_ime';
+  v_nombre_funcion='alm.ft_movimiento_det_valorado_ime';
   v_parametros=pxp.f_get_record(p_tabla);
   /*********************************    
-     #TRANSACCION:  'SAL_MOVDET_INS'
+     #TRANSACCION:  'SAL_DETVAL_INS'
      #DESCRIPCION:  Insercion de registros
-     #AUTOR:        Gonzalo Sarmiento  
-     #FECHA:        02-10-2012
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        21-02-2013
     ***********************************/
-	if(p_transaccion='SAL_MOVDET_INS') then
+	if(p_transaccion='SAL_DETVAL_INS') then
     begin
-    	--revisar q tipo de movimiento es: ingreso o salida
-    	select movtip.tipo, mov.id_almacen into v_tipo_movimiento, v_id_almacen
-        from alm.tmovimiento_tipo movtip
-        inner join alm.tmovimiento mov on mov.id_movimiento_tipo = movtip.id_movimiento_tipo
-        where mov.id_movimiento = v_parametros.id_movimiento;
-        
-        --si es salida, revisas las existencias, ingresos - salidas
-        if (v_tipo_movimiento like '%salida%') then
-        	v_existencias = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_id_almacen);
-            
-            if (v_existencias < v_parametros.cantidad_item) then
-            	raise exception '%', 'No existen suficientes unidades de este item en el almacen seleccionado';
-            end if;
-        end if;
-        
-		insert into alm.tmovimiento_det(
+    	
+        insert into alm.tmovimiento_det_valorado(
             id_usuario_reg,
             fecha_reg,
             estado_reg,
-            id_movimiento,
-            id_item,
+            id_movimiento_det,
             cantidad,
-            fecha_caducidad
+            costo_unitario
         ) VALUES (
             p_id_usuario,
             now(),
             'activo',
             v_parametros.id_movimiento,
-            v_parametros.id_item,
             v_parametros.cantidad_item,
-            v_parametros.fecha_caducidad
-        ) RETURNING id_movimiento_det into v_id_movimiento_det;
+            v_parametros.costo_unitario
+        ) RETURNING id_movimiento_det_valorado into v_id_movimiento_det_valorado;
               				
-        v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Detalle de movimiento almacenado(a) con exito (id_movimiento_det'||v_id_movimiento_det||')');
-        v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_id_movimiento_det::varchar);
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Valorado del Detalle de movimiento almacenado(a) con exito (id_movimiento_det'||v_id_movimiento_det||')');
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_id_movimiento_det_valorado::varchar);
         return v_respuesta;
 		
     end;
     /*********************************    
-     #TRANSACCION:  'SAL_MOVDET_MOD'
+     #TRANSACCION:  'SAL_DETVAL_MOD'
      #DESCRIPCION:  Modificacion de registros
-     #AUTOR:        Gonzalo Sarmiento
-     #FECHA:        02-10-2012
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        21-02-2013
     ***********************************/
-    elseif (p_transaccion='SAL_MOVDET_MOD') then
+    elseif (p_transaccion='SAL_DETVAL_MOD') then
     begin
     	
     	select mov.estado_mov into v_estado_mov
         from alm.tmovimiento mov
-        where mov.id_movimiento = v_parametros.id_movimiento;
+        inner join alm.tmovimiento_det movdet on movdet.id_movimiento = mov.id_movimiento
+        where movdet.id_movimiento_det = v_parametros.id_movimiento_det;
         
         if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
-        	raise exception '%', 'El detalle de movimiento actual no puede ser modificado';
+        	raise exception '%', 'El Valorado del detalle de movimiento actual no puede ser modificado';
         end if;
         
-    	update alm.tmovimiento_det set
+    	update alm.tmovimiento_det_valorado set
             id_usuario_mod = p_id_usuario,
             fecha_mod = now(),
             id_movimiento = v_parametros.id_movimiento,
@@ -106,34 +92,35 @@ BEGIN
             fecha_caducidad = v_parametros.fecha_caducidad
         where id_movimiento_det = v_parametros.id_movimiento_det;
         
-        v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje','Detalle de movimiento modificado con exito');
-        v_respuesta = pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_parametros.id_movimiento_det::varchar);
+        v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje','Valorador del Detalle de movimiento modificado con exito');
+        v_respuesta = pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_parametros.id_movimiento_det_valorado::varchar);
             
         return v_respuesta;
     end;
     /*********************************    
-     #TRANSACCION:  'SAL_MOVDET_ELI'
+     #TRANSACCION:  'SAL_DETVAL_ELI'
      #DESCRIPCION:  Eliminacion de registros
-     #AUTOR:        Gonzalo Sarmiento 
-     #FECHA:        02-10-2012
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        21-02-2013
     ***********************************/
-    elseif(p_transaccion='SAL_MOVDET_ELI')then
+    elseif(p_transaccion='SAL_DETVAL_ELI')then
     begin
     	
     	select mov.estado_mov into v_estado_mov
         from alm.tmovimiento mov
         inner join alm.tmovimiento_det movdet on movdet.id_movimiento = mov.id_movimiento
-        where movdet.id_movimiento_det = v_parametros.id_movimiento_det;
+        inner join alm.tmovimiento_det_valorado on detval.id_movimiento_det = movdet.id_movimiento_det
+        where detval.id_movimiento_det_valorado = v_parametros.id_movimiento_det_valorado;
         
         if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
-        	raise exception '%', 'El detalle de movimiento actual no puede ser eliminado';
+        	raise exception '%', 'El valorado del detalle de movimiento actual no puede ser eliminado';
         end if;
         
-    	delete from alm.tmovimiento_det
-        where id_movimiento_det = v_parametros.id_movimiento_det;
+    	delete from alm.tmovimiento_det_valorado
+        where id_movimiento_det_valorado = v_parametros.id_movimiento_det_valorado;
             
-        v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Detalle de movimiento eliminado correctamente');
-        v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_parametros.id_movimiento_det::varchar);
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Valorado del Detalle de movimiento eliminado correctamente');
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_parametros.id_movimiento_det_valorado::varchar);
            
     	return v_respuesta;
     end;

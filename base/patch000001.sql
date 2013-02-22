@@ -212,6 +212,21 @@ ALTER TABLE alm.tmovimiento
   RENAME COLUMN numero_mov TO codigo;
 /***********************************F-SCP-AAO-ALM-20-15/02/2013****************************************/
 
-/***********************************I-SCP-AAO-ALM-21-19/02/2013****************************************/
---todo
-/***********************************F-SCP-AAO-ALM-21-19/02/2013****************************************/
+/***********************************I-SCP-AAO-ALM-25-21/02/2013****************************************/
+ALTER TABLE alm.tmovimiento_det
+  DROP COLUMN costo_unitario;
+
+CREATE TABLE alm.tmovimiento_det_valorado (
+  id_movimiento_det_valorado SERIAL NOT NULL, 
+  id_movimiento_det INTEGER, 
+  cantidad INTEGER, 
+  costo_unitario NUMERIC(18,6), 
+  aux_saldo NUMERIC(18,6), 
+  PRIMARY KEY(id_movimiento_det_valorado)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.tmovimiento_det_valorado
+  OWNER TO postgres;
+/***********************************F-SCP-AAO-ALM-25-21/02/2013****************************************/
+

@@ -2,18 +2,18 @@
 /**
  *@package pXP
  *@file AlmacenStock.php
- *@author  Gonzalo Sarmiento
- *@date 01-10-2012
+ *@author Ariel Ayaviri Omonte
+ *@date 20-02-2013
  *@description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  */
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-	Phx.vista.MovimientoDetalle = Ext.extend(Phx.gridInterfaz, {
+	Phx.vista.MovimientoDetValorado = Ext.extend(Phx.gridInterfaz, {
 		constructor : function(config) {
 			this.maestro = config.maestro;
-			Phx.vista.MovimientoDetalle.superclass.constructor.call(this, config);
+			Phx.vista.MovimientoDetValorado.superclass.constructor.call(this, config);
 			this.init();
 			this.grid.getTopToolbar().disable();
 			this.grid.getBottomToolbar().disable();
@@ -23,13 +23,13 @@ header("content-type: text/javascript; charset=UTF-8");
 			config : {
 				labelSeparator : '',
 				inputType : 'hidden',
-				name : 'id_movimiento_det'
+				name : 'id_movimiento_det_valorado'
 			},
 			type : 'Field',
 			form : true
 		}, {
 			config : {
-				name : 'id_movimiento',
+				name : 'id_movimiento_det',
 				labelSeparator : '',
 				inputType : 'hidden',
 			},
@@ -103,7 +103,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			config : {
 				name : 'costo_unitario',
 				fieldLabel : 'Costo unitario',
-				allowBlank : true,
+				allowBlank : false,
 				anchor : '100%',
 				gwidth : 90,
 				maxLength : 10
@@ -193,29 +193,22 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : false
 		}],
 		title : 'Detalle de Movimiento',
-		ActSave : '../../sis_almacenes/control/MovimientoDetalle/insertarMovimientoDetalle',
-		ActDel : '../../sis_almacenes/control/MovimientoDetalle/eliminarMovimientoDetalle',
-		ActList : '../../sis_almacenes/control/MovimientoDetalle/listarMovimientoDetalle',
-		id_store : 'id_movimiento_det',
+		ActSave : '../../sis_almacenes/control/MovimientoDetValorado/insertarMovimientoDetValorado',
+		ActDel : '../../sis_almacenes/control/MovimientoDetValorado/eliminarMovimientoDetValorado',
+		ActList : '../../sis_almacenes/control/MovimientoDetValorado/listarMovimientoDetValorado',
+		id_store : 'id_movimiento_det_valorado',
 		fields : [{
+			name : 'id_movimiento_det_valorado',
+			type : 'numeric'
+		}, {
 			name : 'id_movimiento_det',
 			type : 'numeric'
-		}, {
-			name : 'id_movimiento',
-			type : 'numeric'
-		}, {
-			name : 'id_item',
-			type : 'numeric'
-		}, {
-			name : 'nombre_item',
-			type : 'string'
 		}, {
 			name : 'cantidad_item',
 			type : 'numeric'
 		}, {
-			name : 'fecha_caducidad',
-			type : 'date',
-			dateFormat : 'Y-m-d'
+			name : 'costo_unitario',
+			type : 'numeric'
 		}, {
 			name : 'usr_reg',
 			type : 'string'
@@ -232,7 +225,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			dateFormat : 'Y-m-d H:i:s.u'
 		}],
 		sortInfo : {
-			field : 'id_movimiento_det',
+			field : 'id_movimiento_det_valorado',
 			direction : 'ASC'
 		},
 		bsave : false,
@@ -240,7 +233,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		fheight : 280,
 		onReloadPage : function(m) {
 			this.maestro = m;
-			this.Atributos[1].valorInicial = this.maestro.id_movimiento;
+			this.Atributos[1].valorInicial = this.maestro.id_movimiento_det;
 			if (this.maestro.estado_mov == 'finalizado' || this.maestro.estado_mov == 'cancelado') {
 				this.getBoton('edit').hide();
 				this.getBoton('del').hide();
@@ -252,7 +245,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			}
 			if (m.id != 'id') {
 				this.store.baseParams = {
-					id_movimiento : this.maestro.id_movimiento
+					id_movimiento_det : this.maestro.id_movimiento_det
 				};
 				this.load({
 					params : {
@@ -265,20 +258,6 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.grid.getBottomToolbar().disable();
 				this.store.removeAll();
 			}
-		},
-		east : {
-			url : '../../../sis_almacenes/vista/movimientoDetValorado/MovimientoDetValorado.php',
-			title : 'Valoracion del Detalle',
-			width : '50%',
-			cls : 'MovimientoDetValorado'
-		},
-		onButtonEdit : function() {
-			Phx.vista.MovimientoDetalle.superclass.onButtonEdit.call(this);
-			this.getComponente('costo_unitario').disable();
-		},
-		onButtonNew : function() {
-			Phx.vista.MovimientoDetalle.superclass.onButtonNew.call(this);
-			this.getComponente('costo_unitario').enable();
 		}
 	})
 </script>

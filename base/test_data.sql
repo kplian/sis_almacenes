@@ -56,14 +56,14 @@ VALUES (1, 1, E'2013-02-20 00:17:34.600', E'2013-02-20 00:19:41.139', E'activo',
 
 -- Movimiento_det
 
-INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "costo_unitario", "fecha_caducidad")
-VALUES (1, NULL, E'2013-02-19 19:33:25.293', E'2013-02-19 19:33:25.293', E'activo', 1, 1, 2, '12', '30', NULL);
+INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad")
+VALUES (1, NULL, E'2013-02-19 19:33:25.293', E'2013-02-19 19:33:25.293', E'activo', 1, 1, 2, '12', NULL);
 
-INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "costo_unitario", "fecha_caducidad")
-VALUES (1, NULL, E'2013-02-19 19:33:37.357', E'2013-02-19 19:33:37.357', E'activo', 2, 1, 3, '20', '15', NULL);
+INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad")
+VALUES (1, NULL, E'2013-02-19 19:33:37.357', E'2013-02-19 19:33:37.357', E'activo', 2, 1, 3, '20', NULL);
 
-INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "costo_unitario", "fecha_caducidad")
-VALUES (1, NULL, E'2013-02-20 00:19:52.213', E'2013-02-20 00:19:52.213', E'activo', 7, 3, 2, '12', '30', NULL);
+INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad")
+VALUES (1, NULL, E'2013-02-20 00:19:52.213', E'2013-02-20 00:19:52.213', E'activo', 7, 3, 2, '12', NULL);
 
 -- Actalizacion de Secuencias
 

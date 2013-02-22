@@ -1,6 +1,6 @@
 --------------- SQL ---------------
 
-CREATE OR REPLACE FUNCTION alm.f_get_existencias_item (
+CREATE OR REPLACE FUNCTION alm.f_get_saldo_fisico_item (
   p_id_item integer,
   p_id_almacen integer
 )
@@ -8,7 +8,7 @@ RETURNS numeric AS
 $body$
 /**************************************************************************
  SISTEMA:		SISTEMA DE ALMACENES
- FUNCION: 		alm.f_get_existencias_item
+ FUNCION: 		alm.f_get_saldo_fisico_item
  DESCRIPCION:   Función que devuelve la cantidad existente del item con ID: p_id_item
  RETORNA:		Devuelve el valor de la cantidad disponible para el item: p_id_item
  AUTOR: 		Ariel Ayaviri Omonte
@@ -28,7 +28,7 @@ DECLARE
     v_existencias		numeric;
 
 BEGIN
-    v_nombre_funcion = 'alm.f_get_existencias_item';
+    v_nombre_funcion = 'alm.f_get_saldo_fisico_item';
     v_item_saldo := 0;
     
     select sum(movdet.cantidad) into v_ingresos
@@ -40,7 +40,7 @@ BEGIN
         and movdet.cantidad is not null
         and movdet.costo_unitario is not null
         and movdet.id_item = p_id_item
-        and mov.estado_mov in ('finalizado', 'borrador')
+        and mov.estado_mov = 'finalizado'
         and mov.id_almacen = p_id_almacen;
     
     select sum(movdet.cantidad) into v_salidas
@@ -52,7 +52,7 @@ BEGIN
         and movdet.cantidad is not null
         and movdet.costo_unitario is not null
         and movdet.id_item = p_id_item
-        and mov.estado_mov in ('finalizado', 'borrador')
+        and mov.estado_mov = 'finalizado'
         and mov.id_almacen = p_id_almacen;
     
     if (v_ingresos is null) then
