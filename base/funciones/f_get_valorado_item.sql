@@ -35,7 +35,7 @@ DECLARE
 
 BEGIN
     v_nombre_funcion = 'alm.f_get_valorado_item';    
-    IF (p_cantidad_sol is null or p_cantidad_sol = 0) THEN
+    IF (p_cantidad_sol is null) THEN
     	return;
     END IF;
     

@@ -183,6 +183,7 @@ BEGIN
 			select 
             	movdet.id_item,
             	item.nombre as nombre_item,
+                movdet.id_movimiento_det,
 				movdet.cantidad as cantidad_item
             from alm.tmovimiento_det movdet
             inner join alm.titem item on item.id_item = movdet.id_item
@@ -265,7 +266,7 @@ BEGIN
                     into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
                 from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad);
                 
-                if (r_costo_valorado is null) then
+                if (v_costo_valorado is null) then
                 	raise exception '%', 'El item ' || g_registros.nombre_item || ' no pudo ser valorado';
                 end if;
                 
@@ -326,9 +327,9 @@ BEGIN
             from alm.tmovimiento_det movdet
             where movdet.id_movimiento = v_parametros.id_movimiento
             	and movdet.estado_reg = 'activo'
-                and movdet.costo_unitario is not null;
+                and movdet.costo_unitario is null;
                 
-            if (v_contador is not null) then
+            if (v_contador > 0) then
             	raise exception '%', 'Todos los items del movimiento deben tener costo unitario.';
             end if;
         end if;

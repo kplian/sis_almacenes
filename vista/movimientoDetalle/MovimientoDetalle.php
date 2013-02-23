@@ -87,7 +87,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			config : {
 				name : 'cantidad_item',
 				fieldLabel : 'Cantidad Total',
-				allowBlank : true,
+				allowBlank : false,
 				anchor : '100%',
 				gwidth : 100,
 				maxLength : 6
@@ -103,7 +103,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			config : {
 				name : 'costo_unitario',
 				fieldLabel : 'Costo unitario',
-				allowBlank : true,
+				allowBlank : false,
 				anchor : '100%',
 				gwidth : 90,
 				maxLength : 10
@@ -240,7 +240,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		bsave : false,
 		fwidth : 420,
-		fheight : 280,
+		fheight : 300,
 		onReloadPage : function(m) {
 			this.maestro = m;
 			this.Atributos[1].valorInicial = this.maestro.id_movimiento;
@@ -278,8 +278,10 @@ header("content-type: text/javascript; charset=UTF-8");
 		onButtonEdit : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonEdit.call(this);
 			if (this.maestro.tipo == 'ingreso') {
+                this.getComponente('costo_unitario').enable();
                 this.getComponente('costo_unitario').setVisible(true);
             } else {
+                this.getComponente('costo_unitario').disable();
                 this.getComponente('costo_unitario').setVisible(false);
             }
             this.getComponente('cantidad_item').setVisible(true);
@@ -287,8 +289,10 @@ header("content-type: text/javascript; charset=UTF-8");
 		onButtonNew : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonNew.call(this);
 			if (this.maestro.tipo == 'ingreso') {
+			    this.getComponente('costo_unitario').enable();
 			    this.getComponente('costo_unitario').setVisible(true);
 			} else {
+			    this.getComponente('costo_unitario').disable();
 			    this.getComponente('costo_unitario').setVisible(false);
 			}
 			this.getComponente('cantidad_item').setVisible(true);

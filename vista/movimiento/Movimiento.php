@@ -24,6 +24,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
 			this.getComponente('tipo').on('select', this.onTipoSelect, this);
 			this.getComponente('id_movimiento_tipo').on('select', this.onMovimientoTipoSelect, this);
+			this.getComponente('solicitante').on('select', this.onSolicitanteSelect, this);
 
 			this.addButton('btnFinalizar', {
 				text : 'Finalizar',
@@ -130,99 +131,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			id_grupo : 0,
 			filters : {
 				pfiltro : 'movtip.nombre',
-				type : 'string'
-			},
-			grid : true,
-			form : true
-		}, {
-			config : {
-				name : 'id_funcionario',
-				fieldLabel : 'Funcionario',
-				allowBlank : false,
-				emptyText : 'Funcionario...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_organigrama/control/Funcionario/listarFuncionario',
-					id : 'id_funcionario',
-					root : 'datos',
-					sortInfo : {
-						field : 'desc_person',
-						direction : 'ASC'
-					},
-					totalProperty : 'total',
-					fields : ['id_funcionario', 'desc_person'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'person.nombre_completo1'
-					}
-				}),
-				valueField : 'id_funcionario',
-				displayField : 'desc_person',
-				gdisplayField : 'nombre_funcionario',
-				hiddenName : 'id_funcionario',
-				forceSelection : true,
-				typeAhead : false,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '100%',
-				gwidth : 100,
-				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_funcionario']);
-				}
-			},
-			type : 'ComboBox',
-			id_grupo : 0,
-			filters : {
-				pfiltro : 'person_fun.nombre_completo1',
-				type : 'string'
-			},
-			grid : true,
-			form : true
-		}, {
-			config : {
-				name : 'id_proveedor',
-				fieldLabel : 'Proveedor',
-				allowBlank : true,
-				emptyText : 'Proveedor...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_parametros/control/Proveedor/listarProveedorCombos',
-					id : 'id_proveedor',
-					root : 'datos',
-					sortInfo : {
-						field : 'desc_proveedor',
-						direction : 'ASC'
-					},
-					fields : ['id_proveedor', 'desc_proveedor'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'desc_proveedor'
-					}
-				}),
-				hidden : true,
-				valueField : 'id_proveedor',
-				displayField : 'desc_proveedor',
-				gdisplayField : 'nombre_proveedor',
-				hiddenName : 'id_proveedor',
-				forceSelection : true,
-				typeAhead : true,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '99%',
-				enableMultiSelect : true,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_proveedor']);
-				}
-			},
-			type : 'ComboBox',
-			id_grupo : 0,
-			filters : {
-				pfiltro : 'person.nombre_completo1',
 				type : 'string'
 			},
 			grid : true,
@@ -339,6 +247,124 @@ header("content-type: text/javascript; charset=UTF-8");
 				type : 'date'
 			},
 			id_grupo : 1,
+			grid : true,
+			form : true
+		}, {
+			config : {
+				name : 'solicitante',
+				fieldLabel : 'Solicitante',
+				allowBlank : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'local',
+				store : new Ext.data.ArrayStore({
+					fields : ['codigo', 'nombre'],
+					data : [['funcionario', 'Funcionario'], ['proveedor', 'Proveedor']]
+				}),
+				disabled : true,
+				hidden : true,
+				anchor : '99%',
+				valueField : 'codigo',
+				displayField : 'nombre'
+			},
+			type : 'ComboBox',
+			id_grupo : 1,
+			form : true,
+			grid : false
+		}, {
+			config : {
+				name : 'id_funcionario',
+				fieldLabel : 'Funcionario',
+				allowBlank : false,
+				emptyText : 'Funcionario...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_organigrama/control/Funcionario/listarFuncionario',
+					id : 'id_funcionario',
+					root : 'datos',
+					sortInfo : {
+						field : 'desc_person',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_funcionario', 'desc_person'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'person.nombre_completo1'
+					}
+				}),
+				disabled : true,
+				hidden : true,
+				valueField : 'id_funcionario',
+				displayField : 'desc_person',
+				gdisplayField : 'nombre_funcionario',
+				hiddenName : 'id_funcionario',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '99%',
+				gwidth : 100,
+				minChars : 2,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['nombre_funcionario']);
+				}
+			},
+			type : 'ComboBox',
+			id_grupo : 0,
+			filters : {
+				pfiltro : 'person_fun.nombre_completo1',
+				type : 'string'
+			},
+			grid : true,
+			form : true
+		}, {
+			config : {
+				name : 'id_proveedor',
+				fieldLabel : 'Proveedor',
+				allowBlank : false,
+				emptyText : 'Proveedor...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_parametros/control/Proveedor/listarProveedorCombos',
+					id : 'id_proveedor',
+					root : 'datos',
+					sortInfo : {
+						field : 'desc_proveedor',
+						direction : 'ASC'
+					},
+					fields : ['id_proveedor', 'desc_proveedor'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'desc_proveedor'
+					}
+				}),
+				disabled : true,
+				hidden : true,
+				valueField : 'id_proveedor',
+				displayField : 'desc_proveedor',
+				gdisplayField : 'nombre_proveedor',
+				hiddenName : 'id_proveedor',
+				forceSelection : true,
+				typeAhead : true,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '99%',
+				enableMultiSelect : true,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['nombre_proveedor']);
+				}
+			},
+			type : 'ComboBox',
+			id_grupo : 0,
+			filters : {
+				pfiltro : 'person.nombre_completo1',
+				type : 'string'
+			},
 			grid : true,
 			form : true
 		}, {
@@ -531,8 +557,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			dateFormat : 'Y-m-d H:i:s.u'
 		}],
 		sortInfo : {
-			field : 'id_movimiento',
-			direction : 'ASC'
+			field : 'fecha_mov',
+			direction : 'DESC'
 		},
 		bdel : true,
 		bsave : false,
@@ -545,11 +571,12 @@ header("content-type: text/javascript; charset=UTF-8");
 			cls : 'MovimientoDetalle'
 		},
 		onTipoSelect : function(e, component, index) {
-			if (e.value.indexOf('ingreso') != -1) {
-				this.getComponente('id_proveedor').setVisible(true);
+			if (e.value == 'ingreso') {
+				this.getComponente('solicitante').setVisible(false);
+				this.getComponente('solicitante').disable();
 			} else {
-				this.getComponente('id_proveedor').setVisible(false);
-
+				this.getComponente('solicitante').setVisible(true);
+				this.getComponente('solicitante').enable();
 			}
 			this.getComponente('id_almacen_dest').setVisible(false);
 			this.getComponente('id_movimiento_tipo').reset();
@@ -563,6 +590,25 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('id_almacen_dest').setVisible(true);
 			} else {
 				this.getComponente('id_almacen_dest').setVisible(false);
+			}
+		},
+		onSolicitanteSelect : function(e, component, index) {
+			if (e.value == 'funcionario') {
+			    this.getComponente('id_proveedor').disable();
+			    this.getComponente('id_proveedor').setVisible(false);
+			    
+				this.getComponente('id_funcionario').reset();
+				this.getComponente('id_funcionario').lastQuery = null;
+				this.getComponente('id_funcionario').setVisible(true);
+				this.getComponente('id_funcionario').enable();
+			} else {
+			    this.getComponente('id_funcionario').disable();
+                this.getComponente('id_funcionario').setVisible(false);
+                
+				this.getComponente('id_proveedor').reset();
+				this.getComponente('id_proveedor').lastQuery = null;
+				this.getComponente('id_proveedor').setVisible(true);
+				this.getComponente('id_proveedor').enable();
 			}
 		},
 		onBtnFinalizar : function() {
@@ -627,12 +673,33 @@ header("content-type: text/javascript; charset=UTF-8");
 		onButtonEdit : function() {
 			Phx.vista.Movimiento.superclass.onButtonEdit.call(this);
 			this.getComponente('tipo').disable();
-			this.getComponente('id_almacen').disable();
+			if(this.getComponente('tipo').value == 'salida') {
+			    var comboSolicitante = this.getComponente('solicitante');
+			    var comboProveedor = this.getComponente('id_proveedor');
+			    var comboFuncionario = this.getComponente('id_funcionario');
+			    if (comboFuncionario.value != null && comboFuncionario.value != undefined) {
+			        comboSolicitante.setValue('funcionario');
+			        comboFuncionario.enable();
+			        comboFuncionario.setVisible(true);
+			    }
+			    if (comboProveedor.value != null && comboProveedor.value != undefined) {
+			        comboSolicitante.setValue('proveedor');
+			        comboProveedor.enable();
+                    comboProveedor.setVisible(true);
+			    }
+			    comboSolicitante.enable();
+                comboSolicitante.setVisible(true);
+			}
 		},
 		onButtonNew : function() {
-		    Phx.vista.Movimiento.superclass.onButtonNew.call(this);
+			Phx.vista.Movimiento.superclass.onButtonNew.call(this);
 			this.getComponente('tipo').enable();
-			this.getComponente('id_almacen').enable();
+			this.getComponente('solicitante').disable();
+			this.getComponente('solicitante').setVisible(false);
+			this.getComponente('id_proveedor').disable();
+			this.getComponente('id_proveedor').setVisible(false);
+			this.getComponente('id_funcionario').disable();
+			this.getComponente('id_funcionario').setVisible(false);
 		}
 	})
 </script>
