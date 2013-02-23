@@ -230,3 +230,7 @@ ALTER TABLE alm.tmovimiento_det_valorado
   OWNER TO postgres;
 /***********************************F-SCP-AAO-ALM-25-21/02/2013****************************************/
 
+/***********************************I-SCP-AAO-ALM-33-21/02/2013****************************************/
+ALTER TABLE alm.tmovimiento_det
+  ADD COLUMN costo_unitario NUMERIC(18,6);
+/***********************************F-SCP-AAO-ALM-33-21/02/2013****************************************/

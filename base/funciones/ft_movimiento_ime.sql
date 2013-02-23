@@ -35,7 +35,6 @@ DECLARE
   v_estado_mov					varchar;
   g_registros					record;
   g_registros_2					record;
-  v_errores						varchar;
   v_tipo_mov					varchar;
   v_id_almacen					integer;
   v_codigo_valoracion			varchar;
@@ -44,6 +43,8 @@ DECLARE
   v_costo_valorado				numeric;
   v_cantidad_valorada			numeric;
   v_id_movimiento_det_val_desc 	integer;
+  v_nombre_item					varchar;
+  v_errores						varchar;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -157,7 +158,6 @@ BEGIN
     ***********************************/
 	elseif(p_transaccion='SAL_MOVFIN_MOD')then
   	begin
-    
     	--verificar que el almacen esté activo.
         select alma.estado into v_estado_almacen
         from alm.talmacen alma
@@ -167,97 +167,107 @@ BEGIN
         	raise exception '%', 'El almacen seleccionado para este movimiento no se encuentra activo';
         end if;
         
+        --TODO: Verificar que la fecha no sea anterior al ultimo registro finalizado.
+        
         --TODO: revisar si el periodo esta abierto.
         
-        --buscamos errores en las dependencias del movimiento
-		v_errores := '';
-        v_contador = 0;
+        --se obtiene el tipo de movimiento para realizar validaciones
+        select movtip.tipo into v_tipo_mov
+        from alm.tmovimiento mov 
+        inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
+        where mov.id_movimiento = v_parametros.id_movimiento;
         
+        -- Busqueda de errores en las dependencias del movimiento
+        v_contador := 0;
         FOR g_registros in (
 			select 
-     			movdet.id_movimiento_det,
-                movdet.id_movimiento,
-                movdet.id_item,
-                item.nombre as nombre_item,
-                movdet.cantidad as cantidad_item
+            	movdet.id_item,
+            	item.nombre as nombre_item,
+				movdet.cantidad as cantidad_item
             from alm.tmovimiento_det movdet
             inner join alm.titem item on item.id_item = movdet.id_item
             where movdet.estado_reg = 'activo'
             	and movdet.id_movimiento = v_parametros.id_movimiento
 		) LOOP
         	v_contador = v_contador + 1;
-        	if (g_registros.cantidad_item is null or g_registros.cantidad_item <= 0) then
-            	v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener cantidad total mayor a cero';
+            
+        	--Verificamos que la cantidad no sea nula y que la cantidad requerida no sea mayor que el saldo 
+            v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen);
+            if (g_registros.cantidad_item is null or g_registros.cantidad_item < 0) then
+            	v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener cantidad registrada igual o mayor a cero';
+            elseif (v_tipo_mov = 'salida' and g_registros.cantidad_item > v_saldo_cantidad) then
+            	v_errores = v_errores || '\nNo existen suficientes existencias del item ' || g_registros.nombre_item || '. Solicitado: ' || g_registros.cantidad_item || '. Existencias: '|| v_saldo_cantidad;
             end if;
             
             v_contador_2 := 0;
-            
             FOR g_registros_2 IN (
             	select 
-                    detval.cantidad as cantidad_item,
-                    detval.costo_unitario
+                    detval.cantidad as cantidad_item
                 from alm.tmovimiento_det_valorado detval
                 inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
                 where detval.estado_reg = 'activo'
                     and detval.id_movimiento_det = g_registros.id_movimiento_det 
             ) LOOP
             	v_contador_2 = v_contador_2 + 1;
-                if (g_registros_2.cantidad_item is null or g_registros_2.cantidad_item <= 0) THEN
-                	v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' no debe contener valorados con cantidad igual o menor que cero';
+                if (g_registros_2.cantidad_item is null or g_registros_2.cantidad_item < 0) THEN
+                	v_errores = v_errores || '\n- El item ' || g_registros.nombre_item || ' debe contener valorados con cantidad mayor o igual que cero';
                 end if;
                 
             END LOOP;
             
             if (v_contador_2 = 0) then
-            	v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener al menos una cantidad para valorar';
+            	v_errores = v_errores || '\n- El item ' || g_registros.nombre_item || ' debe tener al menos una cantidad para valorar';
             end if;
         END LOOP;
         
         --verificar que el movimiento tenga al menos un movimiento_detalle registrado.
-        if (v_contador <= 0) then
+        if (v_contador = 0) then
         	raise exception '%', 'El movimiento seleccionado debe tener al menos un item registrado en su detalle';
         end if;
         
-        --verificamos que el movimiento no tenga errores en sus dependencias
+        --muestra los errores si los hubiese
         if (v_errores != '') then
-        	raise exception '%', 'El siguiente item: '|| g_registros.nombre_item || '; debe tener una cantidad total mayor a cero.';
+        	raise exception '%', v_errores;
         end if;
         
         --Si el movimiento que se desea finalizar es una salida entonces se debe valorar los detalles.
-        select movtip.tipo, mov.id_almacen into v_tipo_mov, v_id_almacen
-        from alm.tmovimiento mov 
-        inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
-        where mov.id_movimiento = v_parametros.id_movimiento;
-        
         if (v_tipo_mov = 'salida') then
         	
         	FOR g_registros IN (
             	select 
                 	movdet.id_movimiento_det,
                 	movdet.id_item,
+                    itm.nombre as nombre_item,
                 	movdet.cantidad,
                     detval.id_movimiento_det_valorado
                 from alm.tmovimiento_det_valorado detval
                 inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
+                inner join alm.titem itm on itm.id_item = movdet.id_item
                 where movdet.id_movimiento = v_parametros.id_movimiento
                 	and movdet.estado_reg = 'activo'
             ) LOOP
-            
             	--obtener el codigo del metodo de valoracion
                 select metval.codigo into v_codigo_valoracion
                 from alm.talmacen_stock alstock
                 inner join alm.tmetodo_val metval on metval.id_metodo_val = alstock.id_metodo_val
-                where alstock.id_almacen = v_id_almacen
+                where alstock.id_almacen = v_parametros.id_almacen
                 	and alstock.id_item = g_registros.id_item
                     and alstock.estado_reg = 'activo';
                 
                 v_saldo_cantidad = g_registros.cantidad;
                 
-                -- TODO: por defecto valorar con Promedio Ponderado.
-
+                -- Verificar que el el item tenga un tipo de valoracion
+				if (v_codigo_valoracion is null) then
+                	raise exception '%', 'El item ' || g_registros.nombre_item || ' no tiene registrado un metodo de valoracion';
+                end if;
+                
                 select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
                     into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
-                from alm.f_get_valorado_item(g_registros.id_item, v_id_almacen, v_codigo_valoracion, v_saldo_cantidad);
+                from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad);
+                
+                if (r_costo_valorado is null) then
+                	raise exception '%', 'El item ' || g_registros.nombre_item || ' no pudo ser valorado';
+                end if;
                 
                 IF (v_codigo_valoracion = 'PEPS' or v_codigo_valoracion = 'UEPS') THEN
                     --Se descuenta la cantidad valorada del detalle valorado que se utilizo en la valoracion
@@ -281,7 +291,7 @@ BEGIN
                 WHILE (v_saldo_cantidad > 0) LOOP
                 	select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
                     	into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
-                    from alm.f_get_valorado_item(g_registros.id_item, v_id_almacen, v_codigo_valoracion, v_saldo_cantidad);
+                    from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad);
                     
                     --Se descuenta la cantidad valorada del detalle valorado que se utilizo en la valoracion
                     update alm.tmovimiento_det_valorado detval set
@@ -309,9 +319,18 @@ BEGIN
                     
                     v_saldo_cantidad = v_saldo_cantidad - v_cantidad_valorada;
                 END LOOP;
-                
             END LOOP;
-        
+            
+        elseif(v_tipo_mov = 'ingreso') then
+        	select count(*) into v_contador
+            from alm.tmovimiento_det movdet
+            where movdet.id_movimiento = v_parametros.id_movimiento
+            	and movdet.estado_reg = 'activo'
+                and movdet.costo_unitario is not null;
+                
+            if (v_contador is not null) then
+            	raise exception '%', 'Todos los items del movimiento deben tener costo unitario.';
+            end if;
         end if;
         
     	update alm.tmovimiento set

@@ -34,7 +34,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				inputType : 'hidden',
 			},
 			type : 'Field',
-			form : true
+			form : false
 		}, {
 			config : {
 				name : 'cantidad_item',
@@ -50,7 +50,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				type : 'numeric'
 			},
 			grid : true,
-			form : true
+			form : false
 		}, {
 			config : {
 				name : 'costo_unitario',
@@ -66,7 +66,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				type : 'numeric'
 			},
 			grid : true,
-			form : true
+			form : false
 		}, {
 			config : {
 				name : 'usr_reg',
@@ -127,8 +127,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : false
 		}],
 		title : 'Detalle de Movimiento',
-		ActSave : '../../sis_almacenes/control/MovimientoDetValorado/insertarMovimientoDetValorado',
-		ActDel : '../../sis_almacenes/control/MovimientoDetValorado/eliminarMovimientoDetValorado',
 		ActList : '../../sis_almacenes/control/MovimientoDetValorado/listarMovimientoDetValorado',
 		id_store : 'id_movimiento_det_valorado',
 		fields : [{
@@ -163,25 +161,13 @@ header("content-type: text/javascript; charset=UTF-8");
 			direction : 'ASC'
 		},
 		bsave : false,
-		fwidth : 420,
-		fheight : 280,
+		bnew : false,
+		bedit : false,
+		bdel : false,
 		onReloadPage : function(m) {
 			this.maestro = m;
 			this.Atributos[1].valorInicial = this.maestro.id_movimiento_det;
 			
-			if (this.maestro.estado_mov == 'finalizado' || this.maestro.estado_mov == 'cancelado') {
-				this.getBoton('edit').hide();
-				this.getBoton('del').hide();
-				this.getBoton('new').hide();
-			} else {
-			    if (this.maestro.tipo =='salida') {
-                    this.getBoton('new').hide();
-                } else {
-                    this.getBoton('new').show();
-                } 
-				this.getBoton('edit').show();
-				this.getBoton('del').show();
-			}
 			if (m.id != 'id') {
 				this.store.baseParams = {
 					id_movimiento_det : this.maestro.id_movimiento_det
@@ -197,42 +183,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.grid.getBottomToolbar().disable();
 				this.store.removeAll();
 			}
-		},
-		successSave : function(resp) {
-			this.store.rejectChanges();
-			Phx.CP.loadingHide();
-			if (resp.argument && resp.argument.news) {
-				if (resp.argument.def == 'reset') {
-					this.form.getForm().reset();
-				}
-
-				this.loadValoresIniciales()
-			} else {
-				this.window.hide();
-			}
-			this.sm.clearSelections();
-			Phx.CP.getPagina(this.idContenedorPadre).reload();
-		},
-		successDel : function(resp) {
-			Phx.CP.loadingHide();
-			Phx.CP.getPagina(this.idContenedorPadre).reload();
-		},
-		onButtonEdit : function() {
-            Phx.vista.MovimientoDetValorado.superclass.onButtonEdit.call(this);
-            if (this.maestro.tipo == 'ingreso') {
-                this.getComponente('costo_unitario').setVisible(true);
-            } else {
-                this.getComponente('costo_unitario').setVisible(false);
-            }
-        },
-        onButtonNew : function() {
-            Phx.vista.MovimientoDetValorado.superclass.onButtonNew.call(this);
-            if (this.maestro.tipo == 'ingreso') {
-                this.getComponente('costo_unitario').setVisible(true);
-            } else {
-                this.getComponente('costo_unitario').setVisible(false);
-            }
-        }
+		}
 	})
 </script>
 

@@ -42,6 +42,7 @@ BEGIN
                 movdet.id_item,                    
                 item.nombre as nombre_item,
                 movdet.cantidad as cantidad_item,
+                movdet.costo_unitario,
                 movdet.fecha_caducidad,
                 usu1.cuenta as usr_reg,
                 movdet.fecha_reg,

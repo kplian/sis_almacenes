@@ -25,6 +25,7 @@ class MODMovimientoDetalle extends MODbase {
         $this->captura('id_item', 'int4');
         $this->captura('nombre_item', 'varchar');
         $this->captura('cantidad_item', 'numeric');
+        $this->captura('costo_unitario', 'numeric');
         $this->captura('fecha_caducidad', 'date');
         $this->captura('usr_reg', 'varchar');
         $this->captura('fecha_reg', 'timestamp');
@@ -62,6 +63,8 @@ class MODMovimientoDetalle extends MODbase {
         $this->setParametro('id_movimiento_det', 'id_movimiento_det', 'integer');
         $this->setParametro('id_movimiento', 'id_movimiento', 'integer');
         $this->setParametro('id_item', 'id_item', 'integer');
+        $this->setParametro('cantidad_item', 'cantidad_item', 'numeric');
+        $this->setParametro('costo_unitario', 'costo_unitario', 'numeric');
         $this->setParametro('fecha_caducidad', 'fecha_caducidad', 'date');
 
         $this->armarConsulta();

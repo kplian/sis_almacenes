@@ -113,7 +113,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				pfiltro : 'movdet.costo_unitario',
 				type : 'numeric'
 			},
-			grid : false,
+			grid : true,
 			form : true
 		}, {
 			config : {
@@ -213,6 +213,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'cantidad_item',
 			type : 'numeric'
 		}, {
+            name : 'costo_unitario',
+            type : 'numeric'
+        }, {
 			name : 'fecha_caducidad',
 			type : 'date',
 			dateFormat : 'Y-m-d'
@@ -269,13 +272,17 @@ header("content-type: text/javascript; charset=UTF-8");
 		east : {
 			url : '../../../sis_almacenes/vista/movimientoDetValorado/MovimientoDetValorado.php',
 			title : 'Valoracion del Detalle',
-			width : '50%',
+			width : '20%',
 			cls : 'MovimientoDetValorado'
 		},
 		onButtonEdit : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonEdit.call(this);
-			this.getComponente('costo_unitario').setVisible(false);
-            this.getComponente('cantidad_item').setVisible(false);
+			if (this.maestro.tipo == 'ingreso') {
+                this.getComponente('costo_unitario').setVisible(true);
+            } else {
+                this.getComponente('costo_unitario').setVisible(false);
+            }
+            this.getComponente('cantidad_item').setVisible(true);
 		},
 		onButtonNew : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonNew.call(this);
@@ -285,13 +292,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			    this.getComponente('costo_unitario').setVisible(false);
 			}
 			this.getComponente('cantidad_item').setVisible(true);
-		},
-		preparaMenu : function(n) {
-            var tb = Phx.vista.MovimientoDetalle.superclass.preparaMenu.call(this);
-            var data = this.getSelectedData();
-            data.estado_mov = this.maestro.estado_mov;
-            data.tipo = this.maestro.tipo;            return tb;
-        }
+		}
 	})
 </script>
 
