@@ -36,6 +36,7 @@ DECLARE
   g_registros					record;
   g_registros_2					record;
   v_tipo_mov					varchar;
+  v_tipo_mov_personalizado		varchar;
   v_id_almacen					integer;
   v_codigo_valoracion			varchar;
   v_saldo_cantidad				numeric;
@@ -45,6 +46,11 @@ DECLARE
   v_id_movimiento_det_val_desc 	integer;
   v_nombre_item					varchar;
   v_errores						varchar;
+  v_id_almacen_dest				integer;
+  v_id_movimiento_dest			integer;
+  v_id_movimiento_det_dest		integer;
+  v_fecha_mov_ultima			timestamp;
+  v_fecha_mov					timestamp;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -167,17 +173,27 @@ BEGIN
         	raise exception '%', 'El almacen seleccionado para este movimiento no se encuentra activo';
         end if;
         
-        --TODO: Verificar que la fecha no sea anterior al ultimo registro finalizado.
-        
-        --TODO: revisar si el periodo esta abierto.
-        
-        --se obtiene el tipo de movimiento para realizar validaciones
-        select movtip.tipo into v_tipo_mov
+        --se obtienen los datos del movimiento a finalizar para realizar validaciones
+        select mov.fecha_mov, movtip.tipo, movtip.nombre, mov.id_almacen_dest
+        into v_fecha_mov, v_tipo_mov, v_tipo_mov_personalizado, v_id_almacen_dest
         from alm.tmovimiento mov 
         inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
         where mov.id_movimiento = v_parametros.id_movimiento;
         
+        --Verificar que la fecha no sea anterior al ultimo registro finalizado.
+        select max(mov.fecha_mov) into v_fecha_mov_ultima
+        from alm.tmovimiento mov
+        where mov.estado_mov = 'finalizado'
+            and mov.estado_reg = 'activo';
+        
+        if (v_fecha_mov < v_fecha_mov_ultima) then
+        	raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
+        end if;
+
+        --TODO: revisar si el periodo esta abierto.
+        
         -- Busqueda de errores en las dependencias del movimiento
+        v_errores = '';
         v_contador := 0;
         FOR g_registros in (
 			select 
@@ -322,6 +338,69 @@ BEGIN
                 END LOOP;
             END LOOP;
             
+            --En el caso de que la salida sea por transferencia
+            if (lower(v_tipo_mov_personalizado) like '%salida por transferencia%') then
+                -- se debe insertar el registro de ingreso por transferencia en el destino
+                insert into alm.tmovimiento (
+                    id_usuario_reg,
+                    fecha_reg, 
+                    estado_reg,
+                    id_movimiento_tipo, 
+                    id_almacen,
+                    fecha_mov,
+                    estado_mov
+                ) values (
+                    p_id_usuario,
+                    now(),
+                    'activo',
+                    2,
+                    v_id_almacen_dest,
+                    v_parametros.fecha_mov,
+                    'borrador'
+                ) RETURNING id_movimiento into v_id_movimiento_dest;
+                
+                --se copia el detalle del movimiento de salida por transferencia pero sin costos unitarios.
+                FOR g_registros IN (
+                    select 
+                        movdet.id_movimiento_det,
+                        movdet.id_item,
+                        movdet.cantidad
+                    from alm.tmovimiento_det movdet
+					where movdet.id_movimiento = v_parametros.id_movimiento
+                        and movdet.estado_reg = 'activo'
+                ) LOOP
+                	insert into alm.tmovimiento_det(
+                        id_usuario_reg,
+                        fecha_reg,
+                        estado_reg,
+                        id_movimiento,
+                        id_item,
+                        cantidad
+                    ) VALUES (
+                        p_id_usuario,
+                        now(),
+                        'activo',
+                        v_id_movimiento_dest,
+                        g_registros.id_item,
+                        g_registros.cantidad
+                    ) RETURNING id_movimiento_det into v_id_movimiento_det_dest;
+                    
+                    insert into alm.tmovimiento_det_valorado (
+                        id_usuario_reg,
+                        fecha_reg,
+                        estado_reg,
+                        id_movimiento_det,
+                        cantidad
+                    ) VALUES (
+                        p_id_usuario,
+                        now(),
+                        'activo',
+                        v_id_movimiento_det_dest,
+                        g_registros.cantidad
+                    );
+                END LOOP;
+            end if;
+            
         elseif(v_tipo_mov = 'ingreso') then
         	select count(*) into v_contador
             from alm.tmovimiento_det movdet
@@ -335,9 +414,11 @@ BEGIN
         end if;
         
     	update alm.tmovimiento set
-        	estado_mov = 'finalizado'
+        	estado_mov = 'finalizado',
+            id_movimiento_dest = v_id_movimiento_dest
         where id_movimiento = v_parametros.id_movimiento;
         
+        --Se actualiza el saldo fisico del detalle del cual provino la cantidad.
         update alm.tmovimiento_det_valorado detval set
             aux_saldo_fisico = detval.cantidad
         from alm.tmovimiento_det movdet
@@ -346,83 +427,7 @@ BEGIN
             and movdet.estado_reg = 'activo'
             and detval.estado_reg = 'activo';
         
-        --TODO: Pendiente para el issue de transferencia
-        /*
-    	if(v_parametros.operacion = 'finalizarTransferencia')then
-        	begin
-            	select * into v_transferencia from alm.tmovimiento where id_movimiento=v_parametros.id_movimiento;
-                v_id_movimiento_tipo_ingreso=(select id_movimiento_tipo from alm.tmovimiento_tipo 
-  						where codigo='INGRESO');
-                
-                v_id_movimiento_tipo_salida=(select id_movimiento_tipo from alm.tmovimiento_tipo 
-  						where codigo='SALIDA');
-                
-                insert into alm.tmovimiento(
-                id_movimiento_tipo,
-                id_almacen,
-                id_funcionario,
-                fecha_mov,
-                numero_mov,
-                descripcion,
-                observaciones,
-                id_usuario_reg,
-                fecha_reg,
-                estado_mov)values(
-                v_id_movimiento_tipo_ingreso,
-                v_transferencia.id_almacen_dest,
-                v_transferencia.id_funcionario,
-                v_transferencia.fecha_mov,
-                v_transferencia.numero_mov,
-                v_transferencia.descripcion,
-                v_transferencia.observaciones,
-                v_transferencia.id_usuario_reg,
-				now(),
-                'finalizado')RETURNING id_movimiento into v_id_movimiento_ingreso;
-				
-                insert into alm.tmovimiento(
-                id_movimiento_tipo,
-                id_almacen,
-                id_funcionario,
-                fecha_mov,
-                numero_mov,
-                descripcion,
-                observaciones,
-                id_usuario_reg,
-                fecha_reg,
-                estado_mov)values(
-                v_id_movimiento_tipo_salida,
-                v_transferencia.id_almacen,
-                v_transferencia.id_funcionario,
-                v_transferencia.fecha_mov,
-                v_transferencia.numero_mov,
-                v_transferencia.descripcion,
-                v_transferencia.observaciones,
-                v_transferencia.id_usuario_reg,
-                now(),
-                'finalizado')RETURNING id_movimiento into v_id_movimiento_salida;
-                
-                v_consulta='select * from alm.tmovimiento_det where id_movimiento='||v_parametros.id_movimiento||'';
-                FOR v_detalle IN EXECUTE(v_consulta)
-                LOOP     
-                	insert into alm.tmovimiento_det(
-                    id_movimiento,id_item,cantidad, costo_unitario,fecha_caducidad,
-                    id_usuario_reg,fecha_reg,estado_reg)values
-                    (v_id_movimiento_ingreso, v_detalle.id_item,v_detalle.cantidad,
-                    v_detalle.costo_unitario, v_detalle.fecha_caducidad,
-                    v_detalle.id_usuario_reg,now(),'activo');
-                    
-                    insert into alm.tmovimiento_det(
-                    id_movimiento,id_item, cantidad, costo_unitario,
-                    fecha_caducidad, id_usuario_reg, fecha_reg, estado_reg)
-                    values(
-                    v_id_movimiento_salida, v_detalle.id_item, v_detalle.cantidad,
-                    v_detalle.costo_unitario,v_detalle.fecha_caducidad,
-                    v_detalle.id_usuario_reg, now(),'activo');                              
-           		END LOOP;
-        	end;
-        end if;
-        */
-        v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento finalizado');
+     	v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento finalizado');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
         return v_respuesta;	
     end;
