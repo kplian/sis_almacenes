@@ -26,6 +26,8 @@ class MODAlmacen extends MODbase {
         $this->captura('usr_reg', 'varchar');
         $this->captura('usr_mod', 'varchar');
         $this->captura('estado', 'varchar');
+        $this->captura('id_departamento', 'integer');
+        $this->captura('nombre_depto', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -41,6 +43,7 @@ class MODAlmacen extends MODbase {
         $this->setParametro('codigo', 'codigo', 'varchar');
         $this->setParametro('nombre', 'nombre', 'varchar');
         $this->setParametro('localizacion', 'localizacion', 'varchar');
+        $this->setParametro('id_departamento', 'id_departamento', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -57,6 +60,7 @@ class MODAlmacen extends MODbase {
         $this->setParametro('codigo', 'codigo', 'varchar');
         $this->setParametro('nombre', 'nombre', 'varchar');
         $this->setParametro('localizacion', 'localizacion', 'varchar');
+        $this->setParametro('id_departamento', 'id_departamento', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

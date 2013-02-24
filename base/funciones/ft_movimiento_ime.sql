@@ -51,6 +51,8 @@ DECLARE
   v_id_movimiento_det_dest		integer;
   v_fecha_mov_ultima			timestamp;
   v_fecha_mov					timestamp;
+  v_id_depto					integer;
+  v_cod_documento				varchar;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -165,7 +167,7 @@ BEGIN
 	elseif(p_transaccion='SAL_MOVFIN_MOD')then
   	begin
     	--verificar que el almacen esté activo.
-        select alma.estado into v_estado_almacen
+        select alma.estado, alma.id_departamento into v_estado_almacen, v_id_depto
         from alm.talmacen alma
         where alma.id_almacen = v_parametros.id_almacen;
         
@@ -249,7 +251,7 @@ BEGIN
         
         --Si el movimiento que se desea finalizar es una salida entonces se debe valorar los detalles.
         if (v_tipo_mov = 'salida') then
-        	
+        	v_cod_documento = 'MOVSAL';
         	FOR g_registros IN (
             	select 
                 	movdet.id_movimiento_det,
@@ -402,6 +404,7 @@ BEGIN
             end if;
             
         elseif(v_tipo_mov = 'ingreso') then
+        	v_cod_documento = 'MOVIN';
         	select count(*) into v_contador
             from alm.tmovimiento_det movdet
             where movdet.id_movimiento = v_parametros.id_movimiento
@@ -413,12 +416,15 @@ BEGIN
             end if;
         end if;
         
+        --Actualiza
+        
     	update alm.tmovimiento set
         	estado_mov = 'finalizado',
-            id_movimiento_dest = v_id_movimiento_dest
+            id_movimiento_dest = v_id_movimiento_dest,
+            codigo = param.f_obtener_correlativo (v_cod_documento, NULL, NULL, v_id_depto, p_id_usuario, 'ALM', null)
         where id_movimiento = v_parametros.id_movimiento;
         
-        --Se actualiza el saldo fisico del detalle del cual provino la cantidad.
+        --Se actualiza el saldo fisico del detalle.
         update alm.tmovimiento_det_valorado detval set
             aux_saldo_fisico = detval.cantidad
         from alm.tmovimiento_det movdet

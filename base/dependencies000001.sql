@@ -134,3 +134,12 @@ ALTER TABLE alm.tmovimiento_det_valorado
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-AAO-ALM-25-21/02/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-26-25/02/2013*****************************************/
+ALTER TABLE alm.talmacen
+  ADD CONSTRAINT fk_talmacen__id_departamento FOREIGN KEY (id_departamento)
+    REFERENCES param.tdepto(id_depto)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-AAO-ALM-26-25/02/2013*****************************************/

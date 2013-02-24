@@ -239,3 +239,8 @@ ALTER TABLE alm.tmovimiento_det
 ALTER TABLE alm.tmovimiento
   ADD COLUMN id_movimiento_dest INTEGER;
 /***********************************F-SCP-AAO-ALM-31-23/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-26-25/02/2013****************************************/
+ALTER TABLE alm.talmacen
+  ADD COLUMN id_departamento INTEGER;
+/***********************************F-SCP-AAO-ALM-26-25/02/2013****************************************/

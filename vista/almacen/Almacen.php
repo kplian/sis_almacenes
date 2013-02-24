@@ -107,6 +107,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			},
 			type : 'TextField',
 			filters : {
+			    pfiltro : 'alm.codigo',
 				type : 'string'
 			},
 			id_grupo : 1,
@@ -123,6 +124,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			},
 			type : 'TextField',
 			filters : {
+			    pfiltro : 'alm.nombre',
 				type : 'string'
 			},
 			id_grupo : 1,
@@ -132,7 +134,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			config : {
 				name : 'localizacion',
 				fieldLabel : 'Localizacion',
-				allowBlank : false,
+				allowBlank : true,
 				anchor : '100%',
 				gwidth : 100,
 				maxLength : 50
@@ -142,6 +144,54 @@ header("content-type:text/javascript; charset=UTF-8");
 				type : 'string'
 			},
 			id_grupo : 1,
+			grid : true,
+			form : true
+		}, {
+			config : {
+				name : 'id_departamento',
+				fieldLabel : 'Departamento',
+				allowBlank : false,
+				emptyText : 'Departamento...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_parametros/control/Depto/listarDepto',
+					id : 'id_depto',
+					root : 'datos',
+					sortInfo : {
+						field : 'nombre',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_depto', 'nombre', 'codigo'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'DEPPTO.nombre#DEPPTO.codigo'
+					}
+				}),
+				valueField : 'id_depto',
+				displayField : 'nombre',
+				gdisplayField : 'nombre_depto',
+				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p></div></tpl>',
+				hiddenName : 'id_departamento',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '100%',
+				gwidth : 100,
+				minChars : 2,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['nombre_depto']);
+				}
+			},
+			type : 'ComboBox',
+			id_grupo : 0,
+			filters : {
+				pfiltro : 'dpto.nombre',
+				type : 'string'
+			},
 			grid : true,
 			form : true
 		}, {
@@ -250,6 +300,11 @@ header("content-type:text/javascript; charset=UTF-8");
 		}, {
 			name : 'estado',
 			type : 'string'
+		}, {
+			name : 'id_departamento'
+		}, {
+			name : 'nombre_depto',
+			type : 'string'
 		}],
 		sortInfo : {
 			field : 'id_almacen',
@@ -257,7 +312,7 @@ header("content-type:text/javascript; charset=UTF-8");
 		},
 		bdel : true,
 		fwidth : 420,
-		fheight : 230,
+		fheight : 250,
 		east : {
 			url : '../../../sis_almacenes/vista/almacenStock/AlmacenStock.php',
 			title : 'Stock Minimo de almacenes',
