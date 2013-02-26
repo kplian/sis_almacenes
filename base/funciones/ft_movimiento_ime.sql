@@ -53,6 +53,13 @@ DECLARE
   v_fecha_mov					timestamp;
   v_id_depto					integer;
   v_cod_documento				varchar;
+  v_alerta_amarilla				numeric;
+  v_alerta_roja					numeric;
+  v_cantidad_minima				numeric;
+  v_nombre_almacen				varchar;
+  v_alerts						boolean;
+  v_descripcion_alerta			varchar;
+  v_mostrar_alerts				boolean;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -170,7 +177,7 @@ BEGIN
 	elseif(p_transaccion='SAL_MOVFIN_MOD')then
   	begin
     	--verificar que el almacen esté activo.
-        select alma.estado, alma.id_departamento into v_estado_almacen, v_id_depto
+        select alma.nombre, alma.estado, alma.id_departamento into v_nombre_almacen, v_estado_almacen, v_id_depto
         from alm.talmacen alma
         where alma.id_almacen = v_parametros.id_almacen;
         
@@ -437,8 +444,81 @@ BEGIN
             and movdet.estado_reg = 'activo'
             and detval.estado_reg = 'activo';
         
+        
+        --Se revisa si el movimiento es una salida y si las existencias de los items del movimiento han llegado a 
+        -- su nivel de alerta en el stock.
+        v_mostrar_alerts = false;
+        if (v_tipo_mov = 'salida') then
+            FOR g_registros IN (
+                select 
+                	item.nombre as nombre_item,
+                    movdet.id_movimiento_det,
+                    movdet.id_item
+                from alm.tmovimiento_det movdet
+                inner join alm.titem item on item.id_item = movdet.id_item
+                where movdet.id_movimiento = v_parametros.id_movimiento
+                    and movdet.estado_reg = 'activo'
+            ) LOOP
+            	v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen);
+                select 
+                	almstock.cantidad_alerta_amarilla,
+                    almstock.cantidad_alerta_roja,
+                    almstock.cantidad_min
+                into
+                	v_alerta_amarilla,
+                    v_alerta_roja,
+                    v_cantidad_minima
+                from alm.talmacen_stock almstock
+                inner join alm.talmacen alma on alma.id_almacen = almstock.id_almacen
+                where almstock.id_almacen = v_parametros.id_almacen
+                	and almstock.id_item = g_registros.id_item;
+                v_alerts = false;
+                if (v_saldo_cantidad <= v_cantidad_minima) then
+                	v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo del mínimo en el almacén: '||v_nombre_almacen;
+                    v_alerts = true;
+                elseif(v_saldo_cantidad <= v_alerta_roja) then
+                	v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo de la alerta roja en el almacén: '||v_nombre_almacen;
+                	v_alerts = true;
+                elseif(v_saldo_cantidad <= v_alerta_amarilla) then
+                	v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo de la alerta amarilla en el almacén: '||v_nombre_almacen;
+                	v_alerts = true;
+                end if;
+                
+                IF (v_alerts) THEN
+                    FOR g_registros_2 IN (
+                        select almu.id_usuario
+                        from alm.talmacen_usuario almu
+                        where almu.id_almacen = v_parametros.id_almacen
+                    ) LOOP
+                        v_aux_integer = param.f_inserta_alarma (
+                            NULL,
+                            v_descripcion_alerta,
+                            NULL,
+                            now()::date,
+                            'notificacion',
+                            NULL,
+                            p_id_usuario,
+                            NULL,
+                            'Bajas existencias en Almacén: '||v_nombre_almacen,
+                            '{}',
+                            g_registros_2.id_usuario,
+                            'Bajas existencias en Almacén: '||v_nombre_almacen
+                        );
+                        IF (g_registros_2.id_usuario = p_id_usuario) THEN
+                        	v_mostrar_alerts = true;
+                        END IF;
+                    END LOOP;
+                END IF;
+            END LOOP;
+            
+        END IF;
+        
      	v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento finalizado');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
+        
+        IF(v_mostrar_alerts) THEN
+        	v_respuesta=pxp.f_agrega_clave(v_respuesta,'alerts',v_hay_alerts::varchar);
+        END IF;
         return v_respuesta;	
     end;
 	/*********************************   
@@ -455,7 +535,6 @@ BEGIN
 
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento cancelado');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
-
         return v_respuesta;
     end;
   else

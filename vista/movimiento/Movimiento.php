@@ -267,57 +267,57 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : true,
 			form : true
 		}, {
-            config : {
-                name : 'id_movimiento_origen',
-                fieldLabel : 'Movimiento Origen',
-                allowBlank : false,
-                emptyText : 'Movimiento Origen...',
-                store : new Ext.data.JsonStore({
-                    url : '../../sis_almacenes/control/Movimiento/listarMovimiento',
-                    id : 'id_movimiento',
-                    root : 'datos',
-                    sortInfo : {
-                        field : 'mov.id_movimiento',
-                        direction : 'ASC'
-                    },
-                    totalProperty : 'total',
-                    fields : ['id_movimiento', 'codigo'],
-                    remoteSort : true,
-                    baseParams : {
-                        par_filtro : 'mov.codigo',
-                        estado_mov : 'finalizado',
-                        tipo : 'salida'
-                    }
-                }),
-                disabled : true,
-                hidden : true,
-                valueField : 'id_movimiento',
-                displayField : 'codigo',
-                gdisplayField : 'codigo_origen',
-                hiddenName : 'id_movimiento_origen',
-                forceSelection : true,
-                typeAhead : false,
-                triggerAction : 'all',
-                lazyRender : true,
-                mode : 'remote',
-                pageSize : 10,
-                queryDelay : 1000,
-                anchor : '99%',
-                gwidth : 150,
-                minChars : 2,
-                renderer : function(value, p, record) {
-                    return String.format('{0}', record.data['codigo_origen']);
-                }
-            },
-            type : 'ComboBox',
-            id_grupo : 0,
-            filters : {
-                pfiltro : 'movorig.codigo',
-                type : 'string'
-            },
-            grid : true,
-            form : true
-        }, {
+			config : {
+				name : 'id_movimiento_origen',
+				fieldLabel : 'Movimiento Origen',
+				allowBlank : false,
+				emptyText : 'Movimiento Origen...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_almacenes/control/Movimiento/listarMovimiento',
+					id : 'id_movimiento',
+					root : 'datos',
+					sortInfo : {
+						field : 'mov.id_movimiento',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_movimiento', 'codigo'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'mov.codigo',
+						estado_mov : 'finalizado',
+						tipo : 'salida'
+					}
+				}),
+				disabled : true,
+				hidden : true,
+				valueField : 'id_movimiento',
+				displayField : 'codigo',
+				gdisplayField : 'codigo_origen',
+				hiddenName : 'id_movimiento_origen',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '99%',
+				gwidth : 150,
+				minChars : 2,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['codigo_origen']);
+				}
+			},
+			type : 'ComboBox',
+			id_grupo : 0,
+			filters : {
+				pfiltro : 'movorig.codigo',
+				type : 'string'
+			},
+			grid : true,
+			form : true
+		}, {
 			config : {
 				name : 'solicitante',
 				fieldLabel : 'Solicitante',
@@ -492,7 +492,8 @@ header("content-type: text/javascript; charset=UTF-8");
 				gwidth : 100,
 				renderer : function(value, p, record) {
 					return value ? value.dateFormat('d/m/Y h:i:s') : ''
-				}			},
+				}
+			},
 			type : 'DateField',
 			filters : {
 				pfiltro : 'mov.fecha_reg',
@@ -645,12 +646,11 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('id_almacen_dest').lastQuery = null;
 				this.getComponente('id_almacen_dest').setVisible(true);
 			} else if (this.getComponente('tipo').value.indexOf('ingreso') != -1 && component.data.nombre.toLowerCase().indexOf('devol') != -1) {
-			    this.getComponente('id_movimiento_origen').reset();
-			    this.getComponente('id_movimiento_origen').lastQuery = null;
-			    this.getComponente('id_movimiento_origen').enable();
-			    this.getComponente('id_movimiento_origen').setVisible(true);
-			}
-			else {
+				this.getComponente('id_movimiento_origen').reset();
+				this.getComponente('id_movimiento_origen').lastQuery = null;
+				this.getComponente('id_movimiento_origen').enable();
+				this.getComponente('id_movimiento_origen').setVisible(true);
+			} else {
 				this.getComponente('id_almacen_dest').setVisible(false);
 				this.getComponente('id_movimiento_origen').disable();
 				this.getComponente('id_movimiento_origen').setVisible(false);
@@ -748,30 +748,30 @@ header("content-type: text/javascript; charset=UTF-8");
 					comboFuncionario.enable();
 					comboFuncionario.setVisible(true);
 					comboProveedor.disable();
-                    comboProveedor.setVisible(false);
-				}else if (comboProveedor.value != null && comboProveedor.value != undefined) {
+					comboProveedor.setVisible(false);
+				} else if (comboProveedor.value != null && comboProveedor.value != undefined) {
 					comboSolicitante.setValue('proveedor');
 					comboProveedor.enable();
 					comboProveedor.setVisible(true);
 					comboFuncionario.disable();
-                    comboFuncionario.setVisible(false);
+					comboFuncionario.setVisible(false);
 				}
 				this.getComponente('id_movimiento_origen').disable();
-                this.getComponente('id_movimiento_origen').setVisible(false);
-			} else if (this.getComponente('tipo').value == 'ingreso'){
-			    if (this.getComponente('id_movimiento_tipo').getRawValue().toLowerCase().indexOf('devol') != -1) {
-                    this.getComponente('id_movimiento_origen').enable();
-                    this.getComponente('id_movimiento_origen').setVisible(true);
-                } else {
-                    this.getComponente('id_movimiento_origen').disable();
-                    this.getComponente('id_movimiento_origen').setVisible(false);
-                }
-                this.getComponente('solicitante').disable();
-                this.getComponente('solicitante').setVisible(false);
-                this.getComponente('id_proveedor').disable();
-                this.getComponente('id_proveedor').setVisible(false);
-                this.getComponente('id_funcionario').disable();
-                this.getComponente('id_funcionario').setVisible(false);
+				this.getComponente('id_movimiento_origen').setVisible(false);
+			} else if (this.getComponente('tipo').value == 'ingreso') {
+				if (this.getComponente('id_movimiento_tipo').getRawValue().toLowerCase().indexOf('devol') != -1) {
+					this.getComponente('id_movimiento_origen').enable();
+					this.getComponente('id_movimiento_origen').setVisible(true);
+				} else {
+					this.getComponente('id_movimiento_origen').disable();
+					this.getComponente('id_movimiento_origen').setVisible(false);
+				}
+				this.getComponente('solicitante').disable();
+				this.getComponente('solicitante').setVisible(false);
+				this.getComponente('id_proveedor').disable();
+				this.getComponente('id_proveedor').setVisible(false);
+				this.getComponente('id_funcionario').disable();
+				this.getComponente('id_funcionario').setVisible(false);
 			}
 		},
 		onButtonNew : function() {
@@ -784,7 +784,17 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.getComponente('id_funcionario').disable();
 			this.getComponente('id_funcionario').setVisible(false);
 			this.getComponente('id_movimiento_origen').disable();
-            this.getComponente('id_movimiento_origen').setVisible(false);
+			this.getComponente('id_movimiento_origen').setVisible(false);
+		},
+		successSave : function(resp) {
+			Phx.vista.Movimiento.superclass.successSave.call(this, resp);
+			var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+			if (reg.ROOT.datos.alerts) {
+				Phx.CP.loadWindows('../../../sis_parametros/vista/alarma/AlarmaFuncionario.php', 'Alarmas', {
+					width : 800,
+					height : 500
+				}, null, this.idContenedor, 'AlarmaFuncionario');
+			}
 		}
 	})
 </script>

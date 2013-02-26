@@ -17,11 +17,11 @@ class ACTMovimiento extends ACTbase {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODMovimiento', 'listarMovimiento');
         } else {
-            if($this->objParam->getParametro('estado_mov') != null) {
-                $this->objParam->addFiltro(" mov.estado_mov = ''".$this->objParam->getParametro('estado_mov')."'' ");
+            if ($this->objParam->getParametro('estado_mov') != null) {
+                $this->objParam->addFiltro(" mov.estado_mov = ''" . $this->objParam->getParametro('estado_mov') . "'' ");
             }
-            if($this->objParam->getParametro('tipo') != null) {
-                $this->objParam->addFiltro(" movtip.tipo = ''".$this->objParam->getParametro('tipo')."'' ");
+            if ($this->objParam->getParametro('tipo') != null) {
+                $this->objParam->addFiltro(" movtip.tipo = ''" . $this->objParam->getParametro('tipo') . "'' ");
             }
             $this->objFunc = $this->create('MODMovimiento');
             $this->res = $this->objFunc->listarMovimiento();
@@ -50,7 +50,7 @@ class ACTMovimiento extends ACTbase {
         $this->res = $this->objFunc->finalizarMovimiento();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
-    
+
     function cancelarMovimiento() {
         $this->objFunc = $this->create('MODMovimiento');
         $this->res = $this->objFunc->cancelarMovimiento();

@@ -18,7 +18,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				params : {
 					start : 0,
 					limit : 50,
-					id_almacen: this.id_almacen
+					id_almacen : this.id_almacen
 				}
 			});
 			this.Atributos[1].valorInicial = this.id_almacen;
@@ -32,14 +32,14 @@ header("content-type: text/javascript; charset=UTF-8");
 			type : 'Field',
 			form : true
 		}, {
-            config : {
-                labelSeparator : '',
-                inputType : 'hidden',
-                name : 'id_almacen'
-            },
-            type : 'Field',
-            form : true
-        }, {
+			config : {
+				labelSeparator : '',
+				inputType : 'hidden',
+				name : 'id_almacen'
+			},
+			type : 'Field',
+			form : true
+		}, {
 			config : {
 				name : 'tipo',
 				fieldLabel : 'Tipo',
@@ -59,9 +59,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			type : 'ComboBox',
 			id_grupo : 1,
 			filters : {
-                pfiltro : 'tipo',
-                type : 'string'
-            },
+				pfiltro : 'tipo',
+				type : 'string'
+			},
 			form : true,
 			grid : true
 		}, {
@@ -72,7 +72,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				emptyText : 'Usuario...',
 				store : new Ext.data.JsonStore({
 					url : '../../sis_seguridad/control/Usuario/listarUsuario',
-					id : 'id_clasificador',
+					id : 'id_usuario',
 					root : 'datos',
 					sortInfo : {
 						field : 'cuenta',
@@ -82,10 +82,10 @@ header("content-type: text/javascript; charset=UTF-8");
 					fields : ['id_usuario', 'cuenta', 'desc_person'],
 					remoteSort : true,
 					baseParams : {
-						par_filtro : 'cuenta#desc_person'
+						par_filtro : 'USUARI.cuenta#PERSON.nombre_completo2'
 					}
 				}),
-				tpl:'<tpl for="."><div class="x-combo-list-item"><p>Cuenta: {cuenta}</p><p>Nombre: {desc_person}</p></div></tpl>',
+				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Cuenta: {cuenta}</p><p>Nombre: {desc_person}</p></div></tpl>',
 				valueField : 'id_usuario',
 				displayField : 'cuenta',
 				gdisplayField : 'cuenta',
@@ -212,12 +212,12 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'cuenta',
 			type : 'string'
 		}, {
-            name : 'id_almacen',
-            type : 'numeric'
-        }, {
-            name : 'tipo',
-            type : 'string'
-        }, {
+			name : 'id_almacen',
+			type : 'numeric'
+		}, {
+			name : 'tipo',
+			type : 'string'
+		}, {
 			name : 'estado_reg',
 			type : 'string'
 		}, {
