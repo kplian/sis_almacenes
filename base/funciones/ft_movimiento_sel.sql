@@ -60,6 +60,8 @@ BEGIN
             	mov.codigo,
             	mov.descripcion,
             	mov.observaciones,
+                mov.id_movimiento_origen,
+                movorig.codigo as codigo_origen,
             	mov.estado_mov,
             	usu1.cuenta as usr_reg,
             	mov.fecha_reg,
@@ -74,9 +76,11 @@ BEGIN
             LEFT JOIN param.tinstitucion inst on inst.id_institucion = pro.id_institucion
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
             LEFT JOIN alm.talmacen almd on almd.id_almacen = mov.id_almacen_dest
+            LEFT JOIN alm.tmovimiento movorig on movorig.id_movimiento = mov.id_movimiento_origen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
 			WHERE mov.estado_reg = ''activo'' and ';
+            
     	v_consulta:=v_consulta||v_parametros.filtro;
         v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;
         return v_consulta;
@@ -100,6 +104,7 @@ BEGIN
             LEFT JOIN param.tinstitucion inst on inst.id_institucion = pro.id_institucion
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
             LEFT JOIN alm.talmacen almd on almd.id_almacen = mov.id_almacen_dest
+            LEFT JOIN alm.tmovimiento movorig on movorig.id_movimiento = mov.id_movimiento_origen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
 			WHERE mov.estado_reg = ''activo'' and ';

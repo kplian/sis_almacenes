@@ -52,6 +52,42 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : true
 		}, {
 			config : {
+				name : 'estado_mov',
+				fieldLabel : 'Estado',
+				allowBlank : false,
+				anchor : '100%',
+				gwidth : 70,
+				maxLength : 10
+			},
+			type : 'TextField',
+			filters : {
+				pfiltro : 'mov.estado_mov',
+				type : 'string'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : false
+		}, {
+			config : {
+				name : 'fecha_mov',
+				fieldLabel : 'Fecha Movimiento',
+				allowBlank : false,
+				gwidth : 100,
+				format : 'Y-m-d',
+				renderer : function(value, p, record) {
+					return value ? value.dateFormat('d/m/Y h:i:s') : ''
+				}
+			},
+			type : 'DateField',
+			filters : {
+				pfiltro : 'mov.fecha_mov',
+				type : 'date'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : true
+		}, {
+			config : {
 				name : 'tipo',
 				fieldLabel : 'Tipo',
 				allowBlank : false,
@@ -70,23 +106,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			id_grupo : 1,
 			form : true,
 			grid : false
-		}, {
-			config : {
-				name : 'estado_mov',
-				fieldLabel : 'Estado',
-				allowBlank : false,
-				anchor : '100%',
-				gwidth : 100,
-				maxLength : 10
-			},
-			type : 'TextField',
-			filters : {
-				pfiltro : 'mov.estado_mov',
-				type : 'string'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : false
 		}, {
 			config : {
 				name : 'id_movimiento_tipo',
@@ -121,7 +140,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				pageSize : 10,
 				queryDelay : 1000,
 				anchor : '100%',
-				gwidth : 100,
+				gwidth : 150,
 				minChars : 2,
 				renderer : function(value, p, record) {
 					return String.format('{0}', record.data['nombre_movimiento_tipo']);
@@ -168,7 +187,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				pageSize : 10,
 				queryDelay : 1000,
 				anchor : '100%',
-				gwidth : 100,
+				gwidth : 150,
 				minChars : 2,
 				renderer : function(value, p, record) {
 					return String.format('{0}', record.data['nombre_almacen']);
@@ -182,6 +201,23 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			grid : true,
 			form : true
+		}, {
+			config : {
+				name : 'codigo',
+				fieldLabel : 'Codigo',
+				allowBlank : true,
+				anchor : '100%',
+				gwidth : 150,
+				maxLength : 30
+			},
+			type : 'TextField',
+			filters : {
+				pfiltro : 'mov.codigo',
+				type : 'string'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : false
 		}, {
 			config : {
 				name : 'id_almacen_dest',
@@ -231,25 +267,57 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : true,
 			form : true
 		}, {
-			config : {
-				name : 'fecha_mov',
-				fieldLabel : 'Fecha Movimiento',
-				allowBlank : false,
-				gwidth : 100,
-				format : 'Y-m-d',
-				renderer : function(value, p, record) {
-					return value ? value.dateFormat('d/m/Y h:i:s') : ''
-				}
-			},
-			type : 'DateField',
-			filters : {
-				pfiltro : 'mov.fecha_mov',
-				type : 'date'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : true
-		}, {
+            config : {
+                name : 'id_movimiento_origen',
+                fieldLabel : 'Movimiento Origen',
+                allowBlank : false,
+                emptyText : 'Movimiento Origen...',
+                store : new Ext.data.JsonStore({
+                    url : '../../sis_almacenes/control/Movimiento/listarMovimiento',
+                    id : 'id_movimiento',
+                    root : 'datos',
+                    sortInfo : {
+                        field : 'mov.id_movimiento',
+                        direction : 'ASC'
+                    },
+                    totalProperty : 'total',
+                    fields : ['id_movimiento', 'codigo'],
+                    remoteSort : true,
+                    baseParams : {
+                        par_filtro : 'mov.codigo',
+                        estado_mov : 'finalizado',
+                        tipo : 'salida'
+                    }
+                }),
+                disabled : true,
+                hidden : true,
+                valueField : 'id_movimiento',
+                displayField : 'codigo',
+                gdisplayField : 'codigo_origen',
+                hiddenName : 'id_movimiento_origen',
+                forceSelection : true,
+                typeAhead : false,
+                triggerAction : 'all',
+                lazyRender : true,
+                mode : 'remote',
+                pageSize : 10,
+                queryDelay : 1000,
+                anchor : '99%',
+                gwidth : 150,
+                minChars : 2,
+                renderer : function(value, p, record) {
+                    return String.format('{0}', record.data['codigo_origen']);
+                }
+            },
+            type : 'ComboBox',
+            id_grupo : 0,
+            filters : {
+                pfiltro : 'movorig.codigo',
+                type : 'string'
+            },
+            grid : true,
+            form : true
+        }, {
 			config : {
 				name : 'solicitante',
 				fieldLabel : 'Solicitante',
@@ -367,23 +435,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			grid : true,
 			form : true
-		}, {
-			config : {
-				name : 'codigo',
-				fieldLabel : 'Codigo',
-				allowBlank : true,
-				anchor : '100%',
-				gwidth : 100,
-				maxLength : 30
-			},
-			type : 'TextField',
-			filters : {
-				pfiltro : 'mov.codigo',
-				type : 'string'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : false
 		}, {
 			config : {
 				name : 'descripcion',
@@ -539,6 +590,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'observaciones',
 			type : 'string'
 		}, {
+			name : 'id_movimiento_origen'
+		}, {
+			name : 'codigo_origen',
+			type : 'string'
+		}, {
 			name : 'estado_mov',
 			type : 'string'
 		}, {
@@ -563,7 +619,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		bdel : true,
 		bsave : false,
 		fwidth : 420,
-		fheight : 500,
+		fheight : 530,
 		south : {
 			url : '../../../sis_almacenes/vista/movimientoDetalle/MovimientoDetalle.php',
 			title : 'Detalle de Movimiento',
@@ -588,23 +644,31 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('id_almacen_dest').reset();
 				this.getComponente('id_almacen_dest').lastQuery = null;
 				this.getComponente('id_almacen_dest').setVisible(true);
-			} else {
+			} else if (this.getComponente('tipo').value.indexOf('ingreso') != -1 && component.data.nombre.toLowerCase().indexOf('devol') != -1) {
+			    this.getComponente('id_movimiento_origen').reset();
+			    this.getComponente('id_movimiento_origen').lastQuery = null;
+			    this.getComponente('id_movimiento_origen').enable();
+			    this.getComponente('id_movimiento_origen').setVisible(true);
+			}
+			else {
 				this.getComponente('id_almacen_dest').setVisible(false);
+				this.getComponente('id_movimiento_origen').disable();
+				this.getComponente('id_movimiento_origen').setVisible(false);
 			}
 		},
 		onSolicitanteSelect : function(e, component, index) {
 			if (e.value == 'funcionario') {
-			    this.getComponente('id_proveedor').disable();
-			    this.getComponente('id_proveedor').setVisible(false);
-			    
+				this.getComponente('id_proveedor').disable();
+				this.getComponente('id_proveedor').setVisible(false);
+
 				this.getComponente('id_funcionario').reset();
 				this.getComponente('id_funcionario').lastQuery = null;
 				this.getComponente('id_funcionario').setVisible(true);
 				this.getComponente('id_funcionario').enable();
 			} else {
-			    this.getComponente('id_funcionario').disable();
-                this.getComponente('id_funcionario').setVisible(false);
-                
+				this.getComponente('id_funcionario').disable();
+				this.getComponente('id_funcionario').setVisible(false);
+
 				this.getComponente('id_proveedor').reset();
 				this.getComponente('id_proveedor').lastQuery = null;
 				this.getComponente('id_proveedor').setVisible(true);
@@ -673,22 +737,41 @@ header("content-type: text/javascript; charset=UTF-8");
 		onButtonEdit : function() {
 			Phx.vista.Movimiento.superclass.onButtonEdit.call(this);
 			this.getComponente('tipo').disable();
-			if(this.getComponente('tipo').value == 'salida') {
-			    var comboSolicitante = this.getComponente('solicitante');
-			    var comboProveedor = this.getComponente('id_proveedor');
-			    var comboFuncionario = this.getComponente('id_funcionario');
-			    if (comboFuncionario.value != null && comboFuncionario.value != undefined) {
-			        comboSolicitante.setValue('funcionario');
-			        comboFuncionario.enable();
-			        comboFuncionario.setVisible(true);
-			    }
-			    if (comboProveedor.value != null && comboProveedor.value != undefined) {
-			        comboSolicitante.setValue('proveedor');
-			        comboProveedor.enable();
-                    comboProveedor.setVisible(true);
-			    }
-			    comboSolicitante.enable();
-                comboSolicitante.setVisible(true);
+			if (this.getComponente('tipo').value == 'salida') {
+				var comboSolicitante = this.getComponente('solicitante');
+				var comboProveedor = this.getComponente('id_proveedor');
+				var comboFuncionario = this.getComponente('id_funcionario');
+				comboSolicitante.enable();
+				comboSolicitante.setVisible(true);
+				if (comboFuncionario.value != null && comboFuncionario.value != undefined) {
+					comboSolicitante.setValue('funcionario');
+					comboFuncionario.enable();
+					comboFuncionario.setVisible(true);
+					comboProveedor.disable();
+                    comboProveedor.setVisible(false);
+				}else if (comboProveedor.value != null && comboProveedor.value != undefined) {
+					comboSolicitante.setValue('proveedor');
+					comboProveedor.enable();
+					comboProveedor.setVisible(true);
+					comboFuncionario.disable();
+                    comboFuncionario.setVisible(false);
+				}
+				this.getComponente('id_movimiento_origen').disable();
+                this.getComponente('id_movimiento_origen').setVisible(false);
+			} else if (this.getComponente('tipo').value == 'ingreso'){
+			    if (this.getComponente('id_movimiento_tipo').getRawValue().toLowerCase().indexOf('devol') != -1) {
+                    this.getComponente('id_movimiento_origen').enable();
+                    this.getComponente('id_movimiento_origen').setVisible(true);
+                } else {
+                    this.getComponente('id_movimiento_origen').disable();
+                    this.getComponente('id_movimiento_origen').setVisible(false);
+                }
+                this.getComponente('solicitante').disable();
+                this.getComponente('solicitante').setVisible(false);
+                this.getComponente('id_proveedor').disable();
+                this.getComponente('id_proveedor').setVisible(false);
+                this.getComponente('id_funcionario').disable();
+                this.getComponente('id_funcionario').setVisible(false);
 			}
 		},
 		onButtonNew : function() {
@@ -700,6 +783,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.getComponente('id_proveedor').setVisible(false);
 			this.getComponente('id_funcionario').disable();
 			this.getComponente('id_funcionario').setVisible(false);
+			this.getComponente('id_movimiento_origen').disable();
+            this.getComponente('id_movimiento_origen').setVisible(false);
 		}
 	})
 </script>

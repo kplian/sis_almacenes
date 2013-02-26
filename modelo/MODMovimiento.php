@@ -36,6 +36,8 @@ class MODMovimiento extends MODbase {
         $this->captura('codigo', 'varchar');
         $this->captura('descripcion', 'varchar');
         $this->captura('observaciones', 'varchar');
+        $this->captura('id_movimiento_origen', 'integer');
+        $this->captura('codigo_origen', 'varchar');
         $this->captura('estado_mov', 'varchar');
         $this->captura('usr_reg', 'varchar');
         $this->captura('fecha_reg', 'timestamp');
@@ -61,6 +63,7 @@ class MODMovimiento extends MODbase {
         $this->setParametro('fecha_mov', 'fecha_mov', 'timestamp');
         $this->setParametro('descripcion', 'descripcion', 'varchar');
         $this->setParametro('observaciones', 'observaciones', 'varchar');
+        $this->setParametro('id_movimiento_origen', 'id_movimiento_origen', 'integer');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -82,6 +85,7 @@ class MODMovimiento extends MODbase {
         $this->setParametro('fecha_mov', 'fecha_mov', 'timestamp');
         $this->setParametro('descripcion', 'descripcion', 'varchar');
         $this->setParametro('observaciones', 'observaciones', 'varchar');
+        $this->setParametro('id_movimiento_origen', 'id_movimiento_origen', 'integer');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

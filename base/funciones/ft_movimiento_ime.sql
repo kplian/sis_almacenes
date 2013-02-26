@@ -78,7 +78,8 @@ BEGIN
             fecha_mov,
             descripcion,
             observaciones,
-            estado_mov
+            estado_mov,
+            id_movimiento_origen
         ) values (
         	p_id_usuario,
             now(),
@@ -91,7 +92,8 @@ BEGIN
             v_parametros.fecha_mov,
             v_parametros.descripcion,
             v_parametros.observaciones,
-            'borrador'
+            'borrador',
+            v_parametros.id_movimiento_origen
         ) RETURNING id_movimiento into v_id_movimiento;
 
         v_respuesta =pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento almacenado correctamente');
@@ -127,7 +129,8 @@ BEGIN
             id_almacen_dest = v_parametros.id_almacen_dest,
             fecha_mov = v_parametros.fecha_mov,
             descripcion = v_parametros.descripcion,
-            observaciones = v_parametros.observaciones
+            observaciones = v_parametros.observaciones,
+            id_movimiento_origen = v_parametros.id_movimiento_origen
         where id_movimiento = v_parametros.id_movimiento;
         
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento modificado con exito');
@@ -350,7 +353,8 @@ BEGIN
                     id_movimiento_tipo, 
                     id_almacen,
                     fecha_mov,
-                    estado_mov
+                    estado_mov,
+                    id_movimiento_origen
                 ) values (
                     p_id_usuario,
                     now(),
@@ -358,7 +362,8 @@ BEGIN
                     2,
                     v_id_almacen_dest,
                     v_parametros.fecha_mov,
-                    'borrador'
+                    'borrador',
+                    v_parametros.id_movimiento
                 ) RETURNING id_movimiento into v_id_movimiento_dest;
                 
                 --se copia el detalle del movimiento de salida por transferencia pero sin costos unitarios.
@@ -420,7 +425,6 @@ BEGIN
         
     	update alm.tmovimiento set
         	estado_mov = 'finalizado',
-            id_movimiento_dest = v_id_movimiento_dest,
             codigo = param.f_obtener_correlativo (v_cod_documento, NULL, NULL, v_id_depto, p_id_usuario, 'ALM', null)
         where id_movimiento = v_parametros.id_movimiento;
         
