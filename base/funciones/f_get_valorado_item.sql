@@ -52,7 +52,8 @@ BEGIN
         
     ELSEIF (p_valoracion = 'PEPS') THEN
     	--obtener el aux_saldo mas antiguo distinto de cero
-        select detval.aux_saldo_fisico, detval.costo_unitario, detval.id_movimiento_det_valorado into v_saldo_fisico, r_costo_valorado, r_id_movimiento_det_val_desc
+        select detval.aux_saldo_fisico, detval.costo_unitario, detval.id_movimiento_det_valorado 
+        into v_saldo_fisico, r_costo_valorado, r_id_movimiento_det_val_desc
         from alm.tmovimiento_det_valorado detval
         inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
         inner join alm.tmovimiento mov on mov.id_movimiento = movdet.id_movimiento
@@ -80,7 +81,8 @@ BEGIN
         
     ELSEIF (p_valoracion = 'UEPS') THEN
     	--obtener el aux_saldo mas reciente distinto de cero
-        select detval.aux_saldo_fisico, detval.costo_unitario, detval.id_movimiento_det_valorado into v_saldo_fisico, r_costo_valorado, r_id_movimiento_det_val_desc
+        select detval.aux_saldo_fisico, detval.costo_unitario, detval.id_movimiento_det_valorado 
+        into v_saldo_fisico, r_costo_valorado, r_id_movimiento_det_val_desc
         from alm.tmovimiento_det_valorado detval
         inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
         inner join alm.tmovimiento mov on mov.id_movimiento = movdet.id_movimiento

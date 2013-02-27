@@ -313,7 +313,8 @@ BEGIN
                     id_usuario_mod = p_id_usuario,
                     fecha_mod = now(),
                     cantidad = v_cantidad_valorada,
-                    costo_unitario = v_costo_valorado
+                    costo_unitario = v_costo_valorado,
+                    id_mov_det_val_origen = v_id_movimiento_det_val_desc
                 where id_movimiento_det_valorado = g_registros.id_movimiento_det_valorado;
                 
                 --si todavia hay saldo que valorar
@@ -336,14 +337,16 @@ BEGIN
                         estado_reg,
                         id_movimiento_det,
                         cantidad,
-                        costo_unitario
+                        costo_unitario,
+                        id_mov_det_val_origen
                     ) VALUES (
                         p_id_usuario,
                         now(),
                         'activo',
                         g_registros.id_movimiento_det,
                         v_cantidad_valorada,
-                        v_costo_valorado
+                        v_costo_valorado,
+                        v_id_movimiento_det_val_desc
                     );
                     
                     v_saldo_cantidad = v_saldo_cantidad - v_cantidad_valorada;
@@ -428,14 +431,13 @@ BEGIN
             end if;
         end if;
         
-        --Actualiza
-        
-    	update alm.tmovimiento set
+        --Actualiza el estado a finalizado cuando no hay ningun error
+        update alm.tmovimiento set
         	estado_mov = 'finalizado',
             codigo = param.f_obtener_correlativo (v_cod_documento, NULL, NULL, v_id_depto, p_id_usuario, 'ALM', null)
         where id_movimiento = v_parametros.id_movimiento;
         
-        --Se actualiza el saldo fisico del detalle.
+        --Se actualiza el saldo fisico del detalle valorado.
         update alm.tmovimiento_det_valorado detval set
             aux_saldo_fisico = detval.cantidad
         from alm.tmovimiento_det movdet
@@ -517,7 +519,7 @@ BEGIN
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
         
         IF(v_mostrar_alerts) THEN
-        	v_respuesta=pxp.f_agrega_clave(v_respuesta,'alerts',v_hay_alerts::varchar);
+        	v_respuesta=pxp.f_agrega_clave(v_respuesta,'alerts',v_mostrar_alerts::varchar);
         END IF;
         return v_respuesta;	
     end;
@@ -534,6 +536,103 @@ BEGIN
         where id_movimiento = v_parametros.id_movimiento;
 
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento cancelado');
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
+        return v_respuesta;
+    end;
+    /*********************************   
+     #TRANSACCION:  'SAL_MOVREV_MOD'
+     #DESCRIPCION:  Reversion de un movimiento
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        26-02-2013
+    ***********************************/
+    elseif (p_transaccion = 'SAL_MOVREV_MOD') then
+    begin
+    	--Revisar que sea el último movimiento finalizado.
+        select mov.id_movimiento
+        into v_id_movimiento
+        from alm.tmovimiento mov
+        where mov.estado_mov = 'finalizado'
+        	and mov.estado_reg = 'activo' 
+            order by mov.fecha_mov desc limit 1;
+        
+        if (v_id_movimiento != v_parametros.id_movimiento) then
+        	raise exception '%', 'No se puede revertir el movimiento seleccionado. Para revertir un movimiento no deben existir movimiento finalizados despues de éste.';
+        end if;
+        
+        --se obtienen los datos del movimiento a revertir
+        select mov.fecha_mov, movtip.tipo, movtip.nombre, mov.id_almacen_dest
+        into v_fecha_mov, v_tipo_mov, v_tipo_mov_personalizado, v_id_almacen_dest
+        from alm.tmovimiento mov 
+        inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
+        where mov.id_movimiento = v_parametros.id_movimiento;
+        
+        -- solo para salidas.
+        if (v_tipo_mov = 'salida') then
+        -- BUCLE de los detalle del movimiento
+        	FOR g_registros in (
+                select 
+                    movdet.id_item,
+                    item.nombre as nombre_item,
+                    movdet.id_movimiento_det,
+                    movdet.cantidad as cantidad_item
+                from alm.tmovimiento_det movdet
+                inner join alm.titem item on item.id_item = movdet.id_item
+                where movdet.estado_reg = 'activo'
+                    and movdet.id_movimiento = v_parametros.id_movimiento
+            ) LOOP 
+            	--se obtiene el tipo de valoracion 
+                --obtener el codigo del metodo de valoracion
+                select metval.codigo into v_codigo_valoracion
+                from alm.talmacen_stock alstock
+                inner join alm.tmetodo_val metval on metval.id_metodo_val = alstock.id_metodo_val
+                where alstock.id_almacen = v_parametros.id_almacen
+                	and alstock.id_item = g_registros.id_item
+                    and alstock.estado_reg = 'activo';
+                
+                --se va recorriendo todos los detalles valorados del detalle_movimiento
+            	FOR g_registros_2 in (
+                	select detval.cantidad, detval.id_mov_det_val_origen
+                    from alm.tmovimiento_det_valorado detval
+                    where detval.id_movimiento_det = g_registros.id_movimiento_det
+                    order by detval.id_movimiento_det_valorado desc
+                ) LOOP
+                	IF (g_registros_2.id_mov_det_val_origen is not null) THEN
+                        -- sumar la cantidad del ultimo detalle valorado al aux_saldo encontrado
+                        update alm.tmovimiento_det_valorado set
+                            id_usuario_mod = p_id_usuario,
+                            fecha_mod = now(),
+                            aux_saldo_fisico = aux_saldo_fisico + g_registros_2.cantidad
+                        where id_movimiento_det_valorado = g_registros_2.id_mov_det_val_origen;
+                    END IF;
+                END LOOP;
+                
+                -- eliminar todos los det_valorados del detalle_movimiento
+                delete from alm.tmovimiento_det_valorado detval
+                where detval.id_movimiento_det = g_registros.id_movimiento_det;
+                
+                --Insertar un nuevo detalle_valorado con la cantidad del detalle_movimiento
+                insert into alm.tmovimiento_det_valorado (
+                    id_usuario_reg,
+                    fecha_reg,
+                    estado_reg,
+                    id_movimiento_det,
+                    cantidad
+                ) VALUES (
+                    p_id_usuario,
+                    now(),
+                    'activo',
+                    g_registros.id_movimiento_det,
+                    g_registros.cantidad_item
+                );
+            END LOOP;
+        end if;
+        
+        --se devuelve el movimiento a estado borrador
+        update alm.tmovimiento set
+        	estado_mov = 'borrador'
+        where id_movimiento = v_parametros.id_movimiento;
+        
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento revertido');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
         return v_respuesta;
     end;

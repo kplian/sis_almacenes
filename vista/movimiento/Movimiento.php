@@ -41,6 +41,14 @@ header("content-type: text/javascript; charset=UTF-8");
 				handler : this.onBtnCancelar,
 				tooltip : '<b>Cancelar Movimiento</b>'
 			});
+
+			this.addButton('btnRevertir', {
+				text : 'Revertir',
+				iconCls : 'bchecklist',
+				disabled : true,
+				handler : this.onBtnRevertir,
+				tooltip : '<b>Revertir Movimiento</b>'
+			})
 		},
 		Atributos : [{
 			config : {
@@ -702,11 +710,15 @@ header("content-type: text/javascript; charset=UTF-8");
 			if (data.estado_mov == 'finalizado' || data.estado_mov == 'cancelado') {
 				this.getBoton('btnFinalizar').disable();
 				this.getBoton('btnCancelar').disable();
+				if (data.estado_mov == 'finalizado') {
+				    this.getBoton('btnRevertir').enable();
+				}
 				this.getBoton('edit').disable();
 				this.getBoton('del').disable();
 			} else {
 				this.getBoton('btnFinalizar').enable();
 				this.getBoton('btnCancelar').enable();
+				this.getBoton('btnRevertir').disable();
 			}
 			return tb;
 		},
@@ -725,6 +737,26 @@ header("content-type: text/javascript; charset=UTF-8");
 						url : '../../sis_almacenes/control/Movimiento/cancelarMovimiento',
 						params : {
 							'id_movimiento' : data.id_movimiento
+						},
+						success : global.successSave,
+						failure : global.conexionFailure,
+						timeout : global.timeout,
+						scope : global
+					});
+				}
+			});
+		},
+		onBtnRevertir : function() {
+			var rec = this.sm.getSelected();
+			var data = rec.data;
+			var global = this;
+			Ext.Msg.confirm('Confirmación', '¿Está seguro de Revertir este movimiento?', function(btn) {
+				if (btn == "yes") {
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Movimiento/revertirMovimiento',
+						params : {
+							'id_movimiento' : data.id_movimiento,
+							'id_almacen' : data.id_almacen
 						},
 						success : global.successSave,
 						failure : global.conexionFailure,

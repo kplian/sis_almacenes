@@ -57,5 +57,11 @@ class ACTMovimiento extends ACTbase {
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
+    function revertirMovimiento() {
+        $this->objFunc = $this->create('MODMovimiento');
+        $this->res = $this->objFunc->revertirMovimiento();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 }
 ?>

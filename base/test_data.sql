@@ -36,6 +36,14 @@ VALUES (1, NULL, E'2013-02-23 22:59:46.396', NULL, E'activo', 2, 1, 1, '10', '30
 INSERT INTO alm.talmacen_stock ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_almacen_stock", "id_almacen", "id_item", "cantidad_min", "cantidad_alerta_amarilla", "cantidad_alerta_roja", "id_metodo_val")
 VALUES (1, NULL, E'2013-02-23 22:59:55.473', NULL, E'activo', 3, 1, 4, '10', '30', '20', 2);
 
+--almacen usuario
+
+INSERT INTO alm.talmacen_usuario ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_almacen_usuario", "id_usuario", "tipo", "id_almacen")
+VALUES (1, NULL, E'2013-02-26 02:52:19.588', NULL, E'activo', 1, 1, E'responsable', 1);
+
+INSERT INTO alm.talmacen_usuario ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_almacen_usuario", "id_usuario", "tipo", "id_almacen")
+VALUES (1, NULL, E'2013-02-26 02:52:29.050', NULL, E'activo', 2, 2, E'asistente', 1);
+
 
 -- Item
 INSERT INTO alm.titem (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_item, id_clasificacion, codigo, nombre, descripcion, palabras_clave, codigo_fabrica, observaciones, numero_serie)
@@ -65,188 +73,187 @@ INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg
 VALUES (1, NULL, E'2013-02-19 19:13:26.057', E'2013-02-19 19:13:26.057', E'activo', 5, E'SALVENT', E'Salida por Venta', E'salida');
 
 -- Movimiento
-INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
-VALUES (1, NULL, E'2013-02-23 15:37:40.362', E'2013-02-23 15:37:40.362', E'activo', 1, 4, 1, 4, NULL, NULL, E'2013-02-10 00:00:00', NULL, E'', E'', E'finalizado');
 
-INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
-VALUES (1, NULL, E'2013-02-23 16:27:00.379', E'2013-02-23 16:27:00.379', E'activo', 2, 4, 1, 4, NULL, NULL, E'2013-02-11 00:00:00', NULL, E'', E'', E'finalizado');
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
+VALUES (1, NULL, E'2013-02-26 20:15:28.267', E'2013-02-26 20:15:28.267', E'activo', 1, 4, 1, NULL, NULL, NULL, E'2013-02-17 00:00:00', E'ALM01-I-2-2/2013', E'', E'', E'finalizado', NULL);
 
-INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
-VALUES (1, NULL, E'2013-02-23 16:28:18.682', E'2013-02-23 16:28:18.682', E'activo', 3, 5, 1, 4, NULL, NULL, E'2013-02-12 00:00:00', NULL, E'', E'', E'finalizado');
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
+VALUES (1, NULL, E'2013-02-26 21:51:13.431', E'2013-02-26 21:51:13.431', E'activo', 2, 4, 1, NULL, NULL, NULL, E'2013-02-18 00:00:00', E'ALM01-I-2-3/2013', E'', E'', E'finalizado', NULL);
 
-INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
-VALUES (1, NULL, E'2013-02-23 16:38:47.818', E'2013-02-23 16:38:47.818', E'activo', 4, 5, 1, 4, NULL, NULL, E'2013-02-13 00:00:00', NULL, E'', E'', E'finalizado');
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
+VALUES (1, NULL, E'2013-02-26 21:58:48.791', E'2013-02-26 21:58:48.791', E'activo', 3, 5, 1, NULL, 1, NULL, E'2013-02-19 00:00:00', E'ALM01-S-2-2/2013', E'', E'', E'finalizado', NULL);
 
-INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
-VALUES (1, NULL, E'2013-02-23 16:41:35.130', E'2013-02-23 16:41:35.130', E'activo', 5, 4, 1, 4, NULL, NULL, E'2013-02-14 00:00:00', NULL, E'', E'', E'finalizado');
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
+VALUES (1, NULL, E'2013-02-26 22:04:05.055', E'2013-02-26 22:04:05.055', E'activo', 4, 5, 1, NULL, 2, NULL, E'2013-02-20 00:00:00', E'ALM01-S-2-5/2013', E'', E'', E'finalizado', NULL);
 
-INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
-VALUES (1, NULL, E'2013-02-23 16:42:42.927', E'2013-02-23 16:42:42.927', E'activo', 6, 4, 1, 4, NULL, NULL, E'2013-02-15 00:00:00', NULL, E'', E'', E'finalizado');
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
+VALUES (1, NULL, E'2013-02-26 22:15:08.220', E'2013-02-26 22:15:08.220', E'activo', 5, 4, 1, NULL, NULL, NULL, E'2013-02-21 00:00:00', E'ALM01-I-2-4/2013', E'', E'', E'finalizado', NULL);
 
-INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
-VALUES (1, NULL, E'2013-02-23 16:44:09.925', E'2013-02-23 16:44:09.925', E'activo', 7, 5, 1, 4, NULL, NULL, E'2013-02-16 00:00:00', NULL, E'', E'', E'finalizado');
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
+VALUES (1, NULL, E'2013-02-26 22:16:10.313', E'2013-02-26 22:16:10.313', E'activo', 6, 4, 1, NULL, NULL, NULL, E'2013-02-22 00:00:00', E'ALM01-I-2-5/2013', E'', E'', E'finalizado', NULL);
 
-INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov")
-VALUES (1, NULL, E'2013-02-23 16:46:11.740', E'2013-02-23 16:46:11.740', E'activo', 8, 5, 1, 3, NULL, NULL, E'2013-02-17 00:00:00', NULL, E'', E'', E'finalizado');
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
+VALUES (1, NULL, E'2013-02-26 22:17:16.003', E'2013-02-26 22:17:16.003', E'activo', 7, 5, 1, NULL, 2, NULL, E'2013-02-23 00:00:00', E'ALM01-S-2-6/2013', E'', E'', E'finalizado', NULL);
+
+INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
+VALUES (1, NULL, E'2013-02-26 22:18:41.026', E'2013-02-26 22:18:41.026', E'activo', 8, 5, 1, NULL, 2, NULL, E'2013-02-24 00:00:00', E'ALM01-S-2-9/2013', E'', E'', E'finalizado', NULL);
 
 -- Movimiento_det
 
+INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
+VALUES (1, NULL, E'2013-02-26 20:15:47.272', E'2013-02-26 20:15:47.272', E'activo', 1, 1, 7, '100', NULL, '80');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:10:11.310', E'2013-02-23 16:10:11.310', E'activo', 1, 1, 7, '100', NULL, '80');
+VALUES (1, NULL, E'2013-02-26 20:15:57.269', E'2013-02-26 20:15:57.269', E'activo', 2, 1, 1, '100', NULL, '80');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:18:24.487', E'2013-02-23 16:18:24.487', E'activo', 2, 1, 1, '100', NULL, '80');
+VALUES (1, NULL, E'2013-02-26 20:16:01.945', E'2013-02-26 20:16:01.945', E'activo', 3, 1, 4, '100', NULL, '80');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:18:31.546', E'2013-02-23 16:18:31.546', E'activo', 3, 1, 4, '100', NULL, '80');
+VALUES (1, NULL, E'2013-02-26 21:51:27.796', E'2013-02-26 21:51:27.796', E'activo', 4, 2, 7, '50', NULL, '70');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:27:14.908', E'2013-02-23 16:27:14.908', E'activo', 4, 2, 7, '50', NULL, '70');
+VALUES (1, NULL, E'2013-02-26 21:51:34.428', E'2013-02-26 21:51:34.428', E'activo', 5, 2, 1, '50', NULL, '70');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:27:20.539', E'2013-02-23 16:27:20.539', E'activo', 5, 2, 1, '50', NULL, '70');
+VALUES (1, NULL, E'2013-02-26 21:51:39.616', E'2013-02-26 21:51:39.616', E'activo', 6, 2, 4, '50', NULL, '70');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:27:31.803', E'2013-02-23 16:27:31.803', E'activo', 6, 2, 4, '50', NULL, '70');
+VALUES (1, NULL, E'2013-02-26 21:59:46.449', E'2013-02-26 21:59:46.449', E'activo', 7, 3, 7, '80', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:28:30.930', E'2013-02-23 16:28:30.930', E'activo', 7, 3, 7, '80', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 21:59:52.916', E'2013-02-26 21:59:52.916', E'activo', 8, 3, 1, '80', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:28:36.722', E'2013-02-23 16:28:36.722', E'activo', 8, 3, 1, '80', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 21:59:57.411', E'2013-02-26 21:59:57.411', E'activo', 9, 3, 4, '80', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:28:41.199', E'2013-02-23 16:28:41.199', E'activo', 9, 3, 4, '80', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 22:08:01.564', E'2013-02-26 22:08:01.564', E'activo', 10, 4, 7, '50', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:39:07.595', E'2013-02-23 16:39:07.595', E'activo', 10, 4, 7, '50', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 22:08:08.187', E'2013-02-26 22:08:08.187', E'activo', 11, 4, 1, '50', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:39:14.063', E'2013-02-23 16:39:14.063', E'activo', 11, 4, 1, '50', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 22:08:27.618', E'2013-02-26 22:08:27.618', E'activo', 12, 4, 4, '50', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:39:18.589', E'2013-02-23 16:39:18.589', E'activo', 12, 4, 4, '50', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 22:15:39.949', E'2013-02-26 22:15:39.949', E'activo', 13, 5, 7, '90', NULL, '90');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:41:56.246', E'2013-02-23 16:41:56.246', E'activo', 13, 5, 7, '90', NULL, '90');
+VALUES (1, NULL, E'2013-02-26 22:15:46.139', E'2013-02-26 22:15:46.139', E'activo', 14, 5, 1, '90', NULL, '90');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:42:03.490', E'2013-02-23 16:42:03.490', E'activo', 14, 5, 1, '90', NULL, '90');
+VALUES (1, NULL, E'2013-02-26 22:15:51.071', E'2013-02-26 22:15:51.071', E'activo', 15, 5, 4, '90', NULL, '90');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:42:08.539', E'2013-02-23 16:42:08.539', E'activo', 15, 5, 4, '90', NULL, '90');
+VALUES (1, NULL, E'2013-02-26 22:16:26.458', E'2013-02-26 22:16:26.458', E'activo', 16, 6, 7, '50', NULL, '70');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:43:08.160', E'2013-02-23 16:43:08.160', E'activo', 16, 6, 7, '50', NULL, '70');
+VALUES (1, NULL, E'2013-02-26 22:16:37.336', E'2013-02-26 22:16:37.336', E'activo', 17, 6, 1, '50', NULL, '70');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:43:28.618', E'2013-02-23 16:43:28.618', E'activo', 17, 6, 1, '50', NULL, '70');
+VALUES (1, NULL, E'2013-02-26 22:16:43.390', E'2013-02-26 22:16:43.390', E'activo', 18, 6, 4, '50', NULL, '70');
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:43:33.886', E'2013-02-23 16:43:33.886', E'activo', 18, 6, 4, '50', NULL, '70');
+VALUES (1, NULL, E'2013-02-26 22:17:32.473', E'2013-02-26 22:17:32.473', E'activo', 19, 7, 7, '50', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:44:46.046', E'2013-02-23 16:44:46.046', E'activo', 19, 7, 7, '50', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 22:17:39.554', E'2013-02-26 22:17:39.554', E'activo', 20, 7, 1, '50', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:44:52.762', E'2013-02-23 16:44:52.762', E'activo', 20, 7, 1, '50', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 22:17:46.175', E'2013-02-26 22:17:46.175', E'activo', 21, 7, 4, '50', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:44:58.513', E'2013-02-23 16:44:58.513', E'activo', 21, 7, 4, '50', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 22:19:03.949', E'2013-02-26 22:19:03.949', E'activo', 22, 8, 7, '20', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:47:08.253', E'2013-02-23 16:47:08.253', E'activo', 23, 8, 1, '20', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 22:19:11.339', E'2013-02-26 22:19:11.339', E'activo', 23, 8, 1, '20', NULL, NULL);
 
 INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, NULL, E'2013-02-23 16:47:13.223', E'2013-02-23 16:47:13.223', E'activo', 24, 8, 4, '20', NULL, NULL);
-
-INSERT INTO alm.tmovimiento_det ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det", "id_movimiento", "id_item", "cantidad", "fecha_caducidad", "costo_unitario")
-VALUES (1, 1, E'2013-02-23 16:46:56.606', E'2013-02-23 16:47:32.988', E'activo', 22, 8, 7, '20', NULL, NULL);
+VALUES (1, NULL, E'2013-02-26 22:19:17.051', E'2013-02-26 22:19:17.051', E'activo', 24, 8, 4, '20', NULL, NULL);
 
 -- Movimiento_det_valorado
 
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:15:46.139', E'2013-02-26 22:24:08.205', E'activo', 28, 14, '90', '90', '40', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, NULL, E'2013-02-23 16:10:11.310', E'2013-02-23 16:10:11.310', E'activo', 1, 1, '100', '80', '100');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, NULL, E'2013-02-26 20:15:47.272', E'2013-02-26 20:15:47.272', E'activo', 1, 1, '100', '80', '100', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, NULL, E'2013-02-23 16:27:14.908', E'2013-02-23 16:27:14.908', E'activo', 4, 4, '50', '70', '50');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, NULL, E'2013-02-26 21:51:27.796', E'2013-02-26 21:51:27.796', E'activo', 4, 4, '50', '70', '50', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:27:31.803', E'2013-02-23 16:36:51.483', E'activo', 6, 6, '50', '70', '0');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:15:51.071', E'2013-02-26 22:24:08.205', E'activo', 29, 15, '90', '90', '70', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:28:30.930', E'2013-02-23 16:36:51.483', E'activo', 7, 7, '80', '76.666667', '80');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 20:15:57.269', E'2013-02-26 22:14:37.486', E'activo', 2, 2, '100', '80', '0', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:28:36.722', E'2013-02-23 16:36:51.483', E'activo', 8, 8, '80', '80', '80');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:23:59.557', E'2013-02-26 22:24:08.205', E'activo', 43, 22, '20', '82.083334', '20', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:28:41.199', E'2013-02-23 16:36:51.483', E'activo', 9, 9, '50', '70', '50');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 20:16:01.945', E'2013-02-26 22:14:37.486', E'activo', 3, 3, '100', '80', '20', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, NULL, E'2013-02-23 16:36:51.483', E'2013-02-23 16:36:51.483', E'activo', 10, 9, '30', '80', '30');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:23:59.557', E'2013-02-26 22:24:08.205', E'activo', 44, 23, '20', '90', '20', 28);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:18:24.487', E'2013-02-23 16:39:31.996', E'activo', 2, 2, '100', '80', '0');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:11:28.579', E'2013-02-26 22:14:37.486', E'activo', 23, 10, '50', '76.666666', '50', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:18:31.546', E'2013-02-23 16:39:31.996', E'activo', 3, 3, '100', '80', '20');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:11:28.579', E'2013-02-26 22:14:37.486', E'activo', 24, 11, '20', '80', '20', 2);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:39:07.595', E'2013-02-23 16:39:31.996', E'activo', 11, 10, '50', '76.666666', '50');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, NULL, E'2013-02-26 22:14:37.486', E'2013-02-26 22:14:37.486', E'activo', 26, 11, '30', '70', '30', 5);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:39:14.063', E'2013-02-23 16:39:31.996', E'activo', 12, 11, '20', '80', '20');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:11:28.579', E'2013-02-26 22:14:37.486', E'activo', 25, 12, '50', '80', '50', 3);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, NULL, E'2013-02-23 16:39:31.996', E'2013-02-23 16:39:31.996', E'activo', 14, 11, '30', '70', '30');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, NULL, E'2013-02-26 22:15:39.949', E'2013-02-26 22:15:39.949', E'activo', 27, 13, '90', '90', '90', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:39:18.589', E'2013-02-23 16:39:31.996', E'activo', 13, 12, '50', '80', '50');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:23:59.557', E'2013-02-26 22:24:08.205', E'activo', 45, 24, '20', '90', '20', 29);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, NULL, E'2013-02-23 16:41:56.246', E'2013-02-23 16:41:56.246', E'activo', 15, 13, '90', '90', '90');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, NULL, E'2013-02-26 22:16:26.458', E'2013-02-26 22:16:26.458', E'activo', 30, 16, '50', '70', '50', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, NULL, E'2013-02-23 16:43:08.160', E'2013-02-23 16:43:08.160', E'activo', 18, 16, '50', '70', '50');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 21:51:39.616', E'2013-02-26 22:01:32.489', E'activo', 6, 6, '50', '70', '0', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, NULL, E'2013-02-23 16:43:28.618', E'2013-02-23 16:43:28.618', E'activo', 19, 17, '50', '70', '50');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, NULL, E'2013-02-26 22:16:37.336', E'2013-02-26 22:16:37.336', E'activo', 31, 17, '50', '70', '50', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:27:20.539', E'2013-02-23 16:45:12.548', E'activo', 5, 5, '50', '70', '0');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:01:06.047', E'2013-02-26 22:01:32.489', E'activo', 11, 7, '80', '76.666667', '80', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:43:33.886', E'2013-02-23 16:45:12.548', E'activo', 20, 18, '50', '70', '0');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:01:06.047', E'2013-02-26 22:01:32.489', E'activo', 12, 8, '80', '80', '80', 2);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:44:46.046', E'2013-02-23 16:45:12.548', E'activo', 21, 19, '50', '82.083333', '50');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:01:06.047', E'2013-02-26 22:01:32.489', E'activo', 13, 9, '50', '70', '50', 6);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:44:52.762', E'2013-02-23 16:45:12.548', E'activo', 22, 20, '20', '70', '20');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, NULL, E'2013-02-26 22:01:32.489', E'2013-02-26 22:01:32.489', E'activo', 14, 9, '30', '80', '30', 3);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, NULL, E'2013-02-23 16:45:12.548', E'2013-02-23 16:45:12.548', E'activo', 24, 20, '30', '90', '30');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 21:51:34.428', E'2013-02-26 22:17:55.463', E'activo', 5, 5, '50', '70', '0', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:44:58.513', E'2013-02-23 16:45:12.548', E'activo', 23, 21, '50', '70', '50');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:16:43.390', E'2013-02-26 22:17:55.463', E'activo', 32, 18, '50', '70', '0', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:42:03.490', E'2013-02-23 16:47:41.089', E'activo', 16, 14, '90', '90', '40');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:17:32.473', E'2013-02-26 22:17:55.463', E'activo', 33, 19, '50', '82.083333', '50', NULL);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:42:08.539', E'2013-02-23 16:47:41.089', E'activo', 17, 15, '90', '90', '70');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:17:39.554', E'2013-02-26 22:17:55.463', E'activo', 34, 20, '20', '70', '20', 5);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:47:08.253', E'2013-02-23 16:47:41.089', E'activo', 26, 23, '20', '90', '20');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, NULL, E'2013-02-26 22:17:55.463', E'2013-02-26 22:17:55.463', E'activo', 36, 20, '30', '90', '30', 28);
 
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:47:13.223', E'2013-02-23 16:47:41.089', E'activo', 27, 24, '20', '90', '20');
-
-INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico")
-VALUES (1, 1, E'2013-02-23 16:46:56.606', E'2013-02-23 16:47:41.089', E'activo', 25, 22, '20', '82.083334', '20');
+INSERT INTO alm.tmovimiento_det_valorado ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_det_valorado", "id_movimiento_det", "cantidad", "costo_unitario", "aux_saldo_fisico", "id_mov_det_val_origen")
+VALUES (1, 1, E'2013-02-26 22:17:46.175', E'2013-02-26 22:17:55.463', E'activo', 35, 21, '50', '70', '50', 32);
 
 -- Actalizacion de Secuencias
 
@@ -332,13 +339,4 @@ VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 11, 11, 105, E'201
 
 INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
 VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 12, 12, 105, E'2013-12-01', E'2013-12-31');
-
-
---almacen usuario
-
-INSERT INTO alm.talmacen_usuario ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_almacen_usuario", "id_usuario", "tipo", "id_almacen")
-VALUES (1, NULL, E'2013-02-26 02:52:19.588', NULL, E'activo', 1, 1, E'responsable', 1);
-
-INSERT INTO alm.talmacen_usuario ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_almacen_usuario", "id_usuario", "tipo", "id_almacen")
-VALUES (1, NULL, E'2013-02-26 02:52:29.050', NULL, E'activo', 2, 2, E'asistente', 1);
 
