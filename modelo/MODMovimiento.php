@@ -149,5 +149,22 @@ class MODMovimiento extends MODbase {
         $this->ejecutarConsulta();
         return $this->respuesta;
     }
+    
+    function listarReporteMovimiento() {
+        $this->procedimiento = 'alm.ft_movimiento_sel';
+        $this->transaccion = 'SAL_MOVREPORT_SEL';
+        $this->tipo_procedimiento = 'SEL';
+
+        $this->captura('codigo', 'varchar');
+        $this->captura('nombre', 'varchar');
+        $this->captura('cantidad', 'numeric');
+        $this->captura('costo_unitario', 'numeric');
+        $this->captura('costo_total', 'numeric');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
 }
 ?>

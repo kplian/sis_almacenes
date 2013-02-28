@@ -48,7 +48,28 @@ header("content-type: text/javascript; charset=UTF-8");
 				disabled : true,
 				handler : this.onBtnRevertir,
 				tooltip : '<b>Revertir Movimiento</b>'
-			})
+			});
+
+			this.addButton('btnReport', {
+				text : '',
+				iconCls : 'bpdf32',
+				disabled : true,
+				handler : function() {
+					var rec = this.sm.getSelected();
+					Phx.CP.loadingShow();
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Movimiento/generarReporteMovimiento',
+						params : {
+							'id_movimiento' : rec.data.id_movimiento
+						},
+						success : this.successExport,
+						failure : this.conexionFailure,
+						timeout : this.timeout,
+						scope : this
+					});
+				},
+				tooltip : '<b>Reporte de Movimiento</b><br/>Generar el reporte del Movimiento Seleccionado.'
+			});
 		},
 		Atributos : [{
 			config : {
@@ -707,11 +728,12 @@ header("content-type: text/javascript; charset=UTF-8");
 		preparaMenu : function(n) {
 			var tb = Phx.vista.Movimiento.superclass.preparaMenu.call(this);
 			var data = this.getSelectedData();
+			this.getBoton('btnReport').enable();
 			if (data.estado_mov == 'finalizado' || data.estado_mov == 'cancelado') {
 				this.getBoton('btnFinalizar').disable();
 				this.getBoton('btnCancelar').disable();
 				if (data.estado_mov == 'finalizado') {
-				    this.getBoton('btnRevertir').enable();
+					this.getBoton('btnRevertir').enable();
 				}
 				this.getBoton('edit').disable();
 				this.getBoton('del').disable();
@@ -724,7 +746,10 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		liberaMenu : function() {
 			var tb = Phx.vista.Movimiento.superclass.liberaMenu.call(this);
-			this.getBoton('btnFinalizar').setDisabled(true);
+			this.getBoton('btnFinalizar').disable;
+			this.getBoton('btnCancelar').disable();
+            this.getBoton('btnRevertir').disable();
+			this.getBoton('btnReport').disable();
 			return tb;
 		},
 		onBtnCancelar : function() {

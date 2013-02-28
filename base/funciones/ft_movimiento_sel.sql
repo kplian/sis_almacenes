@@ -111,6 +111,49 @@ BEGIN
         v_consulta:= v_consulta||v_parametros.filtro;
         return v_consulta;
      end;
+     
+  /*********************************   
+     #TRANSACCION:  'SAL_MOVREPORT_SEL'
+     #DESCRIPCION:  Consulta de datos
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        28-02-2013
+    ***********************************/
+  
+	elseif(p_transaccion='SAL_MOVREPORT_SEL')then
+  	begin
+    	v_consulta:='
+        	select 
+            	item.codigo, 
+                item.nombre, 
+                detval.cantidad, 
+                detval.costo_unitario, 
+                detval.cantidad * detval.costo_unitario as costo_total
+            from alm.tmovimiento_det_valorado detval
+            inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
+            inner join alm.titem item on item.id_item = movdet.id_item
+            where movdet.estado_reg = ''activo'' and ';
+            
+    	v_consulta:=v_consulta||v_parametros.filtro;
+        v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;
+        return v_consulta;
+    end;
+  /*********************************   
+     #TRANSACCION:  'SAL_MOVREPORT_CONT'
+     #DESCRIPCION:  Conteo de registros
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        28-02-2013
+    ***********************************/
+  elsif(p_transaccion='SAL_MOVREPORT_CONT')then
+    begin
+    	v_consulta:='
+        	select count(detval.id_movimiento)
+        	from alm.tmovimiento_det_valorado detval
+            inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
+            inner join alm.titem item on item.id_item = movdet.id_item
+            where movdet.estado_reg = ''activo'' and ';
+        v_consulta:= v_consulta||v_parametros.filtro;
+        return v_consulta;
+     end;
   end if;
 EXCEPTION
   WHEN OTHERS THEN
