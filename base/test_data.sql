@@ -1,3 +1,7 @@
+-- USUARIOS
+INSERT INTO segu.tusuario ("id_clasificador", "cuenta", "contrasena", "fecha_caducidad", "fecha_reg", "estilo", "contrasena_anterior", "id_persona", "estado_reg", "autentificacion")
+VALUES (1, E'spanza', E'533cd2ec574f9a6ded5801efbfee21ba', E'2014-02-28', E'2013-02-28', E'xtheme-blue.css', NULL, 3, E'activo', E'local');
+
 -- Clasificacion
 INSERT INTO alm.tclasificacion (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_clasificacion, id_clasificacion_fk, codigo, nombre, descripcion, codigo_largo)
 VALUES (1, NULL, '2012-11-13 10:36:14', '2012-11-13 10:36:14', 'activo', 1, NULL, 'EQUIP', 'Equipos', NULL, 'EQUIPOS');
