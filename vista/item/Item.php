@@ -58,6 +58,26 @@ header("content-type: text/javascript; charset=UTF-8");
 			type : 'Field',
 			form : true
 		}, {
+            config:{
+                    name:'id_unidad_medida',
+                    origen:'UNIDADMEDIDA',
+                    tinit:true,
+                    fieldLabel:'Unidad Medida',
+                    gdisplayField:'codigo_unidad',
+                    anchor: '100%',
+                    gwidth: 70,
+                    tipo : "All",
+                    renderer:function (value, p, record){return String.format('{0}', record.data['codigo_unidad']);}
+                 },
+                type:'ComboRec',
+                id_grupo:0,
+                filters:{   
+                    pfiltro:'umed.codigo',
+                    type:'string'
+                },
+                grid:true,
+                form:true
+        }, {
 			config : {
 				name : 'nombre',
 				fieldLabel : 'Nombre',
@@ -207,7 +227,13 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			name : 'numero_serie',
 			type : 'string'
-		}],
+		}, {
+            name : 'id_unidad_medida',
+            type : 'integer'
+        }, {
+            name : 'codigo_unidad',
+            type : 'string'
+        }],
 		sortInfo : {
 			field : 'id_item',
 			direction : 'ASC'

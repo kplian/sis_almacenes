@@ -143,3 +143,12 @@ ALTER TABLE alm.talmacen
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-AAO-ALM-26-25/02/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-34-01/03/2013*****************************************/
+ALTER TABLE alm.titem
+  ADD CONSTRAINT fk_titem__id_unidad_medida FOREIGN KEY (id_unidad_medida)
+    REFERENCES param.tunidad_medida(id_unidad_medida)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************I-DEP-AAO-ALM-34-01/03/2013*****************************************/

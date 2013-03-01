@@ -254,3 +254,8 @@ ALTER TABLE alm.tmovimiento
 ALTER TABLE alm.tmovimiento_det_valorado
   ADD COLUMN id_mov_det_val_origen INTEGER;
 /***********************************F-SCP-AAO-ALM-28-26/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-34-01/03/2013****************************************/
+ALTER TABLE alm.titem
+  ADD COLUMN id_unidad_medida INTEGER;
+/***********************************F-SCP-AAO-ALM-34-01/03/2013****************************************/

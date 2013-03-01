@@ -57,8 +57,11 @@ BEGIN
                     item.palabras_clave,
                     item.codigo_fabrica,
                     item.observaciones,
-                    item.numero_serie                       
+                    item.numero_serie,
+                    item.id_unidad_medida,
+                	umed.codigo as codigo_unidad
                 from alm.titem item
+                inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
                 where item.estado_reg = ''activo'' and ';
            
             --Definicion de la respuesta
@@ -69,6 +72,30 @@ BEGIN
             return v_consulta;
                        
         end;
+    /*********************************   
+     #TRANSACCION:  'SAL_ITEM_CONT'
+     #DESCRIPCION:  Conteo de registros
+     #AUTOR:        Gonzalo Sarmiento   
+     #FECHA:        20-09-2012
+    ***********************************/
+
+    elsif(p_transaccion='SAL_ITEM_CONT')then
+
+        begin
+            --Sentencia de la consulta de conteo de registros
+            v_consulta:='
+            	select count(item.id_item)
+                from alm.titem item
+                inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+                where item.estado_reg = ''activo'' and ';
+           
+            --Definicion de la respuesta           
+            v_consulta:=v_consulta||v_parametros.filtro;
+
+            --Devuelve la respuesta
+            return v_consulta;
+
+        end;  
     /*********************************   
      #TRANSACCION:  'SAL_ARB_SEL'
      #DESCRIPCION:    Consulta de datos
@@ -161,31 +188,7 @@ BEGIN
             --Devuelve la respuesta
             return v_consulta;
 
-        end;
-        
-	/*********************************   
-     #TRANSACCION:  'SAL_ITEM_CONT'
-     #DESCRIPCION:  Conteo de registros
-     #AUTOR:        Gonzalo Sarmiento   
-     #FECHA:        20-09-2012
-    ***********************************/
-
-    elsif(p_transaccion='SAL_ITEM_CONT')then
-
-        begin
-            --Sentencia de la consulta de conteo de registros
-            v_consulta:='
-            	select count(item.id_item)
-                from alm.titem item
-                where item.estado_reg = ''activo'' and ';
-           
-            --Definicion de la respuesta           
-            v_consulta:=v_consulta||v_parametros.filtro;
-
-            --Devuelve la respuesta
-            return v_consulta;
-
-        end;       
+        end;     
     else
                         
         raise exception 'Transaccion inexistente';

@@ -27,6 +27,8 @@ class MODItem extends MODbase {
         $this->captura('codigo_fabrica', 'varchar');
         $this->captura('observaciones', 'varchar');
         $this->captura('numero_serie', 'varchar');
+        $this->captura('id_unidad_medida', 'integer');
+        $this->captura('codigo_unidad', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -68,6 +70,8 @@ class MODItem extends MODbase {
         $this->setParametro('codigo_fabrica', 'codigo_fabrica', 'varchar');
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('numero_serie', 'numero_serie', 'varchar');
+        $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
+        
         $this->armarConsulta();
         $this->ejecutarConsulta();
 
@@ -87,6 +91,8 @@ class MODItem extends MODbase {
         $this->setParametro('codigo_fabrica', 'codigo_fabrica', 'varchar');
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('numero_serie', 'numero_serie', 'varchar');
+        $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
+        
         $this->armarConsulta();
         $this->ejecutarConsulta();
 
