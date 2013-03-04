@@ -259,3 +259,11 @@ ALTER TABLE alm.tmovimiento_det_valorado
 ALTER TABLE alm.titem
   ADD COLUMN id_unidad_medida INTEGER;
 /***********************************F-SCP-AAO-ALM-34-01/03/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-35-04/03/2013****************************************/
+ALTER TABLE alm.talmacen
+  ALTER COLUMN codigo TYPE VARCHAR(20);
+  
+ALTER TABLE alm.titem
+  ALTER COLUMN codigo TYPE VARCHAR(30);
+/***********************************F-SCP-AAO-ALM-35-04/03/2013****************************************/

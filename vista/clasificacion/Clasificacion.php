@@ -48,7 +48,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				fieldLabel : 'Codigo',
 				allowBlank : false,
 				anchor : '100%',
-				maxLength : 4
+				maxLength : 20
 			},
 			type : 'TextField',
 			filters : {
@@ -65,7 +65,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				allowBlank : false,
 				anchor : '100%',
 				gwidth : 100,
-				maxLength : 25
+				maxLength : 100
 			},
 			type : 'TextField',
 			filters : {
@@ -82,7 +82,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				allowBlank : true,
 				anchor : '100%',
 				gwidth : 100,
-				maxLength : 100
+				maxLength : 150
 			},
 			type : 'TextArea',
 			filters : {
