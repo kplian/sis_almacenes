@@ -96,7 +96,7 @@ BEGIN
             v_parametros.id_funcionario, 
             v_parametros.id_proveedor,
             v_parametros.id_almacen_dest,
-            v_parametros.fecha_mov,
+            date(v_parametros.fecha_mov) + interval '12 hours',
             v_parametros.descripcion,
             v_parametros.observaciones,
             'borrador',
@@ -134,7 +134,7 @@ BEGIN
             id_funcionario = v_parametros.id_funcionario,
             id_proveedor = v_parametros.id_proveedor,
             id_almacen_dest = v_parametros.id_almacen_dest,
-            fecha_mov = v_parametros.fecha_mov,
+            fecha_mov = date(v_parametros.fecha_mov) + interval '12 hours',
             descripcion = v_parametros.descripcion,
             observaciones = v_parametros.observaciones,
             id_movimiento_origen = v_parametros.id_movimiento_origen
@@ -196,9 +196,10 @@ BEGIN
         select max(mov.fecha_mov) into v_fecha_mov_ultima
         from alm.tmovimiento mov
         where mov.estado_mov = 'finalizado'
-            and mov.estado_reg = 'activo';
+            and mov.estado_reg = 'activo'
+            and mov.id_almacen = v_parametros.id_almacen;
         
-        if (v_fecha_mov < v_fecha_mov_ultima) then
+        if (date(v_fecha_mov) < date(v_fecha_mov_ultima)) then
         	raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
         end if;
 
@@ -431,9 +432,23 @@ BEGIN
             end if;
         end if;
         
-        --Actualiza el estado a finalizado cuando no hay ningun error
+        --Se obtiene la fecha_mov del último movimiento finalizado en la fecha_mov del movimiento que se va a finalizar.
+        select max(mov.fecha_mov) into v_fecha_mov_ultima
+        from alm.tmovimiento mov
+		where date(mov.fecha_mov) = date(v_fecha_mov) 
+        	and mov.estado_mov = 'finalizado'
+            and mov.id_almacen = v_parametros.id_almacen;
+        
+        if (v_fecha_mov_ultima is not null) then
+        	v_fecha_mov = v_fecha_mov_ultima + interval '1 min';
+        else 
+        	v_fecha_mov = date(v_fecha_mov) + interval '1 min';
+        end if;
+        
+    	--Actualiza el estado a finalizado cuando no hay ningun error
         update alm.tmovimiento set
         	estado_mov = 'finalizado',
+            fecha_mov = v_fecha_mov,
             codigo = param.f_obtener_correlativo (v_cod_documento, NULL, NULL, v_id_depto, p_id_usuario, 'ALM', null)
         where id_movimiento = v_parametros.id_movimiento;
         
