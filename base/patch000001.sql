@@ -267,3 +267,11 @@ ALTER TABLE alm.talmacen
 ALTER TABLE alm.titem
   ALTER COLUMN codigo TYPE VARCHAR(30);
 /***********************************F-SCP-AAO-ALM-35-04/03/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-41-05/03/2013*****************************************/
+ALTER TABLE alm.titem_archivo
+  ALTER COLUMN descripcion TYPE VARCHAR(1000);
+  
+ALTER TABLE alm.tmetodo_val
+  ALTER COLUMN descripcion TYPE VARCHAR(1000);
+/***********************************F-SCP-AAO-ALM-41-05/03/2013*****************************************/

@@ -82,7 +82,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				allowBlank : true,
 				anchor : '100%',
 				gwidth : 100,
-				maxLength : 150
+				maxLength : 1000
 			},
 			type : 'TextArea',
 			filters : {

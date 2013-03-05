@@ -118,7 +118,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				allowBlank : true,
 				width : '100%',
 				gwidth : 150,
-				maxLength : 100
+				maxLength : 1000
 			},
 			type : 'TextField',
 			filters : {
@@ -186,7 +186,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				allowBlank : true,
 				width : '100%',
 				gwidth : 100,
-				maxLength : 200
+				maxLength : 1000
 			},
 			type : 'TextArea',
 			filters : {
