@@ -121,9 +121,9 @@ BEGIN
                 from alm.titem it
                 inner join segu.tusuario usu1 on usu1.id_usuario = it.id_usuario_reg
                 left join segu.tusuario usu2 on usu2.id_usuario = it.id_usuario_mod
-                where it.estado_reg = ''activo'' and '|| v_where ||' and ';
-            --Definicion de la respuesta
-            v_consulta:=v_consulta||v_parametros.filtro;
+                where it.estado_reg = ''activo'' 
+                and '|| v_where ||' order by it.codigo';
+
             --Devuelve la respuesta
         	return v_consulta;
         end;
