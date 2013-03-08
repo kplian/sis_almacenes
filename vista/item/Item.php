@@ -120,7 +120,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				gwidth : 150,
 				maxLength : 1000
 			},
-			type : 'TextField',
+			type : 'TextArea',
 			filters : {
 				pfiltro : 'item.descripcion',
 				type : 'string'

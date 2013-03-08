@@ -255,11 +255,11 @@ header("content-type: text/javascript; charset=UTF-8");
 		fwidht : 450,
 		fheight : 250,
 		preparaMenu : function(tb) {
-			Phx.vista.UniConsArchivo.superclass.preparaMenu.call(this, tb)
+			Phx.vista.ItemArchivo.superclass.preparaMenu.call(this, tb)
 			this.getBoton('btnUpload').enable();
 		},
 		liberaMenu : function(tb) {
-			Phx.vista.UniConsArchivo.superclass.liberaMenu.call(this, tb)
+			Phx.vista.ItemArchivo.superclass.liberaMenu.call(this, tb)
 			this.getBoton('btnUpload').disable();
 		}
 	})

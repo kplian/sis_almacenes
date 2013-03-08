@@ -560,7 +560,7 @@ BEGIN
      #AUTOR:        Ariel Ayaviri Omonte
      #FECHA:        26-02-2013
     ***********************************/
-    elseif (p_transaccion = 'SAL_MOVREV_MOD') then
+    elseif (p_transaccion='SAL_MOVREV_MOD') then
     begin
     	--Revisar que sea el último movimiento finalizado.
         select mov.id_movimiento
