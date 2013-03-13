@@ -44,10 +44,10 @@ class ACTClasificacion extends ACTbase {
 
         /*Estas funciones definen reglas para los nodos en funcion a los tipo de nodos que contenga cada uno*/
 
-        $this->res->addNivelArbol('tipo_nodo', 'raiz', array('leaf' => false, 'allowDelete' => true, 'allowEdit' => true, 'cls' => 'folder', 'tipo_nodo' => 'raiz', 'icon' => '../../../lib/imagenes/a_form_edit.png'), $arreglo);
-        $this->res->addNivelArbol('tipo_nodo', 'hijo', array('leaf' => false, 'allowDelete' => true, 'allowEdit' => true, 'tipo_nodo' => 'hijo', 'icon' => '../../../lib/imagenes/a_form_edit.png'), $arreglo);        
-        $this->res->addNivelArbol('tipo_nodo', 'raiz_bloqueado', array('leaf' => false, 'allowDelete' => false, 'allowEdit' => true, 'cls' => 'folder', 'tipo_nodo' => 'raiz', 'icon' => '../../../lib/imagenes/a_form.png'), $arreglo);
-        $this->res->addNivelArbol('tipo_nodo', 'hijo_bloqueado', array('leaf' => false, 'allowDelete' => false, 'allowEdit' => true, 'cls' => 'folder', 'tipo_nodo' => 'hijo', 'icon' => '../../../lib/imagenes/a_form.png'), $arreglo);
+        $this->res->addNivelArbol('tipo_nodo', 'raiz', array('leaf' => false, 'draggable' => true, 'allowDelete' => true, 'allowEdit' => true, 'cls' => 'folder', 'tipo_nodo' => 'raiz', 'icon' => '../../../lib/imagenes/a_form_edit.png'), $arreglo);
+        $this->res->addNivelArbol('tipo_nodo', 'hijo', array('leaf' => false, 'draggable' => true, 'allowDelete' => true, 'allowEdit' => true, 'tipo_nodo' => 'hijo', 'icon' => '../../../lib/imagenes/a_form_edit.png'), $arreglo);
+        $this->res->addNivelArbol('tipo_nodo', 'raiz_bloqueado', array('leaf' => false, 'draggable' => false, 'allowDelete' => false, 'allowEdit' => true, 'cls' => 'folder', 'tipo_nodo' => 'raiz', 'icon' => '../../../lib/imagenes/a_form.png'), $arreglo);
+        $this->res->addNivelArbol('tipo_nodo', 'hijo_bloqueado', array('leaf' => false, 'draggable' => false, 'allowDelete' => false, 'allowEdit' => true, 'cls' => 'folder', 'tipo_nodo' => 'hijo', 'icon' => '../../../lib/imagenes/a_form.png'), $arreglo);
 
         $arreglo = array();
 
@@ -57,8 +57,7 @@ class ACTClasificacion extends ACTbase {
         array_push($arreglo, array('nombre' => 'text', 'valores' => '[#codigo#]-#nombre#'));
         array_push($arreglo, array('nombre' => 'cls', 'valor' => 'nombre'));
         array_push($arreglo, array('nombre' => 'qtip', 'valores' => '<b>#codigo#</b><br/>#nombre#'));
-        $this->res->addNivelArbol('tipo_nodo', 'item', array('leaf' => true, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo);
-
+        $this->res->addNivelArbol('tipo_nodo', 'item_codificado', array('leaf' => true, 'draggable' => false, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo);        $this->res->addNivelArbol('tipo_nodo', 'item', array('leaf' => true, 'draggable' => true, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo);
         //Se imprime el arbol en formato JSON
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
@@ -78,11 +77,18 @@ class ACTClasificacion extends ACTbase {
         $this->res = $this->objFunc->eliminarClasificacion();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
-    
+
     function cambiarEstadoClasificacion() {
         $this->objFunc = $this->create('MODClasificacion');
         $this->res = $this->objFunc->cambiarEstadoClasificacion();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+
+    function guardarDragDrop() {
+        $this->objFunSeguridad = $this->create('MODClasificacion');
+        $this->res = $this->objFunSeguridad->guardarDragDrop($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 }
 ?>

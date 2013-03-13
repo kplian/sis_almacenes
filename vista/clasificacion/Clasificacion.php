@@ -14,8 +14,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			this.maestro = config.maestro;
 			Phx.vista.Clasificacion.superclass.constructor.call(this, config);
 			this.init();
-			
-			
+
 			this.tbar.items.get('b-new-' + this.idContenedor).disable();
 
 			this.addButton('btnBlockUnblock', {
@@ -97,10 +96,15 @@ header("content-type:text/javascript; charset=UTF-8");
 		ActSave : '../../sis_almacenes/control/Clasificacion/insertarClasificacion',
 		ActDel : '../../sis_almacenes/control/Clasificacion/eliminarClasificacion',
 		ActList : '../../sis_almacenes/control/Clasificacion/listarClasificacionArb',
+		ActDragDrop:'../../sis_almacenes/control/Clasificacion/guardarDragDrop',
 		id_store : 'id_clasificacion',
 		textRoot : 'Clasificaciones',
 		id_nodo : 'id_clasificacion',
 		id_nodo_p : 'id_clasificacion_fk',
+		idNodoDD : 'id_clasificacion',
+		idOldParentDD : 'id_clasificacion_fk',
+		idTargetDD : 'id_clasificacion',
+		enableDD : true,
 		onButtonNew : function() {
 			Phx.vista.Clasificacion.superclass.onButtonNew.call(this);
 			this.getComponente('codigo').enable();
@@ -112,14 +116,14 @@ header("content-type:text/javascript; charset=UTF-8");
 			var nodo = this.sm.getSelectedNode();
 			if (nodo.attributes != undefined && nodo.attributes.estado == 'restringido') {
 				this.getComponente('codigo').disable();
-			} else if(nodo.attributes != undefined && nodo.attributes.estado == 'bloqueado') {
-			    this.getComponente('codigo').disable();
-                this.getComponente('nombre').disable();
-                this.getComponente('descripcion').disable();
+			} else if (nodo.attributes != undefined && nodo.attributes.estado == 'bloqueado') {
+				this.getComponente('codigo').disable();
+				this.getComponente('nombre').disable();
+				this.getComponente('descripcion').disable();
 			} else {
 				this.getComponente('codigo').enable();
-                this.getComponente('nombre').enable();
-                this.getComponente('descripcion').enable();
+				this.getComponente('nombre').enable();
+				this.getComponente('descripcion').enable();
 			}
 		},
 		fields : [{
@@ -155,10 +159,29 @@ header("content-type:text/javascript; charset=UTF-8");
 		rootVisible : true,
 		fwidth : 420,
 		fheight : 300,
+		onNodeDrop : function(o) {
+		    this.ddParams = {
+		        tipo_nodo : o.dropNode.attributes.tipo_nodo
+		    };
+		    this.idTargetDD = 'id_clasificacion';
+		    if (o.dropNode.attributes.tipo_nodo == 'raiz' || o.dropNode.attributes.tipo_nodo == 'hijo') {
+		        this.idNodoDD = 'id_clasificacion';
+		        this.idOldParentDD = 'id_clasificacion_fk';
+		    } else if(o.dropNode.attributes.tipo_nodo == 'item') {
+		        this.idNodoDD = 'id_item';
+                this.idOldParentDD = 'id_p';
+		    }
+		    Phx.vista.Clasificacion.superclass.onNodeDrop.call(this, o);
+		},
 		preparaMenu : function(n) {
 			Phx.vista.Clasificacion.superclass.preparaMenu.call(this, n);
+			this.id_nodo = 'id_clasificacion';
+            this.id_nodo_p = 'id_clasificacion_fk';
+			this.ddParams = {
+                tipo_nodo : n.attributes.tipo_nodo
+            };
 			if (n.attributes.tipo_nodo == 'raiz' || n.attributes.tipo_nodo == 'hijo') {
-				this.getBoton('new').enable();
+			    this.getBoton('new').enable();
 				this.getBoton('edit').enable();
 				this.getBoton('del').enable();
 				this.getBoton('btnBlockUnblock').enable();

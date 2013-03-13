@@ -123,7 +123,7 @@ class MODClasificacion extends MODbase {
 
         return $this->respuesta;
     }
-    
+
     function cambiarEstadoClasificacion() {
         $this->procedimiento = 'alm.ft_clasificacion_ime';
         $this->transaccion = 'SAL_ESTCLA_MOD';
@@ -137,5 +137,22 @@ class MODClasificacion extends MODbase {
 
         return $this->respuesta;
     }
+
+    function guardarDragDrop() {
+        $this->procedimiento = 'alm.ft_clasificacion_ime';
+        $this->transaccion = 'SAL_CLADD_MOD';
+        $this->tipo_procedimiento = 'IME';
+
+        $this->setParametro('punto', 'point', 'varchar');
+        $this->setParametro('id_nodo', 'id_nodo', 'integer');
+        $this->setParametro('id_old_parent', 'id_old_parent', 'integer');
+        $this->setParametro('id_target', 'id_target', 'integer');
+        $this->setParametro('tipo_nodo', 'tipo_nodo', 'varchar');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
 }
 ?>

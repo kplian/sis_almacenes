@@ -117,7 +117,12 @@ BEGIN
                     it.codigo,
                     it.id_clasificacion as id_clasificacion_fk,
                     (it.id_clasificacion::varchar||''_''||it.id_item::varchar)::varchar as id_clasificacion,
-                    (''item'')::varchar as tipo_nodo						
+                    case
+                        when (it.codigo is not null and it.codigo <> '''') then
+                        	''item_codificado''::varchar
+                        ELSE
+                            ''item''::varchar
+                    END as tipo_nodo
                 from alm.titem it
                 inner join segu.tusuario usu1 on usu1.id_usuario = it.id_usuario_reg
                 left join segu.tusuario usu2 on usu2.id_usuario = it.id_usuario_mod
