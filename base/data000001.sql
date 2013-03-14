@@ -654,3 +654,11 @@ select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_CAT_I
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_CAT_MOD', 'CATLOG');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_CAT_ELI', 'CATLOG');
 /***********************************F-DAT-AAO-ALM-42-11/03/2013*****************************************/
+
+/***********************************I-DAT-AAO-ALM-60-14/03/2013*****************************************/
+update alm.tmovimiento_tipo set
+	read_only = TRUE;
+
+update alm.tmetodo_val set
+	read_only = TRUE;
+/***********************************F-DAT-AAO-ALM-60-14/03/2013*****************************************/

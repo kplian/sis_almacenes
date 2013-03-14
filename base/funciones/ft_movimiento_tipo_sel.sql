@@ -43,7 +43,8 @@ BEGIN
                 usu1.cuenta as usr_reg,
                 movtip.fecha_reg,
                 usu2.cuenta as usr_mod,
-                movtip.fecha_mod
+                movtip.fecha_mod,
+                movtip.read_only
             from alm.tmovimiento_tipo movtip
             inner join segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod

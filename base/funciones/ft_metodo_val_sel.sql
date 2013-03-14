@@ -43,7 +43,8 @@ BEGIN
                 usu1.cuenta as usr_reg,
                 meval.fecha_reg,
                 usu2.cuenta as usr_mod,
-                meval.fecha_mod
+                meval.fecha_mod,
+                meval.read_only
             from alm.tmetodo_val meval
             inner join segu.tusuario usu1 on usu1.id_usuario = meval.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = meval.id_usuario_mod

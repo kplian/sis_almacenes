@@ -275,3 +275,17 @@ ALTER TABLE alm.titem_archivo
 ALTER TABLE alm.tmetodo_val
   ALTER COLUMN descripcion TYPE VARCHAR(1000);
 /***********************************F-SCP-AAO-ALM-41-05/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-60-14/03/2013*****************************************/
+ALTER TABLE alm.tmovimiento_tipo
+  ADD COLUMN read_only BOOLEAN;
+
+ALTER TABLE alm.tmovimiento_tipo
+  ALTER COLUMN read_only SET DEFAULT FALSE;
+  
+ALTER TABLE alm.tmetodo_val
+  ADD COLUMN read_only BOOLEAN;
+
+ALTER TABLE alm.tmetodo_val
+  ALTER COLUMN read_only SET DEFAULT FALSE;
+/***********************************F-SCP-AAO-ALM-60-14/03/2013*****************************************/

@@ -189,7 +189,10 @@ header("content-type:text/javascript; charset=UTF-8");
 		}, {
 			name : 'usr_mod',
 			type : 'string'
-		}],
+		}, {
+            name : 'read_only',
+            type : 'boolean'
+        }],
 		sortInfo : {
 			field : 'id_movimiento_tipo',
 			direction : 'ASC'
@@ -200,9 +203,7 @@ header("content-type:text/javascript; charset=UTF-8");
 		preparaMenu : function(n) {
 			var tb = Phx.vista.MovimientoTipo.superclass.preparaMenu.call(this);
 			var data = this.getSelectedData();
-			console.log(data);
-			if (data.nombre.toLowerCase().indexOf('transferencia') != -1) {
-			    console.log('entra');
+			if (data.read_only == true) {
 			    this.getBoton('edit').setDisabled(true);
                 this.getBoton('del').setDisabled(true);
 			}

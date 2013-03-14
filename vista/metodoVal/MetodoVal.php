@@ -64,23 +64,23 @@ header("content-type:text/javascript; charset=UTF-8");
 			grid : true,
 			form : true
 		}, {
-            config : {
-                name : 'descripcion',
-                fieldLabel : 'Descripcion',
-                allowBlank : true,
-                anchor : '100%',
-                gwidth : 150,
-                maxLength : 150
-            },
-            type : 'TextArea',
-            filters : {
-                pfiltro : 'meval.nombre',
-                type : 'string'
-            },
-            id_grupo : 1,
-            grid : true,
-            form : true
-        }, {
+			config : {
+				name : 'descripcion',
+				fieldLabel : 'Descripcion',
+				allowBlank : true,
+				anchor : '100%',
+				gwidth : 150,
+				maxLength : 150
+			},
+			type : 'TextArea',
+			filters : {
+				pfiltro : 'meval.nombre',
+				type : 'string'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : true
+		}, {
 			config : {
 				name : 'usr_reg',
 				fieldLabel : 'Creado por',
@@ -183,6 +183,9 @@ header("content-type:text/javascript; charset=UTF-8");
 		}, {
 			name : 'usr_mod',
 			type : 'string'
+		}, {
+			name : 'read_only',
+			type : 'boolean'
 		}],
 		sortInfo : {
 			field : 'id_metodo_val',
@@ -190,6 +193,15 @@ header("content-type:text/javascript; charset=UTF-8");
 		},
 		bdel : true,
 		fwidth : 420,
-		fheight : 260
+		fheight : 260,
+		preparaMenu : function(n) {
+			var tb = Phx.vista.MetodoVal.superclass.preparaMenu.call(this);
+			var data = this.getSelectedData();
+			if (data.read_only == true) {
+				this.getBoton('edit').setDisabled(true);
+				this.getBoton('del').setDisabled(true);
+			}
+			return tb;
+		}
 	}); 
 </script>

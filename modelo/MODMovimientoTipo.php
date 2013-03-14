@@ -25,6 +25,7 @@ class MODMovimientoTipo extends MODbase {
         $this->captura('fecha_reg', 'timestamp');
         $this->captura('usr_mod', 'varchar');
         $this->captura('fecha_mod', 'timestamp');
+        $this->captura('read_only', 'boolean');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
