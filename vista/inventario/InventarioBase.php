@@ -16,15 +16,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.maestro = config.maestro;
             Phx.vista.InventarioBase.superclass.constructor.call(this, config);
             this.init();
-            
-            // this.load({
-                // params : {
-                    // start : 0,
-                    // limit : this.tamPag
-                // }
-            // });
         },
-        tamPag : 50,
         Atributos : [{
             config : {
                 labelSeparator : '',
@@ -35,16 +27,15 @@ header("content-type: text/javascript; charset=UTF-8");
             form : true
         }, {
             config : {
-                name : 'estado_reg',
-                fieldLabel : 'Estado Reg.',
+                name : 'estado',
+                fieldLabel : 'Estado',
                 allowBlank : true,
-                anchor : '100%',
                 gwidth : 100,
-                maxLength : 10
+                maxLength : 1000
             },
             type : 'TextField',
             filters : {
-                pfiltro : 'inv.estado_reg',
+                pfiltro : 'inv.estado',
                 type : 'string'
             },
             id_grupo : 1,
@@ -220,6 +211,21 @@ header("content-type: text/javascript; charset=UTF-8");
             id_grupo : 1,
             grid : true,
             form : true
+        }, {
+            config : {
+                name : 'estado_reg',
+                fieldLabel : 'Estado Reg.',
+                gwidth : 100,
+                maxLength : 10
+            },
+            type : 'TextField',
+            filters : {
+                pfiltro : 'inv.estado_reg',
+                type : 'string'
+            },
+            id_grupo : 1,
+            grid : true,
+            form : false
         }, {
             config : {
                 name : 'fecha_reg',
