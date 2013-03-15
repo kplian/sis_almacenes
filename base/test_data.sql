@@ -354,5 +354,8 @@ VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 12, 12, 105, E'201
 
 ---Temporal
 
-select pxp.f_insert_tgui ('Inventario', 'Inventario', 'INVMAIN', 'si', 1, 'sis_almacenes/vista/inventario/Inventario.php', 5, '', 'Inventario', 'ALM');
+select pxp.f_insert_tgui ('Inventario', 'Inventario', 'INVMAIN', 'si', 1, 'sis_almacenes/vista/inventario/InventarioBase.php', 5, '', 'InventarioBase', 'ALM');
 select pxp.f_insert_testructura_gui ('INVMAIN', 'ALMAIN');
+
+select pxp.f_insert_tgui ('Orden Inventario', 'Orden Inventario', 'ORDINV', 'si', 1, 'sis_almacenes/vista/inventario/OrdenInventario.php', 5, '', 'OrdenInventario', 'ALM');
+select pxp.f_insert_testructura_gui ('ORDINV', 'ALMAIN');
