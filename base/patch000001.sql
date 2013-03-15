@@ -289,3 +289,18 @@ ALTER TABLE alm.tmetodo_val
 ALTER TABLE alm.tmetodo_val
   ALTER COLUMN read_only SET DEFAULT FALSE;
 /***********************************F-SCP-AAO-ALM-60-14/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-45-14/03/2013*****************************************/
+CREATE TABLE alm.tinventario (
+  id_inventario SERIAL, 
+  id_almacen INTEGER NOT NULL, 
+  id_usuario_resp INTEGER NOT NULL, 
+  fecha_inv_planif TIMESTAMP WITHOUT TIME ZONE, 
+  fecha_inv_ejec TIMESTAMP WITHOUT TIME ZONE, 
+  observaciones VARCHAR(1000), 
+  completo VARCHAR(2) NOT NULL, 
+  estado VARCHAR(20), 
+  CONSTRAINT tinventario_pkey PRIMARY KEY(id_inventario)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+/***********************************F-SCP-AAO-ALM-45-14/03/2013*****************************************/

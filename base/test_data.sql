@@ -352,3 +352,7 @@ VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 11, 11, 105, E'201
 INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
 VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 12, 12, 105, E'2013-12-01', E'2013-12-31');
 
+---Temporal
+
+select pxp.f_insert_tgui ('Inventario', 'Inventario', 'INVMAIN', 'si', 1, 'sis_almacenes/vista/inventario/Inventario.php', 5, '', 'Inventario', 'ALM');
+select pxp.f_insert_testructura_gui ('INVMAIN', 'ALMAIN');

@@ -662,3 +662,9 @@ update alm.tmovimiento_tipo set
 update alm.tmetodo_val set
 	read_only = TRUE;
 /***********************************F-DAT-AAO-ALM-60-14/03/2013*****************************************/
+
+/***********************************I-DAT-AAO-ALM-45-15/03/2013*****************************************/
+update segu.tsubsistema set
+	nombre_carpeta = 'almacenes'
+where codigo = 'ALM';
+/***********************************F-DAT-AAO-ALM-45-15/03/2013*****************************************/

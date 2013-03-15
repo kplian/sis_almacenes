@@ -151,4 +151,20 @@ ALTER TABLE alm.titem
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
-/***********************************I-DEP-AAO-ALM-34-01/03/2013*****************************************/
+/***********************************F-DEP-AAO-ALM-34-01/03/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-45-14/03/2013*****************************************/
+ALTER TABLE alm.tinventario
+  ADD CONSTRAINT fk_tinventario__id_almacen FOREIGN KEY (id_almacen)
+    REFERENCES alm.talmacen(id_almacen)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+ALTER TABLE alm.tinventario
+  ADD CONSTRAINT fk_tinventario__id_usuario_resp FOREIGN KEY (id_usuario_resp)
+    REFERENCES segu.tusuario(id_usuario)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-AAO-ALM-45-14/03/2013*****************************************/
