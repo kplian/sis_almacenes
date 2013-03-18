@@ -145,5 +145,18 @@ class MODInventario extends MODbase {
         return $this->respuesta;
     }
 
+    function corregirEjecucionInventario() {
+        $this->procedimiento = 'alm.ft_inventario_ime';
+        $this->transaccion = 'SAL_INVCORRREV_MOD';
+        $this->tipo_procedimiento = 'IME';
+
+        $this->setParametro('id_inventario', 'id_inventario', 'int4');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
+
 }
 ?>

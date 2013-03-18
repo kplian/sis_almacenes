@@ -49,7 +49,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		preparaMenu : function(n) {
 			var tb = Phx.vista.EjecucionInventario.superclass.preparaMenu.call(this);
 			var data = this.getSelectedData();
-			if (data.estado == 'pendiente_ejecucion') {
+			if (data.estado == 'pendiente_ejecucion' || data.estado == 'pendiente_correccion') {
 				this.getBoton('btnEjecucionInventario').enable();
 				this.getBoton('btnFinEjecucionInventario').disable();
 			} else {

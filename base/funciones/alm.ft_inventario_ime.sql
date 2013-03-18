@@ -251,6 +251,30 @@ BEGIN
             return v_resp;
 
 		end;
+    
+    /*********************************    
+ 	#TRANSACCION:  'SAL_INVCORRREV_MOD'
+ 	#DESCRIPCION:	Finalizacion de registro Orden Inventario
+ 	#AUTOR:			Ariel Ayaviri Omonte
+ 	#FECHA:			18-03-2013
+	***********************************/
+
+	elsif(p_transaccion='SAL_INVCORRREV_MOD')then
+
+		begin
+			update alm.tinventario set
+                estado = 'pendiente_correccion'
+			where id_inventario=v_parametros.id_inventario;
+               
+            --Definicion de la respuesta
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Inventario actualizado'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'id_inventario',v_parametros.id_inventario::varchar);
+              
+            --Devuelve la respuesta
+            return v_resp;
+
+		end;
+        
 	else
      
     	raise exception 'Transaccion inexistente: %',p_transaccion;

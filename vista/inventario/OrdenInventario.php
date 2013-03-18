@@ -34,7 +34,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				iconCls : 'badelante',
 				disabled : true,
 				handler : this.onBtnFinRegistro,
-				tooltip : '<b>Finalizar Registro Orden Inventario</b><br/>Finaliza el registro de la Orden de Inventario para su posterior ejecución.'
+				tooltip : '<b>Finalizar Registro de Orden Inventario</b><br/>Finaliza el registro de la Orden de Inventario para su posterior ejecución.'
 			});
 			
 			this.addButton('btnFinRevision', {
@@ -42,7 +42,15 @@ header("content-type: text/javascript; charset=UTF-8");
                 iconCls : 'bend',
                 disabled : true,
                 handler : this.onBtnFinRevision,
-                tooltip : '<b>Finalizar Registro Orden Inventario</b><br/>Finaliza el registro de la Orden de Inventario para su posterior ejecución.'
+                tooltip : '<b>Finalizar Revision de Orden Inventario</b><br/>Da por finalizada la revision de una Orden de Inventario.'
+            });
+            
+            this.addButton('btnCorregirInventario', {
+                text : '',
+                iconCls : 'bundo',
+                disabled : true,
+                handler : this.onBtnCorregirInventario,
+                tooltip : '<b>Devolver por Corrección</b><br/>Devuelve la Orden de Inventario para se corregida.'
             });
 		},
 		preparaMenu : function(n) {
@@ -51,18 +59,23 @@ header("content-type: text/javascript; charset=UTF-8");
 			if (data.estado == 'borrador') {
 				this.getBoton('btnFinRegistro').enable();
 				this.getBoton('btnFinRevision').disable();
+				this.getBoton('btnCorregirInventario').disable();
 			} else if (data.estado == 'revision') {
 			    this.getBoton('btnFinRegistro').disable();
                 this.getBoton('btnFinRevision').enable();
+                this.getBoton('btnCorregirInventario').enable();
 			} else {
 				this.getBoton('btnFinRegistro').disable();
 				this.getBoton('btnFinRevision').disable();
+				this.getBoton('btnCorregirInventario').disable();
 			}
 			return tb;
 		},
 		liberaMenu : function() {
 			var tb = Phx.vista.OrdenInventario.superclass.liberaMenu.call(this);
 			this.getBoton('btnFinRegistro').disable();
+			this.getBoton('btnFinRevision').disable();
+            this.getBoton('btnCorregirInventario').disable();
 			return tb;
 		},
 		onBtnFinRegistro : function() {
@@ -92,6 +105,25 @@ header("content-type: text/javascript; charset=UTF-8");
                 if (btn == "yes") {
                     Ext.Ajax.request({
                         url : '../../sis_almacenes/control/Inventario/finalizarRevisionInventario',
+                        params : {
+                            'id_inventario' : data.id_inventario,
+                        },
+                        success : global.successSave,
+                        failure : global.conexionFailure,
+                        timeout : global.timeout,
+                        scope : global
+                    });
+                }
+            });
+        },
+        onBtnCorregirInventario : function() {
+            var rec = this.sm.getSelected();
+            var data = rec.data;
+            var global = this;
+            Ext.Msg.confirm('Confirmación', '¿Está seguro de devolver la Orden de Inventario para su corrección?', function(btn) {
+                if (btn == "yes") {
+                    Ext.Ajax.request({
+                        url : '../../sis_almacenes/control/Inventario/corregirEjecucionInventario',
                         params : {
                             'id_inventario' : data.id_inventario,
                         },

@@ -353,7 +353,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				}
 			} else if (this.nombreVista == 'EjecucionInventario') {
 				this.getComponente('id_item').disable();
-				if (this.maestro.estado == 'pendiente_ejecucion') {
+				if (this.maestro.estado == 'pendiente_ejecucion' || this.maestro.estado == 'pendiente_correccion') {
 					this.getBoton('save').hide();
 					this.getBoton('edit').hide();
 					this.getBoton('del').hide();
