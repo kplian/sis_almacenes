@@ -36,14 +36,27 @@ header("content-type: text/javascript; charset=UTF-8");
 				handler : this.onBtnFinRegistro,
 				tooltip : '<b>Finalizar Registro Orden Inventario</b><br/>Finaliza el registro de la Orden de Inventario para su posterior ejecución.'
 			});
+			
+			this.addButton('btnFinRevision', {
+                text : '',
+                iconCls : 'bend',
+                disabled : true,
+                handler : this.onBtnFinRevision,
+                tooltip : '<b>Finalizar Registro Orden Inventario</b><br/>Finaliza el registro de la Orden de Inventario para su posterior ejecución.'
+            });
 		},
 		preparaMenu : function(n) {
 			var tb = Phx.vista.OrdenInventario.superclass.preparaMenu.call(this);
 			var data = this.getSelectedData();
 			if (data.estado == 'borrador') {
 				this.getBoton('btnFinRegistro').enable();
+				this.getBoton('btnFinRevision').disable();
+			} else if (data.estado == 'revision') {
+			    this.getBoton('btnFinRegistro').disable();
+                this.getBoton('btnFinRevision').enable();
 			} else {
 				this.getBoton('btnFinRegistro').disable();
+				this.getBoton('btnFinRevision').disable();
 			}
 			return tb;
 		},
@@ -71,6 +84,25 @@ header("content-type: text/javascript; charset=UTF-8");
 				}
 			});
 		},
+		onBtnFinRevision : function() {
+            var rec = this.sm.getSelected();
+            var data = rec.data;
+            var global = this;
+            Ext.Msg.confirm('Confirmación', '¿Está seguro de finalizar la revision de la Orden de Inventario seleccionada?', function(btn) {
+                if (btn == "yes") {
+                    Ext.Ajax.request({
+                        url : '../../sis_almacenes/control/Inventario/finalizarRevisionInventario',
+                        params : {
+                            'id_inventario' : data.id_inventario,
+                        },
+                        success : global.successSave,
+                        failure : global.conexionFailure,
+                        timeout : global.timeout,
+                        scope : global
+                    });
+                }
+            });
+        },
 		onButtonNew : function() {
 			Phx.vista.OrdenInventario.superclass.onButtonNew.call(this);
 			this.getComponente('id_almacen').enable();

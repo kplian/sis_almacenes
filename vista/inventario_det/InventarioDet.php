@@ -346,7 +346,7 @@ header("content-type: text/javascript; charset=UTF-8");
 					this.getBoton('edit').show();
 					this.getBoton('del').show();
 					this.getBoton('new').show();
-				} else if (this.maestro.estado == 'pendiente_ejecucion' || this.maestro.estado == 'ejecucion') {
+				} else {
 					this.getBoton('edit').hide();
 					this.getBoton('del').hide();
 					this.getBoton('new').hide();

@@ -60,5 +60,11 @@ class ACTInventario extends ACTbase {
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
+    function finalizarRevisionInventario() {
+        $this->objFunc = $this->create('MODInventario');
+        $this->res = $this->objFunc->finalizarRevisionInventario($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 }
 ?>

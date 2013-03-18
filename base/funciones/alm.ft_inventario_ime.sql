@@ -31,7 +31,10 @@ DECLARE
 	v_resp		            varchar;
 	v_nombre_funcion        text;
 	v_mensaje_error         text;
-	v_id_inventario	integer;
+	v_id_inventario			integer;
+    v_fecha_inv_ejec		timestamp;
+    v_fecha_inv_planif		timestamp;
+    v_cont					integer;
 			    
 BEGIN
 
@@ -149,6 +152,13 @@ BEGIN
 	elsif(p_transaccion='SAL_INVFINREG_MOD')then
 
 		begin
+        	select count(id_inventario_det) into v_cont
+            from alm.tinventario_det 
+            where id_inventario = v_parametros.id_inventario;
+        	
+            IF(v_cont = 0) THEN
+            	raise exception '%', 'No se puede finalizar el registro de la Orden de Inventario: Debe tener al menos un item a inventariar.';
+            END IF;
 			update alm.tinventario set
                 estado = 'pendiente_ejecucion'
 			where id_inventario=v_parametros.id_inventario;
@@ -194,8 +204,43 @@ BEGIN
 	elsif(p_transaccion='SAL_INVFINEJE_MOD')then
 
 		begin
+        	
+        	select fecha_inv_ejec, fecha_inv_planif into v_fecha_inv_ejec, v_fecha_inv_planif
+            from alm.tinventario 
+            where id_inventario = v_parametros.id_inventario;
+        	
+            IF (v_fecha_inv_ejec is not null) THEN
+                IF (v_fecha_inv_ejec < v_fecha_inv_planif) THEN
+                	raise exception '%', 'No se puede finalizar el llenado del inventario: La fecha de Ejecución no puede ser anterior a la fecha de planificacion.';
+                ELSE
+                	update alm.tinventario set
+                        estado = 'revision'
+                    where id_inventario=v_parametros.id_inventario;
+                END IF;
+            ELSE
+            	raise exception '%', 'No se puede finalizar el llenado del inventario. Debe especificar la fecha de ejecución ';
+            END IF;
+            --Definicion de la respuesta
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Inventario actualizado'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'id_inventario',v_parametros.id_inventario::varchar);
+              
+            --Devuelve la respuesta
+            return v_resp;
+
+		end;
+    
+    /*********************************    
+ 	#TRANSACCION:  'SAL_INVFINREV_MOD'
+ 	#DESCRIPCION:	Finalizacion de registro Orden Inventario
+ 	#AUTOR:			Ariel Ayaviri Omonte
+ 	#FECHA:			18-03-2013
+	***********************************/
+
+	elsif(p_transaccion='SAL_INVFINREV_MOD')then
+
+		begin
 			update alm.tinventario set
-                estado = 'revision'
+                estado = 'finalizado'
 			where id_inventario=v_parametros.id_inventario;
                
             --Definicion de la respuesta
