@@ -2,7 +2,7 @@
 /**
  *@package pXP
  *@file gen-SistemaDist.php
- *@author  (fprudencio)
+ *@author  Ariel Ayaviri Omonte
  *@date 20-09-2011 10:22:05
  *@description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  */
@@ -13,7 +13,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		require : '../../../sis_almacenes/vista/inventario/InventarioBase.php',
 		requireclase : 'Phx.vista.InventarioBase',
 		title : 'Órdenes de Inventario',
-		nombreVista : 'ordenInventario',
+		nombreVista : 'OrdenInventario',
 		bdel : true,
 		bedit : true,
 		bnew : true,
@@ -23,7 +23,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.load({
 				params : {
 					start : 0,
-					limit : 50
+					limit : 50,
+					nombreVista : this.nombreVista
 				}
 			});
 			this.getComponente('fecha_inv_ejec').disable();
@@ -69,6 +70,31 @@ header("content-type: text/javascript; charset=UTF-8");
 					});
 				}
 			});
+		},
+		onButtonNew : function() {
+			Phx.vista.OrdenInventario.superclass.onButtonNew.call(this);
+			this.getComponente('id_almacen').enable();
+			this.getComponente('id_usuario_resp').enable();
+			this.getComponente('completo').enable();
+			this.getComponente('fecha_inv_planif').enable();
+			this.getComponente('observaciones').enable();
+		},
+		onButtonEdit : function() {
+			Phx.vista.OrdenInventario.superclass.onButtonEdit.call(this);
+			var rec = this.sm.getSelected();
+			if (rec.data.estado == 'borrador') {
+				this.getComponente('id_almacen').enable();
+				this.getComponente('id_usuario_resp').enable();
+				this.getComponente('completo').enable();
+				this.getComponente('fecha_inv_planif').enable();
+				this.getComponente('observaciones').enable();
+			} else if (rec.data.estado == 'pendiente_ejecucion' || rec.data.estado == 'ejecucion') {
+				this.getComponente('id_almacen').disable();
+				this.getComponente('id_usuario_resp').disable();
+				this.getComponente('completo').disable();
+				this.getComponente('fecha_inv_planif').disable();
+				this.getComponente('observaciones').disable();
+			}
 		}
 	}; 
 </script>

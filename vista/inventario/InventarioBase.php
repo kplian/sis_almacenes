@@ -14,6 +14,16 @@ header("content-type: text/javascript; charset=UTF-8");
 
         constructor : function(config) {
             this.maestro = config.maestro;
+            this.south = {
+                url : '../../../sis_almacenes/vista/inventario_det/InventarioDet.php',
+                title : 'Detalle Inventario',
+                height : 300,
+                cls : 'InventarioDet',
+                params : {
+                    nombreVista : this.nombreVista
+                }
+            };
+
             Phx.vista.InventarioBase.superclass.constructor.call(this, config);
             this.init();
         },
@@ -160,7 +170,7 @@ header("content-type: text/javascript; charset=UTF-8");
             config : {
                 name : 'fecha_inv_planif',
                 fieldLabel : 'Fecha Planif.',
-                allowBlank : true,
+                allowBlank : false,
                 gwidth : 100,
                 format : 'd/m/Y',
                 renderer : function(value, p, record) {
@@ -179,7 +189,7 @@ header("content-type: text/javascript; charset=UTF-8");
             config : {
                 name : 'fecha_inv_ejec',
                 fieldLabel : 'Fecha Ejec.',
-                allowBlank : true,
+                allowBlank : false,
                 gwidth : 100,
                 format : 'd/m/Y',
                 renderer : function(value, p, record) {

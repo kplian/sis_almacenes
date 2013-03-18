@@ -17,8 +17,10 @@ class ACTInventario extends ACTbase {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODInventario', 'listarInventario');
         } else {
+            if($this->objParam->getParametro('nombreVista') == 'EjecucionInventario') {
+                $this->objParam->addFiltro(" inv.estado in (''pendiente_ejecucion'',''ejecucion'')");
+            }
             $this->objFunc = $this->create('MODInventario');
-
             $this->res = $this->objFunc->listarInventario($this->objParam);
         }
         $this->res->imprimirRespuesta($this->res->generarJson());
@@ -43,6 +45,12 @@ class ACTInventario extends ACTbase {
     function finalizarRegistro() {
         $this->objFunc = $this->create('MODInventario');
         $this->res = $this->objFunc->finalizarRegistro($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+    
+    function iniciarEjecucionInventario() {
+        $this->objFunc = $this->create('MODInventario');
+        $this->res = $this->objFunc->iniciarEjecucionInventario($this->objParam);
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 }

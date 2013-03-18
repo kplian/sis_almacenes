@@ -303,4 +303,26 @@ CREATE TABLE alm.tinventario (
   CONSTRAINT tinventario_pkey PRIMARY KEY(id_inventario)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
+
+ALTER TABLE alm.tinventario
+  OWNER TO postgres;
 /***********************************F-SCP-AAO-ALM-45-14/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-45-15/03/2013*****************************************/
+
+CREATE TABLE alm.tinventario_det (
+  id_inventario_det SERIAL NOT NULL, 
+  id_inventario INTEGER, 
+  id_item INTEGER, 
+  cantidad_sistema NUMERIC(18,2), 
+  cantidad_real NUMERIC(18,2), 
+  diferencia NUMERIC(18,2),
+  observaciones VARCHAR(1000), 
+  PRIMARY KEY(id_inventario_det)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.tinventario_det
+  OWNER TO postgres;
+  
+/***********************************F-SCP-AAO-ALM-45-15/03/2013*****************************************/

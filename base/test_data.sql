@@ -359,3 +359,6 @@ select pxp.f_insert_testructura_gui ('INVMAIN', 'ALMAIN');
 
 select pxp.f_insert_tgui ('Orden Inventario', 'Orden Inventario', 'ORDINV', 'si', 1, 'sis_almacenes/vista/inventario/OrdenInventario.php', 5, '', 'OrdenInventario', 'ALM');
 select pxp.f_insert_testructura_gui ('ORDINV', 'ALMAIN');
+
+select pxp.f_insert_tgui ('Ejecucion Inventario', 'Ejecucion Inventario', 'EJEINV', 'si', 1, 'sis_almacenes/vista/inventario/EjecucionInventario.php', 5, '', 'EjecucionInventario', 'ALM');
+select pxp.f_insert_testructura_gui ('EJEINV', 'ALMAIN');
