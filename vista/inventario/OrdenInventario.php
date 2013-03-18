@@ -31,7 +31,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
 			this.addButton('btnFinRegistro', {
 				text : '',
-				iconCls : 'bok',
+				iconCls : 'badelante',
 				disabled : true,
 				handler : this.onBtnFinRegistro,
 				tooltip : '<b>Finalizar Registro Orden Inventario</b><br/>Finaliza el registro de la Orden de Inventario para su posterior ejecución.'
@@ -88,7 +88,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('completo').enable();
 				this.getComponente('fecha_inv_planif').enable();
 				this.getComponente('observaciones').enable();
-			} else if (rec.data.estado == 'pendiente_ejecucion' || rec.data.estado == 'ejecucion') {
+			} else {
 				this.getComponente('id_almacen').disable();
 				this.getComponente('id_usuario_resp').disable();
 				this.getComponente('completo').disable();

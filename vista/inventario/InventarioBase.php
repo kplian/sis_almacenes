@@ -331,7 +331,7 @@ header("content-type: text/javascript; charset=UTF-8");
         }, {
             name : 'fecha_inv_planif',
             type : 'date',
-            dateFormat : 'Y-m-d H:i:s.u'
+            dateFormat : 'Y-m-d H:i:s'
         }, {
             name : 'estado',
             type : 'string'
@@ -341,7 +341,7 @@ header("content-type: text/javascript; charset=UTF-8");
         }, {
             name : 'fecha_inv_ejec',
             type : 'date',
-            dateFormat : 'Y-m-d H:i:s.u'
+            dateFormat : 'Y-m-d H:i:s'
         }, {
             name : 'completo',
             type : 'string'

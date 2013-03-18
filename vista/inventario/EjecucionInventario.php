@@ -30,10 +30,18 @@ header("content-type: text/javascript; charset=UTF-8");
 			
 			this.addButton('btnEjecucionInventario', {
 				text : '',
-				iconCls : 'bok',
+				iconCls : 'bchecklist',
 				disabled : true,
 				handler : this.onBtnEjecucionInventario,
-				tooltip : '<b>Comezar el Registro de Inventario</b><br/>Habilita el registro del inventario seleccionado.'
+				tooltip : '<b>Comezar el Llenado de Inventario</b><br/>Habilita el registro del inventario seleccionado.'
+			});
+			
+			this.addButton('btnFinEjecucionInventario', {
+				text : '',
+				iconCls : 'badelante',
+				disabled : true,
+				handler : this.onBtnFinEjecucionInventario,
+				tooltip : '<b>Finalizar el llenado de Inventario</b><br/>Habilita el registro del inventario seleccionado.'
 			});
 
 			this.getComponente('')
@@ -43,8 +51,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			var data = this.getSelectedData();
 			if (data.estado == 'pendiente_ejecucion') {
 				this.getBoton('btnEjecucionInventario').enable();
+				this.getBoton('btnFinEjecucionInventario').disable();
 			} else {
 				this.getBoton('btnEjecucionInventario').disable();
+				this.getBoton('btnFinEjecucionInventario').enable();
 			}
 			return tb;
 		},
@@ -72,6 +82,25 @@ header("content-type: text/javascript; charset=UTF-8");
 				}
 			});
 		},
+		onBtnFinEjecucionInventario : function() {
+            var rec = this.sm.getSelected();
+            var data = rec.data;
+            var global = this;
+            Ext.Msg.confirm('Confirmación', '¿Está seguro de finalizar el llenado del inventario seleccionado?', function(btn) {
+                if (btn == "yes") {
+                    Ext.Ajax.request({
+                        url : '../../sis_almacenes/control/Inventario/finalizarEjecucionInventario',
+                        params : {
+                            'id_inventario' : data.id_inventario,
+                        },
+                        success : global.successSave,
+                        failure : global.conexionFailure,
+                        timeout : global.timeout,
+                        scope : global
+                    });
+                }
+            });
+        },
 		onButtonNew : function() {
             Phx.vista.OrdenInventario.superclass.onButtonNew.call(this);
             this.getComponente('id_almacen').disable();
