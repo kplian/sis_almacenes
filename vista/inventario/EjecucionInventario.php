@@ -43,8 +43,6 @@ header("content-type: text/javascript; charset=UTF-8");
 				handler : this.onBtnFinEjecucionInventario,
 				tooltip : '<b>Finalizar el llenado de Inventario</b><br/>Habilita el registro del inventario seleccionado.'
 			});
-
-			this.getComponente('')
 		},
 		preparaMenu : function(n) {
 			var tb = Phx.vista.EjecucionInventario.superclass.preparaMenu.call(this);
