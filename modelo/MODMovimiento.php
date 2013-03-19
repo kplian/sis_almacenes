@@ -150,6 +150,21 @@ class MODMovimiento extends MODbase {
         return $this->respuesta;
     }
     
+    function movimientosPendientesPeriodo() {
+        $this->procedimiento = 'alm.ft_movimiento_sel';
+        $this->transaccion = 'SAL_MOVPENPER_SEL';
+        $this->tipo_procedimiento = 'SEL';
+
+        $this->setParametro('id_periodo_subsistema', 'id_periodo_subsistema', 'integer');
+        
+        $this->captura('id_movimiento', 'integer');
+        $this->captura('tipo', 'varchar');
+        
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+    
     function listarReporteMovimiento() {
         $this->procedimiento = 'alm.ft_movimiento_sel';
         $this->transaccion = 'SAL_MOVREPORT_SEL';

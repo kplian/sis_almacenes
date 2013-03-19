@@ -7,10 +7,10 @@
  * @descripcion Clase que recibe los parametros enviados por la vista para luego ser mandadas a la capa Modelo
  */
 
-require_once(dirname(__FILE__).'/../reportes/pxpReport/ReportWriter.php');
-require_once(dirname(__FILE__).'/../reportes/RMovimiento.php');
-require_once(dirname(__FILE__).'/../reportes/pxpReport/DataSource.php');
- 
+require_once (dirname(__FILE__) . '/../reportes/pxpReport/ReportWriter.php');
+require_once (dirname(__FILE__) . '/../reportes/RMovimiento.php');
+require_once (dirname(__FILE__) . '/../reportes/pxpReport/DataSource.php');
+
 class ACTMovimiento extends ACTbase {
 
     function listarMovimiento() {
@@ -66,11 +66,17 @@ class ACTMovimiento extends ACTbase {
         $this->res = $this->objFunc->revertirMovimiento();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
-    
+
+    function movimientosPendientesPeriodo() {
+        $this->objFunc = $this->create('MODMovimiento');
+        $this->res = $this->objFunc->movimientosPendientesPeriodo();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
     function generarReporteMovimiento() {
         $dataSource = new DataSource();
         $idMovimiento = $this->objParam->getParametro('id_movimiento');
-        $this->objParam->addParametroConsulta('filtro', ' movdet.id_movimiento = '.$idMovimiento);
+        $this->objParam->addParametroConsulta('filtro', ' movdet.id_movimiento = ' . $idMovimiento);
         $this->objParam->addParametroConsulta('ordenacion', 'movdet.id_movimiento_det');
         $this->objParam->addParametroConsulta('dir_ordenacion', 'asc');
         $this->objParam->addParametroConsulta('cantidad', 1000);
@@ -78,23 +84,23 @@ class ACTMovimiento extends ACTbase {
         $this->objFunc = $this->create('MODMovimiento');
         $resultRepMovimiento = $this->objFunc->listarReporteMovimiento($this->objParam);
         $dataSource->setDataset($resultRepMovimiento->getDatos());
-        
+
         //se obtienen los totales de los resultados
         $totalCantidad = 0;
         $totalCosto = 0;
-        
-        foreach($resultRepMovimiento->getDatos() as $row) {
+
+        foreach ($resultRepMovimiento->getDatos() as $row) {
             $totalCantidad += $row['cantidad'];
             $totalCosto += $row['costo_total'];
         }
-        
-        $this->objParam->addParametroConsulta('filtro', ' mov.id_movimiento = '.$idMovimiento);
+
+        $this->objParam->addParametroConsulta('filtro', ' mov.id_movimiento = ' . $idMovimiento);
         $this->objParam->addParametroConsulta('ordenacion', 'mov.id_movimiento');
         $this->objParam->addParametroConsulta('cantidad', 1);
         $this->objFunc = $this->create('MODMovimiento');
         $resultMovimiento = $this->objFunc->listarMovimiento($this->objParam);
         $datosMovimiento = $resultMovimiento->getDatos();
-        
+
         $dataSource->putParameter('codigo', $datosMovimiento[0]['codigo']);
         $dataSource->putParameter('tipo', $datosMovimiento[0]['tipo']);
         $dataSource->putParameter('almacen', $datosMovimiento[0]['nombre_almacen']);
@@ -105,16 +111,15 @@ class ACTMovimiento extends ACTbase {
         $dataSource->putParameter('fechaMovimiento', $datosMovimiento[0]['fecha_mov']);
         $dataSource->putParameter('totalCantidad', $totalCantidad);
         $dataSource->putParameter('totalCosto', $totalCosto);
-        
+
         $reporte = new RMovimiento();
         $reporte->setDataSource($dataSource);
         $nombreArchivo = 'Movimiento.pdf';
-        $reportWriter = new ReportWriter($reporte, dirname(__FILE__).'/../../reportes_generados/'.$nombreArchivo);
+        $reportWriter = new ReportWriter($reporte, dirname(__FILE__) . '/../../reportes_generados/' . $nombreArchivo);
         $reportWriter->writeReport(ReportWriter::PDF);
-        
+
         $mensajeExito = new Mensaje();
-        $mensajeExito->setMensaje('EXITO','Reporte.php','Reporte generado',
-                                        'Se generó con éxito el reporte: '.$nombreArchivo,'control');
+        $mensajeExito->setMensaje('EXITO', 'Reporte.php', 'Reporte generado', 'Se generó con éxito el reporte: ' . $nombreArchivo, 'control');
         $mensajeExito->setArchivoGenerado($nombreArchivo);
         $this->res = $mensajeExito;
         $this->res->imprimirRespuesta($this->res->generarJson());

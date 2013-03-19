@@ -22,6 +22,8 @@ DECLARE
   v_consulta 		varchar;
   v_parametros 		record;
   v_respuesta		varchar;
+  v_fecha_ini		date;
+  v_fecha_fin		date;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_sel';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -137,6 +139,7 @@ BEGIN
         v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;
         return v_consulta;
     end;
+    
   /*********************************   
      #TRANSACCION:  'SAL_MOVREPORT_CONT'
      #DESCRIPCION:  Conteo de registros
@@ -152,6 +155,51 @@ BEGIN
             inner join alm.titem item on item.id_item = movdet.id_item
             where movdet.estado_reg = ''activo'' and ';
         v_consulta:= v_consulta||v_parametros.filtro;
+        return v_consulta;
+     end;
+     
+  /*********************************   
+     #TRANSACCION:  'SAL_MOVPENPER_SEL'
+     #DESCRIPCION:  Consulta de datos
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        19-03-2013
+    ***********************************/
+	elseif(p_transaccion='SAL_MOVPENPER_SEL')then
+  	begin
+    	select peri.fecha_ini, peri.fecha_fin into v_fecha_ini, v_fecha_fin
+        from param.tperiodo_subsistema pesu
+        inner join param.tperiodo peri on peri.id_periodo = pesu.id_periodo
+        where pesu.id_periodo_subsistema = v_parametros.id_periodo_subsistema;
+        
+        v_consulta:='
+        	SELECT
+            	mov.id_movimiento,
+                mov.estado_mov
+            FROM alm.tmovimiento mov
+            WHERE mov.estado_reg = ''activo'' 
+            	and mov.estado_mov = ''borrador'' 
+                and mov.fecha_mov between ''' || v_fecha_ini || ''' and ''' || v_fecha_fin ||''' ;';
+        return v_consulta;
+    end;
+	/*********************************   
+     #TRANSACCION:  'SAL_MOVPENPER_CONT'
+     #DESCRIPCION:  Conteo de registros
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        19-03-2013
+    ***********************************/
+	elsif(p_transaccion='SAL_MOVPENPER_CONT')then
+    begin
+    	select peri.fecha_ini, peri.fecha_fin into v_fecha_ini, v_fecha_fin
+        from param.tperiodo_subsistema pesu
+        inner join param.tperiodo peri on peri.id_periodo = pesu.id_periodo
+        where pesu.id_periodo_subsistema = v_parametros.id_periodo_subsistema;
+        
+    	v_consulta:='
+        	SELECT count(mov.id_movimiento)
+            FROM alm.tmovimiento mov
+            WHERE mov.estado_reg = ''activo'' 
+            	and mov.estado_mov = ''borrador'' 
+                and mov.fecha_mov between ''' || v_fecha_ini || ''' and ''' || v_fecha_fin ||''' ;';
         return v_consulta;
      end;
   end if;
