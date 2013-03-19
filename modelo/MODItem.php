@@ -71,7 +71,7 @@ class MODItem extends MODbase {
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('numero_serie', 'numero_serie', 'varchar');
         $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
-        
+
         $this->armarConsulta();
         $this->ejecutarConsulta();
 
@@ -92,7 +92,7 @@ class MODItem extends MODbase {
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('numero_serie', 'numero_serie', 'varchar');
         $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
-        
+
         $this->armarConsulta();
         $this->ejecutarConsulta();
 
@@ -111,7 +111,7 @@ class MODItem extends MODbase {
 
         return $this->respuesta;
     }
-    
+
     function generarCodigoItem() {
         $this->procedimiento = 'alm.ft_item_ime';
         $this->transaccion = 'SAL_GENCODE_MOD';
@@ -125,5 +125,22 @@ class MODItem extends MODbase {
 
         return $this->respuesta;
     }
+
+    function buscarItemArb() {
+        $this->procedimiento = 'alm.ft_item_sel';
+        $this->transaccion = 'SAL_ITMSRCHARB_SEL';
+        $this->tipo_procedimiento = 'SEL';
+
+        $this->setParametro('text_search', 'text_search', 'varchar');
+        
+        $this->captura('id', 'int4');
+        $this->captura('ruta', 'integer[]');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
+
 }
 ?>

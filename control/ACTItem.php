@@ -62,5 +62,11 @@ class ACTItem extends ACTbase {
         $this->res = $this->objFunc->generarCodigoItem();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+    
+    function buscarItemArb() {
+        $this->objFunc = $this->create('MODItem');
+        $this->res = $this->objFunc->buscarItemArb();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 }
 ?>

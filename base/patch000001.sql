@@ -326,3 +326,18 @@ ALTER TABLE alm.tinventario_det
   OWNER TO postgres;
   
 /***********************************F-SCP-AAO-ALM-45-15/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-9-18/03/2013*****************************************/
+
+ALTER TABLE alm.talmacen_stock
+  ALTER COLUMN id_item SET NOT NULL;
+
+ALTER TABLE alm.titem_reemplazo
+  ALTER COLUMN id_item SET NOT NULL;
+ 
+ALTER TABLE alm.titem_reemplazo
+  ALTER COLUMN id_item_r SET NOT NULL;
+
+ALTER TABLE alm.tmovimiento_det
+  ALTER COLUMN id_item SET NOT NULL;
+/***********************************F-SCP-AAO-ALM-9-18/03/2013*****************************************/
