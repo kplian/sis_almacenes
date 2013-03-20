@@ -21,7 +21,7 @@ BEGIN
     where invdet.id_inventario = p_id_inventario;
             
     update alm.tinventario_det invdet set
-        diferencia = invdet.cantidad_sistma - invdet.cantidad_real
+        diferencia = invdet.cantidad_sistema - invdet.cantidad_real
     where invdet.id_inventario = p_id_inventario;
   	
     return true;

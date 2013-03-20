@@ -237,6 +237,8 @@ BEGIN
                 IF (v_fecha_inv_ejec < v_fecha_inv_planif) THEN
                 	raise exception '%', 'No se puede finalizar el llenado del inventario: La fecha de Ejecución no puede ser anterior a la fecha de planificacion.';
                 ELSE
+                	
+                	v_boolean = alm.f_actualizar_saldos_inventario(v_parametros.id_inventario);
                 	update alm.tinventario set
                         estado = 'revision'
                     where id_inventario=v_parametros.id_inventario;
