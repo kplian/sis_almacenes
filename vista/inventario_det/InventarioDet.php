@@ -15,8 +15,8 @@ header("content-type: text/javascript; charset=UTF-8");
 		constructor : function(config) {
 			this.bsave = true;
 			if (config.nombreVista == 'EjecucionInventario') {
-				this.Atributos[4].grid = false;
-				this.Atributos[6].grid = false;
+				this.Atributos[5].grid = false;
+				this.Atributos[7].grid = false;
 			}
 
 			Phx.vista.InventarioDet.superclass.constructor.call(this, config);
@@ -43,6 +43,14 @@ header("content-type: text/javascript; charset=UTF-8");
 			type : 'Field',
 			form : true
 		}, {
+            config : {
+                labelSeparator : '',
+                inputType : 'hidden',
+                name : 'id_almacen'
+            },
+            type : 'Field',
+            form : true
+        }, {
 			config : {
 				name : 'id_item',
 				fieldLabel : 'Item',
@@ -333,6 +341,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			Phx.vista.InventarioDet.superclass.loadValoresIniciales.call(this);
 			if (this.maestro.id_inventario != undefined) {
 				this.getComponente('id_inventario').setValue(this.maestro.id_inventario);
+				this.getComponente('id_almacen').setValue(this.maestro.id_almacen);
 			}
 		},
 		onReloadPage : function(m) {

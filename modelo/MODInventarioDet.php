@@ -49,6 +49,7 @@ class MODInventarioDet extends MODbase {
         $this->tipo_procedimiento = 'IME';
 
         $this->setParametro('id_item', 'id_item', 'int4');
+        $this->setParametro('id_almacen', 'id_almacen', 'int4');
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('cantidad_real', 'cantidad_real', 'numeric');
         $this->setParametro('id_inventario', 'id_inventario', 'int4');
@@ -65,6 +66,7 @@ class MODInventarioDet extends MODbase {
         $this->tipo_procedimiento = 'IME';
 
         $this->setParametro('id_inventario_det', 'id_inventario_det', 'int4');
+        $this->setParametro('id_almacen', 'id_almacen', 'int4');
         $this->setParametro('id_item', 'id_item', 'int4');
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('cantidad_real', 'cantidad_real', 'numeric');

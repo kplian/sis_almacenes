@@ -32,6 +32,7 @@ DECLARE
 	v_nombre_funcion        text;
 	v_mensaje_error         text;
 	v_id_inventario_det		integer;
+    v_saldo_fisico			numeric;
 			    
 BEGIN
 
@@ -92,13 +93,17 @@ BEGIN
 
 		begin
 			--Sentencia de la modificacion
+            v_saldo_fisico = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_parametros.id_almacen);
+            
 			update alm.tinventario_det set
-			id_item = v_parametros.id_item,
-			observaciones = v_parametros.observaciones,
-			cantidad_real = v_parametros.cantidad_real,
-			id_inventario = v_parametros.id_inventario,
-			fecha_mod = now(),
-			id_usuario_mod = p_id_usuario
+                id_item = v_parametros.id_item,
+                observaciones = v_parametros.observaciones,
+                cantidad_sistema = v_saldo_fisico,
+                cantidad_real = v_parametros.cantidad_real,
+                diferencia = v_saldo_fisico - v_parametros.cantidad_real,
+                id_inventario = v_parametros.id_inventario,
+                fecha_mod = now(),
+                id_usuario_mod = p_id_usuario
 			where id_inventario_det=v_parametros.id_inventario_det;
                
 			--Definicion de la respuesta

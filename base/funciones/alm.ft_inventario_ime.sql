@@ -35,6 +35,8 @@ DECLARE
     v_fecha_inv_ejec		timestamp;
     v_fecha_inv_planif		timestamp;
     v_cont					integer;
+    g_registros				record;
+    v_boolean 				boolean;
 			    
 BEGIN
 
@@ -80,6 +82,28 @@ BEGIN
                 null
 			)RETURNING id_inventario into v_id_inventario;
 			
+            if (v_parametros.completo = 'si') then
+            	FOR g_registros IN (
+                	select id_item from alm.titem where estado_reg = 'activo'
+                ) LOOP
+                    insert into alm.tinventario_det(
+                    	id_inventario,
+                        id_item,
+                        fecha_reg,
+                        id_usuario_reg,
+                        fecha_mod,
+                        id_usuario_mod
+                    ) values (
+                    	v_id_inventario,
+                        g_registros.id_item,
+                        now(),
+                        p_id_usuario,
+                        null,
+                        null
+                    );
+                END LOOP;
+            end if;
+            
 			--Definicion de la respuesta
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Inventario almacenado(a) con exito (id_inventario'||v_id_inventario||')'); 
             v_resp = pxp.f_agrega_clave(v_resp,'id_inventario',v_id_inventario::varchar);
@@ -254,7 +278,7 @@ BEGIN
     
     /*********************************    
  	#TRANSACCION:  'SAL_INVCORRREV_MOD'
- 	#DESCRIPCION:	Finalizacion de registro Orden Inventario
+ 	#DESCRIPCION:	Devuelve el inventario para correccion
  	#AUTOR:			Ariel Ayaviri Omonte
  	#FECHA:			18-03-2013
 	***********************************/
@@ -274,7 +298,85 @@ BEGIN
             return v_resp;
 
 		end;
-        
+    
+    /*********************************    
+ 	#TRANSACCION:  'SAL_INVREVDIF_MOD'
+ 	#DESCRIPCION:	Revision de diferencias en el inventario detalle
+ 	#AUTOR:			Ariel Ayaviri Omonte
+ 	#FECHA:			20-03-2013
+	***********************************/
+
+	elsif(p_transaccion='SAL_INVREVDIF_MOD')then
+
+		begin
+        	-- Se actualizan los saldos de los items del sistema.
+        	v_boolean = alm.f_actualizar_saldos_inventario(v_parametros.id_inventario);
+            
+            --se obtiene la cantidad de registros con diferencias
+        	
+            select count(invdet.id_inventario_det) into v_cont
+            from alm.tinventario_det invdet
+            where invdet.id_inventario = v_parametros.id_inventario
+            	and invdet.diferencia <> 0;
+        	   
+            --Definicion de la respuesta
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Revision de diferencias en el inventario'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'cant_diferencias',v_cont::varchar);
+            
+            --Devuelve la respuesta
+            return v_resp;
+
+		end;
+    /*********************************    
+ 	#TRANSACCION:  'SAL_INVNIVMOV_MOD'
+ 	#DESCRIPCION:	Realiza la insercion de los movimientos necesarios para la nivelacion de saldos.
+ 	#AUTOR:			Ariel Ayaviri Omonte
+ 	#FECHA:			20-03-2013
+	***********************************/
+
+	elsif(p_transaccion='SAL_INVNIVMOV_MOD')then
+		begin
+        	-- Se actualizan los saldos de los items del sistema.
+        	v_boolean = alm.f_actualizar_saldos_inventario(v_parametros.id_inventario);
+            
+            --se obtiene la cantidad de registros con diferencias
+        	select count(invdet.id_inventario_det) into v_cont
+            from alm.tinventario_det invdet
+            where invdet.id_inventario = v_parametros.id_inventario
+            	and invdet.diferencia <> 0;
+        	   
+            --Definicion de la respuesta
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Revision de diferencias en el inventario'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'cant_diferencias',v_cont::varchar);
+            
+            --Devuelve la respuesta
+            return v_resp;
+
+		end;
+    
+    /*********************************    
+ 	#TRANSACCION:  'SAL_INVACTSALD_MOD'
+ 	#DESCRIPCION:	Actualiza los saldos del inventario
+ 	#AUTOR:			Ariel Ayaviri Omonte
+ 	#FECHA:			20-03-2013
+	***********************************/
+
+	elsif(p_transaccion='SAL_INVACTSALD_MOD')then
+
+		begin
+        	-- Se actualizan los saldos de los items del sistema.
+        	v_boolean = alm.f_actualizar_saldos_inventario(v_parametros.id_inventario);
+               
+            --Definicion de la respuesta
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Revision de diferencias en el inventario'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'exito',v_boolean::varchar);
+            
+            --Devuelve la respuesta
+            return v_resp;
+
+		end;
+    
+    
 	else
      
     	raise exception 'Transaccion inexistente: %',p_transaccion;
