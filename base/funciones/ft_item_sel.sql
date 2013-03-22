@@ -64,6 +64,10 @@ BEGIN
                 inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
                 where item.estado_reg = ''activo'' and ';
            
+        	if (v_parametros.ordenacion = 'codigo') then
+            	v_parametros.ordenacion = 'num_por_clasificacion';
+            end if;
+        
             --Definicion de la respuesta
             v_consulta:=v_consulta||v_parametros.filtro;
             v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
@@ -127,7 +131,7 @@ BEGIN
                 inner join segu.tusuario usu1 on usu1.id_usuario = it.id_usuario_reg
                 left join segu.tusuario usu2 on usu2.id_usuario = it.id_usuario_mod
                 where it.estado_reg = ''activo'' 
-                and '|| v_where ||' order by it.codigo';
+                and '|| v_where ||' order by it.num_por_clasificacion ';
 
             --Devuelve la respuesta
         	return v_consulta;
