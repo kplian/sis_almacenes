@@ -93,22 +93,28 @@ header("content-type:text/javascript; charset=UTF-8");
                 pathTxt = pathTxt.replace('{', '[');
                 pathTxt = pathTxt.replace('}', ']');
                 var path = eval(pathTxt);
-                this.showPath(path, path[path.length - 1].toString()+'_'+reg.datos[i].id.toString());
+                if (path.length == 0) {
+                    this.showPath(path, '0_'+reg.datos[i].id.toString());
+                } else {
+                    this.showPath(path, path[path.length - 1].toString()+'_'+reg.datos[i].id.toString());
+                }
             }
         },
         showPath : function(pathArray, foundId) {
             var global = this;
-            var currentNode = this.treePanel.getNodeById(pathArray[0].toString());
-            currentNode.expand(false, true, function(node, b, c, d) {
-                pathArray.shift();
-                if (pathArray.length > 0) {
+            if (pathArray.length > 0) {
+                var currentNode = this.treePanel.getNodeById(pathArray[0].toString());
+                currentNode.expand(false, true, function(node, b, c, d) {
+                    pathArray.shift();
                     global.showPath(pathArray, foundId);
-                } else {
-                    var foundNode = global.treePanel.getNodeById(foundId.toString());
-                    foundNode.setCls('light-node');
-                    global.lightNodes[global.lightNodes.length] = foundNode;
-                }
-            }, global);
+                    
+                }, global);
+            } else {
+                var foundNode = global.treePanel.getNodeById(foundId.toString());
+                foundNode.setCls('light-node');
+                global.lightNodes[global.lightNodes.length] = foundNode;
+            }
+            
         },
         clearLightNodes : function() {
             if (this.lightNodes != undefined && this.lightNodes != null) {

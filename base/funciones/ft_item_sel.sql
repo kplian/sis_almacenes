@@ -120,7 +120,7 @@ BEGIN
                     it.nombre,
                     it.codigo,
                     it.id_clasificacion as id_clasificacion_fk,
-                    (it.id_clasificacion::varchar||''_''||it.id_item::varchar)::varchar as id_clasificacion,
+                    (COALESCE(it.id_clasificacion,0)::varchar||''_''||it.id_item::varchar)::varchar as id_clasificacion,
                     case
                         when (it.codigo is not null and it.codigo <> '''') then
                         	''item_codificado''::varchar
@@ -132,6 +132,8 @@ BEGIN
                 left join segu.tusuario usu2 on usu2.id_usuario = it.id_usuario_mod
                 where it.estado_reg = ''activo'' 
                 and '|| v_where ||' order by it.num_por_clasificacion ';
+                
+                
 
             --Devuelve la respuesta
         	return v_consulta;
@@ -194,6 +196,54 @@ BEGIN
             --Definicion de la respuesta           
             v_consulta:=v_consulta||v_parametros.filtro;
 
+            --Devuelve la respuesta
+            return v_consulta;
+
+        end;  
+    
+    /*********************************   
+     #TRANSACCION:  'SAL_ITMSRCHARB_SEL'
+     #DESCRIPCION:    Consulta de datos
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        20-09-2012
+    ***********************************/
+
+    elsif(p_transaccion='SAL_ITMSRCHARB_SEL')then
+                    
+        begin
+            --Sentencia de la consulta
+            v_consulta:='
+            	select 
+                	it.id_item id, 
+                	case 
+                        when (it.id_clasificacion is null) then
+                            ''{}''::INT[]
+                        else 
+                            alm.f_get_ruta_clasificacion(it.id_clasificacion)
+                    end as ruta
+				from alm.titem it
+                where it.estado_reg = ''activo'' and it.nombre ilike ''%' || v_parametros.text_search || '%'' ';
+           
+            return v_consulta;
+                       
+        end;
+    
+    /*********************************   
+     #TRANSACCION:  'SAL_ITMSRCHARB_CONT'
+     #DESCRIPCION:  Conteo de registros
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        20-09-2012
+    ***********************************/
+
+    elsif(p_transaccion='SAL_ITMSRCHARB_CONT')then
+
+        begin
+            --Sentencia de la consulta de conteo de registros
+            v_consulta:='
+            	select count(it.id_item)
+                from alm.titem it
+                where it.estado_reg = ''activo'' and it.nombre ilike ''%' || v_parametros.text_search || '%'' ';
+           
             --Devuelve la respuesta
             return v_consulta;
 
