@@ -50,6 +50,7 @@ BEGIN
 						almusr.id_almacen_usuario,
 						almusr.id_usuario,
 						usualm.cuenta,
+                        PERSON.nombre_completo2 as desc_person,
                         almusr.id_almacen,
                         almusr.tipo,
 						almusr.estado_reg,
@@ -63,6 +64,7 @@ BEGIN
 						inner join segu.tusuario usu1 on usu1.id_usuario = almusr.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = almusr.id_usuario_mod
 					    inner join segu.tusuario usualm on usualm.id_usuario = almusr.id_usuario
+                        inner join segu.vpersona PERSON on PERSON.id_persona = usualm.id_persona
 				        where almusr.id_almacen = ' || v_parametros.id_almacen ||' and ';
 			
 			--Definicion de la respuesta
@@ -86,10 +88,11 @@ BEGIN
 		begin
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_almacen_usuario)
-					    from alm.talmacen_usuario almusr
+					    						from alm.talmacen_usuario almusr
 						inner join segu.tusuario usu1 on usu1.id_usuario = almusr.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = almusr.id_usuario_mod
 					    inner join segu.tusuario usualm on usualm.id_usuario = almusr.id_usuario
+                        inner join segu.vpersona PERSON on PERSON.id_persona = usualm.id_persona
 				        where almusr.id_almacen = ' || v_parametros.id_almacen ||' and ';
 			
 			--Definicion de la respuesta		    

@@ -23,9 +23,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     nombreVista : this.nombreVista
                 }
             };
-
+            
             Phx.vista.InventarioBase.superclass.constructor.call(this, config);
             this.init();
+            this.getComponente('id_almacen').on('select', this.onAlmacenSelect, this);
         },
         Atributos : [{
             config : {
@@ -105,7 +106,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 allowBlank : false,
                 emptyText : 'Usuario...',
                 store : new Ext.data.JsonStore({
-                    url : '../../sis_seguridad/control/Usuario/listarUsuario',
+                    url : '../../sis_almacenes/control/AlmacenUsuario/listarAlmacenUsuario',
                     id : 'id_usuario',
                     root : 'datos',
                     sortInfo : {
@@ -116,7 +117,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     fields : ['id_usuario', 'cuenta', 'desc_person'],
                     remoteSort : true,
                     baseParams : {
-                        par_filtro : 'USUARI.cuenta#PERSON.nombre_completo2'
+                        par_filtro : 'USUALM.cuenta#PERSON.nombre_completo2'
                     }
                 }),
                 tpl : '<tpl for="."><div class="x-combo-list-item"><p>Cuenta: {cuenta}</p><p>Nombre: {desc_person}</p></div></tpl>',
@@ -378,6 +379,12 @@ header("content-type: text/javascript; charset=UTF-8");
         },
         bsave : false,
         fwidth : 420,
-        fheight : 380
+        fheight : 380,
+        onAlmacenSelect : function(e,b,c){
+            this.getComponente('id_usuario_resp').enable();
+            this.getComponente('id_usuario_resp').reset();
+            this.getComponente('id_usuario_resp').lastQuery = null;
+            this.getComponente('id_usuario_resp').store.baseParams.id_almacen = e.value;
+        }
     })
 </script>

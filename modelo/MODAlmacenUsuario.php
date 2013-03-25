@@ -23,6 +23,7 @@ class MODAlmacenUsuario extends MODbase {
         $this->captura('id_almacen_usuario', 'int4');
         $this->captura('id_usuario', 'int4');
         $this->captura('cuenta', 'varchar');
+        $this->captura('desc_person', 'text');
         $this->captura('id_almacen', 'int4');
         $this->captura('tipo', 'varchar');
         $this->captura('estado_reg', 'varchar');

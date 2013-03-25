@@ -172,7 +172,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		onButtonNew : function() {
 			this.getComponente('id_almacen').enable();
-			this.getComponente('id_usuario_resp').enable();
+			this.getComponente('id_usuario_resp').disable();
 			this.getComponente('completo').enable();
 			this.getComponente('fecha_inv_planif').enable();
 			this.getComponente('observaciones').enable();

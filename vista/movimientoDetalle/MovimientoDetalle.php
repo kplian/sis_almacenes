@@ -287,9 +287,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			if (this.maestro.tipo == 'ingreso') {
                 this.getComponente('costo_unitario').enable();
                 this.getComponente('costo_unitario').setVisible(true);
+                this.getComponente('fecha_caducidad').setVisible(true);
             } else {
                 this.getComponente('costo_unitario').disable();
                 this.getComponente('costo_unitario').setVisible(false);
+                this.getComponente('fecha_caducidad').setVisible(false);
             }
             this.getComponente('cantidad_item').setVisible(true);
 		},
@@ -298,9 +300,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			if (this.maestro.tipo == 'ingreso') {
 			    this.getComponente('costo_unitario').enable();
 			    this.getComponente('costo_unitario').setVisible(true);
+			    this.getComponente('fecha_caducidad').setVisible(true);
 			} else {
 			    this.getComponente('costo_unitario').disable();
 			    this.getComponente('costo_unitario').setVisible(false);
+			    this.getComponente('fecha_caducidad').setVisible(false);
 			}
 			this.getComponente('cantidad_item').setVisible(true);
 		}
