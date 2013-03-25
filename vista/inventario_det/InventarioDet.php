@@ -51,54 +51,61 @@ header("content-type: text/javascript; charset=UTF-8");
             type : 'Field',
             form : true
         }, {
-			config : {
-				name : 'id_item',
-				fieldLabel : 'Item',
-				allowBlank : false,
-				emptyText : 'Item...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_almacenes/control/Item/listarItem',
-					id : 'id_item',
-					root : 'datos',
-					sortInfo : {
-						field : 'nombre',
-						direction : 'ASC'
-					},
-					totalProperty : 'total',
-					fields : ['id_item', 'nombre', 'codigo'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'nombre'
-					}
-				}),
-				valueField : 'id_item',
-				displayField : 'nombre',
-				gdisplayField : 'nombre_item',
-				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p></div></tpl>',
-				hiddenName : 'id_item',
-				forceSelection : true,
-				typeAhead : true,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '100%',
-				gwidth : 170,
-				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_item']);
-				}
-			},
-			type : 'ComboBox',
-			id_grupo : 0,
-			filters : {
-				pfiltro : 'itm.nombre',
-				type : 'string'
-			},
-			grid : true,
-			form : true
-		}, {
+            config : {
+                name : 'id_item',
+                fieldLabel : 'Item',
+                allowBlank : false,
+                emptyText : 'Item...',
+                store : new Ext.data.JsonStore({
+                    url : '../../sis_almacenes/control/Item/listarItemNotBase',
+                    id : 'id_item',
+                    root : 'datos',
+                    sortInfo : {
+                        field : 'nombre',
+                        direction : 'ASC'
+                    },
+                    totalProperty : 'total',
+                    fields : ['id_item', 'nombre', 'codigo', 'desc_clasificacion'],
+                    remoteSort : true,
+                    baseParams : {
+                        par_filtro : 'item.nombre#item.codigo#cla.nombre'
+                    }
+                }),
+                valueField : 'id_item',
+                displayField : 'nombre',
+                gdisplayField : 'desc_item',
+                tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
+                hiddenName : 'id_item',
+                forceSelection : true,
+                typeAhead : false,
+                triggerAction : 'all',
+                lazyRender : true,
+                mode : 'remote',
+                pageSize : 10,
+                queryDelay : 1000,
+                anchor : '100%',
+                gwidth : 100,
+                minChars : 2,
+                turl : '../../../sis_almacenes/vista/item/BuscarItem.php',
+                tasignacion : true,
+                tname : 'id_item',
+                ttitle : 'Items',
+                tdata : {},
+                tcls : 'BuscarItem',
+                pid : this.idContenedor,
+                renderer : function(value, p, record) {
+                    return String.format('{0}', record.data['nombre_item']);
+                }
+            },
+            type : 'TrigguerCombo',
+            id_grupo : 0,
+            filters : {
+                pfiltro : 'itm.nombre',
+                type : 'string'
+            },
+            grid : true,
+            form : true
+        }, {
 			config : {
 				name : 'codigo_item',
 				fieldLabel : 'Código',
