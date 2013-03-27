@@ -77,22 +77,48 @@ class ACTMovimiento extends ACTbase {
         $dataSource = new DataSource();
         $idMovimiento = $this->objParam->getParametro('id_movimiento');
         $this->objParam->addParametroConsulta('filtro', ' movdet.id_movimiento = ' . $idMovimiento);
-        $this->objParam->addParametroConsulta('ordenacion', 'movdet.id_movimiento_det');
+        $this->objParam->addParametroConsulta('ordenacion', 'cla.id_clasificacion');
         $this->objParam->addParametroConsulta('dir_ordenacion', 'asc');
         $this->objParam->addParametroConsulta('cantidad', 1000);
         $this->objParam->addParametroConsulta('puntero', 0);
         $this->objFunc = $this->create('MODMovimiento');
         $resultRepMovimiento = $this->objFunc->listarReporteMovimiento($this->objParam);
-        $dataSource->setDataset($resultRepMovimiento->getDatos());
 
-        //se obtienen los totales de los resultados
-        $totalCantidad = 0;
-        $totalCosto = 0;
-
+        $resultData = $resultRepMovimiento->getDatos();
+        $lastNombreClasificacion = $resultData[0]['nombre_clasificacion'];
+        $dataSourceArray = Array();
+        $dataSourceClasificacion = new DataSource();
+        $dataSetClasificacion = Array();
+        $totalCostoClasificacion = 0;
+        $mainDataSet = array();
+        $costoTotal = 0;
         foreach ($resultRepMovimiento->getDatos() as $row) {
-            $totalCantidad += $row['cantidad'];
-            $totalCosto += $row['costo_total'];
+            if ($row['nombre_clasificacion'] != $lastNombreClasificacion) {
+                $costoTotal += $totalCostoClasificacion;
+                $mainDataSet[] = array("nombreClasificacion" => $lastNombreClasificacion, "totalClasificacion" => $totalCostoClasificacion);
+                $dataSourceClasificacion->setDataSet($dataSetClasificacion);
+                $dataSourceClasificacion->putParameter('totalCosto', $totalCostoClasificacion);
+                $dataSourceClasificacion->putParameter('nombreClasificacion', $lastNombreClasificacion);
+                $dataSourceArray[] = $dataSourceClasificacion;
+
+                $lastNombreClasificacion = $row['nombre_clasificacion'];
+                $dataSourceClasificacion = new DataSource();
+                $dataSetClasificacion = Array();
+                $totalCostoClasificacion = 0;
+            }
+            $dataSetClasificacion[] = $row;
+            $totalCostoClasificacion += $row['costo_total'];
         }
+        $costoTotal += $totalCostoClasificacion;
+        $mainDataSet[] = array("nombreClasificacion" => $lastNombreClasificacion, "totalClasificacion" => $totalCostoClasificacion);
+        $dataSourceClasificacion->setDataSet($dataSetClasificacion);
+        $dataSourceClasificacion->putParameter('totalCosto', $totalCostoClasificacion);
+        $dataSourceClasificacion->putParameter('nombreClasificacion', $lastNombreClasificacion);
+        $dataSourceArray[] = $dataSourceClasificacion;
+
+        $dataSource->putParameter('clasificacionDataSources', $dataSourceArray);
+        $dataSource->putParameter('costoTotal', $costoTotal);
+        $dataSource->setDataSet($mainDataSet);
 
         $this->objParam->addParametroConsulta('filtro', ' mov.id_movimiento = ' . $idMovimiento);
         $this->objParam->addParametroConsulta('ordenacion', 'mov.id_movimiento');
@@ -109,8 +135,6 @@ class ACTMovimiento extends ACTbase {
         $dataSource->putParameter('observaciones', $datosMovimiento[0]['observaciones']);
         $dataSource->putParameter('fechaRemision', $datosMovimiento[0]['fecha_reg']);
         $dataSource->putParameter('fechaMovimiento', $datosMovimiento[0]['fecha_mov']);
-        $dataSource->putParameter('totalCantidad', $totalCantidad);
-        $dataSource->putParameter('totalCosto', $totalCosto);
 
         $reporte = new RMovimiento();
         $reporte->setDataSource($dataSource);

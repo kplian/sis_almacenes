@@ -311,47 +311,6 @@ SELECT pg_catalog.setval('tmovimiento_id_movimiento_seq', 7, true);
 --
 SELECT pg_catalog.setval('tmovimiento_det_id_movimiento_det_seq', 11, true);*/
 
--- Gestion
-INSERT INTO param.tgestion ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_gestion", "gestion", "estado", "id_moneda_base", "id_empresa")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 105, 2013, E'', 1, 1);
-
--- Periodo
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 1, 1, 105, E'2013-01-01', E'2013-01-31');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 2, 2, 105, E'2013-02-01', E'2013-02-28');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 3, 3, 105, E'2013-03-01', E'2013-03-31');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 4, 4, 105, E'2013-04-01', E'2013-04-30');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 5, 5, 105, E'2013-05-01', E'2013-05-31');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 6, 6, 105, E'2013-06-01', E'2013-06-30');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 7, 7, 105, E'2013-07-01', E'2013-07-31');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 8, 8, 105, E'2013-08-01', E'2013-08-31');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 9, 9, 105, E'2013-09-01', E'2013-09-30');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 10, 10, 105, E'2013-10-01', E'2013-10-31');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 11, 11, 105, E'2013-11-01', E'2013-11-30');
-
-INSERT INTO param.tperiodo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_periodo", "periodo", "id_gestion", "fecha_ini", "fecha_fin")
-VALUES (1, NULL, E'2013-02-24 04:11:51.076', NULL, E'activo', 12, 12, 105, E'2013-12-01', E'2013-12-31');
-
 ---Temporal
 
 select pxp.f_insert_tgui ('Inventario', 'Inventario', 'INVMAIN', 'si', 1, 'sis_almacenes/vista/inventario/InventarioBase.php', 5, '', 'InventarioBase', 'ALM');

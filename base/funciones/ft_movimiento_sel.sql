@@ -127,12 +127,17 @@ BEGIN
         	select 
             	item.codigo, 
                 item.nombre, 
+                umed.codigo as unidad_medida,
+                item.id_clasificacion,
+                cla.nombre as nombre_clasificacion,
                 detval.cantidad, 
                 detval.costo_unitario, 
                 detval.cantidad * detval.costo_unitario as costo_total
             from alm.tmovimiento_det_valorado detval
             inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
             inner join alm.titem item on item.id_item = movdet.id_item
+            inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+            left join alm.tclasificacion cla on cla.id_clasificacion = item.id_clasificacion
             where movdet.estado_reg = ''activo'' and ';
             
     	v_consulta:=v_consulta||v_parametros.filtro;
@@ -153,6 +158,8 @@ BEGIN
         	from alm.tmovimiento_det_valorado detval
             inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
             inner join alm.titem item on item.id_item = movdet.id_item
+            inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+            left join alm.tclasificacion cla on cla.id_clasificacion = item.id_clasificacion
             where movdet.estado_reg = ''activo'' and ';
         v_consulta:= v_consulta||v_parametros.filtro;
         return v_consulta;

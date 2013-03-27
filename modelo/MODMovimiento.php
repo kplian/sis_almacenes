@@ -123,7 +123,7 @@ class MODMovimiento extends MODbase {
         $this->ejecutarConsulta();
         return $this->respuesta;
     }
-    
+
     function cancelarMovimiento() {
         $this->procedimiento = 'alm.ft_movimiento_ime';
         $this->transaccion = 'SAL_MOVCNL_MOD';
@@ -136,7 +136,7 @@ class MODMovimiento extends MODbase {
 
         return $this->respuesta;
     }
-    
+
     function revertirMovimiento() {
         $this->procedimiento = 'alm.ft_movimiento_ime';
         $this->transaccion = 'SAL_MOVREV_MOD';
@@ -144,27 +144,27 @@ class MODMovimiento extends MODbase {
 
         $this->setParametro('id_movimiento', 'id_movimiento', 'integer');
         $this->setParametro('id_almacen', 'id_almacen', 'integer');
-        
+
         $this->armarConsulta();
         $this->ejecutarConsulta();
         return $this->respuesta;
     }
-    
+
     function movimientosPendientesPeriodo() {
         $this->procedimiento = 'alm.ft_movimiento_sel';
         $this->transaccion = 'SAL_MOVPENPER_SEL';
         $this->tipo_procedimiento = 'SEL';
 
         $this->setParametro('id_periodo_subsistema', 'id_periodo_subsistema', 'integer');
-        
+
         $this->captura('id_movimiento', 'integer');
         $this->captura('tipo', 'varchar');
-        
+
         $this->armarConsulta();
         $this->ejecutarConsulta();
         return $this->respuesta;
     }
-    
+
     function listarReporteMovimiento() {
         $this->procedimiento = 'alm.ft_movimiento_sel';
         $this->transaccion = 'SAL_MOVREPORT_SEL';
@@ -172,6 +172,9 @@ class MODMovimiento extends MODbase {
 
         $this->captura('codigo', 'varchar');
         $this->captura('nombre', 'varchar');
+        $this->captura('unidad_medida', 'varchar');
+        $this->captura('id_clasificacion', 'integer');
+        $this->captura('nombre_clasificacion', 'varchar');
         $this->captura('cantidad', 'numeric');
         $this->captura('costo_unitario', 'numeric');
         $this->captura('costo_total', 'numeric');
@@ -181,5 +184,6 @@ class MODMovimiento extends MODbase {
 
         return $this->respuesta;
     }
+
 }
 ?>
