@@ -35,12 +35,26 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			type : 'Field',
 			form : true
-		}, {
+		},{
+			config:{
+				name: 'codigo_item',
+				fieldLabel: 'Código',
+				allowBlank: true,
+				anchor: '100%',
+				gwidth: 120
+			},
+			type:'TextField',
+			filters:{pfiltro:'item.codigo',type:'string'},
+			id_grupo:0,
+			grid:true,
+			form:false
+		}, 
+		{
             config : {
                 name : 'id_item',
                 fieldLabel : 'Item',
                 allowBlank : false,
-                emptyText : 'Item...',
+                emptyText : 'Elija un Item...',
                 store : new Ext.data.JsonStore({
                     url : '../../sis_almacenes/control/Item/listarItemNotBase',
                     id : 'id_item',
@@ -57,8 +71,9 @@ header("content-type: text/javascript; charset=UTF-8");
                     }
                 }),
                 valueField : 'id_item',
+                //hiddenValue: 'id_item',
                 displayField : 'nombre',
-                gdisplayField : 'desc_item',
+                gdisplayField : 'nombre_item',
                 tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
                 hiddenName : 'id_item',
                 forceSelection : true,
@@ -69,7 +84,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 pageSize : 10,
                 queryDelay : 1000,
                 anchor : '100%',
-                gwidth : 100,
+                gwidth : 250,
                 minChars : 2,
                 turl : '../../../sis_almacenes/vista/item/BuscarItem.php',
                 tasignacion : true,
@@ -96,7 +111,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				fieldLabel : 'Cantidad Total',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 100,
+				gwidth : 120,
 				maxLength : 6
 			},
 			type : 'NumberField',
@@ -112,8 +127,10 @@ header("content-type: text/javascript; charset=UTF-8");
 				fieldLabel : 'Costo unitario',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 90,
-				maxLength : 10
+				gwidth : 130,
+				maxLength : 10,
+				allowNegative: false,
+				decimalPrecision: 6
 			},
 			type : 'NumberField',
 			filters : {
@@ -122,7 +139,23 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			grid : true,
 			form : true
-		}, {
+		},
+		{
+			config : {
+				name : 'costo_total',
+				fieldLabel : 'Costo Total',
+				allowBlank : false,
+				anchor : '100%',
+				gwidth : 150,
+				maxLength : 10,
+				allowNegative: false,
+				decimalPrecision: 6
+			},
+			type : 'NumberField',
+			grid : true,
+			form : false
+		},
+		{
 			config : {
 				name : 'fecha_caducidad',
 				fieldLabel : 'Fecha de caducidad',
@@ -130,7 +163,8 @@ header("content-type: text/javascript; charset=UTF-8");
 				renderer : function(value, p, record) {
 					return value ? value.dateFormat('d/m/Y') : ''
 				},
-				format : 'Y-m-d'
+				format : 'Y-m-d',
+				gwidth: 150
 			},
 			type : 'DateField',
 			filters : {
@@ -240,7 +274,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'fecha_mod',
 			type : 'date',
 			dateFormat : 'Y-m-d H:i:s.u'
-		}],
+		},
+		'codigo_item',
+		'costo_total'],
 		sortInfo : {
 			field : 'id_movimiento_det',
 			direction : 'ASC'

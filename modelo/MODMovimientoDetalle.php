@@ -31,6 +31,8 @@ class MODMovimientoDetalle extends MODbase {
         $this->captura('fecha_reg', 'timestamp');
         $this->captura('usr_mod', 'varchar');
         $this->captura('fecha_mod', 'timestamp');
+		$this->captura('codigo_item', 'varchar');
+		$this->captura('costo_total', 'numeric');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
