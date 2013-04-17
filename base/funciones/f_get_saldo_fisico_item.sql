@@ -31,7 +31,7 @@ BEGIN
     v_nombre_funcion = 'alm.f_get_saldo_fisico_item';
     v_item_saldo := 0;
     
-    select sum(movdet.cantidad) into v_ingresos
+    select coalesce(sum(movdet.cantidad),0) into v_ingresos
     from alm.tmovimiento_det movdet
     inner join alm.tmovimiento mov on mov.id_movimiento = movdet.id_movimiento
     inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
@@ -41,7 +41,7 @@ BEGIN
         and mov.estado_mov = 'finalizado'
         and mov.id_almacen = p_id_almacen;
     
-    select sum(movdet.cantidad) into v_salidas
+    select coalesce(sum(movdet.cantidad),0) into v_salidas
     from alm.tmovimiento_det movdet
     inner join alm.tmovimiento mov on mov.id_movimiento = movdet.id_movimiento
     inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
@@ -59,7 +59,7 @@ BEGIN
     	v_existencias = v_ingresos - v_salidas;
     end if;
     
-    return v_existencias;
+    return coalesce(v_existencias,0);
 EXCEPTION					
 	WHEN OTHERS THEN
 			v_resp='';

@@ -57,7 +57,7 @@ BEGIN
     	v_saldo_valorado = v_ingresos - v_salidas;
     end if;
     
-    return v_saldo_valorado;
+    return coalesce(v_saldo_valorado,0);
 EXCEPTION					
 	WHEN OTHERS THEN
 			v_resp='';

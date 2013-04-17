@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.f_get_valorado_item (
   p_id_item integer,
   p_id_almacen integer,
@@ -13,45 +11,47 @@ RETURNS record AS
 $body$
 /**************************************************************************
 
- SISTEMA:		SISTEMA DE GESTION DE ALMACENES
- FUNCION: 		alm.f_get_valorado_item
+ SISTEMA:   SISTEMA DE GESTION DE ALMACENES
+ FUNCION:     alm.f_get_valorado_item
  DESCRIPCION:   Función que devuelve el costo unitario para el item: p_id_item en base 
-				al parametro de criterio de valoración: p_criterio_valoracion que puede ser
+        al parametro de criterio de valoración: p_criterio_valoracion que puede ser
                 Promedio Ponderado, PEPS y UEPS.
                 Posibles Valores  de p_criterio_valoracion:
                 PP, PEPS, UEPS
 
- AUTOR: 		Ariel Ayaviri Omonte
- FECHA:	        22/02/2013
+ AUTOR:     Ariel Ayaviri Omonte
+ FECHA:         22/02/2013
 ***************************************************************************/
 
 DECLARE
 
-	v_nombre_funcion   		text;
-    v_resp					varchar;
-   	v_consulta  			varchar;  
-    v_saldo_fisico			numeric;
-    v_saldo_valorado		numeric;
+  v_nombre_funcion      text;
+    v_resp          varchar;
+    v_consulta        varchar;  
+    v_saldo_fisico      numeric;
+    v_saldo_valorado    numeric;
 
 BEGIN
     v_nombre_funcion = 'alm.f_get_valorado_item';    
     IF (p_cantidad_sol is null) THEN
-    	return;
+      return;
     END IF;
     
+   
     IF (p_valoracion = 'PP') THEN
         v_saldo_fisico = alm.f_get_saldo_fisico_item(p_id_item, p_id_almacen);
         v_saldo_valorado = alm.f_get_saldo_valorado_item(p_id_item, p_id_almacen);
         
         IF (v_saldo_fisico = 0) THEN
-        	return;
+          r_costo_valorado = 0;
+            r_cantidad_valorada = 0;
         END IF;
         
         r_costo_valorado = v_saldo_valorado/v_saldo_fisico;
         r_cantidad_valorada = p_cantidad_sol;
         
     ELSEIF (p_valoracion = 'PEPS') THEN
-    	--obtener el aux_saldo mas antiguo distinto de cero
+      --obtener el aux_saldo mas antiguo distinto de cero
         select detval.aux_saldo_fisico, detval.costo_unitario, detval.id_movimiento_det_valorado 
         into v_saldo_fisico, r_costo_valorado, r_id_movimiento_det_val_desc
         from alm.tmovimiento_det_valorado detval
@@ -69,18 +69,19 @@ BEGIN
         order by mov.fecha_mov asc limit 1;
         
         IF (v_saldo_fisico is null) THEN
-        	return;
-        END IF;
-        
-        --comparo si la cantidad del item solicitado es mayor que el saldo
-        IF (p_cantidad_sol > v_saldo_fisico) THEN
-        	r_cantidad_valorada = v_saldo_fisico;
-        ELSE
-        	r_cantidad_valorada = p_cantidad_sol;
+          r_costo_valorado = 0;
+            r_cantidad_valorada = 0;
+        ELSE 
+          --comparo si la cantidad del item solicitado es mayor que el saldo
+            IF (p_cantidad_sol > v_saldo_fisico) THEN
+                r_cantidad_valorada = v_saldo_fisico;
+            ELSE
+                r_cantidad_valorada = p_cantidad_sol;
+            END IF;
         END IF;
         
     ELSEIF (p_valoracion = 'UEPS') THEN
-    	--obtener el aux_saldo mas reciente distinto de cero
+      --obtener el aux_saldo mas reciente distinto de cero
         select detval.aux_saldo_fisico, detval.costo_unitario, detval.id_movimiento_det_valorado 
         into v_saldo_fisico, r_costo_valorado, r_id_movimiento_det_val_desc
         from alm.tmovimiento_det_valorado detval
@@ -98,18 +99,21 @@ BEGIN
         order by mov.fecha_mov desc limit 1;
         
         IF (v_saldo_fisico is null) THEN
-        	return;
-        END IF;
-        
-        --comparo si la cantidad del item solicitado es mayor que el saldo
-        IF (p_cantidad_sol > v_saldo_fisico) THEN
-        	r_cantidad_valorada = v_saldo_fisico;
+          r_costo_valorado = 0;
+            r_cantidad_valorada = 0;
         ELSE
-        	r_cantidad_valorada = p_cantidad_sol;
+          --comparo si la cantidad del item solicitado es mayor que el saldo
+            IF (p_cantidad_sol > v_saldo_fisico) THEN
+                r_cantidad_valorada = v_saldo_fisico;
+            ELSE
+                r_cantidad_valorada = p_cantidad_sol;
+            END IF;
         END IF;
         
     END IF;
-    
+
+  return;
+   
 --    DROP TABLE IF EXISTS  tt_item_costo_unitario;
     
         
@@ -122,12 +126,12 @@ BEGIN
    
 /*
     if(p_criterio_valoracion = 1) then --FIFO: 1
-    	begin
+      begin
         
         -- Obtener el costo_unitario del primer ingreso      
         v_consulta = '
         WITH item_ingresos_valorado
-          AS	(
+          AS  (
                 SELECT movdet.id_movimiento_det, movdet.id_item, mov.id_movimiento, movdet.costo_unitario
                 FROM alm.tmovimiento_det movdet
                 INNER JOIN alm.tmovimiento mov ON mov.id_movimiento = movdet.id_movimiento
@@ -136,16 +140,16 @@ BEGIN
                 ORDER BY movdet.id_movimiento_det asc limit 1 
               )
           SELECT * INTO TEMP tt_item_costo_unitario FROM  item_ingresos_valorado';
-	    execute(v_consulta);
+      execute(v_consulta);
         
-    	end;
+      end;
     elsif(p_criterio_valoracion = 2) then --LIFO: 2
-    	begin
+      begin
         
         -- Obtener el costo_unitario del ultimo ingreso 
         v_consulta = '
         WITH item_ingresos_valorado
-          AS	(
+          AS  (
                 SELECT movdet.id_movimiento_det, movdet.id_item, mov.id_movimiento, movdet.costo_unitario
                 FROM alm.tmovimiento_det movdet
                 INNER JOIN alm.tmovimiento mov ON mov.id_movimiento = movdet.id_movimiento
@@ -154,17 +158,17 @@ BEGIN
                 ORDER BY movdet.id_movimiento_det asc limit 1 
               )
           SELECT * INTO TEMP tt_item_costo_unitario  FROM  item_ingresos_valorado';
-	    execute(v_consulta);
+      execute(v_consulta);
         
         end;
     
     elsif(p_criterio_valoracion = 3) then --Promedio: 3
-    	begin
+      begin
         
         -- Obtener el costo_unitario promedio de todos los ingresos
         v_consulta = '
         WITH item_ingresos_valorado
-          AS	(
+          AS  (
                 SELECT movdet.id_item, array_agg(mov.id_movimiento) AS id_movimiento,
                 sum(movdet.cantidad) AS cantidad_total, sum(movdet.costo_unitario * movdet.cantidad) AS costo_unitario_total
                 FROM alm.tmovimiento_det movdet
@@ -178,12 +182,12 @@ BEGIN
               SELECT *, (costo_unitario_total /cantidad_total) AS costo_unitario FROM  item_ingresos_valorado
               )
         SELECT * INTO TEMP tt_item_costo_unitario  FROM costo_promedio';
-	    execute(v_consulta);
+      execute(v_consulta);
         
         end;
         
     ELSE
-    	raise exception 'Opcion de valoracion de item invalida.';
+      raise exception 'Opcion de valoracion de item invalida.';
 
     END IF;
         
@@ -194,7 +198,7 @@ BEGIN
     END IF;    
     
     RETURN v_item_costo_unitario;
-	
+  
     -- En caso de que se requiera retornar un record (RETURNS SETOF  record AS $$) 
     -- con la información de las cantidaddes de los ingresos y salidas ademas del saldo. 
     
@@ -204,28 +208,28 @@ BEGIN
     
     --El SELECT para obtener los valores seria:
     /*
-    	SELECT * gem.f_get_valorado_item ( 5 ) 
+      SELECT * gem.f_get_valorado_item ( 5 ) 
          f ( id_item  integer,              
              id_movimiento_ingresos integer[],
              id_movimiento_salidas integer[],
              suma_ingresos numeric,
              suma_salidas numeric,
              saldo numeric
-         	);
+          );
     */
-EXCEPTION					
+EXCEPTION         
 
-	WHEN OTHERS THEN
+  WHEN OTHERS THEN
 
-			v_resp='';
+      v_resp='';
 
-			v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
+      v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
 
-			v_resp = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);
+      v_resp = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);
 
-			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
+      v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 
-			raise exception '%',v_resp;
+      raise exception '%',v_resp;
 
 END;
 $body$

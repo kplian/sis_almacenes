@@ -17,49 +17,50 @@ $body$
  COMENTARIOS:   
 ************************************************************************/
 DECLARE
-  v_nombre_funcion 				varchar;  
-  v_parametros					record;
-  v_id_movimiento_tipo			integer;
-  v_id_movimiento				integer;
-  v_id_movimiento_tipo_ingreso	integer;
-  v_id_movimiento_tipo_salida	integer;
-  v_respuesta					varchar;
-  v_id_movimiento_ingreso		integer;
-  v_id_movimiento_salida		integer;
-  v_transferencia				record;
-  v_consulta					varchar;
-  v_detalle						record;
-  v_contador					numeric;
-  v_contador_2					numeric;
-  v_estado_almacen				varchar;
-  v_estado_mov					varchar;
-  g_registros					record;
-  g_registros_2					record;
-  v_tipo_mov					varchar;
-  v_tipo_mov_personalizado		varchar;
-  v_id_almacen					integer;
-  v_codigo_valoracion			varchar;
-  v_saldo_cantidad				numeric;
-  v_aux_integer					integer;
-  v_costo_valorado				numeric;
-  v_cantidad_valorada			numeric;
-  v_id_movimiento_det_val_desc 	integer;
-  v_nombre_item					varchar;
-  v_errores						varchar;
-  v_id_almacen_dest				integer;
-  v_id_movimiento_dest			integer;
-  v_id_movimiento_det_dest		integer;
-  v_fecha_mov_ultima			timestamp;
-  v_fecha_mov					timestamp;
-  v_id_depto					integer;
-  v_cod_documento				varchar;
-  v_alerta_amarilla				numeric;
-  v_alerta_roja					numeric;
-  v_cantidad_minima				numeric;
-  v_nombre_almacen				varchar;
-  v_alerts						boolean;
-  v_descripcion_alerta			varchar;
-  v_mostrar_alerts				boolean;
+  v_nombre_funcion        varchar;  
+  v_parametros          record;
+  v_id_movimiento_tipo      integer;
+  v_id_movimiento       integer;
+  v_id_movimiento_tipo_ingreso  integer;
+  v_id_movimiento_tipo_salida integer;
+  v_respuesta         varchar;
+  v_id_movimiento_ingreso   integer;
+  v_id_movimiento_salida    integer;
+  v_transferencia       record;
+  v_consulta          varchar;
+  v_detalle           record;
+  v_contador          numeric;
+  v_contador_2          numeric;
+  v_estado_almacen        varchar;
+  v_estado_mov          varchar;
+  g_registros         record;
+  g_registros_2         record;
+  v_tipo_mov          varchar;
+  v_tipo_mov_personalizado    varchar;
+  v_id_almacen          integer;
+  v_codigo_valoracion     varchar;
+  v_saldo_cantidad        numeric;
+  v_aux_integer         integer;
+  v_costo_valorado        numeric;
+  v_cantidad_valorada     numeric;
+  v_id_movimiento_det_val_desc  integer;
+  v_nombre_item         varchar;
+  v_errores           varchar;
+  v_id_almacen_dest       integer;
+  v_id_movimiento_dest      integer;
+  v_id_movimiento_det_dest    integer;
+  v_fecha_mov_ultima      timestamp;
+  v_fecha_mov         timestamp;
+  v_id_depto          integer;
+  v_cod_documento       varchar;
+  v_alerta_amarilla       numeric;
+  v_alerta_roja         numeric;
+  v_cantidad_minima       numeric;
+  v_nombre_almacen        varchar;
+  v_alerts            boolean;
+  v_descripcion_alerta      varchar;
+  v_mostrar_alerts        boolean;
+  v_cant_aux            numeric;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -71,10 +72,10 @@ BEGIN
      #AUTOR:        Gonzalo Sarmiento   
      #FECHA:        03-10-2012
     ***********************************/
-	if(p_transaccion='SAL_MOV_INS') then
-	begin
-		insert into alm.tmovimiento (
-        	id_usuario_reg,
+  if(p_transaccion='SAL_MOV_INS') then
+  begin
+    insert into alm.tmovimiento (
+          id_usuario_reg,
             fecha_reg, 
             estado_reg,
             id_movimiento_tipo, 
@@ -88,10 +89,10 @@ BEGIN
             estado_mov,
             id_movimiento_origen
         ) values (
-        	p_id_usuario,
+          p_id_usuario,
             now(),
             'activo',
-        	v_parametros.id_movimiento_tipo,
+          v_parametros.id_movimiento_tipo,
             v_parametros.id_almacen,
             v_parametros.id_funcionario, 
             v_parametros.id_proveedor,
@@ -113,24 +114,24 @@ BEGIN
      #DESCRIPCION:  Modificacion de datos
      #AUTOR:        Gonzalo Sarmiento   
      #FECHA:        03-10-2012
-    ***********************************/    	 
-        		
-	elseif(p_transaccion='SAL_MOV_MOD')then
-  	begin
-    	
-    	select mov.estado_mov into v_estado_mov
+    ***********************************/       
+            
+  elseif(p_transaccion='SAL_MOV_MOD')then
+    begin
+      
+      select mov.estado_mov into v_estado_mov
         from alm.tmovimiento mov
         where mov.id_movimiento = v_parametros.id_movimiento;
         
         if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
-        	raise exception '%', 'El movimiento actual no puede ser modificado';
+          raise exception '%', 'El movimiento actual no puede ser modificado';
         end if;
         
-    	update alm.tmovimiento set       			 
-        	id_usuario_mod = p_id_usuario,
+      update alm.tmovimiento set             
+          id_usuario_mod = p_id_usuario,
             fecha_mod = now(),
             id_movimiento_tipo = v_parametros.id_movimiento_tipo,
-        	id_almacen = v_parametros.id_almacen,
+          id_almacen = v_parametros.id_almacen,
             id_funcionario = v_parametros.id_funcionario,
             id_proveedor = v_parametros.id_proveedor,
             id_almacen_dest = v_parametros.id_almacen_dest,
@@ -150,17 +151,17 @@ BEGIN
      #AUTOR:        Gonzalo Sarmiento   
      #FECHA:        03-10-2012
     ***********************************/
-  	elseif(p_transaccion='SAL_MOV_ELI')then
-  	begin
-    	select mov.estado_mov into v_estado_mov
+    elseif(p_transaccion='SAL_MOV_ELI')then
+    begin
+      select mov.estado_mov into v_estado_mov
         from alm.tmovimiento mov
         where mov.id_movimiento = v_parametros.id_movimiento;
         
         if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
-        	raise exception '%', 'El movimiento actual no puede ser eliminado';
+          raise exception '%', 'El movimiento actual no puede ser eliminado';
         end if;
         
-    	delete from alm.tmovimiento
+      delete from alm.tmovimiento
         where id_movimiento=v_parametros.id_movimiento;
 
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento eliminado');
@@ -174,15 +175,15 @@ BEGIN
      #AUTOR:        Ariel Ayaviri Omonte
      #FECHA:        20-02-2013
     ***********************************/
-	elseif(p_transaccion='SAL_MOVFIN_MOD')then
-  	begin
-    	--verificar que el almacen esté activo.
+  elseif(p_transaccion='SAL_MOVFIN_MOD')then
+    begin
+      --verificar que el almacen esté activo.
         select alma.nombre, alma.estado, alma.id_departamento into v_nombre_almacen, v_estado_almacen, v_id_depto
         from alm.talmacen alma
         where alma.id_almacen = v_parametros.id_almacen;
         
         if (v_estado_almacen is null or v_estado_almacen = 'inactivo') then
-        	raise exception '%', 'El almacen seleccionado para este movimiento no se encuentra activo';
+          raise exception '%', 'El almacen seleccionado para este movimiento no se encuentra activo';
         end if;
         
         --se obtienen los datos del movimiento a finalizar para realizar validaciones
@@ -200,7 +201,7 @@ BEGIN
             and mov.id_almacen = v_parametros.id_almacen;
         
         if (date(v_fecha_mov) < date(v_fecha_mov_ultima)) then
-        	raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
+          raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
         end if;
 
         --TODO: revisar si el periodo esta abierto.
@@ -209,94 +210,112 @@ BEGIN
         v_errores = '';
         v_contador := 0;
         FOR g_registros in (
-			select 
-            	movdet.id_item,
-            	item.nombre as nombre_item,
+      select 
+              movdet.id_item,
+              item.nombre as nombre_item,
                 movdet.id_movimiento_det,
-				movdet.cantidad as cantidad_item
+        movdet.cantidad as cantidad_item
             from alm.tmovimiento_det movdet
             inner join alm.titem item on item.id_item = movdet.id_item
             where movdet.estado_reg = 'activo'
-            	and movdet.id_movimiento = v_parametros.id_movimiento
-		) LOOP
-        	v_contador = v_contador + 1;
+              and movdet.id_movimiento = v_parametros.id_movimiento
+    ) LOOP
+          v_contador = v_contador + 1;
             
-        	--Verificamos que la cantidad no sea nula y que la cantidad requerida no sea mayor que el saldo 
+          --Verificamos que la cantidad no sea nula y que la cantidad requerida no sea mayor que el saldo 
             v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen);
             if (g_registros.cantidad_item is null or g_registros.cantidad_item < 0) then
-            	v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener cantidad registrada igual o mayor a cero';
+              v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener cantidad registrada igual o mayor a cero';
             elseif (v_tipo_mov = 'salida' and g_registros.cantidad_item > v_saldo_cantidad) then
-            	v_errores = v_errores || '\nNo existen suficientes existencias del item ' || g_registros.nombre_item || '. Solicitado: ' || g_registros.cantidad_item || '. Existencias: '|| v_saldo_cantidad;
+              --RCM 24042013: se añade opción para que se entregue lo existente si es que no hay suficiente
+              --v_errores = v_errores || '\nNo existen suficientes existencias del item ' || g_registros.nombre_item || '. Solicitado: ' || g_registros.cantidad_item || '. Existencias: '|| v_saldo_cantidad;
             end if;
             
             v_contador_2 := 0;
             FOR g_registros_2 IN (
-            	select 
+              select 
                     detval.cantidad as cantidad_item
                 from alm.tmovimiento_det_valorado detval
                 inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
                 where detval.estado_reg = 'activo'
                     and detval.id_movimiento_det = g_registros.id_movimiento_det 
             ) LOOP
-            	v_contador_2 = v_contador_2 + 1;
+              v_contador_2 = v_contador_2 + 1;
                 if (g_registros_2.cantidad_item is null or g_registros_2.cantidad_item < 0) THEN
-                	v_errores = v_errores || '\n- El item ' || g_registros.nombre_item || ' debe contener valorados con cantidad mayor o igual que cero';
+                  v_errores = v_errores || '\n- El item ' || g_registros.nombre_item || ' debe contener valorados con cantidad mayor o igual que cero';
                 end if;
                 
             END LOOP;
             
             if (v_contador_2 = 0) then
-            	v_errores = v_errores || '\n- El item ' || g_registros.nombre_item || ' debe tener al menos una cantidad para valorar';
+              v_errores = v_errores || '\n- El item ' || g_registros.nombre_item || ' debe tener al menos una cantidad para valorar';
             end if;
         END LOOP;
         
         --verificar que el movimiento tenga al menos un movimiento_detalle registrado.
         if (v_contador = 0) then
-        	raise exception '%', 'El movimiento seleccionado debe tener al menos un item registrado en su detalle';
+          raise exception '%', 'El movimiento seleccionado debe tener al menos un item registrado en su detalle';
         end if;
         
         --muestra los errores si los hubiese
         if (v_errores != '') then
-        	raise exception '%', v_errores;
+          raise exception '%', v_errores;
         end if;
         
         --Si el movimiento que se desea finalizar es una salida entonces se debe valorar los detalles.
         if (v_tipo_mov = 'salida') then
-        	v_cod_documento = 'MOVSAL';
-        	FOR g_registros IN (
-            	select 
-                	movdet.id_movimiento_det,
-                	movdet.id_item,
+          v_cod_documento = 'MOVSAL';
+          FOR g_registros IN (
+              select 
+                  movdet.id_movimiento_det,
+                  movdet.id_item,
                     itm.nombre as nombre_item,
-                	movdet.cantidad,
+                  movdet.cantidad,
                     detval.id_movimiento_det_valorado
                 from alm.tmovimiento_det_valorado detval
                 inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
                 inner join alm.titem itm on itm.id_item = movdet.id_item
                 where movdet.id_movimiento = v_parametros.id_movimiento
-                	and movdet.estado_reg = 'activo'
+                  and movdet.estado_reg = 'activo'
             ) LOOP
-            	--obtener el codigo del metodo de valoracion
+              --obtener el codigo del metodo de valoracion
                 select metval.codigo into v_codigo_valoracion
                 from alm.talmacen_stock alstock
                 inner join alm.tmetodo_val metval on metval.id_metodo_val = alstock.id_metodo_val
                 where alstock.id_almacen = v_parametros.id_almacen
-                	and alstock.id_item = g_registros.id_item
+                  and alstock.id_item = g_registros.id_item
                     and alstock.estado_reg = 'activo';
                 
-                v_saldo_cantidad = g_registros.cantidad;
+                --RCM:
+                v_cant_aux = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen);
+                if g_registros.id_item = 65 then
+                  
+                end if;
+                if g_registros.cantidad > v_cant_aux then
+                  v_saldo_cantidad = v_cant_aux;
+                  update alm.tmovimiento_det set
+                  cantidad = v_cant_aux
+                  where id_movimiento_det = g_registros.id_movimiento_det;
+                else
+                  v_saldo_cantidad = g_registros.cantidad;  
+                end if;
+                --FIN RCM
+                
                 
                 -- Verificar que el el item tenga un tipo de valoracion
-				if (v_codigo_valoracion is null) then
-                	raise exception '%', 'El item ' || g_registros.nombre_item || ' no tiene registrado un metodo de valoracion';
+        if (v_codigo_valoracion is null) then
+                  raise exception '%', 'El item ' || g_registros.nombre_item || ' no tiene registrado un metodo de valoracion';
                 end if;
                 
                 select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
                     into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
                 from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad);
                 
+                --rcm
+                raise notice 'item: %, costo_valoraro: %, cantidad valorada: %',g_registros.id_item,v_costo_valorado,v_cantidad_valorada;
+
                 if (v_costo_valorado is null) then
-                	raise exception '%', 'El item ' || g_registros.nombre_item || ' no pudo ser valorado';
+                  raise exception '%', 'El item ' || g_registros.nombre_item || ' no pudo ser valorado';
                 end if;
                 
                 IF (v_codigo_valoracion = 'PEPS' or v_codigo_valoracion = 'UEPS') THEN
@@ -320,8 +339,8 @@ BEGIN
                 
                 --si todavia hay saldo que valorar
                 WHILE (v_saldo_cantidad > 0) LOOP
-                	select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
-                    	into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
+                  select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
+                      into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
                     from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad);
                     
                     --Se descuenta la cantidad valorada del detalle valorado que se utilizo en la valoracion
@@ -384,10 +403,10 @@ BEGIN
                         movdet.id_item,
                         movdet.cantidad
                     from alm.tmovimiento_det movdet
-					where movdet.id_movimiento = v_parametros.id_movimiento
+          where movdet.id_movimiento = v_parametros.id_movimiento
                         and movdet.estado_reg = 'activo'
                 ) LOOP
-                	insert into alm.tmovimiento_det(
+                  insert into alm.tmovimiento_det(
                         id_usuario_reg,
                         fecha_reg,
                         estado_reg,
@@ -420,36 +439,36 @@ BEGIN
             end if;
             
         elseif(v_tipo_mov = 'ingreso') then
-        	v_cod_documento = 'MOVIN';
-        	select count(*) into v_contador
+          v_cod_documento = 'MOVIN';
+          select count(*) into v_contador
             from alm.tmovimiento_det movdet
             where movdet.id_movimiento = v_parametros.id_movimiento
-            	and movdet.estado_reg = 'activo'
+              and movdet.estado_reg = 'activo'
                 and movdet.costo_unitario is null;
                 
             if (v_contador > 0) then
-            	raise exception '%', 'Todos los items del movimiento deben tener costo unitario.';
+              raise exception '%', 'Todos los items del movimiento deben tener costo unitario.';
             end if;
         end if;
         
         --Se obtiene la fecha_mov del último movimiento finalizado en la fecha_mov del movimiento que se va a finalizar.
         select max(mov.fecha_mov) into v_fecha_mov_ultima
         from alm.tmovimiento mov
-		where date(mov.fecha_mov) = date(v_fecha_mov) 
-        	and mov.estado_mov = 'finalizado'
+    where date(mov.fecha_mov) = date(v_fecha_mov) 
+          and mov.estado_mov = 'finalizado'
             and mov.id_almacen = v_parametros.id_almacen;
         
         if (v_fecha_mov_ultima is not null) then
-        	v_fecha_mov = v_fecha_mov_ultima + interval '1 min';
+          v_fecha_mov = v_fecha_mov_ultima + interval '1 min';
         else 
-        	v_fecha_mov = date(v_fecha_mov) + interval '1 min';
+          v_fecha_mov = date(v_fecha_mov) + interval '1 min';
         end if;
         
-    	--Actualiza el estado a finalizado cuando no hay ningun error
+      --Actualiza el estado a finalizado cuando no hay ningun error
         update alm.tmovimiento set
-        	estado_mov = 'finalizado',
-            fecha_mov = v_fecha_mov,
-            codigo = param.f_obtener_correlativo (v_cod_documento, NULL, NULL, v_id_depto, p_id_usuario, 'ALM', null)
+          estado_mov = 'finalizado',
+            fecha_mov = v_fecha_mov--,
+            --codigo = param.f_obtener_correlativo (v_cod_documento, NULL, NULL, v_id_depto, p_id_usuario, 'ALM', null)
         where id_movimiento = v_parametros.id_movimiento;
         
         --Se actualiza el saldo fisico del detalle valorado.
@@ -468,7 +487,7 @@ BEGIN
         if (v_tipo_mov = 'salida') then
             FOR g_registros IN (
                 select 
-                	item.nombre as nombre_item,
+                  item.nombre as nombre_item,
                     movdet.id_movimiento_det,
                     movdet.id_item
                 from alm.tmovimiento_det movdet
@@ -476,29 +495,29 @@ BEGIN
                 where movdet.id_movimiento = v_parametros.id_movimiento
                     and movdet.estado_reg = 'activo'
             ) LOOP
-            	v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen);
+              v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen);
                 select 
-                	almstock.cantidad_alerta_amarilla,
+                  almstock.cantidad_alerta_amarilla,
                     almstock.cantidad_alerta_roja,
                     almstock.cantidad_min
                 into
-                	v_alerta_amarilla,
+                  v_alerta_amarilla,
                     v_alerta_roja,
                     v_cantidad_minima
                 from alm.talmacen_stock almstock
                 inner join alm.talmacen alma on alma.id_almacen = almstock.id_almacen
                 where almstock.id_almacen = v_parametros.id_almacen
-                	and almstock.id_item = g_registros.id_item;
+                  and almstock.id_item = g_registros.id_item;
                 v_alerts = false;
                 if (v_saldo_cantidad <= v_cantidad_minima) then
-                	v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo del mínimo en el almacén: '||v_nombre_almacen;
+                  v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo del mínimo en el almacén: '||v_nombre_almacen;
                     v_alerts = true;
                 elseif(v_saldo_cantidad <= v_alerta_roja) then
-                	v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo de la alerta roja en el almacén: '||v_nombre_almacen;
-                	v_alerts = true;
+                  v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo de la alerta roja en el almacén: '||v_nombre_almacen;
+                  v_alerts = true;
                 elseif(v_saldo_cantidad <= v_alerta_amarilla) then
-                	v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo de la alerta amarilla en el almacén: '||v_nombre_almacen;
-                	v_alerts = true;
+                  v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo de la alerta amarilla en el almacén: '||v_nombre_almacen;
+                  v_alerts = true;
                 end if;
                 
                 IF (v_alerts) THEN
@@ -522,7 +541,7 @@ BEGIN
                             'Bajas existencias en Almacén: '||v_nombre_almacen
                         );
                         IF (g_registros_2.id_usuario = p_id_usuario) THEN
-                        	v_mostrar_alerts = true;
+                          v_mostrar_alerts = true;
                         END IF;
                     END LOOP;
                 END IF;
@@ -530,24 +549,26 @@ BEGIN
             
         END IF;
         
-     	v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento finalizado');
+        --raise exception 'Done';
+        
+      v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento finalizado');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
         
         IF(v_mostrar_alerts) THEN
-        	v_respuesta=pxp.f_agrega_clave(v_respuesta,'alerts',v_mostrar_alerts::varchar);
+          v_respuesta=pxp.f_agrega_clave(v_respuesta,'alerts',v_mostrar_alerts::varchar);
         END IF;
-        return v_respuesta;	
+        return v_respuesta; 
     end;
-	/*********************************   
+  /*********************************   
      #TRANSACCION:  'SAL_MOVCNL_MOD'
      #DESCRIPCION:  Cancelacion de un movimiento
      #AUTOR:        Ariel Ayaviri Omonte
      #FECHA:        20-02-2013
     ***********************************/
-	elseif (p_transaccion='SAL_MOVCNL_MOD') then
-  	begin
-    	update alm.tmovimiento set
-        	estado_mov = 'cancelado'
+  elseif (p_transaccion='SAL_MOVCNL_MOD') then
+    begin
+      update alm.tmovimiento set
+          estado_mov = 'cancelado'
         where id_movimiento = v_parametros.id_movimiento;
 
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento cancelado');
@@ -562,16 +583,16 @@ BEGIN
     ***********************************/
     elseif (p_transaccion='SAL_MOVREV_MOD') then
     begin
-    	--Revisar que sea el último movimiento finalizado.
+      --Revisar que sea el último movimiento finalizado.
         select mov.id_movimiento
         into v_id_movimiento
         from alm.tmovimiento mov
         where mov.estado_mov = 'finalizado'
-        	and mov.estado_reg = 'activo' 
+          and mov.estado_reg = 'activo' 
             order by mov.fecha_mov desc limit 1;
         
         if (v_id_movimiento != v_parametros.id_movimiento) then
-        	raise exception '%', 'No se puede revertir el movimiento seleccionado. Para revertir un movimiento no deben existir movimiento finalizados despues de éste.';
+          raise exception '%', 'No se puede revertir el movimiento seleccionado. Para revertir un movimiento no deben existir movimiento finalizados despues de éste.';
         end if;
         
         --se obtienen los datos del movimiento a revertir
@@ -584,7 +605,7 @@ BEGIN
         -- solo para salidas.
         if (v_tipo_mov = 'salida') then
         -- BUCLE de los detalle del movimiento
-        	FOR g_registros in (
+          FOR g_registros in (
                 select 
                     movdet.id_item,
                     item.nombre as nombre_item,
@@ -595,23 +616,23 @@ BEGIN
                 where movdet.estado_reg = 'activo'
                     and movdet.id_movimiento = v_parametros.id_movimiento
             ) LOOP 
-            	--se obtiene el tipo de valoracion 
+              --se obtiene el tipo de valoracion 
                 --obtener el codigo del metodo de valoracion
                 select metval.codigo into v_codigo_valoracion
                 from alm.talmacen_stock alstock
                 inner join alm.tmetodo_val metval on metval.id_metodo_val = alstock.id_metodo_val
                 where alstock.id_almacen = v_parametros.id_almacen
-                	and alstock.id_item = g_registros.id_item
+                  and alstock.id_item = g_registros.id_item
                     and alstock.estado_reg = 'activo';
                 
                 --se va recorriendo todos los detalles valorados del detalle_movimiento
-            	FOR g_registros_2 in (
-                	select detval.cantidad, detval.id_mov_det_val_origen
+              FOR g_registros_2 in (
+                  select detval.cantidad, detval.id_mov_det_val_origen
                     from alm.tmovimiento_det_valorado detval
                     where detval.id_movimiento_det = g_registros.id_movimiento_det
                     order by detval.id_movimiento_det_valorado desc
                 ) LOOP
-                	IF (g_registros_2.id_mov_det_val_origen is not null) THEN
+                  IF (g_registros_2.id_mov_det_val_origen is not null) THEN
                         -- sumar la cantidad del ultimo detalle valorado al aux_saldo encontrado
                         update alm.tmovimiento_det_valorado set
                             id_usuario_mod = p_id_usuario,
@@ -644,7 +665,7 @@ BEGIN
         
         --se devuelve el movimiento a estado borrador
         update alm.tmovimiento set
-        	estado_mov = 'borrador'
+          estado_mov = 'borrador'
         where id_movimiento = v_parametros.id_movimiento;
         
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento revertido');
@@ -652,7 +673,7 @@ BEGIN
         return v_respuesta;
     end;
   else
-  	 raise exception 'Transaccion inexistente: %',p_transaccion;
+     raise exception 'Transaccion inexistente: %',p_transaccion;
   end if;
 EXCEPTION
   WHEN OTHERS THEN
