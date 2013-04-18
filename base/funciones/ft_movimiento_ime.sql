@@ -467,7 +467,7 @@ BEGIN
       --Actualiza el estado a finalizado cuando no hay ningun error
         update alm.tmovimiento set
           estado_mov = 'finalizado',
-            fecha_mov = v_fecha_mov--,
+            fecha_mov = v_fecha_mov,
             codigo = param.f_obtener_correlativo (v_cod_documento, NULL, NULL, v_id_depto, p_id_usuario, 'ALM', null)
         where id_movimiento = v_parametros.id_movimiento;
         
