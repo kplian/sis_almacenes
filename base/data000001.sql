@@ -668,3 +668,8 @@ update segu.tsubsistema set
 	nombre_carpeta = 'almacenes'
 where codigo = 'ALM';
 /***********************************F-DAT-AAO-ALM-45-15/03/2013*****************************************/
+
+/***********************************I-DAT-AAO-ALM-72-18/04/2013*****************************************/
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVREPORT_SEL', 'MOV', 'no');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_MOVREPORT_SEL', 'MOV');
+/***********************************I-DAT-AAO-ALM-72-18/04/2013*****************************************/
