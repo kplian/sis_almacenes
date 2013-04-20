@@ -248,105 +248,40 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : true,
 			form : false
 		}, {
-			config : {
-				name : 'id_almacen_dest',
-				fieldLabel : 'Almacen Destino',
-				allowBlank : true,
-				emptyText : 'Almacen Destino...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_almacenes/control/Almacen/listarAlmacen',
-					id : 'id_almacen',
-					root : 'datos',
-					sortInfo : {
-						field : 'nombre',
-						direction : 'ASC'
-					},
-					totalProperty : 'total',
-					fields : ['id_almacen', 'nombre'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'alm.nombre'
-					}
-				}),
-				hidden : true,
-				valueField : 'id_almacen',
-				displayField : 'nombre',
-				gdisplayField : 'nombre_almacen_destino',
-				hiddenName : 'id_almacen_dest',
-				forceSelection : true,
-				typeAhead : false,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '99%',
-				gwidth : 100,
-				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_almacen_destino']);
-				}
-			},
-			type : 'ComboBox',
-			id_grupo : 0,
-			filters : {
-				pfiltro : 'almd.nombre',
-				type : 'string'
-			},
-			grid : true,
-			form : true
-		}, {
-			config : {
-				name : 'id_movimiento_origen',
-				fieldLabel : 'Movimiento Origen',
-				allowBlank : false,
-				emptyText : 'Movimiento Origen...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_almacenes/control/Movimiento/listarMovimiento',
-					id : 'id_movimiento',
-					root : 'datos',
-					sortInfo : {
-						field : 'mov.id_movimiento',
-						direction : 'ASC'
-					},
-					totalProperty : 'total',
-					fields : ['id_movimiento', 'codigo'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'mov.codigo',
-						estado_mov : 'finalizado',
-						tipo : 'salida'
-					}
-				}),
-				disabled : true,
-				hidden : true,
-				valueField : 'id_movimiento',
-				displayField : 'codigo',
-				gdisplayField : 'codigo_origen',
-				hiddenName : 'id_movimiento_origen',
-				forceSelection : true,
-				typeAhead : false,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '99%',
-				gwidth : 150,
-				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['codigo_origen']);
-				}
-			},
-			type : 'ComboBox',
-			id_grupo : 0,
-			filters : {
-				pfiltro : 'movorig.codigo',
-				type : 'string'
-			},
-			grid : true,
-			form : true
-		}, {
+            config : {
+                name : 'descripcion',
+                fieldLabel : 'Descripción',
+                allowBlank : true,
+                anchor : '100%',
+                gwidth : 100,
+                maxLength : 1000
+            },
+            type : 'TextArea',
+            filters : {
+                pfiltro : 'mov.descripcion',
+                type : 'string'
+            },
+            id_grupo : 1,
+            grid : true,
+            form : true
+        }, {
+            config : {
+                name : 'observaciones',
+                fieldLabel : 'Observaciones',
+                allowBlank : true,
+                anchor : '100%',
+                gwidth : 100,
+                maxLength : 1000
+            },
+            type : 'TextArea',
+            filters : {
+                pfiltro : 'mov.observaciones',
+                type : 'string'
+            },
+            id_grupo : 1,
+            grid : true,
+            form : true
+        }, {
 			config : {
 				name : 'solicitante',
 				fieldLabel : 'Solicitante',
@@ -465,40 +400,105 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : true,
 			form : true
 		}, {
-			config : {
-				name : 'descripcion',
-				fieldLabel : 'Descripción',
-				allowBlank : true,
-				anchor : '100%',
-				gwidth : 100,
-				maxLength : 1000
-			},
-			type : 'TextArea',
-			filters : {
-				pfiltro : 'mov.descripcion',
-				type : 'string'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : true
-		}, {
-			config : {
-				name : 'observaciones',
-				fieldLabel : 'Observaciones',
-				allowBlank : true,
-				anchor : '100%',
-				gwidth : 100,
-				maxLength : 1000
-			},
-			type : 'TextArea',
-			filters : {
-				pfiltro : 'mov.observaciones',
-				type : 'string'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : true
-		}, {
+            config : {
+                name : 'id_almacen_dest',
+                fieldLabel : 'Almacen Destino',
+                allowBlank : true,
+                emptyText : 'Almacen Destino...',
+                store : new Ext.data.JsonStore({
+                    url : '../../sis_almacenes/control/Almacen/listarAlmacen',
+                    id : 'id_almacen',
+                    root : 'datos',
+                    sortInfo : {
+                        field : 'nombre',
+                        direction : 'ASC'
+                    },
+                    totalProperty : 'total',
+                    fields : ['id_almacen', 'nombre'],
+                    remoteSort : true,
+                    baseParams : {
+                        par_filtro : 'alm.nombre'
+                    }
+                }),
+                hidden : true,
+                valueField : 'id_almacen',
+                displayField : 'nombre',
+                gdisplayField : 'nombre_almacen_destino',
+                hiddenName : 'id_almacen_dest',
+                forceSelection : true,
+                typeAhead : false,
+                triggerAction : 'all',
+                lazyRender : true,
+                mode : 'remote',
+                pageSize : 10,
+                queryDelay : 1000,
+                anchor : '99%',
+                gwidth : 100,
+                minChars : 2,
+                renderer : function(value, p, record) {
+                    return String.format('{0}', record.data['nombre_almacen_destino']);
+                }
+            },
+            type : 'ComboBox',
+            id_grupo : 0,
+            filters : {
+                pfiltro : 'almd.nombre',
+                type : 'string'
+            },
+            grid : true,
+            form : true
+        }, {
+            config : {
+                name : 'id_movimiento_origen',
+                fieldLabel : 'Movimiento Origen',
+                allowBlank : false,
+                emptyText : 'Movimiento Origen...',
+                store : new Ext.data.JsonStore({
+                    url : '../../sis_almacenes/control/Movimiento/listarMovimiento',
+                    id : 'id_movimiento',
+                    root : 'datos',
+                    sortInfo : {
+                        field : 'mov.id_movimiento',
+                        direction : 'ASC'
+                    },
+                    totalProperty : 'total',
+                    fields : ['id_movimiento', 'codigo'],
+                    remoteSort : true,
+                    baseParams : {
+                        par_filtro : 'mov.codigo',
+                        estado_mov : 'finalizado',
+                        tipo : 'salida'
+                    }
+                }),
+                disabled : true,
+                hidden : true,
+                valueField : 'id_movimiento',
+                displayField : 'codigo',
+                gdisplayField : 'codigo_origen',
+                hiddenName : 'id_movimiento_origen',
+                forceSelection : true,
+                typeAhead : false,
+                triggerAction : 'all',
+                lazyRender : true,
+                mode : 'remote',
+                pageSize : 10,
+                queryDelay : 1000,
+                anchor : '99%',
+                gwidth : 150,
+                minChars : 2,
+                renderer : function(value, p, record) {
+                    return String.format('{0}', record.data['codigo_origen']);
+                }
+            },
+            type : 'ComboBox',
+            id_grupo : 0,
+            filters : {
+                pfiltro : 'movorig.codigo',
+                type : 'string'
+            },
+            grid : true,
+            form : true
+        }, {
 			config : {
 				name : 'usr_reg',
 				fieldLabel : 'Usuario reg.',

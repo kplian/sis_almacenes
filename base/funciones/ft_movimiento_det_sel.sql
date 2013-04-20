@@ -1,18 +1,11 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_sel (
-  p_administrador integer,
-  p_id_usuario integer,
-  p_tabla varchar,
-  p_transaccion varchar
-)
-RETURNS varchar AS
-$body$
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_sel(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
+  RETURNS character varying AS
+$BODY$
 /**************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_movimiento_det_sel
  DESCRIPCION:    Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'param.tdepto_usuario'
- AUTOR:          Gonzalo Sarmiento
+ AUTOR:          Ariel Ayaviri Omonte
  FECHA:          02-10-2012
  COMENTARIOS:    
 ***************************************************************************/
@@ -36,12 +29,13 @@ BEGIN
 	if(p_transaccion='SAL_MOVDET_SEL') then
   	begin
     	v_consulta:='
-        	select 
-     			movdet.id_movimiento_det,
+	    select 
+     		movdet.id_movimiento_det,
                 movdet.id_movimiento,
                 movdet.id_item,                    
                 item.nombre as nombre_item,
                 movdet.cantidad as cantidad_item,
+		movdet.cantidad_solicitada,
                 movdet.costo_unitario,
                 movdet.fecha_caducidad,
                 usu1.cuenta as usr_reg,
@@ -97,9 +91,8 @@ EXCEPTION
             v_respuesta = pxp.f_agrega_clave(v_respuesta,'procedimientos',v_nombre_funcion);
             raise exception '%',v_respuesta;
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.ft_movimiento_det_sel(integer, integer, character varying, character varying)
+  OWNER TO postgres;

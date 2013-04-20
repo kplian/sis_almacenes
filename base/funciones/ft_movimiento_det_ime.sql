@@ -1,13 +1,6 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_ime (
-  p_administrador integer,
-  p_id_usuario integer,
-  p_tabla varchar,
-  p_transaccion varchar
-)
-RETURNS varchar AS
-$body$
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_ime(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
+  RETURNS character varying AS
+$BODY$
 /**************************************************************************
  SISTEMA:		Almacenes
  FUNCION: 		alm.ft_movimiento_det_ime
@@ -73,6 +66,7 @@ BEGIN
             id_movimiento,
             id_item,
             cantidad,
+            cantidad_solicitada,
             costo_unitario,
             fecha_caducidad
         ) VALUES (
@@ -82,6 +76,7 @@ BEGIN
             v_parametros.id_movimiento,
             v_parametros.id_item,
             v_parametros.cantidad_item,
+            v_parametros.cantidad_solicitada,
             v_parametros.costo_unitario,
             v_parametros.fecha_caducidad
         ) RETURNING id_movimiento_det into v_id_movimiento_det;
@@ -130,6 +125,7 @@ BEGIN
             id_movimiento = v_parametros.id_movimiento,
             id_item = v_parametros.id_item,
             cantidad = v_parametros.cantidad_item,
+            cantidad_solicitada = v_parametros.cantidad_solicitada,
             costo_unitario = v_parametros.costo_unitario,
             fecha_caducidad = v_parametros.fecha_caducidad
         where id_movimiento_det = v_parametros.id_movimiento_det;
@@ -187,9 +183,8 @@ EXCEPTION
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'procedimiento',v_nombre_funcion);
         raise exception '%',v_respuesta;
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.ft_movimiento_det_ime(integer, integer, character varying, character varying)
+  OWNER TO postgres;
