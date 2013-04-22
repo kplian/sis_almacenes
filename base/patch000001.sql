@@ -341,3 +341,8 @@ ALTER TABLE alm.titem_reemplazo
 ALTER TABLE alm.tmovimiento_det
   ALTER COLUMN id_item SET NOT NULL;
 /***********************************F-SCP-AAO-ALM-9-18/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-70-21/03/2013*****************************************/
+ALTER TABLE alm.tmovimiento_det 
+  ADD COLUMN cantidad_solicitada numeric(18,6);
+/***********************************F-SCP-AAO-ALM-70-21/03/2013*****************************************/
