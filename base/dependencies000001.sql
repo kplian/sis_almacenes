@@ -184,3 +184,115 @@ ALTER TABLE alm.tinventario_det
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-AAO-ALM-45-15/03/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-72-23/04/2013*****************************************/
+select pxp.f_insert_testructura_gui ('ALCRAL.2.2', 'ALCRAL.2');
+select pxp.f_insert_testructura_gui ('ALREMA.1.2', 'ALREMA.1');
+select pxp.f_insert_testructura_gui ('ALCLMA.1.1.2', 'ALCLMA.1.1');
+select pxp.f_insert_testructura_gui ('MOV.1.2', 'MOV.1');
+select pxp.f_insert_testructura_gui ('INVMAIN.1', 'INVMAIN');
+select pxp.f_insert_testructura_gui ('INVMAIN.1.1', 'INVMAIN.1');
+
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'ALCRAL.2.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'ALCRAL.2.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'ALCRAL.2.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'ALREMA.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'ALREMA.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'ALREMA.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_CLADD_MOD', 'ALCLMA', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'ALCLMA.1.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'ALCLMA.1.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'ALCLMA.1.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'MOV.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'MOV.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'MOV.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CATCMB_SEL', 'CATLOG', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ALM_SEL', 'INVMAIN', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ALMUSR_SEL', 'INVMAIN', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INV_INS', 'INVMAIN', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INV_MOD', 'INVMAIN', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INV_ELI', 'INVMAIN', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INV_SEL', 'INVMAIN', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITEMNOTBASE_SEL', 'INVMAIN.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DINV_INS', 'INVMAIN.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DINV_MOD', 'INVMAIN.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DINV_ELI', 'INVMAIN.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DINV_SEL', 'INVMAIN.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'INVMAIN.1.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'INVMAIN.1.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'INVMAIN.1.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INVFINREG_MOD', 'ORDINV', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INVREVDIF_MOD', 'ORDINV', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INVFINREV_MOD', 'ORDINV', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INVCORRREV_MOD', 'ORDINV', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INVINIEJE_MOD', 'EJEINV', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INVFINEJE_MOD', 'EJEINV', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVPENPER_SEL', 'PERI', 'no');
+
+
+------------------------
+select pxp.f_insert_testructura_gui ('ALCRAL.2.3', 'ALCRAL.2');
+select pxp.f_insert_testructura_gui ('ALREMA.1.3', 'ALREMA.1');
+select pxp.f_insert_testructura_gui ('ALCLMA.1.1.3', 'ALCLMA.1.1');
+select pxp.f_insert_testructura_gui ('MOV.1.3', 'MOV.1');
+select pxp.f_insert_testructura_gui ('INVMAIN.2', 'INVMAIN');
+select pxp.f_insert_testructura_gui ('INVMAIN.2.1', 'INVMAIN.2');
+
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'ALCRAL.2.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'ALCRAL.2.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'ALCRAL.2.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'ALREMA.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'ALREMA.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'ALREMA.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'ALCLMA.1.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'ALCLMA.1.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'ALCLMA.1.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'MOV.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'MOV.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'MOV.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITEMNOTBASE_SEL', 'INVMAIN.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DINV_INS', 'INVMAIN.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DINV_MOD', 'INVMAIN.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DINV_ELI', 'INVMAIN.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DINV_SEL', 'INVMAIN.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'INVMAIN.2.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'INVMAIN.2.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'INVMAIN.2.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_PESU_SEL', 'PERI', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_PESUGEN_INS', 'PERI', 'si');
+select pxp.f_insert_tprocedimiento_gui ('PM_SWESTPE_MOD', 'PERI', 'si');
+
+
+select pxp.f_insert_tgui_rol ('PERI', 'Administrador Almacenes');
+select pxp.f_insert_tgui_rol ('ORDINV', 'Administrador Almacenes');
+select pxp.f_insert_tgui_rol ('EJEINV', 'Administrador Almacenes');
+select pxp.f_insert_tgui_rol ('ORDINV', 'Administrador Almacenes');
+select pxp.f_insert_tgui_rol ('EJEINV', 'Administrador Almacenes');
+select pxp.f_insert_tgui_rol ('INVMAIN', 'Administrador Almacenes');
+select pxp.f_insert_tgui_rol ('INVMAIN.2', 'Administrador Almacenes');
+select pxp.f_insert_tgui_rol ('INVMAIN.2.1', 'Administrador Almacenes');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_MOVPENPER_SEL', 'PERI');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_PESU_SEL', 'PERI');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_PESUGEN_INS', 'PERI');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_SWESTPE_MOD', 'PERI');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INVFINREG_MOD', 'ORDINV');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INVREVDIF_MOD', 'ORDINV');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INVFINREV_MOD', 'ORDINV');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INVCORRREV_MOD', 'ORDINV');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INVINIEJE_MOD', 'EJEINV');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INVFINEJE_MOD', 'EJEINV');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ALM_SEL', 'INVMAIN');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ALMUSR_SEL', 'INVMAIN');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INV_INS', 'INVMAIN');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INV_MOD', 'INVMAIN');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INV_ELI', 'INVMAIN');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_INV_SEL', 'INVMAIN');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ITEMNOTBASE_SEL', 'INVMAIN.2');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_DINV_INS', 'INVMAIN.2');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_DINV_MOD', 'INVMAIN.2');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_DINV_ELI', 'INVMAIN.2');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_DINV_SEL', 'INVMAIN.2');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'ALM_CLA_ARB_SEL', 'INVMAIN.2.1');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ARB_SEL', 'INVMAIN.2.1');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ITMSRCHARB_SEL', 'INVMAIN.2.1');
+/***********************************F-DEP-AAO-ALM-72-23/04/2013*****************************************/
