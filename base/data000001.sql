@@ -672,4 +672,4 @@ where codigo = 'ALM';
 /***********************************I-DAT-AAO-ALM-72-18/04/2013*****************************************/
 select pxp.f_insert_tprocedimiento_gui ('SAL_MOVREPORT_SEL', 'MOV', 'no');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_MOVREPORT_SEL', 'MOV');
-/***********************************I-DAT-AAO-ALM-72-18/04/2013*****************************************/
+/***********************************F-DAT-AAO-ALM-72-18/04/2013*****************************************/
