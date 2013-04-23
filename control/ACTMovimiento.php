@@ -74,8 +74,19 @@ class ACTMovimiento extends ACTbase {
     }
 
     function generarReporteMovimiento() {
-        $dataSource = new DataSource();
         $idMovimiento = $this->objParam->getParametro('id_movimiento');
+        $tipoMovimiento = $this->objParam->getParametro('tipo');
+        $tipoPersonalizado = $this->objParam->getParametro('nombre_movimiento_tipo');
+        $codigoMovimiento = $this->objParam->getParametro('codigo');
+        $nombreAlmacen = $this->objParam->getParametro('nombre_almacen');
+        $descripcionMovimiento = $this->objParam->getParametro('descripcion');
+        $observacionesMovimiento = $this->objParam->getParametro('observaciones');
+        $fechaRegMovimiento = $this->objParam->getParametro('fecha_reg');
+        $fechaMovimiento = $this->objParam->getParametro('fecha_movimiento');
+        $nombreFuncionario = $this->objParam->getParametro('nombre_funcionario');
+        $nombreProveedor = $this->objParam->getParametro('nombre_proveedor');
+        
+        $dataSource = new DataSource();
         $this->objParam->addParametroConsulta('filtro', ' movdet.id_movimiento = ' . $idMovimiento);
         $this->objParam->addParametroConsulta('ordenacion', 'cla.id_clasificacion');
         $this->objParam->addParametroConsulta('dir_ordenacion', 'asc');
@@ -83,58 +94,69 @@ class ACTMovimiento extends ACTbase {
         $this->objParam->addParametroConsulta('puntero', 0);
         $this->objFunc = $this->create('MODMovimiento');
         $resultRepMovimiento = $this->objFunc->listarReporteMovimiento($this->objParam);
-
+        
         $resultData = $resultRepMovimiento->getDatos();
-        $lastNombreClasificacion = $resultData[0]['nombre_clasificacion'];
-        $dataSourceArray = Array();
-        $dataSourceClasificacion = new DataSource();
-        $dataSetClasificacion = Array();
-        $totalCostoClasificacion = 0;
-        $mainDataSet = array();
-        $costoTotal = 0;
-        foreach ($resultRepMovimiento->getDatos() as $row) {
-            if ($row['nombre_clasificacion'] != $lastNombreClasificacion) {
-                $costoTotal += $totalCostoClasificacion;
-                $mainDataSet[] = array("nombreClasificacion" => $lastNombreClasificacion, "totalClasificacion" => $totalCostoClasificacion);
-                $dataSourceClasificacion->setDataSet($dataSetClasificacion);
-                $dataSourceClasificacion->putParameter('totalCosto', $totalCostoClasificacion);
-                $dataSourceClasificacion->putParameter('nombreClasificacion', $lastNombreClasificacion);
-                $dataSourceArray[] = $dataSourceClasificacion;
-
-                $lastNombreClasificacion = $row['nombre_clasificacion'];
-                $dataSourceClasificacion = new DataSource();
-                $dataSetClasificacion = Array();
-                $totalCostoClasificacion = 0;
+        
+        //1. En caso de que el movimiento sea un inventario Inicial
+        if ($tipoMovimiento == "ingreso" && $tipoPersonalizado == "Inventario Inicial") {
+            $lastNombreClasificacion = $resultData[0]['nombre_clasificacion'];
+            $dataSourceArray = Array();
+            $dataSourceClasificacion = new DataSource();
+            $dataSetClasificacion = Array();
+            $totalCostoClasificacion = 0;
+            $mainDataSet = array();
+            $costoTotal = 0;
+            foreach ($resultData as $row) {
+                if ($row['nombre_clasificacion'] != $lastNombreClasificacion) {
+                    $costoTotal += $totalCostoClasificacion;
+                    $mainDataSet[] = array("nombreClasificacion" => $lastNombreClasificacion, "totalClasificacion" => $totalCostoClasificacion);
+                    $dataSourceClasificacion->setDataSet($dataSetClasificacion);
+                    $dataSourceClasificacion->putParameter('totalCosto', $totalCostoClasificacion);
+                    $dataSourceClasificacion->putParameter('nombreClasificacion', $lastNombreClasificacion);
+                    $dataSourceArray[] = $dataSourceClasificacion;
+    
+                    $lastNombreClasificacion = $row['nombre_clasificacion'];
+                    $dataSourceClasificacion = new DataSource();
+                    $dataSetClasificacion = Array();
+                    $totalCostoClasificacion = 0;
+                }
+                $dataSetClasificacion[] = $row;
+                $totalCostoClasificacion += $row['costo_total'];
             }
-            $dataSetClasificacion[] = $row;
-            $totalCostoClasificacion += $row['costo_total'];
+            $costoTotal += $totalCostoClasificacion;
+            $mainDataSet[] = array("nombreClasificacion" => $lastNombreClasificacion, "totalClasificacion" => $totalCostoClasificacion);
+            $dataSourceClasificacion->setDataSet($dataSetClasificacion);
+            $dataSourceClasificacion->putParameter('totalCosto', $totalCostoClasificacion);
+            $dataSourceClasificacion->putParameter('nombreClasificacion', $lastNombreClasificacion);
+            $dataSourceArray[] = $dataSourceClasificacion;
+    
+            $dataSource->putParameter('clasificacionDataSources', $dataSourceArray);
+            $dataSource->putParameter('costoTotal', $costoTotal);
+            $dataSource->setDataSet($mainDataSet);
+            //Fin 1.
+        } else {
+            $costoTotal = 0;
+            foreach($resultData as $row) {
+                $costoTotal += $row['costo_total'];
+            }
+            $dataSource->setDataSet($resultData);
+            $dataSource->putParameter('totalCosto', $costoTotal);
         }
-        $costoTotal += $totalCostoClasificacion;
-        $mainDataSet[] = array("nombreClasificacion" => $lastNombreClasificacion, "totalClasificacion" => $totalCostoClasificacion);
-        $dataSourceClasificacion->setDataSet($dataSetClasificacion);
-        $dataSourceClasificacion->putParameter('totalCosto', $totalCostoClasificacion);
-        $dataSourceClasificacion->putParameter('nombreClasificacion', $lastNombreClasificacion);
-        $dataSourceArray[] = $dataSourceClasificacion;
-
-        $dataSource->putParameter('clasificacionDataSources', $dataSourceArray);
-        $dataSource->putParameter('costoTotal', $costoTotal);
-        $dataSource->setDataSet($mainDataSet);
-
-        $this->objParam->addParametroConsulta('filtro', ' mov.id_movimiento = ' . $idMovimiento);
-        $this->objParam->addParametroConsulta('ordenacion', 'mov.id_movimiento');
-        $this->objParam->addParametroConsulta('cantidad', 1);
-        $this->objFunc = $this->create('MODMovimiento');
-        $resultMovimiento = $this->objFunc->listarMovimiento($this->objParam);
-        $datosMovimiento = $resultMovimiento->getDatos();
-
-        $dataSource->putParameter('codigo', $datosMovimiento[0]['codigo']);
-        $dataSource->putParameter('tipo', $datosMovimiento[0]['tipo']);
-        $dataSource->putParameter('almacen', $datosMovimiento[0]['nombre_almacen']);
-        $dataSource->putParameter('motivo', $datosMovimiento[0]['nombre_movimiento_tipo']);
-        $dataSource->putParameter('descripcion', $datosMovimiento[0]['descripcion']);
-        $dataSource->putParameter('observaciones', $datosMovimiento[0]['observaciones']);
-        $dataSource->putParameter('fechaRemision', $datosMovimiento[0]['fecha_reg']);
-        $dataSource->putParameter('fechaMovimiento', $datosMovimiento[0]['fecha_mov']);
+        
+        $dataSource->putParameter('codigo', $codigoMovimiento);
+        $dataSource->putParameter('tipoMovimiento', $tipoMovimiento);
+        $dataSource->putParameter('almacen', $nombreAlmacen);
+        $dataSource->putParameter('motivo', $tipoPersonalizado);
+        $dataSource->putParameter('descripcion', $descripcionMovimiento);
+        $dataSource->putParameter('observaciones', $observacionesMovimiento);
+        $dataSource->putParameter('fechaRemision', $fechaRegMovimiento);
+        $dataSource->putParameter('fechaMovimiento', $fechaMovimiento);
+        
+        if ($nombreFuncionario != null && $nombreFuncionario != '') {
+            $dataSource->putParameter('solicitante', $nombreFuncionario);
+        } else {
+            $dataSource->putParameter('solicitante', $nombreProveedor);
+        }
 
         $reporte = new RMovimiento();
         $reporte->setDataSource($dataSource);

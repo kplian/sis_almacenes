@@ -28,7 +28,7 @@ class CustomReport extends TCPDF {
         $this->SetFontSize(14);
         $this->SetFont('', 'B');
         $this->Cell(40, $midHeight, '', 'LRT', 0, 'C', false, '', 0, false, 'T', 'C');
-        $this->Cell(105, $midHeight, strtoupper($this->dataSource->getParameter('tipo')) . ' VALORADO DE MATERIALES', 'LRT', 0, 'C', false, '', 0, false, 'T', 'C');
+        $this->Cell(105, $midHeight, strtoupper($this->dataSource->getParameter('tipoMovimiento')) . ' VALORADO DE MATERIALES', 'LRT', 0, 'C', false, '', 0, false, 'T', 'C');
 
         $x = $this->GetX();
         $y = $this->GetY();
@@ -109,6 +109,7 @@ Class RMovimiento extends Report {
         $pdf->AddPage();
 
         $hGlobal = 5;
+        $hMin = 3.5;
         $hMedium = 7.5;
         $hLong = 15;
 
@@ -120,10 +121,16 @@ Class RMovimiento extends Report {
         $pdf->Ln();
 
         $pdf->SetFont('', 'B');
+        $pdf->Ln();
         $pdf->Cell($w = 30, $h = $hMedium, $txt = 'DESCRIPCION: ', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        if ($dataSource->getParameter('nombre') != null || $dataSource->getParameter('nombre') != '') {
+        if ($dataSource->getParameter('descripcion') != null && $dataSource->getParameter('descripcion') != '') {
             $pdf->SetFont('', '');
-            $pdf->MultiCell($w = 0, $h = $hLong, $txt = $dataSource->getParameter('nombre'), $border = 0, $align = 'L', $fill = false, $ln = 1, $x = '', $y = '', $reseth = true, $stretch = 0, $ishtml = false, $autopadding = true, $maxh = $hMedium, $valign = 'M', $fitcell = false);
+            if (strlen($dataSource->getParameter('descripcion')) > 150) {
+                $pdf->MultiCell($w = 0, $h = $hLong, $txt = $dataSource->getParameter('descripcion'), $border = 0, $align = 'L', $fill = false, $ln = 1, $x = '', $y = '', $reseth = true, $stretch = 0, $ishtml = false, $autopadding = true, $maxh = $hMedium, $valign = 'M', $fitcell = false);
+            } else {
+                $pdf->Cell($w = 0, $h = $hMedium, $txt = $dataSource->getParameter('descripcion'), $border = 0, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Ln();
+            }
         } else {
             $pdf->Ln();
         }
@@ -136,63 +143,99 @@ Class RMovimiento extends Report {
         $pdf->Ln();
 
         $pdf->SetFont('', 'B');
-        $pdf->Cell($w = 30, $h = $hMedium, $txt = 'FECHA ' . strtoupper($dataSource->getParameter('tipo')) . ':', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = 30, $h = $hMedium, $txt = 'FECHA ' . strtoupper($dataSource->getParameter('tipoMovimiento')) . ':', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
         $pdf->SetFont('', '');
         $fechaMovimiento = new DateTime($dataSource->getParameter('fechaMovimiento'));
         $pdf->Cell($w = 60, $h = $hMedium, $txt = $fechaMovimiento->format('d/m/Y'), $border = 0, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Ln();
-        $pdf->Ln();
-
-        $wMargin = 30;
-        $wNro = 10;
-        $wDetalle = 110;
-        $wTotal = 20;
-
-        $pdf->SetFontSize(7);
-        $pdf->SetFont('', 'B');
-        $pdf->Cell($w = $wMargin, $h = $hGlobal, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = 'Nro.', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Cell($w = $wDetalle, $h = $hGlobal, $txt = 'Detalle', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Cell($w = $wTotal, $h = $hGlobal, $txt = 'Costo', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Ln();
-        $count = 1;
-        $pdf->SetFont('', '');
-        foreach ($dataSource->getDataSet() as $row) {
-            $pdf->Cell($w = $wMargin, $h = $hGlobal, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-            $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = $count, $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-            $pdf->Cell($w = $wDetalle, $h = $hGlobal, $txt = $row['nombreClasificacion'], $border = 1, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-            $pdf->Cell($w = $wTotal, $h = $hGlobal, $txt = number_format($row['totalClasificacion'], 6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        
+        if ($dataSource->getParameter('motivo') == "Inventario Inicial") {
+            $wMargin = 30;
+            $wNro = 10;
+            $wDetalle = 110;
+            $wTotal = 20;
+            
             $pdf->Ln();
-            $count++;
-        }
-        $pdf->SetFont('', 'B');
-        $pdf->Cell($w = $wMargin, $h = $hGlobal, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = '', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Cell($w = $wDetalle, $h = $hGlobal, $txt = 'COSTO TOTAL', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Cell($w = $wTotal, $h = $hGlobal, $txt = number_format($dataSource->getParameter('costoTotal'), 6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-
-        $pdf->Ln();
-        $pdf->Ln();
-        $pdf->SetFont('', 'B');
-        $pdf->Cell($w = 30, $h = $hMedium, $txt = 'OBSERVACIONES: ', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->SetFont('', '');
-        $pdf->MultiCell($w = 0, $h = $hLong, $txt = $dataSource->getParameter('observaciones'), $border = 0, $align = 'L', $fill = false, $ln = 1, $x = '', $y = '', $reseth = true, $stretch = 0, $ishtml = false, $autopadding = true, $maxh = $hMedium, $valign = 'M', $fitcell = false);
-
-        $pdf->AddPage();
-
-        $pdf->SetFontSize(8);
-        $pdf->SetFont('', 'B');
-
-        $pdf->Cell($w = 0, $h = $hMedium, $txt = 'DETALLE DE MATERIALES', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Ln();
-        foreach ($dataSource->getParameter('clasificacionDataSources') as $clasificacionDataSource) {
-            $this->writeClasificationDetail($pdf, $clasificacionDataSource);
+            $pdf->Ln();
+            $pdf->SetFontSize(7);
+            $pdf->SetFont('', 'B');
+            $pdf->Cell($w = $wMargin, $h = $hGlobal, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = 'Nro.', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wDetalle, $h = $hGlobal, $txt = 'Detalle', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wTotal, $h = $hGlobal, $txt = 'Costo', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Ln();
+            $count = 1;
+            $pdf->SetFont('', '');
+            foreach ($dataSource->getDataSet() as $row) {
+                $pdf->Cell($w = $wMargin, $h = $hGlobal, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = $count, $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wDetalle, $h = $hGlobal, $txt = $row['nombreClasificacion'], $border = 1, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wTotal, $h = $hGlobal, $txt = number_format($row['totalClasificacion'], 6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Ln();
+                $count++;
+            }
+            $pdf->SetFont('', 'B');
+            $pdf->Cell($w = $wMargin, $h = $hGlobal, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = '', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wDetalle, $h = $hGlobal, $txt = 'COSTO TOTAL', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wTotal, $h = $hGlobal, $txt = number_format($dataSource->getParameter('costoTotal'), 6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+    
+            $pdf->Ln();
+            $pdf->Ln();
+            $pdf->SetFont('', 'B');
+            $pdf->Cell($w = 30, $h = $hMedium, $txt = 'OBSERVACIONES: ', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->SetFont('', '');
+            $pdf->MultiCell($w = 0, $h = $hLong, $txt = $dataSource->getParameter('observaciones'), $border = 0, $align = 'L', $fill = false, $ln = 1, $x = '', $y = '', $reseth = true, $stretch = 0, $ishtml = false, $autopadding = true, $maxh = $hMedium, $valign = 'M', $fitcell = false);
+    
+            $pdf->AddPage();
+    
+            $pdf->SetFontSize(8);
+            $pdf->SetFont('', 'B');
+    
+            $pdf->Cell($w = 0, $h = $hMedium, $txt = 'DETALLE DE MATERIALES', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Ln();
+            foreach ($dataSource->getParameter('clasificacionDataSources') as $clasificacionDataSource) {
+                $this->writeClasificationDetail($pdf, $clasificacionDataSource);
+            }
+        } else {
+            $this->writeGlobalDetail($pdf, $dataSource);
+            $pdf->Ln();
+            $pdf->SetFont('', 'B');
+            $pdf->Cell($w = 30, $h = $hGlobal, $txt = 'OBSERVACIONES: ', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->SetFont('', '');
+            if ($dataSource->getParameter('observaciones') != null && $dataSource->getParameter('observaciones') != '') {
+                $pdf->MultiCell($w = 0, $h = $hMedium, $txt = $dataSource->getParameter('observaciones'), $border = 0, $align = 'L', $fill = false, $ln = 0, $x = '', $y = '', $reseth = true, $stretch = 0, $ishtml = false, $autopadding = true, $maxh = $hMedium, $valign = 'M', $fitcell = false);
+            } 
+            
+            if ($dataSource->getParameter('tipoMovimiento') == "salida") {
+                $wMargin = 0;
+                $wColumn1 = 90;
+                $wColumn2 = 90;
+                
+                $pdf->Ln();
+                $pdf->Ln();
+                $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = $dataSource->getParameter('solicitante'), $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = 'Fulanito', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Ln();
+                $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = 'SOLICITANTE', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = 'APROVADOR', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                
+                $pdf->Ln();
+                $pdf->Ln();
+                $pdf->Ln();
+                $pdf->Ln();
+                $pdf->Cell($w = $wColumn1, $h = $hGlobal, $txt = '____________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn2, $h = $hGlobal, $txt = '____________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Ln();
+                $pdf->Cell($w = $wColumn1, $h = $hGlobal, $txt = 'Entregado Por: ___________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn2, $h = $hGlobal, $txt = 'Entregado A: ___________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            }
         }
 
         $pdf->Output($fileName, 'F');
     }
 
     function writeClasificationDetail($pdf, $dataSource) {
+        $hGlobal = 5;
         $wNro = 10;
         $wCodigo = 15;
         $wDescripcionItem = 90;
@@ -221,6 +264,53 @@ Class RMovimiento extends Report {
         $count = 1;
         $pdf->SetFont('', '');
         foreach ($dataSource->getDataset() as $datarow) {
+            $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = $count, $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wCodigo, $h = $hGlobal, $txt = $datarow['codigo'], $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wDescripcionItem, $h = $hGlobal, $txt = $datarow['nombre'], $border = 1, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wUnidad, $h = $hGlobal, $txt = $datarow['unidad_medida'], $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wCantidad, $h = $hGlobal, $txt = number_format($datarow['cantidad'], 2), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wCostoUnitario, $h = $hGlobal, $txt = number_format($datarow['costo_unitario'], 6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Cell($w = $wCostoTotal, $h = $hGlobal, $txt = number_format($datarow['costo_total'], 6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->Ln();
+            $count++;
+        }
+
+        $pdf->SetFont('', 'B');
+        $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = '', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wCodigo, $h = $hGlobal, $txt = '', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wDescripcionItem, $h = $hGlobal, $txt = 'Totales', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wUnidad, $h = $hGlobal, $txt = '', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wCantidad, $h = $hGlobal, $txt = '', $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wCostoUnitario, $h = $hGlobal, $txt = '', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wCostoTotal, $h = $hGlobal, $txt = number_format($dataSource->getParameter('totalCosto'), 6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Ln();
+    }
+    
+    function writeGlobalDetail($pdf, $dataSource) {
+        $hGlobal = 5;
+        $wNro = 10;
+        $wCodigo = 15;
+        $wDescripcionItem = 90;
+        $wUnidad = 15;
+        $wCantidad = 20;
+        $wCostoUnitario = 15;
+        $wCostoTotal = 20;
+        $pdf->Ln();
+        
+        $pdf->SetFontSize(6.5);
+        $pdf->SetFont('', 'B');
+        $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = 'Nro.', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wCodigo, $h = $hGlobal, $txt = 'Código', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wDescripcionItem, $h = $hGlobal, $txt = 'Descripcion del Material', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wUnidad, $h = $hGlobal, $txt = 'Unidad', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wCantidad, $h = $hGlobal, $txt = 'Cantidad', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wCostoUnitario, $h = $hGlobal, $txt = 'C/Unit.', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wCostoTotal, $h = $hGlobal, $txt = 'C/Total', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Ln();
+        
+        $count = 1;
+        $pdf->SetFont('', '');
+        foreach ($dataSource->getDataSet() as $datarow) {
             $pdf->Cell($w = $wNro, $h = $hGlobal, $txt = $count, $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wCodigo, $h = $hGlobal, $txt = $datarow['codigo'], $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wDescripcionItem, $h = $hGlobal, $txt = $datarow['nombre'], $border = 1, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');

@@ -17,7 +17,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.init();
 			this.grid.getTopToolbar().disable();
 			this.grid.getBottomToolbar().disable();
-			this.store.removeAll();
 			
 			this.getComponente('id_item').on('select', function(comp, object, c) {
                 this.getComponente('codigo_unidad').setValue(object.data.codigo_unidad);
@@ -363,11 +362,13 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('costo_unitario').setVisible(true);
 				this.getComponente('fecha_caducidad').setVisible(true);
 				this.getComponente('cantidad_solicitada').setVisible(false);
+				this.getComponente('cantidad_solicitada').disable();
 			} else {
 				this.getComponente('costo_unitario').disable();
 				this.getComponente('costo_unitario').setVisible(false);
 				this.getComponente('fecha_caducidad').setVisible(false);
 				this.getComponente('cantidad_solicitada').setVisible(true);
+				this.getComponente('cantidad_solicitada').enable();
 			}
 			this.getComponente('cantidad_item').setVisible(true);
 		},
@@ -378,11 +379,13 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('costo_unitario').setVisible(true);
 				this.getComponente('fecha_caducidad').setVisible(true);
 				this.getComponente('cantidad_solicitada').setVisible(false);
+				this.getComponente('cantidad_solicitada').disable();
 			} else {
 				this.getComponente('costo_unitario').disable();
 				this.getComponente('costo_unitario').setVisible(false);
 				this.getComponente('fecha_caducidad').setVisible(false);
 				this.getComponente('cantidad_solicitada').setVisible(true);
+				this.getComponente('cantidad_solicitada').enable();
 			}
 			this.getComponente('cantidad_item').setVisible(true);
 		}
