@@ -29,6 +29,7 @@ class MODAlmacenStock extends MODbase {
         $this->captura('cantidad_alerta_roja', 'numeric');
         $this->captura('id_metodo_val', 'int4');
         $this->captura('codigo_metodo_val', 'varchar');
+        $this->captura('codigo_unidad', 'varchar');
         $this->captura('usr_reg', 'varchar');
         $this->captura('fecha_reg', 'timestamp');
         $this->captura('usr_mod', 'varchar');

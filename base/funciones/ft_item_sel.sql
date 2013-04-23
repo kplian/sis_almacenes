@@ -1,13 +1,6 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.ft_item_sel (
-  p_administrador integer,
-  p_id_usuario integer,
-  p_tabla varchar,
-  p_transaccion varchar
-)
-RETURNS varchar AS
-$body$
+CREATE OR REPLACE FUNCTION alm.ft_item_sel(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
+  RETURNS character varying AS
+$BODY$
 /**************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_item_sel
@@ -161,9 +154,11 @@ BEGIN
                     item.palabras_clave,
                     item.codigo_fabrica,
                     item.observaciones,
-                    item.numero_serie
+                    item.numero_serie,
+                    umed.codigo as codigo_unidad
                 from alm.titem item
                 inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
+                inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
                 where item.estado_reg = ''activo'' and ';
            
             --Definicion de la respuesta
@@ -191,6 +186,7 @@ BEGIN
             	select count(item.id_item)
                 from alm.titem item
                 inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
+                inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
                 where item.estado_reg = ''activo'' and ';
            
             --Definicion de la respuesta           
@@ -263,9 +259,8 @@ EXCEPTION
             v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
             raise exception '%',v_resp;
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.ft_item_sel(integer, integer, character varying, character varying)
+  OWNER TO postgres;

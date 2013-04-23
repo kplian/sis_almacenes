@@ -18,6 +18,9 @@ header("content-type: text/javascript; charset=UTF-8");
             this.grid.getTopToolbar().disable();
             this.grid.getBottomToolbar().disable();
             this.store.removeAll();
+            this.getComponente('id_item').on('select', function(comp, object, c) {
+                this.getComponente('codigo_unidad').setValue(object.data.codigo_unidad);
+            }, this);
         },
         Atributos : [{
             config : {
@@ -50,7 +53,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         direction : 'ASC'
                     },
                     totalProperty : 'total',
-                    fields : ['id_item', 'nombre', 'codigo', 'desc_clasificacion'],
+                    fields : ['id_item', 'nombre', 'codigo', 'desc_clasificacion', 'codigo_unidad'],
                     remoteSort : true,
                     baseParams : {
                         par_filtro : 'item.nombre#item.codigo#cla.nombre'
@@ -89,6 +92,20 @@ header("content-type: text/javascript; charset=UTF-8");
                 type : 'string'
             },
             grid : true,
+            form : true
+        }, {
+            config : {
+                name : 'codigo_unidad',
+                fieldLabel : 'Unidad de Medida',
+                allowBlank : true,
+                anchor : '100%',
+                gwidth : 100,
+                maxLength : 10,
+                disabled : true
+            },
+            type : 'TextField',
+            id_grupo : 1,
+            grid : false,
             form : true
         }, {
             config : {
@@ -305,6 +322,9 @@ header("content-type: text/javascript; charset=UTF-8");
             type : 'numeric'
         }, {
             name : 'codigo_metodo_val',
+            type : 'string'
+        }, {
+            name : 'codigo_unidad',
             type : 'string'
         }, {
             name : 'usr_reg',

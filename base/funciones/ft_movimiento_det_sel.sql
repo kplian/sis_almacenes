@@ -34,6 +34,7 @@ BEGIN
                 movdet.id_movimiento,
                 movdet.id_item,                    
                 item.nombre as nombre_item,
+                umed.codigo as codigo_unidad,
                 movdet.cantidad as cantidad_item,
 		movdet.cantidad_solicitada,
                 movdet.costo_unitario,
@@ -46,6 +47,7 @@ BEGIN
                 (movdet.cantidad*movdet.costo_unitario) as costo_total
             from alm.tmovimiento_det movdet
             inner join alm.titem item on item.id_item = movdet.id_item
+            inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
             inner join segu.tusuario usu1 on usu1.id_usuario = movdet.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = movdet.id_usuario_mod
             where movdet.estado_reg = ''activo'' 
@@ -71,6 +73,7 @@ BEGIN
             select count(movdet.id_movimiento_det)
             from alm.tmovimiento_det movdet
             inner join alm.titem item on item.id_item = movdet.id_item
+            inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
             inner join segu.tusuario usu1 on usu1.id_usuario = movdet.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = movdet.id_usuario_mod
             where movdet.estado_reg = ''activo'' 

@@ -51,6 +51,7 @@ class MODItem extends MODbase {
         $this->captura('codigo_fabrica', 'varchar');
         $this->captura('observaciones', 'varchar');
         $this->captura('numero_serie', 'varchar');
+        $this->captura('codigo_unidad', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
