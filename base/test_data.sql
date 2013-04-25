@@ -310,17 +310,3 @@ SELECT pg_catalog.setval('tmovimiento_id_movimiento_seq', 7, true);
 -- Data for sequence alm.tmovimiento_det_id_movimiento_det_seq (OID = 1409081)
 --
 SELECT pg_catalog.setval('tmovimiento_det_id_movimiento_det_seq', 11, true);*/
-
----Temporal
-
-select pxp.f_insert_tgui ('Inventario', 'Inventario', 'INVMAIN', 'si', 1, 'sis_almacenes/vista/inventario/InventarioBase.php', 5, '', 'InventarioBase', 'ALM');
-select pxp.f_insert_testructura_gui ('INVMAIN', 'ALMAIN');
-
-select pxp.f_insert_tgui ('Orden Inventario', 'Orden Inventario', 'ORDINV', 'si', 1, 'sis_almacenes/vista/inventario/OrdenInventario.php', 5, '', 'OrdenInventario', 'ALM');
-select pxp.f_insert_testructura_gui ('ORDINV', 'ALMAIN');
-
-select pxp.f_insert_tgui ('Ejecucion Inventario', 'Ejecucion Inventario', 'EJEINV', 'si', 1, 'sis_almacenes/vista/inventario/EjecucionInventario.php', 5, '', 'EjecucionInventario', 'ALM');
-select pxp.f_insert_testructura_gui ('EJEINV', 'ALMAIN');
-
-select pxp.f_insert_tgui ('Periodo', 'Periodo', 'PERI', 'si', 2, 'sis_almacenes/vista/periodo_almacenes/PeriodoAlmacenes.php', 2, '', 'PeriodoAlmacenes', 'ALM');
-select pxp.f_insert_testructura_gui ('PERI', 'ALDAGE');
