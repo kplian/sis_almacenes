@@ -1,13 +1,6 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.ft_item_sel (
-  p_administrador integer,
-  p_id_usuario integer,
-  p_tabla varchar,
-  p_transaccion varchar
-)
-RETURNS varchar AS
-$body$
+CREATE OR REPLACE FUNCTION alm.ft_item_sel(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
+  RETURNS character varying AS
+$BODY$
 /**************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_item_sel
@@ -29,6 +22,7 @@ DECLARE
     v_parametros          record;
     v_nombre_funcion       text;
     v_resp                varchar;
+    v_where varchar;
                
 BEGIN
 
@@ -46,33 +40,61 @@ BEGIN
                     
         begin
             --Sentencia de la consulta
-            v_consulta:='select
-                        item.id_item,
-                        item.id_clasificacion,
-                        cla.nombre as desc_clasificacion,
-                        cla.codigo_largo,
-                        item.nombre,
-                        item.codigo,
-                        item.descripcion,
-                        item.palabras_clave,
-                        item.codigo_fabrica,
-                        item.observaciones,
-                        item.numero_serie                       
-                        from alm.titem item
-                        left join alm.tclasificacion cla on cla.id_clasificacion=item.id_clasificacion
-                        where ';
+            v_consulta:='
+            	select
+                	item.id_item,
+                    item.id_clasificacion,
+                    item.nombre,
+                    item.codigo,
+                    item.descripcion,
+                    item.palabras_clave,
+                    item.codigo_fabrica,
+                    item.observaciones,
+                    item.numero_serie,
+                    item.id_unidad_medida,
+                	umed.codigo as codigo_unidad
+                from alm.titem item
+                inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+                where item.estado_reg = ''activo'' and ';
            
+        	if (v_parametros.ordenacion = 'codigo') then
+            	v_parametros.ordenacion = 'num_por_clasificacion';
+            end if;
+        
             --Definicion de la respuesta
             v_consulta:=v_consulta||v_parametros.filtro;
             v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 			
             --Devuelve la respuesta
             return v_consulta;
-            
                        
         end;
     /*********************************   
-     #TRANSACCION:  'SAL_ITEM_SEL'
+     #TRANSACCION:  'SAL_ITEM_CONT'
+     #DESCRIPCION:  Conteo de registros
+     #AUTOR:        Gonzalo Sarmiento   
+     #FECHA:        20-09-2012
+    ***********************************/
+
+    elsif(p_transaccion='SAL_ITEM_CONT')then
+
+        begin
+            --Sentencia de la consulta de conteo de registros
+            v_consulta:='
+            	select count(item.id_item)
+                from alm.titem item
+                inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+                where item.estado_reg = ''activo'' and ';
+           
+            --Definicion de la respuesta           
+            v_consulta:=v_consulta||v_parametros.filtro;
+
+            --Devuelve la respuesta
+            return v_consulta;
+
+        end;  
+    /*********************************   
+     #TRANSACCION:  'SAL_ARB_SEL'
      #DESCRIPCION:    Consulta de datos
      #AUTOR:        Gonzalo Sarmiento   
      #FECHA:        20-09-2012
@@ -80,19 +102,32 @@ BEGIN
             
     elseif(p_transaccion='SAL_ARB_SEL')then
     	begin
-        	v_consulta:='select
-						it.id_item,
-						it.nombre,
-						it.codigo,
-						it.id_clasificacion as id_clasificacion_fk,
-                        (it.id_clasificacion::varchar||''_''||it.id_item::varchar)::varchar as id_clasificacion,
-                        (''item'')::varchar as tipo_nodo						
-						from alm.titem it
-						inner join segu.tusuario usu1 on usu1.id_usuario = it.id_usuario_reg
-						left join segu.tusuario usu2 on usu2.id_usuario = it.id_usuario_mod
-                        where it.id_clasificacion= '|| v_parametros.id_clasificacion||' and ';
-            --Definicion de la respuesta
-            v_consulta:=v_consulta||v_parametros.filtro;
+        	if(v_parametros.id_clasificacion = '%') then
+                v_where := ' it.id_clasificacion is NULL';    
+            else
+                v_where := ' it.id_clasificacion = '||v_parametros.id_clasificacion;
+            end if;
+        	v_consulta:='
+            	select
+					it.id_item,
+                    it.nombre,
+                    it.codigo,
+                    it.id_clasificacion as id_clasificacion_fk,
+                    (COALESCE(it.id_clasificacion,0)::varchar||''_''||it.id_item::varchar)::varchar as id_clasificacion,
+                    case
+                        when (it.codigo is not null and it.codigo <> '''') then
+                        	''item_codificado''::varchar
+                        ELSE
+                            ''item''::varchar
+                    END as tipo_nodo
+                from alm.titem it
+                inner join segu.tusuario usu1 on usu1.id_usuario = it.id_usuario_reg
+                left join segu.tusuario usu2 on usu2.id_usuario = it.id_usuario_mod
+                where it.estado_reg = ''activo'' 
+                and '|| v_where ||' order by it.num_por_clasificacion ';
+                
+                
+
             --Devuelve la respuesta
         	return v_consulta;
         end;
@@ -108,20 +143,23 @@ BEGIN
                     
         begin
             --Sentencia de la consulta
-            v_consulta:='select
-                        item.id_item,
-                        item.id_clasificacion,
-                        cla.nombre as desc_clasificacion,
-                        cla.codigo_largo,
-                        item.nombre,
-                        item.descripcion,
-                        item.palabras_clave,
-                        item.codigo_fabrica,
-                        item.observaciones,
-                        item.numero_serie                       
-                        from alm.titem item, alm.tclasificacion cla
-                        where item.id_clasificacion = cla.id_clasificacion 
-                        and cla.id_clasificacion_fk is not NULL and ';
+            v_consulta:='
+            	select
+                	item.id_item,
+                    item.id_clasificacion,
+                    cla.nombre as desc_clasificacion,
+                    item.nombre,
+                    item.codigo,
+                    item.descripcion,
+                    item.palabras_clave,
+                    item.codigo_fabrica,
+                    item.observaciones,
+                    item.numero_serie,
+                    umed.codigo as codigo_unidad
+                from alm.titem item
+                inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
+                inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+                where item.estado_reg = ''activo'' and ';
            
             --Definicion de la respuesta
             v_consulta:=v_consulta||v_parametros.filtro;
@@ -144,10 +182,12 @@ BEGIN
 
         begin
             --Sentencia de la consulta de conteo de registros
-            v_consulta:='select count(item.id_item)
-                        from alm.titem item, alm.tclasificacion cla
-                        where item.id_clasificacion = cla.id_clasificacion 
-                        and cla.id_clasificacion_fk is not NULL and ';
+            v_consulta:='
+            	select count(item.id_item)
+                from alm.titem item
+                inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
+                inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+                where item.estado_reg = ''activo'' and ';
            
             --Definicion de la respuesta           
             v_consulta:=v_consulta||v_parametros.filtro;
@@ -155,30 +195,55 @@ BEGIN
             --Devuelve la respuesta
             return v_consulta;
 
-        end;
-        
-	/*********************************   
-     #TRANSACCION:  'SAL_ITEM_CONT'
-     #DESCRIPCION:  Conteo de registros
-     #AUTOR:        Gonzalo Sarmiento   
+        end;  
+    
+    /*********************************   
+     #TRANSACCION:  'SAL_ITMSRCHARB_SEL'
+     #DESCRIPCION:    Consulta de datos
+     #AUTOR:        Ariel Ayaviri Omonte
      #FECHA:        20-09-2012
     ***********************************/
 
-    elsif(p_transaccion='SAL_ITEM_CONT')then
+    elsif(p_transaccion='SAL_ITMSRCHARB_SEL')then
+                    
+        begin
+            --Sentencia de la consulta
+            v_consulta:='
+            	select 
+                	it.id_item id, 
+                	case 
+                        when (it.id_clasificacion is null) then
+                            ''{}''::INT[]
+                        else 
+                            alm.f_get_ruta_clasificacion(it.id_clasificacion)
+                    end as ruta
+				from alm.titem it
+                where it.estado_reg = ''activo'' and it.nombre ilike ''%' || v_parametros.text_search || '%'' ';
+           
+            return v_consulta;
+                       
+        end;
+    
+    /*********************************   
+     #TRANSACCION:  'SAL_ITMSRCHARB_CONT'
+     #DESCRIPCION:  Conteo de registros
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        20-09-2012
+    ***********************************/
+
+    elsif(p_transaccion='SAL_ITMSRCHARB_CONT')then
 
         begin
             --Sentencia de la consulta de conteo de registros
-            v_consulta:='select count(item.id_item)
-                        from alm.titem item, alm.tclasificacion cla
-                        where item.id_clasificacion = cla.id_clasificacion and ';
+            v_consulta:='
+            	select count(it.id_item)
+                from alm.titem it
+                where it.estado_reg = ''activo'' and it.nombre ilike ''%' || v_parametros.text_search || '%'' ';
            
-            --Definicion de la respuesta           
-            v_consulta:=v_consulta||v_parametros.filtro;
-
             --Devuelve la respuesta
             return v_consulta;
 
-        end;       
+        end;     
     else
                         
         raise exception 'Transaccion inexistente';
@@ -194,9 +259,8 @@ EXCEPTION
             v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
             raise exception '%',v_resp;
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.ft_item_sel(integer, integer, character varying, character varying)
+  OWNER TO postgres;

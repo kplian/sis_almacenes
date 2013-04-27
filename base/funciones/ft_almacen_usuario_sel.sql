@@ -1,7 +1,13 @@
-CREATE OR REPLACE FUNCTION "alm"."ft_almacen_usuario_sel"(	
-				p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-RETURNS character varying AS
-$BODY$
+--------------- SQL ---------------
+
+CREATE OR REPLACE FUNCTION alm.ft_almacen_usuario_sel (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		Sistema de Almacenes
  FUNCION: 		alm.ft_almacen_usuario_sel
@@ -44,18 +50,22 @@ BEGIN
 						almusr.id_almacen_usuario,
 						almusr.id_usuario,
 						usualm.cuenta,
+                        PERSON.nombre_completo2 as desc_person,
+                        almusr.id_almacen,
+                        almusr.tipo,
 						almusr.estado_reg,
 						almusr.id_usuario_reg,
 						almusr.fecha_reg,
 						almusr.fecha_mod,
 						almusr.id_usuario_mod,
 						usu1.cuenta as usr_reg,
-						usu2.cuenta as usr_mod	
+						usu2.cuenta as usr_mod
 						from alm.talmacen_usuario almusr
 						inner join segu.tusuario usu1 on usu1.id_usuario = almusr.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = almusr.id_usuario_mod
 					    inner join segu.tusuario usualm on usualm.id_usuario = almusr.id_usuario
-				        where  ';
+                        inner join segu.vpersona PERSON on PERSON.id_persona = usualm.id_persona
+				        where almusr.id_almacen = ' || v_parametros.id_almacen ||' and ';
 			
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -78,10 +88,12 @@ BEGIN
 		begin
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_almacen_usuario)
-					    from alm.talmacen_usuario almusr
-					    inner join segu.tusuario usu1 on usu1.id_usuario = almusr.id_usuario_reg
+					    						from alm.talmacen_usuario almusr
+						inner join segu.tusuario usu1 on usu1.id_usuario = almusr.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = almusr.id_usuario_mod
-					    where ';
+					    inner join segu.tusuario usualm on usualm.id_usuario = almusr.id_usuario
+                        inner join segu.vpersona PERSON on PERSON.id_persona = usualm.id_persona
+				        where almusr.id_almacen = ' || v_parametros.id_almacen ||' and ';
 			
 			--Definicion de la respuesta		    
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -106,7 +118,9 @@ EXCEPTION
 			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 			raise exception '%',v_resp;
 END;
-$BODY$
-LANGUAGE 'plpgsql' VOLATILE
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
 COST 100;
-ALTER FUNCTION "alm"."ft_almacen_usuario_sel"(integer, integer, character varying, character varying) OWNER TO postgres;

@@ -133,4 +133,216 @@ WITHOUT OIDS;
 
 /***********************************F-SCP-JRR-ALM-1-19/11/2012****************************************/
 
-    
+/***********************************I-SCP-AAO-ALM-16-05/02/2013****************************************/
+ALTER TABLE alm.titem
+  ADD COLUMN num_por_clasificacion INTEGER;
+/***********************************F-SCP-AAO-ALM-16-05/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-16_2-05/02/2013****************************************/
+ALTER TABLE alm.tclasificacion
+  ADD COLUMN estado VARCHAR(20);
+/***********************************F-SCP-AAO-ALM-16_2-05/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-12-06/02/2013****************************************/
+ALTER TABLE alm.talmacen_usuario
+  ADD COLUMN tipo VARCHAR(20);
+
+ALTER TABLE alm.talmacen_usuario
+  ADD COLUMN id_almacen INTEGER;
+/***********************************F-SCP-AAO-ALM-12-06/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-14-06/02/2013****************************************/
+CREATE TABLE alm.titem_reemplazo (
+  id_item_reemplazo SERIAL NOT NULL, 
+  id_item INTEGER,
+  id_item_r INTEGER,
+  PRIMARY KEY(id_item_reemplazo)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.titem_reemplazo
+  OWNER TO postgres;
+/***********************************F-SCP-AAO-ALM-14-06/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-15-06/02/2013****************************************/
+CREATE TABLE alm.titem_archivo (
+  id_item_archivo SERIAL NOT NULL, 
+  nombre VARCHAR(50), 
+  descripcion VARCHAR(150), 
+  extension VARCHAR(10), 
+  archivo BYTEA, 
+  id_item INTEGER,
+  PRIMARY KEY(id_item_archivo)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.titem_archivo
+  OWNER TO postgres;
+/***********************************F-SCP-AAO-ALM-15-06/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-23-13/02/2013****************************************/
+
+ALTER TABLE alm.talmacen
+  ADD COLUMN estado VARCHAR(15);
+/***********************************F-SCP-AAO-ALM-23-13/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-19-13/02/2013****************************************/
+
+ALTER TABLE alm.tmovimiento_tipo
+  ADD COLUMN tipo VARCHAR(25);
+/***********************************F-SCP-AAO-ALM-19-13/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-24-14/02/2013****************************************/
+
+CREATE TABLE alm.tmetodo_val (
+  id_metodo_val SERIAL NOT NULL, 
+  codigo VARCHAR(20), 
+  nombre VARCHAR(50), 
+  descripcion VARCHAR(150), 
+  PRIMARY KEY(id_metodo_val)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.talmacen_stock
+  ADD COLUMN id_metodo_val INTEGER;
+/***********************************F-SCP-AAO-ALM-24-14/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-20-15/02/2013****************************************/
+ALTER TABLE alm.tmovimiento
+  RENAME COLUMN numero_mov TO codigo;
+/***********************************F-SCP-AAO-ALM-20-15/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-25-21/02/2013****************************************/
+ALTER TABLE alm.tmovimiento_det
+  DROP COLUMN costo_unitario;
+
+CREATE TABLE alm.tmovimiento_det_valorado (
+  id_movimiento_det_valorado SERIAL NOT NULL, 
+  id_movimiento_det INTEGER, 
+  cantidad NUMERIC(18,6), 
+  costo_unitario NUMERIC(18,6), 
+  aux_saldo_fisico NUMERIC(18,6),
+  PRIMARY KEY(id_movimiento_det_valorado)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.tmovimiento_det_valorado
+  OWNER TO postgres;
+/***********************************F-SCP-AAO-ALM-25-21/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-33-21/02/2013****************************************/
+ALTER TABLE alm.tmovimiento_det
+  ADD COLUMN costo_unitario NUMERIC(18,6);
+/***********************************F-SCP-AAO-ALM-33-21/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-31-23/02/2013****************************************/
+ALTER TABLE alm.tmovimiento
+  ADD COLUMN id_movimiento_dest INTEGER;
+/***********************************F-SCP-AAO-ALM-31-23/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-26-25/02/2013****************************************/
+ALTER TABLE alm.talmacen
+  ADD COLUMN id_departamento INTEGER;
+/***********************************F-SCP-AAO-ALM-26-25/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-29-25/02/2013****************************************/
+ALTER TABLE alm.tmovimiento
+  RENAME COLUMN id_movimiento_dest TO id_movimiento_origen;
+/***********************************F-SCP-AAO-ALM-29-25/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-28-26/02/2013****************************************/
+ALTER TABLE alm.tmovimiento_det_valorado
+  ADD COLUMN id_mov_det_val_origen INTEGER;
+/***********************************F-SCP-AAO-ALM-28-26/02/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-34-01/03/2013****************************************/
+ALTER TABLE alm.titem
+  ADD COLUMN id_unidad_medida INTEGER;
+/***********************************F-SCP-AAO-ALM-34-01/03/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-35-04/03/2013****************************************/
+ALTER TABLE alm.talmacen
+  ALTER COLUMN codigo TYPE VARCHAR(20);
+  
+ALTER TABLE alm.titem
+  ALTER COLUMN codigo TYPE VARCHAR(30);
+/***********************************F-SCP-AAO-ALM-35-04/03/2013****************************************/
+
+/***********************************I-SCP-AAO-ALM-41-05/03/2013*****************************************/
+ALTER TABLE alm.titem_archivo
+  ALTER COLUMN descripcion TYPE VARCHAR(1000);
+  
+ALTER TABLE alm.tmetodo_val
+  ALTER COLUMN descripcion TYPE VARCHAR(1000);
+/***********************************F-SCP-AAO-ALM-41-05/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-60-14/03/2013*****************************************/
+ALTER TABLE alm.tmovimiento_tipo
+  ADD COLUMN read_only BOOLEAN;
+
+ALTER TABLE alm.tmovimiento_tipo
+  ALTER COLUMN read_only SET DEFAULT FALSE;
+  
+ALTER TABLE alm.tmetodo_val
+  ADD COLUMN read_only BOOLEAN;
+
+ALTER TABLE alm.tmetodo_val
+  ALTER COLUMN read_only SET DEFAULT FALSE;
+/***********************************F-SCP-AAO-ALM-60-14/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-45-14/03/2013*****************************************/
+CREATE TABLE alm.tinventario (
+  id_inventario SERIAL, 
+  id_almacen INTEGER NOT NULL, 
+  id_usuario_resp INTEGER NOT NULL, 
+  fecha_inv_planif TIMESTAMP WITHOUT TIME ZONE, 
+  fecha_inv_ejec TIMESTAMP WITHOUT TIME ZONE, 
+  observaciones VARCHAR(1000), 
+  completo VARCHAR(2) NOT NULL, 
+  estado VARCHAR(20), 
+  CONSTRAINT tinventario_pkey PRIMARY KEY(id_inventario)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.tinventario
+  OWNER TO postgres;
+/***********************************F-SCP-AAO-ALM-45-14/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-45-15/03/2013*****************************************/
+
+CREATE TABLE alm.tinventario_det (
+  id_inventario_det SERIAL NOT NULL, 
+  id_inventario INTEGER, 
+  id_item INTEGER, 
+  cantidad_sistema NUMERIC(18,2), 
+  cantidad_real NUMERIC(18,2), 
+  diferencia NUMERIC(18,2),
+  observaciones VARCHAR(1000), 
+  PRIMARY KEY(id_inventario_det)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+ALTER TABLE alm.tinventario_det
+  OWNER TO postgres;
+  
+/***********************************F-SCP-AAO-ALM-45-15/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-9-18/03/2013*****************************************/
+
+ALTER TABLE alm.talmacen_stock
+  ALTER COLUMN id_item SET NOT NULL;
+
+ALTER TABLE alm.titem_reemplazo
+  ALTER COLUMN id_item SET NOT NULL;
+ 
+ALTER TABLE alm.titem_reemplazo
+  ALTER COLUMN id_item_r SET NOT NULL;
+
+ALTER TABLE alm.tmovimiento_det
+  ALTER COLUMN id_item SET NOT NULL;
+/***********************************F-SCP-AAO-ALM-9-18/03/2013*****************************************/
+
+/***********************************I-SCP-AAO-ALM-70-21/03/2013*****************************************/
+ALTER TABLE alm.tmovimiento_det 
+  ADD COLUMN cantidad_solicitada numeric(18,6);
+/***********************************F-SCP-AAO-ALM-70-21/03/2013*****************************************/

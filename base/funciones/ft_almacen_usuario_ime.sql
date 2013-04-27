@@ -1,8 +1,13 @@
-CREATE OR REPLACE FUNCTION "alm"."ft_almacen_usuario_ime" (	
-				p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-RETURNS character varying AS
-$BODY$
+--------------- SQL ---------------
 
+CREATE OR REPLACE FUNCTION alm.ft_almacen_usuario_ime (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		Sistema de Almacenes
  FUNCION: 		alm.ft_almacen_usuario_ime
@@ -45,19 +50,23 @@ BEGIN
         begin
         	--Sentencia de la insercion
         	insert into alm.talmacen_usuario(
-			id_usuario,
-			estado_reg,
-			id_usuario_reg,
-			fecha_reg,
-			fecha_mod,
-			id_usuario_mod
-          	) values(
-			v_parametros.id_usuario,
-			'activo',
-			p_id_usuario,
-			now(),
-			null,
-			null
+                id_usuario,
+                id_almacen,
+                tipo,
+                estado_reg,
+                id_usuario_reg,
+                fecha_reg,
+                fecha_mod,
+                id_usuario_mod
+            ) values(
+                v_parametros.id_usuario,
+                v_parametros.id_almacen,
+                v_parametros.tipo,
+                'activo',
+                p_id_usuario,
+                now(),
+                null,
+                null
 			)RETURNING id_almacen_usuario into v_id_almacen_usuario;
                
 			--Definicion de la respuesta
@@ -81,9 +90,10 @@ BEGIN
 		begin
 			--Sentencia de la modificacion
 			update alm.talmacen_usuario set
-			id_usuario = v_parametros.id_usuario,
-			fecha_mod = now(),
-			id_usuario_mod = p_id_usuario
+                id_usuario = v_parametros.id_usuario,
+                tipo = v_parametros.tipo,
+                fecha_mod = now(),
+                id_usuario_mod = p_id_usuario
 			where id_almacen_usuario=v_parametros.id_almacen_usuario;
                
 			--Definicion de la respuesta
@@ -107,7 +117,7 @@ BEGIN
 		begin
 			--Sentencia de la eliminacion
 			delete from alm.talmacen_usuario
-            where id_almacen_usuario=v_parametros.id_almacen_usuario;
+            where id_almacen_usuario = v_parametros.id_almacen_usuario;
                
             --Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Usuarios de almacenes eliminado(a)'); 
@@ -134,7 +144,9 @@ EXCEPTION
 		raise exception '%',v_resp;
 				        
 END;
-$BODY$
-LANGUAGE 'plpgsql' VOLATILE
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
 COST 100;
-ALTER FUNCTION "alm"."ft_almacen_usuario_ime"(integer, integer, character varying, character varying) OWNER TO postgres;
