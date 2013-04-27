@@ -813,3 +813,13 @@ select pxp.f_insert_tprocedimiento ('SAL_ITMREE_SEL', 'Consulta de datos', 'si',
 select pxp.f_insert_tprocedimiento ('SAL_ITMREE_CONT', 'Conteo de registros', 'si', '', '', 'alm.ft_item_reemplazo_sel');
 select pxp.f_insert_trol ('', 'Asistente de Almacenes', 'ALM');
 /***********************************F-DAT-AAO-ALM-76-25/04/2013*****************************************/
+
+/***********************************I-DAT-AAO-ALM-78-26/04/2013*****************************************/
+update param.tdocumento set
+  formato = 'depto-I-correlativo-periodo/gestion'
+where codigo = 'MOVIN';
+
+update param.tdocumento set
+  formato = 'depto-S-correlativo-periodo/gestion'
+where codigo = 'MOVSAL';
+/***********************************F-DAT-AAO-ALM-78-26/04/2013*****************************************/

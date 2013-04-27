@@ -1,13 +1,6 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.ft_movimiento_sel (
-  p_administrador integer,
-  p_id_usuario integer,
-  p_tabla varchar,
-  p_transaccion varchar
-)
-RETURNS varchar AS
-$body$
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_sel(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
+  RETURNS character varying AS
+$BODY$
 /***************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_movimiento_sel
@@ -24,6 +17,7 @@ DECLARE
   v_respuesta		varchar;
   v_fecha_ini		date;
   v_fecha_fin		date;
+  v_periodo_subsistema_estado varchar;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_sel';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -196,18 +190,22 @@ BEGIN
     ***********************************/
 	elsif(p_transaccion='SAL_MOVPENPER_CONT')then
     begin
-    	select peri.fecha_ini, peri.fecha_fin into v_fecha_ini, v_fecha_fin
+    	select peri.fecha_ini, peri.fecha_fin, pesu.estado into v_fecha_ini, v_fecha_fin, v_periodo_subsistema_estado
         from param.tperiodo_subsistema pesu
         inner join param.tperiodo peri on peri.id_periodo = pesu.id_periodo
         where pesu.id_periodo_subsistema = v_parametros.id_periodo_subsistema;
-        
-    	v_consulta:='
-        	SELECT count(mov.id_movimiento)
-            FROM alm.tmovimiento mov
-            WHERE mov.estado_reg = ''activo'' 
-            	and mov.estado_mov = ''borrador'' 
-                and mov.fecha_mov between ''' || v_fecha_ini || ''' and ''' || v_fecha_fin ||''' ;';
-        return v_consulta;
+
+        if (v_periodo_subsistema_estado = 'abierto') then
+		v_consulta:='
+			SELECT count(mov.id_movimiento)
+		    FROM alm.tmovimiento mov
+		    WHERE mov.estado_reg = ''activo'' 
+			and mov.estado_mov = ''borrador'' 
+			and mov.fecha_mov between ''' || v_fecha_ini || ''' and ''' || v_fecha_fin ||''' ;';
+	else 
+		v_consulta:='SELECT count(null);';
+	end if;
+	return v_consulta;
      end;
   end if;
 EXCEPTION
@@ -218,9 +216,8 @@ EXCEPTION
     v_respuesta=pxp.f_agrega_clave(v_respuesta,'procedimiento',v_nombre_funcion);
     raise exception '%',v_respuesta;
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.ft_movimiento_sel(integer, integer, character varying, character varying)
+  OWNER TO postgres;
