@@ -203,7 +203,7 @@ BEGIN
         select pesu.id_periodo, pesu.estado into v_id_periodo, v_estado_periodo_subsistema
         from param.tperiodo_subsistema pesu
 	inner join param.tperiodo peri on pesu.id_periodo = peri.id_periodo
-	where v_fecha_mov between peri.fecha_ini and peri.fecha_fin;
+	where v_fecha_mov >= peri.fecha_ini and v_fecha_mov < (peri.fecha_fin + interval '1 day');
 
 	if (v_id_periodo is null) then
 	  raise exception '%', 'El periodo correspondiente a la fecha del movimiento seleccionado no ha sido generado.';
@@ -228,7 +228,7 @@ BEGIN
           v_contador = v_contador + 1;
             
           --Verificamos que la cantidad no sea nula y que la cantidad requerida no sea mayor que el saldo 
-            v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, v_fecha_mov);
+            v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
             if (g_registros.cantidad_item is null or g_registros.cantidad_item < 0) then
               v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener cantidad registrada igual o mayor a cero';
             elseif (v_tipo_mov = 'salida' and g_registros.cantidad_item > v_saldo_cantidad) then
@@ -292,7 +292,7 @@ BEGIN
                     and alstock.estado_reg = 'activo';
                 
                 --RCM:
-                v_cant_aux = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, v_fecha_mov);
+                v_cant_aux = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
                 if g_registros.id_item = 65 then
                   
                 end if;
@@ -314,7 +314,7 @@ BEGIN
                 
                 select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
                     into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
-                from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad);
+                from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad, date(v_fecha_mov));
                 
                 --rcm
                 raise notice 'item: %, costo_valoraro: %, cantidad valorada: %',g_registros.id_item,v_costo_valorado,v_cantidad_valorada;
@@ -346,7 +346,7 @@ BEGIN
                 WHILE (v_saldo_cantidad > 0) LOOP
                   select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
                       into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
-                    from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad);
+                    from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad, date(v_fecha_mov));
                     
                     --Se descuenta la cantidad valorada del detalle valorado que se utilizo en la valoracion
                     update alm.tmovimiento_det_valorado detval set
@@ -500,7 +500,7 @@ BEGIN
                 where movdet.id_movimiento = v_parametros.id_movimiento
                     and movdet.estado_reg = 'activo'
             ) LOOP
-              v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, v_fecha_mov);
+              v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
                 select 
                   almstock.cantidad_alerta_amarilla,
                     almstock.cantidad_alerta_roja,
