@@ -7,27 +7,29 @@
  *@description: DAO para los reportes del sistema de almacenes
  */
 
-class MODMovimiento extends MODbase {
+class MODReporte extends MODbase {
 
     function __construct(CTParametro $pParam) {
         parent::__construct($pParam);
     }
 
     function listarItemsPorAlmacenFecha() {
-        $this->procedimiento = 'alm.ft_reportes_sel';
+        $this->procedimiento = 'alm.ft_reporte_sel';
         $this->transaccion = 'SAL_REPEXIST_SEL';
         $this->tipo_procedimiento = 'SEL';
 
         $this->setParametro('id_almacen', 'id_almacen', 'integer');
         $this->setParametro('fecha_hasta', 'fecha_hasta', 'date');
+        $this->setParametro('all_items', 'all_items', 'varchar');
+        $this->setParametro('id_items', 'id_items', 'varchar');
         
+        $this->captura('id_item', 'integer');
         $this->captura('codigo', 'varchar');
         $this->captura('nombre', 'varchar');
         $this->captura('unidad_medida', 'varchar');
-        $this->captura('nombre_clasificacion', 'varchar');
+        $this->captura('clasificacion', 'varchar');
         $this->captura('cantidad', 'numeric');
-        $this->captura('costo_unitario', 'numeric');
-        $this->captura('costo_total', 'numeric');
+        $this->captura('costo', 'numeric');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

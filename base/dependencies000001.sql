@@ -405,3 +405,45 @@ select pxp.f_insert_trol_procedimiento_gui ('Asistente de Almacenes', 'PM_ALARMC
 select pxp.f_insert_trol_procedimiento_gui ('Asistente de Almacenes', 'PM_ALARM_SEL', 'MOV.2');
 select pxp.f_insert_trol_procedimiento_gui ('Asistente de Almacenes', 'SAL_MOV_ELI', 'MOV');
 /***********************************F-DEP-AAO-ALM-76-23/04/2013*****************************************/
+
+/***********************************I-DEP-AAO-ALM-56-03/05/2013*****************************************/
+select pxp.f_insert_testructura_gui ('REPOR', 'ALM');
+select pxp.f_insert_testructura_gui ('REPEXIST', 'REPOR');
+select pxp.f_insert_testructura_gui ('ALREMA.3', 'ALREMA');
+select pxp.f_insert_testructura_gui ('ALREMA.3.1', 'ALREMA.3');
+select pxp.f_insert_testructura_gui ('ALCLMA.1.3', 'ALCLMA.1');
+select pxp.f_insert_testructura_gui ('ALCLMA.1.3.1', 'ALCLMA.1.3');
+select pxp.f_insert_tprocedimiento_gui ('PM_UME_SEL', 'ALREMA', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_UME_INS', 'ALREMA.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_UME_MOD', 'ALREMA.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_UME_ELI', 'ALREMA.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_UME_SEL', 'ALREMA.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CATCMB_SEL', 'ALREMA.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SEG_SUBSIS_SEL', 'ALREMA.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_PACATI_SEL', 'ALREMA.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CAT_INS', 'ALREMA.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CAT_MOD', 'ALREMA.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CAT_ELI', 'ALREMA.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CAT_SEL', 'ALREMA.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CATCMB_SEL', 'ALREMA.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_UME_INS', 'ALCLMA.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_UME_MOD', 'ALCLMA.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_UME_ELI', 'ALCLMA.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_UME_SEL', 'ALCLMA.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CATCMB_SEL', 'ALCLMA.1.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SEG_SUBSIS_SEL', 'ALCLMA.1.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_PACATI_SEL', 'ALCLMA.1.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CAT_INS', 'ALCLMA.1.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CAT_MOD', 'ALCLMA.1.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CAT_ELI', 'ALCLMA.1.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CAT_SEL', 'ALCLMA.1.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_CATCMB_SEL', 'ALCLMA.1.3.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ALM_SEL', 'REPEXIST', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITEMNOTBASE_SEL', 'REPEXIST', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_REPEXIST_SEL', 'REPEXIST', 'no');
+select pxp.f_insert_tgui_rol ('REPOR', 'Administrador Almacenes');
+select pxp.f_insert_tgui_rol ('REPEXIST', 'Administrador Almacenes');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ALM_SEL', 'REPEXIST');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ITEMNOTBASE_SEL', 'REPEXIST');
+select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_REPEXIST_SEL', 'REPEXIST');
+/***********************************F-DEP-AAO-ALM-56-03/05/2013*****************************************/

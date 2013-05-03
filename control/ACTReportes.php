@@ -6,7 +6,10 @@
  * @date    21-09-2012
  * @descripcion Clase que recibe los parametros enviados por la vista para luego ser mandadas a la capa Modelo
  */
-
+require_once (dirname(__FILE__) . '/../reportes/pxpReport/ReportWriter.php');
+require_once (dirname(__FILE__) . '/../reportes/RExistencias.php');
+require_once (dirname(__FILE__) . '/../reportes/pxpReport/DataSource.php');
+ 
 class ACTReportes extends ACTbase {
 
     function reporteExistencias() {
@@ -16,25 +19,24 @@ class ACTReportes extends ACTbase {
             //Obtener el listado de los items ordenados por clasificacion y por fecha de un determinado almacen:
         $idAlmacen = $this->objParam->getParametro('id_almacen');
         $fechaHasta = $this->objParam->getParametro('fecha_hasta');
-        $this->objParam->addParametroConsulta('filtro', ' movdet.id_movimiento = ' . $idMovimiento);
-        $this->objParam->addParametroConsulta('filtro', ' mov.fecha_mov = ' . $idMovimiento);
         $this->objParam->addParametroConsulta('ordenacion', 'cla.id_clasificacion');
         $this->objParam->addParametroConsulta('dir_ordenacion', 'asc');
         $this->objParam->addParametroConsulta('cantidad', 10000);
         $this->objParam->addParametroConsulta('puntero', 0);
         $this->objFunc = $this->create('MODReporte');
-        $resultRepExistencias = $this->objFunc->reporteExistencias($this->objParam);
-
+        $resultRepExistencias = $this->objFunc->listarItemsPorAlmacenFecha($this->objParam);
+        
+        $dataSource = new DataSource();
         $resultData = $resultRepExistencias->getDatos();
-        $lastNombreClasificacion = $resultData[0]['nombre_clasificacion'];
+        $lastNombreClasificacion = $resultData[0]['clasificacion'];
         $dataSourceArray = Array();
         $dataSourceClasificacion = new DataSource();
         $dataSetClasificacion = Array();
         $totalCostoClasificacion = 0;
         $mainDataSet = array();
         $costoTotal = 0;
-        foreach ($resultRepMovimiento->getDatos() as $row) {
-            if ($row['nombre_clasificacion'] != $lastNombreClasificacion) {
+        foreach ($resultData as $row) {
+            if ($row['clasificacion'] != $lastNombreClasificacion) {
                 $costoTotal += $totalCostoClasificacion;
                 $mainDataSet[] = array("nombreClasificacion" => $lastNombreClasificacion, "totalClasificacion" => $totalCostoClasificacion);
                 $dataSourceClasificacion->setDataSet($dataSetClasificacion);
@@ -42,13 +44,13 @@ class ACTReportes extends ACTbase {
                 $dataSourceClasificacion->putParameter('nombreClasificacion', $lastNombreClasificacion);
                 $dataSourceArray[] = $dataSourceClasificacion;
 
-                $lastNombreClasificacion = $row['nombre_clasificacion'];
+                $lastNombreClasificacion = $row['clasificacion'];
                 $dataSourceClasificacion = new DataSource();
                 $dataSetClasificacion = Array();
                 $totalCostoClasificacion = 0;
             }
             $dataSetClasificacion[] = $row;
-            $totalCostoClasificacion += $row['costo_total'];
+            $totalCostoClasificacion += $row['costo'];
         }
         $costoTotal += $totalCostoClasificacion;
         $mainDataSet[] = array("nombreClasificacion" => $lastNombreClasificacion, "totalClasificacion" => $totalCostoClasificacion);
@@ -56,6 +58,24 @@ class ACTReportes extends ACTbase {
         $dataSourceClasificacion->putParameter('totalCosto', $totalCostoClasificacion);
         $dataSourceClasificacion->putParameter('nombreClasificacion', $lastNombreClasificacion);
         $dataSourceArray[] = $dataSourceClasificacion;
+        
+        $dataSource->putParameter('clasificacionDataSources', $dataSourceArray);
+        $dataSource->putParameter('costoTotal', $costoTotal);
+        $dataSource->putParameter('fechaHasta', $fechaHasta);
+        $dataSource->setDataSet($mainDataSet);
+        
+        $reporte = new RExistencias();
+        
+        $reporte->setDataSource($dataSource);
+        $nombreArchivo = 'Existencias.pdf';
+        $reportWriter = new ReportWriter($reporte, dirname(__FILE__) . '/../../reportes_generados/' . $nombreArchivo);
+        $reportWriter->writeReport(ReportWriter::PDF);
+
+        $mensajeExito = new Mensaje();
+        $mensajeExito->setMensaje('EXITO', 'Reporte.php', 'Reporte generado', 'Se generó con éxito el reporte: ' . $nombreArchivo, 'control');
+        $mensajeExito->setArchivoGenerado($nombreArchivo);
+        $this->res = $mensajeExito;
+        $this->res->imprimirRespuesta($this->res->generarJson());
     }
 }
 ?>

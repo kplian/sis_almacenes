@@ -823,3 +823,16 @@ update param.tdocumento set
   formato = 'depto-S-correlativo-periodo/gestion'
 where codigo = 'MOVSAL';
 /***********************************F-DAT-AAO-ALM-78-26/04/2013*****************************************/
+
+/***********************************I-DAT-AAO-ALM-56-03/05/2013*****************************************/
+select pxp.f_insert_tgui ('Reportes', 'Reportes', 'REPOR', 'si', 3, '', 2, '', '', 'ALM');
+select pxp.f_insert_tgui ('Reporte de Existencias', 'Reporte de Existencias', 'REPEXIST', 'si', 1, 'sis_almacenes/vista/vista_reportes/GenerarReporteExistencias.php', 3, '', 'GenerarReporteExistencias', 'ALM');
+select pxp.f_insert_tgui ('Unidades de Medida', 'Unidades de Medida', 'ALREMA.3', 'no', 0, 'sis_parametros/vista/unidad_medida/UnidadMedida.php', 4, '', 'UnidadMedida', 'ALM');
+select pxp.f_insert_tgui ('Catálogo', 'Catálogo', 'ALREMA.3.1', 'no', 0, 'sis_parametros/vista/catalogo/Catalogo.php', 5, '', 'Catalogo', 'ALM');
+select pxp.f_insert_tgui ('Unidades de Medida', 'Unidades de Medida', 'ALCLMA.1.3', 'no', 0, 'sis_parametros/vista/unidad_medida/UnidadMedida.php', 5, '', 'UnidadMedida', 'ALM');
+select pxp.f_insert_tgui ('Catálogo', 'Catálogo', 'ALCLMA.1.3.1', 'no', 0, 'sis_parametros/vista/catalogo/Catalogo.php', 6, '', 'Catalogo', 'ALM');
+select pxp.f_insert_tfuncion ('alm.ft_reporte_sel', 'Funcion para tabla     ', 'ALM');
+select pxp.f_insert_tprocedimiento ('SAL_REPEXIST_SEL', 'Retorna las existencias de n items de un almacen.', 'si', '', '', 'alm.ft_reporte_sel');
+select pxp.f_insert_tprocedimiento ('SAL_REPEXIST_CONT', 'Conteo de registros', 'si', '', '', 'alm.ft_reporte_sel');
+
+/***********************************F-DAT-AAO-ALM-56-03/05/2013*****************************************/
