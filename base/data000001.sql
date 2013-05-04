@@ -836,3 +836,13 @@ select pxp.f_insert_tprocedimiento ('SAL_REPEXIST_SEL', 'Retorna las existencias
 select pxp.f_insert_tprocedimiento ('SAL_REPEXIST_CONT', 'Conteo de registros', 'si', '', '', 'alm.ft_reporte_sel');
 
 /***********************************F-DAT-AAO-ALM-56-03/05/2013*****************************************/
+
+/***********************************I-DAT-AAO-ALM-52-06/05/2013*****************************************/
+select pxp.f_update_table_sequence('alm', 'tmovimiento_tipo');
+
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "fecha_reg", "estado_reg", "codigo", "nombre", "tipo", "read_only")
+VALUES (1, E'2013-02-19 19:01:02.292', E'activo', E'INAJUST', E'Ingreso por Ajuste de Inventario', E'ingreso', TRUE);
+
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "fecha_reg", "estado_reg", "codigo", "nombre", "tipo", "read_only")
+VALUES (1, E'2013-02-19 19:01:02.292', E'activo', E'SALAJUST', E'Salida por Ajuste de Inventario', E'salida', TRUE);
+/***********************************F-DAT-AAO-ALM-52-06/05/2013*****************************************/

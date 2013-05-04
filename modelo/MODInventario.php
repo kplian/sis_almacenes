@@ -170,5 +170,18 @@ class MODInventario extends MODbase {
 
         return $this->respuesta;
     }
+    
+    function nivelarDiferenciasInventario() {
+        $this->procedimiento = 'alm.ft_inventario_ime';
+        $this->transaccion = 'SAL_INVNIVMOV_MOD';
+        $this->tipo_procedimiento = 'IME';
+
+        $this->setParametro('id_inventario', 'id_inventario', 'int4');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
 }
 ?>

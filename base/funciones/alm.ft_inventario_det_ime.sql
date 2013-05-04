@@ -1,13 +1,6 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.ft_inventario_det_ime (
-  p_administrador integer,
-  p_id_usuario integer,
-  p_tabla varchar,
-  p_transaccion varchar
-)
-RETURNS varchar AS
-$body$
+CREATE OR REPLACE FUNCTION alm.ft_inventario_det_ime(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
+  RETURNS character varying AS
+$BODY$
 /**************************************************************************
  SISTEMA:		Sistema de Almacenes
  FUNCION: 		alm.ft_inventario_det_ime
@@ -93,7 +86,7 @@ BEGIN
 
 		begin
 			--Sentencia de la modificacion
-            v_saldo_fisico = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_parametros.id_almacen);
+            v_saldo_fisico = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_parametros.id_almacen, CURRENT_DATE);
             
 			update alm.tinventario_det set
                 id_item = v_parametros.id_item,
@@ -154,9 +147,8 @@ EXCEPTION
 		raise exception '%',v_resp;
 				        
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.ft_inventario_det_ime(integer, integer, character varying, character varying)
+  OWNER TO postgres;

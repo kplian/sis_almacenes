@@ -77,5 +77,11 @@ class ACTInventario extends ACTbase {
         $this->res = $this->objFunc->revisarDiferenciasInventario($this->objParam);
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+    
+    function nivelarDiferenciasInventario() {
+        $this->objFunc = $this->create('MODInventario');
+        $this->res = $this->objFunc->nivelarDiferenciasInventario($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 }
 ?>
