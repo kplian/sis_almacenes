@@ -7,7 +7,7 @@ $BODY$
  DESCRIPCION:   	Función que devuelve el id_movimiento_tipo en función al código del tipo mov
  AUTOR: 		Ariel Ayaviri Omonte
  FECHA:	        	06/05/2013
- COMENTARIOS:	
+ COMENTARIOS:	 revision
 ***************************************************************************/
 
 DECLARE
