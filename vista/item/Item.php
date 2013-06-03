@@ -152,7 +152,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				allowBlank : true,
 				width : '100%',
 				gwidth : 100,
-				maxLength : 10
+				maxLength : 30
 			},
 			type : 'TextField',
 			filters : {
