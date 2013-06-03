@@ -112,7 +112,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				fieldLabel : 'Fecha Movimiento',
 				allowBlank : false,
 				gwidth : 100,
-				format : 'd-m-Y',
+				format : 'd/m/Y',
 				renderer : function(value, p, record) {
 					return value ? value.dateFormat('d/m/Y h:i:s') : ''
 				}

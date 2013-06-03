@@ -1,13 +1,6 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.ft_inventario_ime (
-  p_administrador integer,
-  p_id_usuario integer,
-  p_tabla varchar,
-  p_transaccion varchar
-)
-RETURNS varchar AS
-$body$
+CREATE OR REPLACE FUNCTION alm.ft_inventario_ime(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
+  RETURNS character varying AS
+$BODY$
 /**************************************************************************
  SISTEMA:		Sistema de Almacenes
  FUNCION: 		alm.ft_inventario_ime
@@ -37,6 +30,8 @@ DECLARE
     v_cont					integer;
     g_registros				record;
     v_boolean 				boolean;
+    v_id_movimiento			integer;
+    v_id_movimiento_det		integer;
 			    
 BEGIN
 
@@ -341,20 +336,151 @@ BEGIN
         	-- Se actualizan los saldos de los items del sistema.
         	v_boolean = alm.f_actualizar_saldos_inventario(v_parametros.id_inventario);
             
-            --se obtiene la cantidad de registros con diferencias
-        	select count(invdet.id_inventario_det) into v_cont
-            from alm.tinventario_det invdet
-            where invdet.id_inventario = v_parametros.id_inventario
-            	and invdet.diferencia <> 0;
-        	   
+            --se se crea un movimiento para ingreso de las existencias faltantes
+	    FOR g_registros in (
+                select
+                    invdet.id_item,
+                    invdet.diferencia,
+                    inv.id_almacen
+                from alm.tinventario_det invdet
+                inner join alm.tinventario inv on inv.id_inventario = invdet.id_inventario
+                where invdet.id_inventario = v_parametros.id_inventario
+                	and invdet.diferencia < 0
+            ) LOOP
+            	if (v_id_movimiento is null) then
+                    insert into alm.tmovimiento (
+                        id_usuario_reg,
+                        fecha_reg, 
+                        estado_reg,
+                        id_movimiento_tipo, 
+                        id_almacen,
+                        fecha_mov,
+                        descripcion,
+                        observaciones,
+                        estado_mov
+                    ) values (
+                        p_id_usuario,
+                        now(),
+                        'activo',
+                        alm.f_get_id_tipo_mov_por_codigo('INAJUST'),
+                        g_registros.id_almacen,
+                        date(now()) + interval '12 hours',
+                        'Ingreso por ajuste de inventario',
+                        'Generado automáticamente',
+                        'borrador'
+                    ) RETURNING id_movimiento into v_id_movimiento;
+                end if;
+                
+                insert into alm.tmovimiento_det (
+                    id_usuario_reg,
+                    fecha_reg,
+                    estado_reg,
+                    id_movimiento,
+                    id_item,
+                    cantidad
+                ) VALUES (
+                    p_id_usuario,
+                    now(),
+                    'activo',
+                    v_id_movimiento,
+                    g_registros.id_item,
+                    g_registros.diferencia * -1
+                ) RETURNING id_movimiento_det into v_id_movimiento_det;
+                
+                insert into alm.tmovimiento_det_valorado (
+                    id_usuario_reg,
+                    fecha_reg,
+                    estado_reg,
+                    id_movimiento_det,
+                    cantidad
+                ) VALUES (
+                    p_id_usuario,
+                    now(),
+                    'activo',
+                    v_id_movimiento_det,
+                    g_registros.diferencia * -1
+                );
+                
+            END LOOP;
+            
+            v_id_movimiento = null;
+
+	    --se se crea un movimiento para la salida de las existencias sobrantes
+	    FOR g_registros in (
+                select
+                    invdet.id_item,
+                    invdet.diferencia,
+                    inv.id_almacen
+                from alm.tinventario_det invdet
+                inner join alm.tinventario inv on inv.id_inventario = invdet.id_inventario
+                where invdet.id_inventario = v_parametros.id_inventario
+                	and invdet.diferencia > 0
+            ) LOOP
+            	if (v_id_movimiento is null) then
+                    insert into alm.tmovimiento (
+                        id_usuario_reg,
+                        fecha_reg, 
+                        estado_reg,
+                        id_movimiento_tipo, 
+                        id_almacen,
+                        fecha_mov,
+                        descripcion,
+                        observaciones,
+                        estado_mov
+                    ) values (
+                        p_id_usuario,
+                        now(),
+                        'activo',
+                        alm.f_get_id_tipo_mov_por_codigo('SALAJUST'),
+                        g_registros.id_almacen,
+                        date(now()) + interval '12 hours',
+                        'Salida por ajuste de inventario',
+                        'Generado automáticamente',
+                        'borrador'
+                    ) RETURNING id_movimiento into v_id_movimiento;
+                end if;
+                
+                insert into alm.tmovimiento_det (
+                    id_usuario_reg,
+                    fecha_reg,
+                    estado_reg,
+                    id_movimiento,
+                    id_item,
+                    cantidad
+                ) VALUES (
+                    p_id_usuario,
+                    now(),
+                    'activo',
+                    v_id_movimiento,
+                    g_registros.id_item,
+                    g_registros.diferencia
+                ) RETURNING id_movimiento_det into v_id_movimiento_det;
+                
+                insert into alm.tmovimiento_det_valorado (
+                    id_usuario_reg,
+                    fecha_reg,
+                    estado_reg,
+                    id_movimiento_det,
+                    cantidad
+                ) VALUES (
+                    p_id_usuario,
+                    now(),
+                    'activo',
+                    v_id_movimiento_det,
+                    g_registros.diferencia
+                );
+                
+            END LOOP;
+            
+            v_id_movimiento = null;
+
             --Definicion de la respuesta
-            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Revision de diferencias en el inventario'); 
-            v_resp = pxp.f_agrega_clave(v_resp,'cant_diferencias',v_cont::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Insercion de ajustes realizado'); 
             
             --Devuelve la respuesta
             return v_resp;
 
-		end;
+	end;
     
     /*********************************    
  	#TRANSACCION:  'SAL_INVACTSALD_MOD'
@@ -395,9 +521,8 @@ EXCEPTION
 		raise exception '%',v_resp;
 				        
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.ft_inventario_ime(integer, integer, character varying, character varying)
+  OWNER TO postgres;

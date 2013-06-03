@@ -1,11 +1,6 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.f_get_saldo_valorado_item (
-  p_id_item integer,
-  p_id_almacen integer
-)
-RETURNS numeric AS
-$body$
+CREATE OR REPLACE FUNCTION alm.f_get_saldo_valorado_item(p_id_item integer, p_id_almacen integer, p_fecha_hasta date)
+  RETURNS numeric AS
+$BODY$
 /**************************************************************************
  SISTEMA:		SISTEMA DE ALMACENES
  FUNCION: 		alm.f_get_saldo_valorado_item
@@ -25,6 +20,7 @@ DECLARE
     v_saldo_valorado	numeric;
 
 BEGIN
+    p_fecha_hasta = p_fecha_hasta + interval '1 day';
     v_nombre_funcion = 'alm.f_get_saldo_valorado_item';
     
     select sum(detval.cantidad * detval.costo_unitario) into v_ingresos
@@ -36,7 +32,8 @@ BEGIN
         and movtip.tipo = 'ingreso'
         and movdet.id_item = p_id_item
         and mov.estado_mov = 'finalizado'
-        and mov.id_almacen = p_id_almacen;
+        and mov.id_almacen = p_id_almacen
+        and mov.fecha_mov < p_fecha_hasta;
     
     select sum(detval.cantidad * detval.costo_unitario) into v_salidas
     from alm.tmovimiento_det_valorado detval
@@ -47,7 +44,8 @@ BEGIN
         and movtip.tipo = 'salida'
         and movdet.id_item = p_id_item
         and mov.estado_mov = 'finalizado'
-        and mov.id_almacen = p_id_almacen;
+        and mov.id_almacen = p_id_almacen
+        and mov.fecha_mov < p_fecha_hasta;
     
     if (v_ingresos is null) then
     	v_saldo_valorado = 0;
@@ -66,9 +64,8 @@ EXCEPTION
 			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 			raise exception '%',v_resp;
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.f_get_saldo_valorado_item(integer, integer, date)
+  OWNER TO postgres;

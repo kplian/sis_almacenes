@@ -17,7 +17,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.init();
 			this.grid.getTopToolbar().disable();
 			this.grid.getBottomToolbar().disable();
-			this.store.removeAll();
 		},
 		Atributos : [{
 			config : {

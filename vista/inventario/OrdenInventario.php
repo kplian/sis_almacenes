@@ -119,6 +119,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			});
 		},
 		successValidarDiferencias : function(resp, a) {
+		    var rec = this.sm.getSelected();
+            var data = rec.data;
+            var global = this;
 			var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
 			if (parseInt(reg.ROOT.datos.cant_diferencias) > 0) {
 				Ext.Msg.confirm('Confirmación', 'El inventario seleccionado tiene diferencias entre los datos del sistema y los datos reales. \n ¿Desea proseguir con la finalización?', function(btn) {
@@ -136,16 +139,16 @@ header("content-type: text/javascript; charset=UTF-8");
 					} else if (btn == 'no') {
 						Ext.Msg.confirm('Confirmación', '¿Desea registrar automáticamente los movimientos necesarios para igualar las diferencias?', function(btn) {
 						    if (btn == "yes") {
-						        // Ext.Ajax.request({
-                                    // url : '../../sis_almacenes/control/Inventario/nivelarDiferencias',
-                                    // params : {
-                                        // 'id_inventario' : data.id_inventario,
-                                    // },
-                                    // success : global.successSave,
-                                    // failure : global.conexionFailure,
-                                    // timeout : global.timeout,
-                                    // scope : global
-                                // });
+						        Ext.Ajax.request({
+                                    url : '../../sis_almacenes/control/Inventario/nivelarDiferenciasInventario',
+                                    params : {
+                                        'id_inventario' : data.id_inventario,
+                                    },
+                                    success : global.successSave,
+                                    failure : global.conexionFailure,
+                                    timeout : global.timeout,
+                                    scope : global
+                                });
 						    }
 						});					}
 				});

@@ -1,11 +1,6 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.f_get_saldo_fisico_item (
-  p_id_item integer,
-  p_id_almacen integer
-)
-RETURNS numeric AS
-$body$
+CREATE OR REPLACE FUNCTION alm.f_get_saldo_fisico_item(p_id_item integer, p_id_almacen integer, p_fecha_hasta date)
+  RETURNS numeric AS
+$BODY$
 /**************************************************************************
  SISTEMA:		SISTEMA DE ALMACENES
  FUNCION: 		alm.f_get_saldo_fisico_item
@@ -28,6 +23,7 @@ DECLARE
     v_existencias		numeric;
 
 BEGIN
+    p_fecha_hasta = p_fecha_hasta + interval '1 day';
     v_nombre_funcion = 'alm.f_get_saldo_fisico_item';
     v_item_saldo := 0;
     
@@ -37,9 +33,10 @@ BEGIN
     inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
     where movdet.estado_reg = 'activo'
         and movtip.tipo like '%ingreso%'
-		and movdet.id_item = p_id_item
+	and movdet.id_item = p_id_item
         and mov.estado_mov = 'finalizado'
-        and mov.id_almacen = p_id_almacen;
+        and mov.id_almacen = p_id_almacen
+        and mov.fecha_mov < p_fecha_hasta;
     
     select coalesce(sum(movdet.cantidad),0) into v_salidas
     from alm.tmovimiento_det movdet
@@ -49,7 +46,8 @@ BEGIN
         and movtip.tipo like '%salida%'
         and movdet.id_item = p_id_item
         and mov.estado_mov = 'finalizado'
-        and mov.id_almacen = p_id_almacen;
+        and mov.id_almacen = p_id_almacen
+        and mov.fecha_mov < p_fecha_hasta;
     
     if (v_ingresos is null) then
     	v_existencias = 0;
@@ -68,9 +66,8 @@ EXCEPTION
 			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 			raise exception '%',v_resp;
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.f_get_saldo_fisico_item(integer, integer, date)
+  OWNER TO postgres;

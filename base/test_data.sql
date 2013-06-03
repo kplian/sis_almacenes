@@ -79,36 +79,36 @@ VALUES (1, NULL, E'2012-12-29 05:30:30.025', E'2012-12-29 05:30:30.025', E'activ
 
 -- Movimiento_tipo
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-19 19:13:12.927', E'2013-02-19 19:13:12.927', E'activo', 5, E'INCOMP', E'Ingreso por Compra', E'ingreso');
+VALUES (1, NULL, E'2013-02-19 19:13:12.927', E'2013-02-19 19:13:12.927', E'activo', 7, E'INCOMP', E'Ingreso por Compra', E'ingreso');
 
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-19 19:13:26.057', E'2013-02-19 19:13:26.057', E'activo', 6, E'SALVENT', E'Salida por Venta', E'salida');
+VALUES (1, NULL, E'2013-02-19 19:13:26.057', E'2013-02-19 19:13:26.057', E'activo', 8, E'SALVENT', E'Salida por Venta', E'salida');
 
 -- Movimiento
 
 INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
-VALUES (1, NULL, E'2013-02-26 20:15:28.267', E'2013-02-26 20:15:28.267', E'activo', 1, 5, 1, NULL, NULL, NULL, E'2013-02-17 00:01:00', E'ALM01-I-2-2/2013', E'', E'', E'finalizado', NULL);
+VALUES (1, NULL, E'2013-02-26 20:15:28.267', E'2013-02-26 20:15:28.267', E'activo', 1, 7, 1, NULL, NULL, NULL, E'2013-02-17 00:01:00', E'ALM01-I-2-2/2013', E'', E'', E'finalizado', NULL);
 
 INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
-VALUES (1, NULL, E'2013-02-26 21:51:13.431', E'2013-02-26 21:51:13.431', E'activo', 2, 5, 1, NULL, NULL, NULL, E'2013-02-18 00:01:00', E'ALM01-I-2-3/2013', E'', E'', E'finalizado', NULL);
+VALUES (1, NULL, E'2013-02-26 21:51:13.431', E'2013-02-26 21:51:13.431', E'activo', 2, 7, 1, NULL, NULL, NULL, E'2013-02-18 00:01:00', E'ALM01-I-2-3/2013', E'', E'', E'finalizado', NULL);
 
 INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
-VALUES (1, NULL, E'2013-02-26 21:58:48.791', E'2013-02-26 21:58:48.791', E'activo', 3, 6, 1, NULL, 1, NULL, E'2013-02-19 00:01:00', E'ALM01-S-2-2/2013', E'', E'', E'finalizado', NULL);
+VALUES (1, NULL, E'2013-02-26 21:58:48.791', E'2013-02-26 21:58:48.791', E'activo', 3, 8, 1, NULL, 1, NULL, E'2013-02-19 00:01:00', E'ALM01-S-2-2/2013', E'', E'', E'finalizado', NULL);
 
 INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
-VALUES (1, NULL, E'2013-02-26 22:04:05.055', E'2013-02-26 22:04:05.055', E'activo', 4, 6, 1, NULL, 2, NULL, E'2013-02-20 00:01:00', E'ALM01-S-2-5/2013', E'', E'', E'finalizado', NULL);
+VALUES (1, NULL, E'2013-02-26 22:04:05.055', E'2013-02-26 22:04:05.055', E'activo', 4, 8, 1, NULL, 2, NULL, E'2013-02-20 00:01:00', E'ALM01-S-2-5/2013', E'', E'', E'finalizado', NULL);
 
 INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
-VALUES (1, NULL, E'2013-02-26 22:15:08.220', E'2013-02-26 22:15:08.220', E'activo', 5, 5, 1, NULL, NULL, NULL, E'2013-02-21 00:01:00', E'ALM01-I-2-4/2013', E'', E'', E'finalizado', NULL);
+VALUES (1, NULL, E'2013-02-26 22:15:08.220', E'2013-02-26 22:15:08.220', E'activo', 5, 7, 1, NULL, NULL, NULL, E'2013-02-21 00:01:00', E'ALM01-I-2-4/2013', E'', E'', E'finalizado', NULL);
 
 INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
-VALUES (1, NULL, E'2013-02-26 22:16:10.313', E'2013-02-26 22:16:10.313', E'activo', 6, 5, 1, NULL, NULL, NULL, E'2013-02-22 00:01:00', E'ALM01-I-2-5/2013', E'', E'', E'finalizado', NULL);
+VALUES (1, NULL, E'2013-02-26 22:16:10.313', E'2013-02-26 22:16:10.313', E'activo', 6, 7, 1, NULL, NULL, NULL, E'2013-02-22 00:01:00', E'ALM01-I-2-5/2013', E'', E'', E'finalizado', NULL);
 
 INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
-VALUES (1, NULL, E'2013-02-26 22:17:16.003', E'2013-02-26 22:17:16.003', E'activo', 7, 6, 1, NULL, 2, NULL, E'2013-02-23 00:01:00', E'ALM01-S-2-6/2013', E'', E'', E'finalizado', NULL);
+VALUES (1, NULL, E'2013-02-26 22:17:16.003', E'2013-02-26 22:17:16.003', E'activo', 7, 8, 1, NULL, 2, NULL, E'2013-02-23 00:01:00', E'ALM01-S-2-6/2013', E'', E'', E'finalizado', NULL);
 
 INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
-VALUES (1, NULL, E'2013-02-26 22:18:41.026', E'2013-02-26 22:18:41.026', E'activo', 8, 6, 1, NULL, 2, NULL, E'2013-02-24 00:01:00', E'ALM01-S-2-9/2013', E'', E'', E'finalizado', NULL);
+VALUES (1, NULL, E'2013-02-26 22:18:41.026', E'2013-02-26 22:18:41.026', E'activo', 8, 8, 1, NULL, 2, NULL, E'2013-02-24 00:01:00', E'ALM01-S-2-9/2013', E'', E'', E'finalizado', NULL);
 
 -- Movimiento_det
 
@@ -310,17 +310,3 @@ SELECT pg_catalog.setval('tmovimiento_id_movimiento_seq', 7, true);
 -- Data for sequence alm.tmovimiento_det_id_movimiento_det_seq (OID = 1409081)
 --
 SELECT pg_catalog.setval('tmovimiento_det_id_movimiento_det_seq', 11, true);*/
-
----Temporal
-
-select pxp.f_insert_tgui ('Inventario', 'Inventario', 'INVMAIN', 'si', 1, 'sis_almacenes/vista/inventario/InventarioBase.php', 5, '', 'InventarioBase', 'ALM');
-select pxp.f_insert_testructura_gui ('INVMAIN', 'ALMAIN');
-
-select pxp.f_insert_tgui ('Orden Inventario', 'Orden Inventario', 'ORDINV', 'si', 1, 'sis_almacenes/vista/inventario/OrdenInventario.php', 5, '', 'OrdenInventario', 'ALM');
-select pxp.f_insert_testructura_gui ('ORDINV', 'ALMAIN');
-
-select pxp.f_insert_tgui ('Ejecucion Inventario', 'Ejecucion Inventario', 'EJEINV', 'si', 1, 'sis_almacenes/vista/inventario/EjecucionInventario.php', 5, '', 'EjecucionInventario', 'ALM');
-select pxp.f_insert_testructura_gui ('EJEINV', 'ALMAIN');
-
-select pxp.f_insert_tgui ('Periodo', 'Periodo', 'PERI', 'si', 2, 'sis_almacenes/vista/periodo_almacenes/PeriodoAlmacenes.php', 2, '', 'PeriodoAlmacenes', 'ALM');
-select pxp.f_insert_testructura_gui ('PERI', 'ALDAGE');

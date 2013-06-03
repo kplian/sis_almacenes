@@ -1,13 +1,6 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.ft_movimiento_ime (
-  p_administrador integer,
-  p_id_usuario integer,
-  p_tabla varchar,
-  p_transaccion varchar
-)
-RETURNS varchar AS
-$body$
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_ime(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
+  RETURNS character varying AS
+$BODY$
 /**************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_movimiento_ime
@@ -61,6 +54,8 @@ DECLARE
   v_descripcion_alerta      varchar;
   v_mostrar_alerts        boolean;
   v_cant_aux            numeric;
+  v_id_periodo		integer;
+  v_estado_periodo_subsistema	varchar;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_ime';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -204,8 +199,18 @@ BEGIN
           raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
         end if;
 
-        --TODO: revisar si el periodo esta abierto.
-        
+        --Se revisa si el periodo esta abierto.
+        select pesu.id_periodo, pesu.estado into v_id_periodo, v_estado_periodo_subsistema
+        from param.tperiodo_subsistema pesu
+	inner join param.tperiodo peri on pesu.id_periodo = peri.id_periodo
+	where v_fecha_mov >= peri.fecha_ini and v_fecha_mov < (peri.fecha_fin + interval '1 day');
+
+	if (v_id_periodo is null) then
+	  raise exception '%', 'El periodo correspondiente a la fecha del movimiento seleccionado no ha sido generado.';
+	elseif (v_estado_periodo_subsistema = 'cerrado') then
+	  raise exception '%', 'El periodo correspondiente a la fecha del movimiento seleccionado se encuentra cerrado.';
+	end if;
+
         -- Busqueda de errores en las dependencias del movimiento
         v_errores = '';
         v_contador := 0;
@@ -223,7 +228,7 @@ BEGIN
           v_contador = v_contador + 1;
             
           --Verificamos que la cantidad no sea nula y que la cantidad requerida no sea mayor que el saldo 
-            v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen);
+            v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
             if (g_registros.cantidad_item is null or g_registros.cantidad_item < 0) then
               v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener cantidad registrada igual o mayor a cero';
             elseif (v_tipo_mov = 'salida' and g_registros.cantidad_item > v_saldo_cantidad) then
@@ -287,7 +292,7 @@ BEGIN
                     and alstock.estado_reg = 'activo';
                 
                 --RCM:
-                v_cant_aux = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen);
+                v_cant_aux = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
                 if g_registros.id_item = 65 then
                   
                 end if;
@@ -309,7 +314,7 @@ BEGIN
                 
                 select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
                     into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
-                from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad);
+                from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad, date(v_fecha_mov));
                 
                 --rcm
                 raise notice 'item: %, costo_valoraro: %, cantidad valorada: %',g_registros.id_item,v_costo_valorado,v_cantidad_valorada;
@@ -341,7 +346,7 @@ BEGIN
                 WHILE (v_saldo_cantidad > 0) LOOP
                   select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
                       into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
-                    from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad);
+                    from alm.f_get_valorado_item(g_registros.id_item, v_parametros.id_almacen, v_codigo_valoracion, v_saldo_cantidad, date(v_fecha_mov));
                     
                     --Se descuenta la cantidad valorada del detalle valorado que se utilizo en la valoracion
                     update alm.tmovimiento_det_valorado detval set
@@ -468,7 +473,7 @@ BEGIN
         update alm.tmovimiento set
           estado_mov = 'finalizado',
             fecha_mov = v_fecha_mov,
-            codigo = param.f_obtener_correlativo (v_cod_documento, NULL, NULL, v_id_depto, p_id_usuario, 'ALM', null)
+            codigo = param.f_obtener_correlativo (v_cod_documento, v_id_periodo, NULL, v_id_depto, p_id_usuario, 'ALM', null)
         where id_movimiento = v_parametros.id_movimiento;
         
         --Se actualiza el saldo fisico del detalle valorado.
@@ -495,7 +500,7 @@ BEGIN
                 where movdet.id_movimiento = v_parametros.id_movimiento
                     and movdet.estado_reg = 'activo'
             ) LOOP
-              v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen);
+              v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
                 select 
                   almstock.cantidad_alerta_amarilla,
                     almstock.cantidad_alerta_roja,
@@ -683,9 +688,8 @@ EXCEPTION
         v_respuesta = pxp.f_agrega_clave(v_respuesta,'procedimientos',v_nombre_funcion);
         raise exception '%',v_respuesta;
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION alm.ft_movimiento_ime(integer, integer, character varying, character varying)
+  OWNER TO postgres;
