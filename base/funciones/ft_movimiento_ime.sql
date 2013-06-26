@@ -57,6 +57,7 @@ DECLARE
 	v_cant_aux            			numeric;
 	v_id_periodo					integer;
 	v_estado_periodo_subsistema		varchar;
+	v_cod_almacen					varchar;
 	
 BEGIN
 
@@ -179,8 +180,8 @@ BEGIN
     	begin
 
 	      	--1.1) Verificar que el almacen esté activo
-	        select alma.nombre, alma.estado, alma.id_departamento
-	        into v_nombre_almacen, v_estado_almacen, v_id_depto
+	        select alma.nombre, alma.estado, alma.id_departamento, alma.codigo
+	        into v_nombre_almacen, v_estado_almacen, v_id_depto, v_cod_almacen
 	        from alm.talmacen alma
 	        where alma.id_almacen = v_parametros.id_almacen;
 	        
@@ -225,7 +226,7 @@ BEGIN
 	        --1.5) Búsqueda de errores en las dependencias del movimiento
 	        v_errores = '';
 	        v_contador := 0;
-	        FOR g_registros in (select 
+	        for g_registros in (select 
 					            movdet.id_item,
 					            item.nombre as nombre_item,
 					            movdet.id_movimiento_det,
@@ -233,10 +234,12 @@ BEGIN
 					            from alm.tmovimiento_det movdet
 					            inner join alm.titem item on item.id_item = movdet.id_item
 					            where movdet.estado_reg = 'activo'
-					            and movdet.id_movimiento = v_parametros.id_movimiento) LOOP
+					            and movdet.id_movimiento = v_parametros.id_movimiento) loop
 				v_contador = v_contador + 1;
+				
 	          	--Verificamos que la cantidad no sea nula y que la cantidad requerida no sea mayor que el saldo 
 	            v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
+	            
 	            if (g_registros.cantidad_item is null or g_registros.cantidad_item < 0) then
 	              v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener cantidad registrada igual o mayor a cero';
 	            elseif (v_tipo_mov = 'salida' and g_registros.cantidad_item > v_saldo_cantidad) then
@@ -476,7 +479,7 @@ BEGIN
 	        update alm.tmovimiento set
 	        estado_mov = 'finalizado',
 	        fecha_mov = v_fecha_mov,
-	        codigo = param.f_obtener_correlativo (v_cod_documento, v_id_periodo, NULL, v_id_depto, p_id_usuario, 'ALM', null)
+	        codigo = param.f_obtener_correlativo (v_cod_documento, v_id_periodo, NULL, NULL, p_id_usuario, 'ALM', null,2,3,'alm.talmacen',v_parametros.id_almacen,v_cod_almacen)
 	        where id_movimiento = v_parametros.id_movimiento;
 	        
 	        --Se actualiza el saldo fisico del detalle valorado.
