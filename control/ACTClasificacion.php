@@ -56,8 +56,8 @@ class ACTClasificacion extends ACTbase {
 
         array_push($arreglo, array('nombre' => 'text', 'valores' => '[#codigo#]-#nombre#'));
         array_push($arreglo, array('nombre' => 'cls', 'valor' => 'nombre'));
-        array_push($arreglo, array('nombre' => 'qtip', 'valores' => '<b>#codigo#</b><br/>#nombre#'));
-        $this->res->addNivelArbol('tipo_nodo', 'item_codificado', array('leaf' => true, 'draggable' => false, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo);        $this->res->addNivelArbol('tipo_nodo', 'item', array('leaf' => true, 'draggable' => true, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo);
+        array_push($arreglo, array('nombre' => 'qtip', 'valores' => '<b>#codigo#</b><br/>#nombre#'));
+        $this->res->addNivelArbol('tipo_nodo', 'item_codificado', array('leaf' => true, 'draggable' => false, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo);        $this->res->addNivelArbol('tipo_nodo', 'item', array('leaf' => true, 'draggable' => true, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo);
         //Se imprime el arbol en formato JSON
         $this->res->imprimirRespuesta($this->res->generarJson());
     }

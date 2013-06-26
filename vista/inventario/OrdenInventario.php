@@ -114,7 +114,7 @@ header("content-type: text/javascript; charset=UTF-8");
 						failure : global.conexionFailure,
 						timeout : global.timeout,
 						scope : global
-					});
+					});
 				}
 			});
 		},
@@ -148,7 +148,7 @@ header("content-type: text/javascript; charset=UTF-8");
                                     failure : global.conexionFailure,
                                     timeout : global.timeout,
                                     scope : global
-                                });
+                                });
 						    }
 						});					}
 				});

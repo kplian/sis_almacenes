@@ -346,3 +346,22 @@ ALTER TABLE alm.tmovimiento_det
 ALTER TABLE alm.tmovimiento_det 
   ADD COLUMN cantidad_solicitada numeric(18,6);
 /***********************************F-SCP-AAO-ALM-70-21/03/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-79-19/06/2013*****************************************/
+CREATE TABLE alm.tperiodo(
+	id_periodo serial not null,
+	periodo date,
+	fecha_ini date,
+	fecha_fin date,
+	CONSTRAINT tperiodo__id_periodo PRIMARY KEY(id_periodo)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+CREATE TABLE alm.tperiodo_log(
+	id_periodo_log serial not null,
+	id_periodo integer not null,
+	estado_reg_ant varchar(15),
+	CONSTRAINT tperiodo_log__id_periodo_log PRIMARY KEY(id_periodo_log)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+/***********************************F-SCP-RCM-ALM-79-19/06/2013*****************************************/

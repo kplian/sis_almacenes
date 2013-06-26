@@ -176,7 +176,7 @@ header("content-type:text/javascript; charset=UTF-8");
 		preparaMenu : function(n) {
 			Phx.vista.Clasificacion.superclass.preparaMenu.call(this, n);
 			this.id_nodo = 'id_clasificacion';
-            this.id_nodo_p = 'id_clasificacion_fk';
+            this.id_nodo_p = 'id_clasificacion_fk';
 			this.ddParams = {
                 tipo_nodo : n.attributes.tipo_nodo
             };
