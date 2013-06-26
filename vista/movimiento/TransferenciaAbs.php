@@ -76,12 +76,12 @@ header("content-type:text/javascript; charset=UTF-8");
                 width:260,
                 gwidth:100,
                 
-                renderer:function (value, p, record){return String.format('{0}', record.data['nombre_origen']);}
+                renderer:function (value, p, record){return String.format('{0}', record.data['nombre_almacen']);}
             },
             type:'ComboBox',
             id_grupo:0,
             filters:{   
-                        pfiltro:'nombre',
+                        pfiltro:'almo.nombre',
                         type:'string'
                     },
            
@@ -122,12 +122,12 @@ header("content-type:text/javascript; charset=UTF-8");
                 width:250,
                 enableMultiSelect:true,
             
-                renderer:function(value, p, record){return String.format('{0}', record.data['desc_funcionario1']);}
+                renderer:function(value, p, record){return String.format('{0}', record.data['nombre_funcionario']);}
 
             },
             type:'ComboBox',
             id_grupo:0,
-            filters:{   pfiltro:'desc_funcionario1',
+            filters:{   pfiltro:'person_fun.nombre_completo1',
                         type:'string'
                     },
             grid:true,
@@ -177,12 +177,12 @@ header("content-type:text/javascript; charset=UTF-8");
                 queryDelay:1000,
                 width:260,
                 
-                renderer:function (value, p, record){return String.format('{0}', record.data['nombre_destino']);}
+                renderer:function (value, p, record){return String.format('{0}', record.data['nombre_almacen_destino']);}
             },
             type:'ComboBox',
             id_grupo:0,
             filters:{   
-                        pfiltro:'nombre',
+                        pfiltro:'almd.nombre',
                         type:'string'
                     },
            
@@ -229,7 +229,7 @@ header("content-type:text/javascript; charset=UTF-8");
                 maxLength:300
             },
             type:'TextField',
-            filters:{type:'string'},
+            filters:{pfiltro:'mov.descripcion',type:'string'},
             id_grupo:1,
             grid:true,
             form:true
@@ -244,7 +244,7 @@ header("content-type:text/javascript; charset=UTF-8");
                 maxLength:300
             },
             type:'TextField',
-            filters:{type:'string'},
+            filters:{pfiltro:'mov.observaciones',type:'string'},
             id_grupo:1,
             grid:true,
             form:true
@@ -322,11 +322,11 @@ header("content-type:text/javascript; charset=UTF-8");
     fields: [
         {name:'id_movimiento'},
         {name:'id_almacen',type:'integer'},
-        {name: 'nombre_origen',type:'string'},      
+        {name: 'nombre_almacen',type:'string'},      
         {name: 'id_funcionario',type:'integer'},
-        {name: 'desc_funcionario1',type:'string'},
+        {name: 'nombre_funcionario',type:'string'},
         {name:'id_almacen_dest',type:'integer'},
-        {name: 'nombre_destino',type:'string'},
+        {name: 'nombre_almacen_destino',type:'string'},
         {name:'fecha_mov',type:'timestamp'},
         {name:'numero_mov', type: 'string'},
         {name:'descripcion', type: 'string'},
