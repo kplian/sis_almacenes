@@ -76,7 +76,7 @@ BEGIN
             v_parametros.id_movimiento,
             v_parametros.id_item,
             v_parametros.cantidad_item,
-            v_parametros.cantidad_solicitada,
+            coalesce(v_parametros.cantidad_solicitada,v_parametros.cantidad_item),
             v_parametros.costo_unitario,
             v_parametros.fecha_caducidad
         ) RETURNING id_movimiento_det into v_id_movimiento_det;
@@ -125,7 +125,7 @@ BEGIN
             id_movimiento = v_parametros.id_movimiento,
             id_item = v_parametros.id_item,
             cantidad = v_parametros.cantidad_item,
-            cantidad_solicitada = v_parametros.cantidad_solicitada,
+            cantidad_solicitada = coalesce(v_parametros.cantidad_solicitada,v_parametros.cantidad_item),
             costo_unitario = v_parametros.costo_unitario,
             fecha_caducidad = v_parametros.fecha_caducidad
         where id_movimiento_det = v_parametros.id_movimiento_det;

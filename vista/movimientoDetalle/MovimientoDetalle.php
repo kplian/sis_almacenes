@@ -11,7 +11,7 @@ header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
 	Phx.vista.MovimientoDetalle = Ext.extend(Phx.gridInterfaz, {
-		constructor : function(config) {
+		constructor: function(config) {
 			this.maestro = config.maestro;
 			Phx.vista.MovimientoDetalle.superclass.constructor.call(this, config);
 			this.init();
@@ -21,6 +21,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.getComponente('id_item').on('select', function(comp, object, c) {
                 this.getComponente('codigo_unidad').setValue(object.data.codigo_unidad);
             }, this);
+            
 		},
 		Atributos : [{
 			config : {

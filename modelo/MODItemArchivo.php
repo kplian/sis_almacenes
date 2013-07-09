@@ -93,7 +93,7 @@ class MODItemArchivo extends MODbase {
 
         $this->setParametro('id_item_archivo', 'id_item_archivo', 'integer');
         $this->setParametro('extension', 'extension', 'varchar');
-        $this->setParametro('archivo', 'archivo', 'bytea', false, '', false, array('doc', 'pdf', 'docx', 'jpg', 'png', 'bmp', 'xls', 'xlsx'));
+        $this->setParametro('archivo', 'archivo', 'bytea', false, '', false, array('doc', 'pdf', 'docx', 'jpg', 'png', 'bmp', 'xls', 'xlsx','txt','gif','jpeg'));
 
         $this->armarConsulta();
 

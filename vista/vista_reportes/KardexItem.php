@@ -1,34 +1,67 @@
 <?php
 /**
  *@package pXP
- *@file    GenerarReporteExistencias.php
- *@author  Ariel Ayaviri Omonte
- *@date    02-05-2013
+ *@file    KardexItem.php
+ *@author  RCM
+ *@date    06/07/2013
  *@description Archivo con la interfaz para generación de reporte
  */
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-	Phx.vista.GenerarReporteExistencias = Ext.extend(Phx.frmInterfaz, {
-		Atributos : [{
+	Phx.vista.KardexItem = Ext.extend(Phx.frmInterfaz, {
+		Atributos : [
+		{
 			config : {
-				name : 'id_almacen',
-				fieldLabel : 'Almacen',
+				name : 'fecha_ini',
+				fieldLabel : 'Fecha Desde',
 				allowBlank : false,
-				emptyText : 'Almacen...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_almacenes/control/Almacen/listarAlmacen',
-					id : 'id_almacen',
-					root : 'datos',
-					sortInfo : {
-						field : 'nombre',
-						direction : 'ASC'
+				gwidth : 100,
+				format : 'd/m/Y',
+				renderer : function(value, p, record) {
+					return value ? value.dateFormat('d/m/Y h:i:s') : ''
+				}
+			},
+			type : 'DateField',
+			id_grupo : 0,
+			grid : true,
+			form : true
+		},
+		{
+			config : {
+				name : 'fecha_fin',
+				fieldLabel : 'Fecha Hasta',
+				allowBlank : false,
+				gwidth : 100,
+				format : 'd/m/Y',
+				renderer : function(value, p, record) {
+					return value ? value.dateFormat('d/m/Y h:i:s') : ''
+				}
+			},
+			type : 'DateField',
+			id_grupo : 0,
+			grid : true,
+			form : true
+		},
+		{
+			config: {
+				name: 'id_almacen',
+				fieldLabel: 'Almacen',
+				allowBlank: false,
+				emptyText: 'Almacen...',
+				store: new Ext.data.JsonStore({
+					url: '../../sis_almacenes/control/Almacen/listarAlmacen',
+					id: 'id_almacen',
+					root: 'datos',
+					sortInfo: {
+						field: 'nombre',
+						direction: 'ASC'
 					},
-					totalProperty : 'total',
-					fields : ['id_almacen', 'nombre'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'alm.nombre'
+					totalProperty: 'total',
+					fields: ['id_almacen', 'nombre'],
+					remoteSort: true,
+					baseParams: {
+						par_filtro: 'alm.nombre'
 					}
 				}),
 				valueField : 'id_almacen',
@@ -53,25 +86,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			id_grupo : 0,
 			grid : true,
 			form : true
-		}, {
+		},  {
 			config : {
-				name : 'fecha_hasta',
-				fieldLabel : 'Fecha',
-				allowBlank : false,
-				gwidth : 100,
-				format : 'd/m/Y',
-				renderer : function(value, p, record) {
-					return value ? value.dateFormat('d/m/Y h:i:s') : ''
-				}
-			},
-			type : 'DateField',
-			id_grupo : 0,
-			grid : true,
-			form : true
-		}, {
-			config : {
-				name : 'all_items',
-				fieldLabel : 'Todos los items',
+				name : 'all_alm',
+				fieldLabel : 'Todos los Almacenes',
 				allowBlank : false,
 				triggerAction : 'all',
 				lazyRender : true,
@@ -134,27 +152,27 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : false,
 			form : true
 		}],
-		title : 'Generar Reporte Anual',
-		ActSave : '../../sis_almacenes/control/Reportes/reporteExistencias',
+		title : 'Kardex x Item',
+		ActSave : '../../sis_almacenes/control/Reportes/reporteKardex',
 		topBar : true,
 		botones : false,
-		labelSubmit : 'Imprimir',
-		tooltipSubmit : '<b>Generar Reporte de Existencias</b>',
+		labelSubmit : 'Generar',
+		tooltipSubmit : '<b>Generar Reporte de Kardex x Item</b>',
 
 		constructor : function(config) {
-			Phx.vista.GenerarReporteExistencias.superclass.constructor.call(this, config);
+			Phx.vista.KardexItem.superclass.constructor.call(this, config);
 			this.init();
 			
-			this.getComponente('all_items').on('select', function(e, component, index) {
+			this.getComponente('all_alm').on('select', function(e, component, index) {
 			    if (e.value == 'si') {
-                    this.getComponente('id_items').disable();
+                    this.getComponente('id_almacen').disable();
                 } else {
-                    this.getComponente('id_items').enable();
+                    this.getComponente('id_almacen').enable();
                 }
 			}, this);
 			
-			this.getComponente('all_items').setValue('si');
-			this.getComponente('id_items').disable();		},
+			this.getComponente('all_alm').setValue('si');
+			this.getComponente('id_almacen').disable();		},
 		tipo : 'reporte',
 		clsSubmit : 'bprint',
 		Grupos : [{
