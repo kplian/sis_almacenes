@@ -42,7 +42,7 @@ BEGIN
     
         IF  lower(v_parametros.tipo_interfaz)='movimientoalm' THEN
             raise notice '%', 'entra';
-            v_filtro = ' (lower(mov.estado_mov)!=''borrador''  and lower(mov.estado_mov)!=''proceso'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'') and ';
+            v_filtro = ' (lower(mov.estado_mov)!=''borrador''  and lower(mov.estado_mov)!=''registrado'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'') and ';
                 
         END IF;	
         

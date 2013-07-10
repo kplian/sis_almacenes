@@ -862,13 +862,24 @@ select pxp.f_insert_tgui ('Movimientos', 'Movimientos', 'MOV', 'si', 1, 'sis_alm
 select wf.f_insert_tproceso_macro ('ALM-MOV', 'Movimiento', 'si', 'activo', 'Sistema de Almacenes');
 select wf.f_insert_ttipo_proceso ('', 'Movimiento Almacenes', 'MOV', 'alm.tmovimiento', 'id_movimiento', 'activo', 'si', 'ALM-MOV');
 select wf.f_insert_ttipo_estado ('borrador', 'Borrador', 'si', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('emitido', 'Emitido', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('registrado', 'Registrado', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('finalizado', 'Finalizado', 'no', 'no', 'si', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_testructura_estado ('borrador', 'MOV', 'emitido', 'MOV', '1', '', 'activo');
+select wf.f_insert_testructura_estado ('emitido', 'MOV', 'registrado', 'MOV', '1', '', 'activo');
+select wf.f_insert_testructura_estado ('registrado', 'MOV', 'finalizado', 'MOV', '1', '', 'activo');
+
+/*
+select wf.f_insert_tproceso_macro ('ALM-MOV', 'Movimiento', 'si', 'activo', 'Sistema de Almacenes');
+select wf.f_insert_ttipo_proceso ('', 'Movimiento Almacenes', 'MOV', 'alm.tmovimiento', 'id_movimiento', 'activo', 'si', 'ALM-MOV');
+select wf.f_insert_ttipo_estado ('borrador', 'Borrador', 'si', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_ttipo_estado ('pendiente', 'Pendiente', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_ttipo_estado ('autorizado', 'Autorizado', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_ttipo_estado ('finalizado', 'Finalizado', 'no', 'no', 'si', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_testructura_estado ('borrador', 'MOV', 'pendiente', 'MOV', '1', '', 'activo');
 select wf.f_insert_testructura_estado ('pendiente', 'MOV', 'autorizado', 'MOV', '1', '', 'activo');
 select wf.f_insert_testructura_estado ('autorizado', 'MOV', 'finalizado', 'MOV', '1', '', 'activo');
-
+*/
 
 -- Movimiento_tipo
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")

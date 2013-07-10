@@ -558,7 +558,7 @@ BEGIN
 	        
 	      	--1.12) Actualiza el estado a finalizado cuando no hay ningun error
 	        update alm.tmovimiento set
-	        estado_mov = 'finalizado',
+	        estado_mov = 'registrado',
 	        fecha_mov = v_fecha_mov
 	        where id_movimiento = v_parametros.id_movimiento;
 	        
