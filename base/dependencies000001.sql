@@ -447,3 +447,17 @@ select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ALM_
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ITEMNOTBASE_SEL', 'REPEXIST');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_REPEXIST_SEL', 'REPEXIST');
 /***********************************F-DEP-AAO-ALM-56-03/05/2013*****************************************/
+
+/***********************************I-DEP-GSS-ALM-69-05/07/2013*****************************************/
+
+ALTER TABLE alm.tmovimiento_tipo
+  ALTER COLUMN id_proceso_macro SET NOT NULL;
+
+ALTER TABLE alm.tmovimiento_tipo
+  ADD CONSTRAINT fk_tmovimiento_tipo__id_proceso_macro FOREIGN KEY (id_proceso_macro)
+    REFERENCES wf.tproceso_macro(id_proceso_macro)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+  
+/***********************************F-DEP-GSS-ALM-69-05/07/2013*****************************************/

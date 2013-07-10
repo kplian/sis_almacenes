@@ -846,3 +846,48 @@ VALUES (1, E'2013-02-19 19:01:02.292', E'activo', E'INAJUST', E'Ingreso por Ajus
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "fecha_reg", "estado_reg", "codigo", "nombre", "tipo", "read_only")
 VALUES (1, E'2013-02-19 19:01:02.292', E'activo', E'SALAJUST', E'Salida por Ajuste de Inventario', E'salida', TRUE);
 /***********************************F-DAT-AAO-ALM-52-06/05/2013*****************************************/
+
+/***********************************I-DAT-GSS-ALM-79-08/07/2013*****************************************/
+
+select pxp.f_insert_tgui ('Periodo', 'Periodo', 'PERI', 'si', 2, 'sis_almacenes/vista/periodo_subsistema/PeriodoAlm.php', 2, '', 'PeriodoAlm', 'ALM');
+select pxp.f_insert_tgui ('Movimientos', 'Movimientos', 'MOV', 'si', 1, 'sis_almacenes/vista/movimiento/MovimientoReq.php', 3, '', 'MovimientoReq', 'ALM');
+
+---------------------------------
+--   (WF)  PROCESO MACRO, TIPOS DE PROCESO
+-----------------------------------------
+---------------------------------
+--COPY LINES TO data.sql FILE  
+---------------------------------
+
+select wf.f_insert_tproceso_macro ('ALM-MOV', 'Movimiento', 'si', 'activo', 'Sistema de Almacenes');
+select wf.f_insert_ttipo_proceso ('', 'Movimiento Almacenes', 'MOV', 'alm.tmovimiento', 'id_movimiento', 'activo', 'si', 'ALM-MOV');
+select wf.f_insert_ttipo_estado ('borrador', 'Borrador', 'si', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('pendiente', 'Pendiente', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('autorizado', 'Autorizado', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('finalizado', 'Finalizado', 'no', 'no', 'si', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_testructura_estado ('borrador', 'MOV', 'pendiente', 'MOV', '1', '', 'activo');
+select wf.f_insert_testructura_estado ('pendiente', 'MOV', 'autorizado', 'MOV', '1', '', 'activo');
+select wf.f_insert_testructura_estado ('autorizado', 'MOV', 'finalizado', 'MOV', '1', '', 'activo');
+
+
+-- Movimiento_tipo
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
+VALUES (1, NULL, E'2013-02-19 19:13:12.927', E'2013-02-19 19:13:12.927', E'activo', 7, E'INCOMP', E'Ingreso por Compra', E'ingreso');
+
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
+VALUES (1, NULL, E'2013-02-19 19:13:26.057', E'2013-02-19 19:13:26.057', E'activo', 8, E'SALVENT', E'Salida por Venta', E'salida');
+
+update alm.tmovimiento_tipo
+set id_proceso_macro = (select id_proceso_macro 
+						from wf.tproceso_macro
+						where codigo = 'ALM-MOV');					
+
+  
+/***********************************F-DAT-GSS-ALM-79-08/07/2013****************************************/
+
+/***********************************I-DAT-GSS-ALM-79-10/07/2013****************************************/
+
+select pxp.f_insert_tgui ('MovimientoAlm', 'movimiento almacenero', 'MOVALM', 'si', 1, 'sis_almacenes/vista/movimiento/MovimientoAlm.php', 3, '', 'MovimientoAlm', 'ALM');
+select pxp.f_insert_testructura_gui ('MOVALM', 'ALMOVI');
+
+/***********************************F-DAT-GSS-ALM-79-10/07/2013****************************************/

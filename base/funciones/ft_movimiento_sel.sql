@@ -1,6 +1,11 @@
-CREATE OR REPLACE FUNCTION alm.ft_movimiento_sel(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_sel (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /***************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_movimiento_sel
@@ -18,6 +23,7 @@ DECLARE
   v_fecha_ini		date;
   v_fecha_fin		date;
   v_periodo_subsistema_estado varchar;
+  v_filtro 			varchar;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_sel';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -31,6 +37,15 @@ BEGIN
   
 	if(p_transaccion='SAL_MOV_SEL')then
   	begin
+    
+    	v_filtro='';	
+    
+        IF  lower(v_parametros.tipo_interfaz)='movimientoalm' THEN
+            raise notice '%', 'entra';
+            v_filtro = ' (lower(mov.estado_mov)!=''borrador''  and lower(mov.estado_mov)!=''proceso'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'') and ';
+                
+        END IF;	
+        
     	v_consulta:='
         	SELECT
             	mov.id_movimiento,
@@ -76,7 +91,8 @@ BEGIN
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
 			WHERE mov.estado_reg = ''activo'' and ';
-            
+
+        v_consulta:=v_consulta||v_filtro;
     	v_consulta:=v_consulta||v_parametros.filtro;
         v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;
         return v_consulta;
@@ -216,8 +232,9 @@ EXCEPTION
     v_respuesta=pxp.f_agrega_clave(v_respuesta,'procedimiento',v_nombre_funcion);
     raise exception '%',v_respuesta;
 END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION alm.ft_movimiento_sel(integer, integer, character varying, character varying)
-  OWNER TO postgres;
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
+COST 100;

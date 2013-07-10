@@ -19,6 +19,8 @@ class MODMovimiento extends MODbase {
         $this->procedimiento = 'alm.ft_movimiento_sel';
         $this->transaccion = 'SAL_MOV_SEL';
         $this->tipo_procedimiento = 'SEL';
+								
+								$this->setParametro('tipo_interfaz','tipo_interfaz','varchar');
 
         $this->captura('id_movimiento', 'integer');
         $this->captura('tipo', 'varchar');
@@ -64,7 +66,8 @@ class MODMovimiento extends MODbase {
         $this->setParametro('descripcion', 'descripcion', 'varchar');
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('id_movimiento_origen', 'id_movimiento_origen', 'integer');
-
+								$this->setParametro('id_gestion', 'id_gestion', 'integer');
+								
         $this->armarConsulta();
         $this->ejecutarConsulta();
 
@@ -115,9 +118,10 @@ class MODMovimiento extends MODbase {
         $this->transaccion = 'SAL_MOVFIN_MOD';
         $this->tipo_procedimiento = 'IME';
 
-        $this->setParametro('id_movimiento', 'id_movimiento', 'integer');
+        $this->setParametro('id_movimiento', 'id_movimiento', 'integer');								
         $this->setParametro('id_almacen', 'id_almacen', 'integer');
-        $this->setParametro('fecha_mov', 'fecha_mov', 'date');
+        $this->setParametro('operacion', 'operacion', 'varchar');
+								$this->setParametro('fecha_mov', 'fecha_mov', 'date');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

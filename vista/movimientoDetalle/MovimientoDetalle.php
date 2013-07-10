@@ -1,9 +1,9 @@
 <?php
 /**
  *@package pXP
- *@file AlmacenStock.php
+ *@file MovimientoDetalle.php
  *@author  Gonzalo Sarmiento
- *@date 01-10-2012
+ *@date 09-07-2013
  *@description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
  */
 
@@ -77,7 +77,6 @@ header("content-type: text/javascript; charset=UTF-8");
 					}
 				}),
 				valueField : 'id_item',
-				//hiddenValue: 'id_item',
 				displayField : 'nombre',
 				gdisplayField : 'nombre_item',
 				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
@@ -358,37 +357,21 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		onButtonEdit : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonEdit.call(this);
-			if (this.maestro.tipo == 'ingreso') {
-				this.getComponente('costo_unitario').enable();
-				this.getComponente('costo_unitario').setVisible(true);
-				this.getComponente('fecha_caducidad').setVisible(true);
-				this.getComponente('cantidad_solicitada').setVisible(false);
-				this.getComponente('cantidad_solicitada').disable();
-			} else {
-				this.getComponente('costo_unitario').disable();
+			 this.getComponente('costo_unitario').disable();
+			 this.getComponente('fecha_caducidad').disable();
 				this.getComponente('costo_unitario').setVisible(false);
 				this.getComponente('fecha_caducidad').setVisible(false);
 				this.getComponente('cantidad_solicitada').setVisible(true);
-				this.getComponente('cantidad_solicitada').enable();
-			}
-			this.getComponente('cantidad_item').setVisible(true);
 		},
 		onButtonNew : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonNew.call(this);
-			if (this.maestro.tipo == 'ingreso') {
-				this.getComponente('costo_unitario').enable();
-				this.getComponente('costo_unitario').setVisible(true);
-				this.getComponente('fecha_caducidad').setVisible(true);
-				this.getComponente('cantidad_solicitada').setVisible(false);
-				this.getComponente('cantidad_solicitada').disable();
-			} else {
 				this.getComponente('costo_unitario').disable();
+				this.getComponente('fecha_caducidad').disable();								
+			 this.getComponente('cantidad_item').disable();				
 				this.getComponente('costo_unitario').setVisible(false);
-				this.getComponente('fecha_caducidad').setVisible(false);
+				this.getComponente('fecha_caducidad').setVisible(false);								
+			 this.getComponente('cantidad_item').setVisible(false);
 				this.getComponente('cantidad_solicitada').setVisible(true);
-				this.getComponente('cantidad_solicitada').enable();
-			}
-			this.getComponente('cantidad_item').setVisible(true);
 		}
 	})
 </script>

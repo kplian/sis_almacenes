@@ -44,10 +44,13 @@ BEGIN
                 movtip.fecha_reg,
                 usu2.cuenta as usr_mod,
                 movtip.fecha_mod,
-                movtip.read_only
+                movtip.read_only,
+                movtip.id_proceso_macro,
+                pm.nombre as desc_proceso_macro
             from alm.tmovimiento_tipo movtip
             inner join segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
+            inner join wf.tproceso_macro pm on pm.id_proceso_macro = movtip.id_proceso_macro
             where movtip.estado_reg = ''activo'' and ';
     	v_consulta:=v_consulta||v_parametros.filtro;
         v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;        	
@@ -66,6 +69,7 @@ BEGIN
             from alm.tmovimiento_tipo movtip
             inner join segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
+			inner join wf.tproceso_macro pm on pm.id_proceso_macro = movtip.id_proceso_macro
             where movtip.estado_reg = ''activo'' and ';
         v_consulta:= v_consulta||v_parametros.filtro;
         return v_consulta;

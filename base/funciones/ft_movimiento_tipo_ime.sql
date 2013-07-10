@@ -45,14 +45,16 @@ BEGIN
             estado_reg,
             codigo,
             nombre,
-            tipo
+            tipo,
+            id_proceso_macro
         ) values (
         	p_id_usuario,
             now(),
             'activo', 
             v_parametros.codigo,
             v_parametros.nombre,
-            v_parametros.tipo
+            v_parametros.tipo,
+            v_parametros.id_proceso_macro
         ) RETURNING id_movimiento_tipo into v_id_movimiento_tipo;
 
         v_respuesta =pxp.f_agrega_clave(v_respuesta, 'mensaje','Movimiento tipo almacenado correctamente');
@@ -74,7 +76,8 @@ BEGIN
             fecha_mod = now(),
             codigo = v_parametros.codigo,
             nombre = v_parametros.nombre,
-            tipo = v_parametros.tipo
+            tipo = v_parametros.tipo,
+            id_proceso_macro = v_parametros.id_proceso_macro
         where id_movimiento_tipo = v_parametros.id_movimiento_tipo;
         
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento Tipo modificado con exito');

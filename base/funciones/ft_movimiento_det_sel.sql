@@ -1,6 +1,11 @@
-CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_sel(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_det_sel (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_movimiento_det_sel
@@ -94,8 +99,9 @@ EXCEPTION
             v_respuesta = pxp.f_agrega_clave(v_respuesta,'procedimientos',v_nombre_funcion);
             raise exception '%',v_respuesta;
 END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION alm.ft_movimiento_det_sel(integer, integer, character varying, character varying)
-  OWNER TO postgres;
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
+COST 100;

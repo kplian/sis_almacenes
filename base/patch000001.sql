@@ -365,3 +365,19 @@ CREATE TABLE alm.tperiodo_log(
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
 /***********************************F-SCP-RCM-ALM-79-19/06/2013*****************************************/
+
+/***********************************I-SCP-GSS-ALM-69-05/07/2013*****************************************/
+
+ALTER TABLE alm.tmovimiento
+  ADD COLUMN id_proceso_macro INTEGER;
+  
+ALTER TABLE alm.tmovimiento
+  ADD COLUMN id_estado_wf INTEGER;
+  
+ALTER TABLE alm.tmovimiento
+  ADD COLUMN id_proceso_wf INTEGER;
+  
+ALTER TABLE alm.tmovimiento_tipo
+  ADD COLUMN id_proceso_macro INTEGER;
+
+/***********************************F-SCP-GSS-ALM-69-05/07/2013*****************************************/

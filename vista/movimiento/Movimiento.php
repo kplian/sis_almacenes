@@ -15,25 +15,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.maestro = config.maestro;
 			Phx.vista.Movimiento.superclass.constructor.call(this, config);
 			this.init();
-			this.load({
-				params : {
-					start : 0,
-					limit : 50
-				}
-			});
 
 			this.getComponente('tipo').on('select', this.onTipoSelect, this);
 			this.getComponente('id_movimiento_tipo').on('select', this.onMovimientoTipoSelect, this);
 			this.getComponente('solicitante').on('select', this.onSolicitanteSelect, this);
-
-			this.addButton('btnFinalizar', {
-				text : 'Finalizar',
-				iconCls : 'bchecklist',
-				disabled : true,
-				handler : this.onBtnFinalizar,
-				tooltip : '<b>Finalizar Movimiento</b>'
-			});
-
+	
 			this.addButton('btnCancelar', {
 				text : 'Cancelar',
 				iconCls : 'bchecklist',
@@ -89,7 +75,18 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			type : 'Field',
 			form : true
-		}, {
+		},		
+								{
+            //configuracion del componente
+            config:{
+                    labelSeparator:'',
+                    inputType:'hidden',
+                    name: 'id_gestion'
+            },
+            type:'Field',
+            form:true 
+        },  
+		{
 			config : {
 				name : 'estado_mov',
 				fieldLabel : 'Estado',
@@ -111,6 +108,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				name : 'fecha_mov',
 				fieldLabel : 'Fecha Movimiento',
 				allowBlank : false,
+				disabled: true,
 				gwidth : 100,
 				format : 'd/m/Y',
 				renderer : function(value, p, record) {
@@ -714,33 +712,11 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('id_proveedor').enable();
 			}
 		},
-		onBtnFinalizar : function() {
-			var rec = this.sm.getSelected();
-			var data = rec.data;
-			var global = this;
-			Ext.Msg.confirm('Confirmación', '¿Está seguro de Finalizar este movimiento?', function(btn) {
-				if (btn == "yes") {
-					Ext.Ajax.request({
-						url : '../../sis_almacenes/control/Movimiento/finalizarMovimiento',
-						params : {
-							'id_movimiento' : data.id_movimiento,
-							'id_almacen' : data.id_almacen,
-							'fecha_mov' : data.fecha_mov
-						},
-						success : global.successSave,
-						failure : global.conexionFailure,
-						timeout : global.timeout,
-						scope : global
-					});
-				}
-			});
-		},
 		preparaMenu : function(n) {
 			var tb = Phx.vista.Movimiento.superclass.preparaMenu.call(this);
 			var data = this.getSelectedData();
 			this.getBoton('btnReport').enable();
-			if (data.estado_mov == 'finalizado' || data.estado_mov == 'cancelado') {
-				this.getBoton('btnFinalizar').disable();
+			if (data.estado_mov == 'finalizado' || data.estado_mov == 'cancelado') {				
 				this.getBoton('btnCancelar').disable();
 				if (data.estado_mov == 'finalizado') {
 					this.getBoton('btnRevertir').enable();
@@ -748,7 +724,6 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getBoton('edit').disable();
 				this.getBoton('del').disable();
 			} else {
-				this.getBoton('btnFinalizar').enable();
 				this.getBoton('btnCancelar').enable();
 				this.getBoton('btnRevertir').disable();
 			}
@@ -756,9 +731,8 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		liberaMenu : function() {
 			var tb = Phx.vista.Movimiento.superclass.liberaMenu.call(this);
-			this.getBoton('btnFinalizar').disable;
 			this.getBoton('btnCancelar').disable();
-            this.getBoton('btnRevertir').disable();
+   this.getBoton('btnRevertir').disable();
 			this.getBoton('btnReport').disable();
 			return tb;
 		},

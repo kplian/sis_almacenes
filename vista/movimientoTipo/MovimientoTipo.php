@@ -29,7 +29,8 @@ header("content-type:text/javascript; charset=UTF-8");
 			},
 			type : 'Field',
 			form : true
-		}, {
+		},
+		{
 			config : {
 				name : 'codigo',
 				fieldLabel : 'Código',
@@ -86,7 +87,56 @@ header("content-type:text/javascript; charset=UTF-8");
 			},
 			grid : true,
 			form : true
-		}, {
+		},
+		{
+			config: {
+				name: 'id_proceso_macro',
+				fieldLabel: 'Proceso',
+				typeAhead: false,
+				forceSelection: false,
+				 hiddenName: 'id_proceso_macro',
+				allowBlank: false,
+				emptyText: 'Lista de Procesos...',
+				store: new Ext.data.JsonStore({
+					url: '../../sis_workflow/control/ProcesoMacro/listarProcesoMacro',
+					id: 'id_proceso_macro',
+					root: 'datos',
+					sortInfo: {
+						field: 'nombre',
+						direction: 'ASC'
+					},
+					totalProperty: 'total',
+					fields: ['id_proceso_macro', 'nombre', 'codigo'],
+					// turn on remote sorting
+					remoteSort: true,
+					baseParams: {par_filtro: 'promac.nombre#promac.codigo',codigo_subsistema:'ALM'}
+				}),
+				valueField: 'id_proceso_macro',
+				displayField: 'nombre',
+				gdisplayField: 'desc_proceso_macro',
+				triggerAction: 'all',
+				lazyRender: true,
+				mode: 'remote',
+				pageSize: 20,
+				queryDelay: 200,
+				listWidth:280,
+				minChars: 2,
+				gwidth: 170,
+				renderer: function(value, p, record) {
+					return String.format('{0}', record.data['desc_proceso_macro']);
+				},
+				tpl: '<tpl for="."><div class="x-combo-list-item"><p>{nombre}</p>Codigo: <strong>{codigo}</strong> </div></tpl>'
+			},
+			type: 'ComboBox',
+			id_grupo: 0,
+			filters: {
+				pfiltro: 'pm.nombre',
+				type: 'string'
+			},
+			grid: true,
+			form: true
+		}, 
+		{
 			config : {
 				name : 'usr_reg',
 				fieldLabel : 'Creado por',
@@ -174,6 +224,14 @@ header("content-type:text/javascript; charset=UTF-8");
 			type : 'string'
 		}, {
 			name : 'tipo',
+			type : 'string'
+		}, {
+			}, {
+			name : 'id_proceso_macro',
+			type : 'integer'
+		}, {
+			}, {
+			name : 'desc_proceso_macro',
 			type : 'string'
 		}, {
 			name : 'fecha_reg',

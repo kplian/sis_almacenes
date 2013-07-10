@@ -25,7 +25,9 @@ class MODMovimientoTipo extends MODbase {
         $this->captura('fecha_reg', 'timestamp');
         $this->captura('usr_mod', 'varchar');
         $this->captura('fecha_mod', 'timestamp');
-        $this->captura('read_only', 'boolean');
+        $this->captura('read_only', 'boolean');								
+								$this->captura('id_proceso_macro','int4');
+								$this->captura('desc_proceso_macro','varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -41,6 +43,7 @@ class MODMovimientoTipo extends MODbase {
         $this->setParametro('codigo', 'codigo', 'varchar');
         $this->setParametro('nombre', 'nombre', 'varchar');
         $this->setParametro('tipo', 'tipo', 'varchar');
+								$this->setParametro('id_proceso_macro','id_proceso_macro','int4');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -57,6 +60,7 @@ class MODMovimientoTipo extends MODbase {
         $this->setParametro('codigo', 'codigo', 'varchar');
         $this->setParametro('nombre', 'nombre', 'varchar');
         $this->setParametro('tipo', 'tipo', 'varchar');
+								$this->setParametro('id_proceso_macro','id_proceso_macro','int4');
         $this->armarConsulta();
         $this->ejecutarConsulta();
 

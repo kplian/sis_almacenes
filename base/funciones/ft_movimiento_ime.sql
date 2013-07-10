@@ -1,6 +1,11 @@
-CREATE OR REPLACE FUNCTION alm.ft_movimiento_ime(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_ime (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_movimiento_ime
@@ -58,6 +63,12 @@ DECLARE
 	v_id_periodo					integer;
 	v_estado_periodo_subsistema		varchar;
 	v_cod_almacen					varchar;
+    v_codigo_tipo_proceso			varchar;
+    v_id_proceso_macro				integer;
+    v_num_tramite 					varchar;
+    v_id_proceso_wf					integer;
+    v_id_estado_wf					integer;
+    v_codigo_estado					varchar;
 	
 BEGIN
 
@@ -73,6 +84,43 @@ BEGIN
     ***********************************/
   if(p_transaccion='SAL_MOV_INS') then
   begin
+  
+  		-- obtener el codigo del tipo_proceso
+       
+        select   tp.codigo, pm.id_proceso_macro 
+            into v_codigo_tipo_proceso, v_id_proceso_macro
+        from  alm.tmovimiento_tipo mt
+        inner join wf.tproceso_macro pm
+        	on pm.id_proceso_macro =  mt.id_proceso_macro
+        inner join wf.ttipo_proceso tp
+        	on tp.id_proceso_macro = pm.id_proceso_macro
+        where   mt.id_movimiento_tipo = v_parametros.id_movimiento_tipo
+                and tp.estado_reg = 'activo' and tp.inicio = 'si';            
+         
+        IF v_codigo_tipo_proceso is NULL THEN
+        
+           raise exception 'No existe un proceso inicial para el proceso macro indicado (Revise la configuración)';
+        
+        END IF;
+        
+        -- inciiar el tramite en el sistema de WF
+        SELECT 
+             ps_num_tramite ,
+             ps_id_proceso_wf ,
+             ps_id_estado_wf ,
+             ps_codigo_estado 
+          into
+             v_num_tramite,
+             v_id_proceso_wf,
+             v_id_estado_wf,
+             v_codigo_estado   
+              
+        FROM wf.f_inicia_tramite(
+             p_id_usuario, 
+             v_parametros.id_gestion, 
+             v_codigo_tipo_proceso, 
+             v_parametros.id_funcionario);
+        
     insert into alm.tmovimiento (
           id_usuario_reg,
             fecha_reg, 
@@ -86,7 +134,10 @@ BEGIN
             descripcion,
             observaciones,
             estado_mov,
-            id_movimiento_origen
+            id_movimiento_origen,
+            id_proceso_macro,
+            id_proceso_wf,
+            id_estado_wf
         ) values (
           p_id_usuario,
             now(),
@@ -100,7 +151,10 @@ BEGIN
             v_parametros.descripcion,
             v_parametros.observaciones,
             'borrador',
-            v_parametros.id_movimiento_origen
+            v_parametros.id_movimiento_origen,
+            v_id_proceso_macro,
+            v_id_proceso_wf,
+            v_id_estado_wf
         ) RETURNING id_movimiento into v_id_movimiento;
 
         v_respuesta =pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento almacenado correctamente');
@@ -178,6 +232,8 @@ BEGIN
 	elseif(p_transaccion='SAL_MOVFIN_MOD')then
 	
     	begin
+        
+        IF  v_parametros.operacion = 'verificar' THEN
 
 	      	--1.1) Verificar que el almacen esté activo
 	        select alma.nombre, alma.estado, alma.id_departamento, alma.codigo
@@ -190,10 +246,9 @@ BEGIN
 	        end if;
 	        
 	        --1.2) Se obtienen los datos del movimiento a finalizar para realizar validaciones
-	        select mov.fecha_mov, movtip.tipo, movtip.nombre, mov.id_almacen_dest
-	        into v_fecha_mov, v_tipo_mov, v_tipo_mov_personalizado, v_id_almacen_dest
+	        select mov.fecha_mov
+	        into v_fecha_mov
 	        from alm.tmovimiento mov 
-	        inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
 	        where mov.id_movimiento = v_parametros.id_movimiento;
 	        
 	        	        
@@ -223,7 +278,7 @@ BEGIN
 	          raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
 	        end if;
 	
-	        --1.5) Búsqueda de errores en las dependencias del movimiento
+    		 --1.5) Búsqueda de errores en las dependencias del movimiento
 	        v_errores = '';
 	        v_contador := 0;
 	        for g_registros in (select 
@@ -242,41 +297,67 @@ BEGIN
 	            
 	            if (g_registros.cantidad_item is null or g_registros.cantidad_item < 0) then
 	              v_errores = v_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener cantidad registrada igual o mayor a cero';
-	            elseif (v_tipo_mov = 'salida' and g_registros.cantidad_item > v_saldo_cantidad) then
+	            --elseif (v_tipo_mov = 'salida' and g_registros.cantidad_item > v_saldo_cantidad) then
 	              --RCM 24042013: se añade opción para que se entregue lo existente si es que no hay suficiente
 	              --v_errores = v_errores || '\nNo existen suficientes existencias del item ' || g_registros.nombre_item || '. Solicitado: ' || g_registros.cantidad_item || '. Existencias: '|| v_saldo_cantidad;
-	            end if;
-	            
-	            v_contador_2 := 0;
-	            FOR g_registros_2 IN (select 
-				                    detval.cantidad as cantidad_item
-				                	from alm.tmovimiento_det_valorado detval
-				                	inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
-				                	where detval.estado_reg = 'activo'
-				                    and detval.id_movimiento_det = g_registros.id_movimiento_det) LOOP
-					v_contador_2 = v_contador_2 + 1;
-	                if (g_registros_2.cantidad_item is null or g_registros_2.cantidad_item < 0) THEN
-	                  v_errores = v_errores || '\n- El item ' || g_registros.nombre_item || ' debe contener valorados con cantidad mayor o igual que cero';
-	                end if;
-	                
-	            END LOOP;
-	            
-	            if (v_contador_2 = 0) then
-	              v_errores = v_errores || '\n- El item ' || g_registros.nombre_item || ' debe tener al menos una cantidad para valorar';
-	            end if;
+	             v_errores = v_errores || '\n- El item ' || g_registros.nombre_item || ' debe tener al menos una cantidad para valorar';
+                end if;
+               
 	        END LOOP;
 	        
 	        --1.6) Verificar que el movimiento tenga al menos un movimiento_detalle registrado.
 	        if (v_contador = 0) then
 	          raise exception '%', 'El movimiento seleccionado debe tener al menos un item registrado en su detalle';
 	        end if;
+            
+        ELSIF v_parametros.operacion = 'finalizarRegistro' THEN   
+        
+        	--1.2) Se obtienen los datos del movimiento a finalizar
+	        select mov.fecha_mov, movtip.tipo, movtip.nombre, mov.id_almacen_dest, mov.id_almacen
+	        into v_fecha_mov, v_tipo_mov, v_tipo_mov_personalizado, v_id_almacen_dest, v_id_almacen
+	        from alm.tmovimiento mov 
+	        inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
+	        where mov.id_movimiento = v_parametros.id_movimiento;
+            
+            select id_departamento into v_id_depto
+            from alm.talmacen
+            where id_almacen=v_id_almacen;        
+        	
+	       
+        	--Se obtiene la fecha_mov del último movimiento finalizado en la fecha_mov del movimiento que se va a finalizar.
+	        select max(mov.fecha_mov) into v_fecha_mov_ultima
+	        from alm.tmovimiento mov
+	    	where date(mov.fecha_mov) = date(v_fecha_mov) 
+	        and mov.estado_mov = 'finalizado'
+	        and mov.id_almacen = v_parametros.id_almacen;
 	        
-	        --1.7) Muestra los errores si los hubiese
-	        if (v_errores != '') then
-	          raise exception '%', v_errores;
+	        if (v_fecha_mov_ultima is not null) then
+	          v_fecha_mov = v_fecha_mov_ultima + interval '1 min';
+	        else 
+	          v_fecha_mov = date(v_fecha_mov) + interval '1 min';
 	        end if;
-	        
-	        --1.8) Si el movimiento que se desea finalizar es una salida entonces se debe valorar los detalles.
+            if (v_tipo_mov = 'salida') then
+	          v_cod_documento = 'MOVSAL';
+            elsif (v_tipo_mov = 'ingreso')then
+              v_cod_documento = 'MOVIN';
+	        end if;
+	      	--1.12) Actualiza el estado a finalizado cuando no hay ningun error
+	        update alm.tmovimiento set
+	        estado_mov = 'emitido',
+	        fecha_mov = v_fecha_mov,
+	        codigo = param.f_obtener_correlativo (v_cod_documento, v_id_periodo, NULL, v_id_depto, p_id_usuario, 'ALM', null,2,3,'alm.talmacen',v_parametros.id_almacen,v_cod_almacen)
+	        where id_movimiento = v_parametros.id_movimiento;
+        
+		ELSIF v_parametros.operacion = 'finalizarMovimiento' THEN
+			
+	        --1.2) Se obtienen los datos del movimiento a finalizar
+	        select mov.fecha_mov, movtip.tipo, movtip.nombre, mov.id_almacen_dest
+	        into v_fecha_mov, v_tipo_mov, v_tipo_mov_personalizado, v_id_almacen_dest
+	        from alm.tmovimiento mov 
+	        inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
+	        where mov.id_movimiento = v_parametros.id_movimiento;
+
+        	--1.8) Si el movimiento que se desea finalizar es una salida entonces se debe valorar los detalles.
 	        if (v_tipo_mov = 'salida') then
 	          v_cod_documento = 'MOVSAL';
 	          FOR g_registros IN (select 
@@ -478,8 +559,7 @@ BEGIN
 	      	--1.12) Actualiza el estado a finalizado cuando no hay ningun error
 	        update alm.tmovimiento set
 	        estado_mov = 'finalizado',
-	        fecha_mov = v_fecha_mov,
-	        codigo = param.f_obtener_correlativo (v_cod_documento, v_id_periodo, NULL, NULL, p_id_usuario, 'ALM', null,2,3,'alm.talmacen',v_parametros.id_almacen,v_cod_almacen)
+	        fecha_mov = v_fecha_mov
 	        where id_movimiento = v_parametros.id_movimiento;
 	        
 	        --Se actualiza el saldo fisico del detalle valorado.
@@ -561,8 +641,13 @@ BEGIN
 	                END IF;
 	            END LOOP;
 	            
-	        END IF;
-	        
+	        END IF;	 
+	   
+   	  ELSE
+          
+        raise exception 'operacion no identificada %',COALESCE( v_parametros.operacion,'--');
+            
+      END IF;       
 	        --raise exception 'Done';
 	        
 	  v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento finalizado');
@@ -697,8 +782,9 @@ EXCEPTION
         v_respuesta = pxp.f_agrega_clave(v_respuesta,'procedimientos',v_nombre_funcion);
         raise exception '%',v_respuesta;
 END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION alm.ft_movimiento_ime(integer, integer, character varying, character varying)
-  OWNER TO postgres;
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
+COST 100;

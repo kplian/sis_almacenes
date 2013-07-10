@@ -76,14 +76,6 @@ VALUES (1, NULL, '2012-11-13 11:38:14', '2012-11-13 11:38:14', 'activo', 5, 3, '
 INSERT INTO alm.titem ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_item", "id_clasificacion", "codigo", "nombre", "descripcion", "palabras_clave", "codigo_fabrica", "observaciones", "numero_serie", id_unidad_medida)
 VALUES (1, NULL, E'2012-12-29 05:30:30.025', E'2012-12-29 05:30:30.025', E'activo', 7, 3, E'', E'Canon Ip1900', E'Impresora multicolor Canon IP 1900', E'IP1900', E'IP1900_s', E'color negro', E'asd579', 100);
 
-
--- Movimiento_tipo
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-19 19:13:12.927', E'2013-02-19 19:13:12.927', E'activo', 7, E'INCOMP', E'Ingreso por Compra', E'ingreso');
-
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-19 19:13:26.057', E'2013-02-19 19:13:26.057', E'activo', 8, E'SALVENT', E'Salida por Venta', E'salida');
-
 -- Movimiento
 
 INSERT INTO alm.tmovimiento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento", "id_movimiento_tipo", "id_almacen", "id_funcionario", "id_proveedor", "id_almacen_dest", "fecha_mov", "codigo", "descripcion", "observaciones", "estado_mov", "id_movimiento_origen")
