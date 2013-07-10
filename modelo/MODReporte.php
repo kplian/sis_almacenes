@@ -36,6 +36,37 @@ class MODReporte extends MODbase {
 
         return $this->respuesta;
     }
+	
+	function listarKardexItem() {
+        $this->procedimiento = 'alm.ft_rep_kardex_item_sel';
+        $this->transaccion = 'SAL_RKARIT_SEL';
+        $this->tipo_procedimiento = 'SEL';
+		$this->tipo_retorno='record';
+		$this->count=false;
+
+		$this->setParametro('fecha_ini', 'fecha_ini', 'date');
+		$this->setParametro('fecha_fin', 'fecha_fin', 'date');
+		$this->setParametro('id_item', 'id_item', 'integer');
+        $this->setParametro('id_almacen', 'id_almacen', 'varchar');
+        $this->setParametro('all_almacen', 'all_almacen', 'varchar');
+		
+		$this->captura('id', 'integer');
+		$this->captura('fecha', 'date');
+		$this->captura('nro_mov', 'varchar');
+		$this->captura('almacen', 'varchar');
+		$this->captura('ingreso', 'numeric');
+		$this->captura('salida', 'numeric');
+		$this->captura('saldo', 'numeric');
+		$this->captura('costo_unitario', 'numeric');
+		$this->captura('ingreso_val', 'numeric');
+		$this->captura('salida_val', 'numeric');
+		$this->captura('saldo_val', 'numeric');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
 
 }
 ?>
