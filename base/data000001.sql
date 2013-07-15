@@ -863,8 +863,8 @@ select wf.f_insert_ttipo_proceso ('', 'Movimiento Almacenes', 'MOV', 'alm.tmovim
 select wf.f_insert_ttipo_estado ('borrador', 'Borrador', 'si', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_ttipo_estado ('pendiente', 'Pendiente', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_ttipo_estado ('finalizado', 'Finalizado', 'no', 'no', 'si', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
-select wf.f_insert_ttipo_estado ('vbrpm', 'Visto Bueno Responsable Movimiento', 'no', 'no', 'no', 'todos', '', 'ninguno', '', '', 'activo', 'MOV', '');
-select wf.f_insert_ttipo_estado ('vbarea', 'Visto Bueno Area', 'no', 'no', 'no', 'todos', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('vbrpm', 'Visto Bueno Responsable Movimiento', 'no', 'no', 'no', 'listado', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('vbarea', 'Visto Bueno Area', 'no', 'no', 'no', 'listado', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_testructura_estado ('borrador', 'MOV', 'pendiente', 'MOV', '1', '', 'activo');
 select wf.f_insert_testructura_estado ('pendiente', 'MOV', 'vbrpm', 'MOV', '1', '', 'activo');
 select wf.f_insert_testructura_estado ('vbrpm', 'MOV', 'vbarea', 'MOV', '1', '', 'activo');
