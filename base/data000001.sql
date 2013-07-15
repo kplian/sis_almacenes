@@ -858,28 +858,17 @@ select pxp.f_insert_tgui ('Movimientos', 'Movimientos', 'MOV', 'si', 1, 'sis_alm
 ---------------------------------
 --COPY LINES TO data.sql FILE  
 ---------------------------------
-
-select wf.f_insert_tproceso_macro ('ALM-MOV', 'Movimiento', 'si', 'activo', 'Sistema de Almacenes');
-select wf.f_insert_ttipo_proceso ('', 'Movimiento Almacenes', 'MOV', 'alm.tmovimiento', 'id_movimiento', 'activo', 'si', 'ALM-MOV');
-select wf.f_insert_ttipo_estado ('borrador', 'Borrador', 'si', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
-select wf.f_insert_ttipo_estado ('emitido', 'Emitido', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
-select wf.f_insert_ttipo_estado ('registrado', 'Registrado', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
-select wf.f_insert_ttipo_estado ('finalizado', 'Finalizado', 'no', 'no', 'si', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
-select wf.f_insert_testructura_estado ('borrador', 'MOV', 'emitido', 'MOV', '1', '', 'activo');
-select wf.f_insert_testructura_estado ('emitido', 'MOV', 'registrado', 'MOV', '1', '', 'activo');
-select wf.f_insert_testructura_estado ('registrado', 'MOV', 'finalizado', 'MOV', '1', '', 'activo');
-
-/*
 select wf.f_insert_tproceso_macro ('ALM-MOV', 'Movimiento', 'si', 'activo', 'Sistema de Almacenes');
 select wf.f_insert_ttipo_proceso ('', 'Movimiento Almacenes', 'MOV', 'alm.tmovimiento', 'id_movimiento', 'activo', 'si', 'ALM-MOV');
 select wf.f_insert_ttipo_estado ('borrador', 'Borrador', 'si', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_ttipo_estado ('pendiente', 'Pendiente', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
-select wf.f_insert_ttipo_estado ('autorizado', 'Autorizado', 'no', 'no', 'no', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_ttipo_estado ('finalizado', 'Finalizado', 'no', 'no', 'si', 'ninguno', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('vbrpm', 'Visto Bueno Responsable Movimiento', 'no', 'no', 'no', 'todos', '', 'ninguno', '', '', 'activo', 'MOV', '');
+select wf.f_insert_ttipo_estado ('vbarea', 'Visto Bueno Area', 'no', 'no', 'no', 'todos', '', 'ninguno', '', '', 'activo', 'MOV', '');
 select wf.f_insert_testructura_estado ('borrador', 'MOV', 'pendiente', 'MOV', '1', '', 'activo');
-select wf.f_insert_testructura_estado ('pendiente', 'MOV', 'autorizado', 'MOV', '1', '', 'activo');
-select wf.f_insert_testructura_estado ('autorizado', 'MOV', 'finalizado', 'MOV', '1', '', 'activo');
-*/
+select wf.f_insert_testructura_estado ('pendiente', 'MOV', 'vbrpm', 'MOV', '1', '', 'activo');
+select wf.f_insert_testructura_estado ('vbrpm', 'MOV', 'vbarea', 'MOV', '1', '', 'activo');
+select wf.f_insert_testructura_estado ('vbarea', 'MOV', 'finalizado', 'MOV', '1', '', 'activo');
 
 -- Movimiento_tipo
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
@@ -902,3 +891,16 @@ select pxp.f_insert_tgui ('MovimientoAlm', 'movimiento almacenero', 'MOVALM', 's
 select pxp.f_insert_testructura_gui ('MOVALM', 'ALMOVI');
 
 /***********************************F-DAT-GSS-ALM-79-10/07/2013****************************************/
+
+/***********************************I-DAT-GSS-ALM-79-15/07/2013****************************************/
+
+select pxp.f_insert_tgui ('Ingresos', 'Ingresos', 'ALINGR', 'si', 4, 'sis_almacenes/vista/movimiento/Ingreso.php
+', 3, '', 'Ingreso', 'ALM');
+select pxp.f_insert_tgui ('Salidas', 'Salidas', 'ALSAGR', 'si', 5, 'sis_almacenes/vista/movimiento/Salida.php
+', 3, '', 'Salida', 'ALM');
+select pxp.f_insert_tgui ('Transferencias', 'Transferencias', 'ALTRGR', 'si', 6, 'sis_almacenes/vista/movimiento/Transferencia.php', 3, '', 'Transferencia', 'ALM');
+select pxp.f_insert_tgui ('MovimientoAlm', 'movimiento almacenero', 'MOVALM', 'si', 3, 'sis_almacenes/vista/movimiento/MovimientoAlm.php', 3, '', 'MovimientoAlm', 'ALM');
+select pxp.f_insert_tgui ('MovimientoVb', 'movimiento vb', 'MOVVB', 'si', 2, 'sis_almacenes/vista/movimiento/MovimientoVb.php', 3, '', 'MovimientoVb', 'ALM');
+select pxp.f_insert_testructura_gui ('MOVVB', 'ALMOVI');
+
+/***********************************F-DAT-GSS-ALM-79-15/07/2013****************************************/

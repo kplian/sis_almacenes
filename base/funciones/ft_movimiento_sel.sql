@@ -42,9 +42,15 @@ BEGIN
     
         IF  lower(v_parametros.tipo_interfaz)='movimientoalm' THEN
             raise notice '%', 'entra';
-            v_filtro = ' (lower(mov.estado_mov)!=''borrador''  and lower(mov.estado_mov)!=''registrado'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'') and ';
+            v_filtro = ' (lower(mov.estado_mov)!=''borrador''  and lower(mov.estado_mov)!=''vbrpm'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'' and lower(mov.estado_mov)!=''pendiente'') and';
                 
-        END IF;	
+        END IF;
+        
+        IF  lower(v_parametros.tipo_interfaz)='movimientovb' THEN
+            raise notice '%', 'entra';
+            v_filtro = ' (lower(mov.estado_mov)!=''borrador'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'' and lower(mov.estado_mov)!=''vbarea'') and ';
+                
+        END IF;		
         
     	v_consulta:='
         	SELECT
@@ -73,6 +79,7 @@ BEGIN
             	mov.observaciones,
                 mov.id_movimiento_origen,
                 movorig.codigo as codigo_origen,
+                mov.id_estado_wf,
             	mov.estado_mov,
             	usu1.cuenta as usr_reg,
             	mov.fecha_reg,

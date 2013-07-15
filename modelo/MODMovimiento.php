@@ -40,6 +40,7 @@ class MODMovimiento extends MODbase {
         $this->captura('observaciones', 'varchar');
         $this->captura('id_movimiento_origen', 'integer');
         $this->captura('codigo_origen', 'varchar');
+								$this->captura('id_estado_wf','int4');
         $this->captura('estado_mov', 'varchar');
         $this->captura('usr_reg', 'varchar');
         $this->captura('fecha_reg', 'timestamp');
@@ -186,6 +187,52 @@ class MODMovimiento extends MODbase {
         $this->armarConsulta();
         $this->ejecutarConsulta();
 
+        return $this->respuesta;
+    }
+				
+				function siguienteEstadoMovimiento(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='alm.ft_movimiento_ime';
+        $this->transaccion='SAL_SIGEMOV_IME';
+        $this->tipo_procedimiento='IME';
+                
+        //Define los parametros para la funcion
+        $this->setParametro('id_movimiento','id_movimiento','int4');
+        $this->setParametro('id_funcionario_usu','id_funcionario_usu','int4');
+        $this->setParametro('operacion','operacion','varchar');
+        $this->setParametro('id_funcionario','id_funcionario','int4');
+        $this->setParametro('id_tipo_estado','id_tipo_estado','int4');
+        $this->setParametro('obs','obs','text');
+        $this->setParametro('instruc_rpc','instruc_rpc','varchar');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+    
+    function anteriorEstadoSolicitud(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='alm.ft_movimiento_ime';
+        $this->transaccion='SAL_ANTEMOV_IME';
+        $this->tipo_procedimiento='IME';
+                
+        //Define los parametros para la funcion
+        $this->setParametro('id_movimiento','id_movimiento','int4');
+        $this->setParametro('id_funcionario_usu','id_funcionario_usu','int4');
+        $this->setParametro('operacion','operacion','varchar');
+        $this->setParametro('id_funcionario','id_funcionario','int4');
+        $this->setParametro('id_tipo_estado','id_tipo_estado','int4');
+        $this->setParametro('id_estado_wf','id_estado_wf','int4');
+          $this->setParametro('obs','obs','text');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
         return $this->respuesta;
     }
 
