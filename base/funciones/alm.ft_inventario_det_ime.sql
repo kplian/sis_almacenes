@@ -1,6 +1,11 @@
-CREATE OR REPLACE FUNCTION alm.ft_inventario_det_ime(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION alm.ft_inventario_det_ime (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		Sistema de Almacenes
  FUNCION: 		alm.ft_inventario_det_ime
@@ -26,6 +31,7 @@ DECLARE
 	v_mensaje_error         text;
 	v_id_inventario_det		integer;
     v_saldo_fisico			numeric;
+    v_items					record;
 			    
 BEGIN
 
@@ -42,30 +48,61 @@ BEGIN
 	if(p_transaccion='SAL_DINV_INS')then
 					
         begin
-        	--Sentencia de la insercion
-        	insert into alm.tinventario_det(
-			estado_reg,
-			id_item,
-			observaciones,
-			cantidad_real,
-			id_inventario,
-			fecha_reg,
-			id_usuario_reg,
-			fecha_mod,
-			id_usuario_mod
-          	) values(
-			'activo',
-			v_parametros.id_item,
-			v_parametros.observaciones,
-			v_parametros.cantidad_real,
-			v_parametros.id_inventario,
-			now(),
-			p_id_usuario,
-			null,
-			null
-							
-			)RETURNING id_inventario_det into v_id_inventario_det;
-			
+        	if(v_parametros.id_clasificacion is NULL)then                
+                --Sentencia de la insercion
+                insert into alm.tinventario_det(
+                estado_reg,
+                id_item,
+                observaciones,
+                cantidad_real,
+                id_inventario,
+                fecha_reg,
+                id_usuario_reg,
+                fecha_mod,
+                id_usuario_mod
+                ) values(
+                'activo',
+                v_parametros.id_item,
+                v_parametros.observaciones,
+                v_parametros.cantidad_real,
+                v_parametros.id_inventario,
+                now(),
+                p_id_usuario,
+                null,
+                null      							
+                )RETURNING id_inventario_det into v_id_inventario_det;
+			else
+            	FOR v_items IN (select it.id_item
+                                from alm.titem it
+                                inner join alm.tclasificacion cla on cla.id_clasificacion=it.id_clasificacion
+								where cla.id_clasificacion=v_parametros.id_clasificacion
+                )LOOP                	
+                    --Sentencia de la insercion
+                    insert into alm.tinventario_det(
+                    estado_reg,
+                    id_item,
+                    observaciones,
+                    cantidad_real,
+                    id_inventario,
+                    fecha_reg,
+                    id_usuario_reg,
+                    fecha_mod,
+                    id_usuario_mod
+                    ) values(
+                    'activo',
+                    v_items.id_item,
+                    v_parametros.observaciones,
+                    v_parametros.cantidad_real,
+                    v_parametros.id_inventario,
+                    now(),
+                    p_id_usuario,
+                    null,
+                    null      							
+                    )RETURNING id_inventario_det into v_id_inventario_det;                	
+                END LOOP;
+            end if;
+        		
+        	
 			--Definicion de la respuesta
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Detalle Inventario almacenado(a) con exito (id_inventario_det'||v_id_inventario_det||')'); 
             v_resp = pxp.f_agrega_clave(v_resp,'id_inventario_det',v_id_inventario_det::varchar);
@@ -147,8 +184,9 @@ EXCEPTION
 		raise exception '%',v_resp;
 				        
 END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION alm.ft_inventario_det_ime(integer, integer, character varying, character varying)
-  OWNER TO postgres;
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
+COST 100;
