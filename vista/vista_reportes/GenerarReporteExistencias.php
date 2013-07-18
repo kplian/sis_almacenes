@@ -91,7 +91,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			config : {
 				name : 'id_items',
 				fieldLabel : 'Item',
-				allowBlank : false,
+				allowBlank : true,
 				emptyText : 'Items...',
 				store : new Ext.data.JsonStore({
 					url : '../../sis_almacenes/control/Item/listarItemNotBase',
@@ -133,6 +133,36 @@ header("content-type: text/javascript; charset=UTF-8");
 			id_grupo : 0,
 			grid : false,
 			form : true
+		},
+		{
+			config : {
+				name : 'clasificacion',
+				fieldLabel : 'Clasificación',
+				allowBlank : true,
+				items: [
+                    {
+                        xtype     : 'textarea',
+                        name      : 'clasif_desc',
+                        fieldLabel: 'Start', 
+                        width:'80%',
+                        disabled:true
+                    },
+                    {
+                        xtype     : 'button',
+                        name      : 'btn_clasif',
+                        fieldLabel: 'B',
+                        listeners: {
+					    	'click': function(a,b) {
+					     				alert('fuck fashion');
+					    			}
+					   	}
+                    }
+                ]
+			},
+			type : 'CompositeField',
+			id_grupo : 0,
+			grid : true,
+			form : true
 		}],
 		title : 'Generar Reporte Anual',
 		ActSave : '../../sis_almacenes/control/Reportes/reporteExistencias',
@@ -165,12 +195,12 @@ header("content-type: text/javascript; charset=UTF-8");
 				border : true,
 				title : 'Generar Reporte',
 				bodyStyle : 'padding:0 10px 0;',
-				columnWidth : '300px',
+				columnWidth : '500px',
 				items : [],
 				id_grupo : 0,
 				collapsible : true
 			}]
-		}],
+		}]
 
 	})
 </script>
