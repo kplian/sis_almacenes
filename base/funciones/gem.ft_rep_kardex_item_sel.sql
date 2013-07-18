@@ -111,7 +111,8 @@ BEGIN
             on alma.id_almacen = mov.id_almacen
             inner join alm.tmovimiento_tipo mtipo
             on mtipo.id_movimiento_tipo = mov.id_movimiento_tipo
-            where mov.estado_mov = ''finalizado''';
+            where mov.estado_mov = ''finalizado''
+            and mdet.cantidad > 0';
             
             if coalesce(v_parametros.id_almacen,'') != '' then
             	v_consulta = v_consulta || ' and mov.id_almacen in ('||v_parametros.id_almacen||')';
