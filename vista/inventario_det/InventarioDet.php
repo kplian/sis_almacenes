@@ -54,7 +54,7 @@ header("content-type: text/javascript; charset=UTF-8");
             config : {
                 name : 'id_item',
                 fieldLabel : 'Item',
-                allowBlank : false,
+                allowBlank : true,
                 emptyText : 'Item...',
                 store : new Ext.data.JsonStore({
                     url : '../../sis_almacenes/control/Item/listarItemNotBase',
@@ -105,7 +105,62 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             grid : true,
             form : true
-        }, {
+        },{
+            config : {
+                name : 'id_clasificacion',
+                fieldLabel : 'Clasificacion',
+                allowBlank : true,
+                emptyText : 'Clasificacion...',
+                store : new Ext.data.JsonStore({
+                    url : '../../sis_almacenes/control/Clasificacion/listarClasificacion',
+                    id : 'id_clasificacion',
+                    root : 'datos',
+                    sortInfo : {
+                        field : 'nombre',
+                        direction : 'ASC'
+                    },
+                    totalProperty : 'total',
+                    fields : ['id_clasificacion', 'nombre', 'codigo_largo'],
+                    remoteSort : true,
+                    baseParams : {
+                        par_filtro : 'cla.nombre#cla.codigo_largo'
+                    }
+                }),
+                valueField : 'id_clasificacion',
+                displayField : 'nombre',
+                tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo_largo}</p></div></tpl>',
+                hiddenName : 'id_clasificacion',
+                forceSelection : true,
+                typeAhead : false,
+                triggerAction : 'all',
+                lazyRender : true,
+                mode : 'remote',
+                pageSize : 10,
+                queryDelay : 1000,
+                anchor : '100%',
+                gwidth : 100,
+                minChars : 2,
+                turl : '../../../sis_almacenes/vista/clasificacion/BuscarClasificacion.php',
+                tasignacion : true,
+                tname : 'id_clasificacion',
+                ttitle : 'Clasificacion',
+                tdata : {},
+                tcls : 'BuscarClasificacion',
+                pid : this.idContenedor,
+                renderer : function(value, p, record) {
+                    return String.format('{0}', record.data['nombre_clasificaion']);
+                }
+            },
+            type : 'TrigguerCombo',
+            id_grupo : 0,
+            filters : {
+                pfiltro : 'itm.clasificacion',
+                type : 'string'
+            },
+            grid : false,
+            form : true
+        }, 
+        {
 			config : {
 				name : 'codigo_item',
 				fieldLabel : 'Código',
@@ -369,6 +424,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				}
 			} else if (this.nombreVista == 'EjecucionInventario') {
 				this.getComponente('id_item').disable();
+				this.getComponente('id_clasificacion').disable();
 				if (this.maestro.estado == 'pendiente_ejecucion' || this.maestro.estado == 'pendiente_correccion') {
 					this.getBoton('save').hide();
 					this.getBoton('edit').hide();

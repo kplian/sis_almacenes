@@ -69,7 +69,31 @@ DECLARE
     v_id_proceso_wf					integer;
     v_id_estado_wf					integer;
     v_codigo_estado					varchar;
-	
+    
+    va_id_tipo_estado integer [];
+    va_codigo_estado varchar [];
+    va_disparador varchar [];
+    va_regla varchar [];
+    va_prioridad integer []; 
+    
+    v_id_estado_actual  integer;
+    
+    v_id_tipo_estado		integer;
+    v_id_tipo_proceso		integer;
+    v_id_funcionario		integer;
+    v_id_usuario_reg		integer;
+    v_id_estado_wf_ant		integer;           
+    
+    v_pedir_obs				varchar;
+    v_num_estados			integer;
+    v_num_funcionarios		integer;
+    v_num_deptos			integer;
+    v_id_funcionario_estado	integer;
+    v_id_depto_estado		integer;
+    v_codigo_estado_siguiente		varchar;
+    v_obs					text;
+    v_uo_sol				varchar;
+    v_codigo				varchar;
 BEGIN
 
 	v_nombre_funcion='alm.ft_movimiento_ime';
@@ -312,6 +336,53 @@ BEGIN
             
         ELSIF v_parametros.operacion = 'finalizarRegistro' THEN   
         
+        	----obtenermos datos basicos
+        	select
+              s.id_proceso_wf,
+              s.id_estado_wf,
+              s.estado_mov
+            into            
+              v_id_proceso_wf,
+              v_id_estado_wf,
+              v_estado_mov
+          	from alm.tmovimiento s
+          	where s.id_movimiento=v_parametros.id_movimiento;
+            
+             --buscamos siguiente estado correpondiente al proceso del WF
+                   
+            SELECT 
+                 ps_id_tipo_estado,
+                 ps_codigo_estado,
+                 ps_disparador,
+                 ps_regla,
+                 ps_prioridad
+              into
+                va_id_tipo_estado,
+                va_codigo_estado,
+                va_disparador,
+                va_regla,
+                va_prioridad
+            
+            FROM wf.f_obtener_estado_wf(v_id_proceso_wf, v_id_estado_wf,NULL,'siguiente');
+        
+        	IF  va_id_tipo_estado[2] is not null  THEN           
+              raise exception 'El proceso se encuentra mal parametrizado dentro de Work Flow,  la finalizacion de solicitud solo admite un estado siguiente';
+            END IF;
+            IF  va_id_tipo_estado[1] is  null  THEN
+              raise exception ' El proceso de Work Flow esta mal parametrizado, no tiene un estado siguiente para la finalizacion';
+            END IF;
+            IF  va_disparador[1]='si'  THEN
+              raise exception ' El proceso de Work Flow esta mal parametrizado, antes de iniciar el proceso de compra necesita comprometer el presupuesto';
+            END IF;
+                        
+            --insertamos el nuevo estado_wf
+            v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1], 
+                                                         1, 
+                                                         v_id_estado_wf, 
+                                                         v_id_proceso_wf,
+                                                         p_id_usuario,
+                                                         NULL);
+        	        
         	--1.2) Se obtienen los datos del movimiento a finalizar
 	        select mov.fecha_mov, movtip.tipo, movtip.nombre, mov.id_almacen_dest, mov.id_almacen
 	        into v_fecha_mov, v_tipo_mov, v_tipo_mov_personalizado, v_id_almacen_dest, v_id_almacen
@@ -343,12 +414,61 @@ BEGIN
 	        end if;
 	      	--1.12) Actualiza el estado a finalizado cuando no hay ningun error
 	        update alm.tmovimiento set
-	        estado_mov = 'emitido',
+            id_estado_wf =  v_id_estado_actual,
+	        estado_mov = va_codigo_estado[1],
 	        fecha_mov = v_fecha_mov,
+            fecha_mod = now(),
 	        codigo = param.f_obtener_correlativo (v_cod_documento, v_id_periodo, NULL, v_id_depto, p_id_usuario, 'ALM', null,2,3,'alm.talmacen',v_parametros.id_almacen,v_cod_almacen)
 	        where id_movimiento = v_parametros.id_movimiento;
         
 		ELSIF v_parametros.operacion = 'finalizarMovimiento' THEN
+        
+        	----obtenermos datos basicos
+        	select
+              m.id_proceso_wf,
+              m.id_estado_wf,
+              m.estado_mov
+            into            
+              v_id_proceso_wf,
+              v_id_estado_wf,
+              v_estado_mov
+          	from alm.tmovimiento m
+          	where m.id_movimiento=v_parametros.id_movimiento;
+            
+             --buscamos siguiente estado correpondiente al proceso del WF
+                   
+            SELECT 
+                 ps_id_tipo_estado,
+                 ps_codigo_estado,
+                 ps_disparador,
+                 ps_regla,
+                 ps_prioridad
+              into
+                va_id_tipo_estado,
+                va_codigo_estado,
+                va_disparador,
+                va_regla,
+                va_prioridad
+            
+            FROM wf.f_obtener_estado_wf(v_id_proceso_wf, v_id_estado_wf,NULL,'siguiente');
+        
+        	IF  va_id_tipo_estado[2] is not null  THEN           
+              raise exception 'El proceso se encuentra mal parametrizado dentro de Work Flow,  la finalizacion de solicitud solo admite un estado siguiente';
+            END IF;
+            IF  va_id_tipo_estado[1] is  null  THEN
+              raise exception ' El proceso de Work Flow esta mal parametrizado, no tiene un estado siguiente para la finalizacion';
+            END IF;
+            IF  va_disparador[1]='si'  THEN
+              raise exception ' El proceso de Work Flow esta mal parametrizado, antes de iniciar el proceso de compra necesita comprometer el presupuesto';
+            END IF;
+                        
+            --insertamos el nuevo estado_wf
+            v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1], 
+                                                         1, 
+                                                         v_id_estado_wf, 
+                                                         v_id_proceso_wf,
+                                                         p_id_usuario,
+                                                         NULL);
 			
 	        --1.2) Se obtienen los datos del movimiento a finalizar
 	        select mov.fecha_mov, movtip.tipo, movtip.nombre, mov.id_almacen_dest
@@ -555,11 +675,13 @@ BEGIN
 	        else 
 	          v_fecha_mov = date(v_fecha_mov) + interval '1 min';
 	        end if;
-	        
+            
 	      	--1.12) Actualiza el estado a finalizado cuando no hay ningun error
 	        update alm.tmovimiento set
-	        estado_mov = 'registrado',
-	        fecha_mov = v_fecha_mov
+            id_estado_wf = v_id_estado_actual,           
+	        estado_mov = va_codigo_estado[1],
+	        fecha_mov = v_fecha_mov,
+            fecha_mod = now()
 	        where id_movimiento = v_parametros.id_movimiento;
 	        
 	        --Se actualiza el saldo fisico del detalle valorado.
@@ -759,7 +881,7 @@ BEGIN
                     g_registros.id_movimiento_det,
                     g_registros.cantidad_item
                 );
-            END LOOP;
+            END LOOP;          
         end if;
         
         --se devuelve el movimiento a estado borrador
@@ -771,6 +893,355 @@ BEGIN
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
         return v_respuesta;
     end;
+    
+  /*********************************    
+ 	#TRANSACCION:  'ALM_ANTEMOV_IME'
+ 	#DESCRIPCION:	Transaccion utilizada  pasar a  estados anterior del movimiento
+                    segun la operacion definida
+ 	#AUTOR:		GSS
+ 	#FECHA:		12-07-2013 12:12:51
+	***********************************/
+
+	elseif(p_transaccion='SAL_ANTEMOV_IME')then   
+        begin
+        
+        --------------------------------------------------
+        --REtrocede al estado inmediatamente anterior
+        -------------------------------------------------
+         IF  v_parametros.operacion = 'cambiar' THEN
+               
+               raise notice 'es_estado_wf %',v_parametros.id_estado_wf;
+              
+                      --recupera estado anterior segun Log del WF
+                        SELECT  
+                           ps_id_tipo_estado,
+                           ps_id_funcionario,
+                           ps_id_usuario_reg,
+                           ps_id_depto,
+                           ps_codigo_estado,
+                           ps_id_estado_wf_ant
+                        into
+                           v_id_tipo_estado,
+                           v_id_funcionario,
+                           v_id_usuario_reg,
+                           v_id_depto,
+                           v_codigo_estado,
+                           v_id_estado_wf_ant 
+                        FROM wf.f_obtener_estado_ant_log_wf(v_parametros.id_estado_wf);
+                        
+                        --
+                      select 
+                           ew.id_proceso_wf 
+                        into 
+                           v_id_proceso_wf
+                      from wf.testado_wf ew
+                      where ew.id_estado_wf= v_id_estado_wf_ant;
+                      
+                      -- registra nuevo estado
+                      
+                      v_id_estado_actual = wf.f_registra_estado_wf(
+                          v_id_tipo_estado, 
+                          v_id_funcionario, 
+                          v_parametros.id_estado_wf, 
+                          v_id_proceso_wf, 
+                          p_id_usuario,
+                          v_id_depto,
+                          v_parametros.obs);
+                      
+                      -- actualiza estado del movimiento
+                        update alm.tmovimiento  m set 
+                           id_estado_wf =  v_id_estado_actual,
+                           estado_mov = v_codigo_estado,
+                           id_usuario_mod=p_id_usuario,
+                           fecha_mod=now()
+                         where id_movimiento = v_parametros.id_movimiento;
+                         
+                        -- si hay mas de un estado disponible  preguntamos al usuario
+                        v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje','Se realizo el cambio de estado)'); 
+                        v_respuesta = pxp.f_agrega_clave(v_respuesta,'operacion','cambio_exitoso');
+                        
+                              
+                      --Devuelve la respuesta
+                        return v_respuesta;
+                        
+           ----------------------------------------------------------------------
+           -- PAra retornar al estado borrador de la solicitud de manera directa
+           ---------------------------------------------------------------------
+           ELSEIF  v_parametros.operacion = 'inicio' THEN
+             
+           SELECT
+            mov.id_estado_wf,
+            pw.id_tipo_proceso,
+           	pw.id_proceso_wf
+           into
+            v_id_estado_wf,
+            v_id_tipo_proceso,
+            v_id_proceso_wf
+             
+           FROM alm.tmovimiento mov
+           inner join wf.tproceso_wf pw on pw.id_proceso_wf = mov.id_proceso_wf
+           WHERE  mov.id_movimiento = v_parametros.id_movimiento;
+           
+             raise notice 'BUSCAMOS EL INICIO PARA %',v_id_tipo_proceso;
+             
+            -- recuperamos el estado inicial segun tipo_proceso
+             
+             SELECT  
+               ps_id_tipo_estado,
+               ps_codigo_estado
+             into
+               v_id_tipo_estado,
+               v_codigo_estado
+             FROM wf.f_obtener_tipo_estado_inicial_del_tipo_proceso(v_id_tipo_proceso);
+             
+             --recupera el funcionario segun ultimo log borrador
+             raise notice 'CODIGO ESTADO BUSCADO %',v_codigo_estado ;
+             
+             SELECT 
+               ps_id_funcionario,
+               ps_codigo_estado ,
+               ps_id_depto
+             into
+              v_id_funcionario,
+              v_codigo_estado,
+              v_id_depto
+                
+             FROM wf.f_obtener_estado_segun_log_wf(v_id_estado_wf, v_id_tipo_estado);
+            
+              raise notice 'CODIGO ESTADO ENCONTRADO %',v_codigo_estado ;
+             
+             --registra estado borrador
+              v_id_estado_actual = wf.f_registra_estado_wf(
+                  v_id_tipo_estado, 
+                  v_id_funcionario, 
+                  v_parametros.id_estado_wf, 
+                  v_id_proceso_wf, 
+                  p_id_usuario,
+                  v_id_depto,
+                  v_parametros.obs);
+                      
+              -- actualiza estado en el movimiento
+                update alm.tmovimiento  m set 
+                   id_estado_wf =  v_id_estado_actual,
+                   estado_mov = v_codigo_estado,
+                   id_usuario_mod=p_id_usuario,
+                   fecha_mod=now()
+                 where id_movimiento = v_parametros.id_movimiento;             
+            
+               -- si hay mas de un estado disponible  preguntamos al usuario
+                v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje','Se regresoa borrador con exito)'); 
+                v_respuesta = pxp.f_agrega_clave(v_respuesta,'operacion','cambio_exitoso');
+                              
+              --Devuelve la respuesta
+                return v_respuesta;
+              
+           ELSE
+           
+           		raise exception 'Operacion no reconocida %',v_parametros.operacion;
+           
+           END IF;
+       end;
+       
+         /*********************************    
+ 	#TRANSACCION:  'SAL_SIGEMOV_IME'
+ 	#DESCRIPCION:	funcion que controla el cambio al Siguiente estado del movimiento, integrado con el WF
+ 	#AUTOR:		GSS
+ 	#FECHA:		12-07-2013 12:12:51
+	***********************************/
+
+	elseif(p_transaccion='SAL_SIGEMOV_IME')then   
+        begin
+        
+        --obtenermos datos basicos
+          
+          select
+            m.id_proceso_wf,
+            m.id_estado_wf,
+            m.estado_mov,
+            m.fecha_mov
+          into           
+            v_id_proceso_wf,
+            v_id_estado_wf,
+            v_codigo_estado,
+            v_fecha_mov
+            
+          from alm.tmovimiento m
+          where m.id_movimiento=v_parametros.id_movimiento;
+          
+           select 
+            ew.id_tipo_estado ,
+            te.pedir_obs
+           into 
+            v_id_tipo_estado,
+            v_pedir_obs
+          from wf.testado_wf ew
+          inner join wf.ttipo_estado te on te.id_tipo_estado = ew.id_tipo_estado
+          where ew.id_estado_wf = v_id_estado_wf;
+          
+         --------------------------------------------- 
+         -- Verifica  los posibles estados sigueintes para que desde la interfza se tome la decision si es necesario
+         --------------------------------------------------
+          IF  v_parametros.operacion = 'verificar' THEN
+          
+              --buscamos siguiente estado correpondiente al proceso del WF
+             
+              ----- variables de retorno------
+              
+              v_num_estados=0;
+              v_num_funcionarios=0;
+              v_num_deptos=0;
+              
+              --------------------------------- 
+              
+             SELECT  
+                 ps_id_tipo_estado,
+                 ps_codigo_estado,
+                 ps_disparador,
+                 ps_regla,
+                 ps_prioridad
+              into
+                va_id_tipo_estado,
+                va_codigo_estado,
+                va_disparador,
+                va_regla,
+                va_prioridad 
+              FROM adq.f_obtener_sig_estado_sol_rec(v_parametros.id_movimiento, v_id_proceso_wf, v_id_tipo_estado); 
+          
+            
+            v_num_estados= array_length(va_id_tipo_estado, 1);
+            
+             IF v_pedir_obs = 'no' THEN
+            
+                IF v_num_estados = 1 then
+                      -- si solo hay un estado,  verificamos si tiene mas de un funcionario por este estado
+                     SELECT 
+                     *
+                      into
+                     v_num_funcionarios 
+                     FROM wf.f_funcionario_wf_sel(
+                         p_id_usuario, 
+                         va_id_tipo_estado[1], 
+                         v_fecha_mov::date,
+                         v_id_estado_wf,
+                         TRUE) AS (total bigint);
+                         
+                    IF v_num_funcionarios = 1 THEN
+                    -- si solo es un funcionario, recuperamos el funcionario correspondiente
+                         SELECT 
+                             id_funcionario
+                               into
+                             v_id_funcionario_estado
+                         FROM wf.f_funcionario_wf_sel(
+                             p_id_usuario, 
+                             va_id_tipo_estado[1], 
+                             v_fecha_mov::date,
+                             v_id_estado_wf,
+                             FALSE) 
+                             AS (id_funcionario integer,
+                               desc_funcionario text,
+                               desc_funcionario_cargo text,
+                               prioridad integer);
+                    END IF;    
+                  
+                  --verificamos el numero de deptos
+                  
+                    SELECT 
+                    *
+                    into
+                      v_num_deptos 
+                   FROM wf.f_depto_wf_sel(
+                       p_id_usuario, 
+                       va_id_tipo_estado[1], 
+                       v_fecha_mov::date,
+                       v_id_estado_wf,
+                       TRUE) AS (total bigint);
+                       
+                  IF v_num_deptos = 1 THEN
+                      -- si solo es un funcionario, recuperamos el funcionario correspondiente
+                           SELECT 
+                               id_depto
+                                 into
+                               v_id_depto_estado
+                          FROM wf.f_depto_wf_sel(
+                               p_id_usuario, 
+                               va_id_tipo_estado[1], 
+                               v_fecha_soli,
+                               v_id_estado_wf,
+                               FALSE) 
+                               AS (id_depto integer,
+                                 codigo_depto varchar,
+                                 nombre_corto_depto varchar,
+                                 nombre_depto varchar,
+                                 prioridad integer);
+                    END IF;
+                  
+                 END IF;
+           
+           END IF;
+            
+            -- si hay mas de un estado disponible  preguntamos al usuario
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje','Verificacion para el siguiente estado)'); 
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'estados', array_to_string(va_id_tipo_estado, ','));
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'operacion','preguntar_todo');
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'num_estados',v_num_estados::varchar);
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'num_funcionarios',v_num_funcionarios::varchar);
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'num_deptos',v_num_deptos::varchar);
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'id_funcionario_estado',v_id_funcionario_estado::varchar);
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'id_depto_estado',v_id_depto_estado::varchar);
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'id_tipo_estado', va_id_tipo_estado[1]::varchar);
+            
+            
+           ----------------------------------------
+           --Se se solicita cambiar de estado a la solicitud
+           ------------------------------------------
+           ELSEIF  v_parametros.operacion = 'cambiar' THEN
+            
+            -- obtener datos tipo estado
+            
+            select
+             te.codigo
+            into
+             v_codigo_estado_siguiente
+            from wf.ttipo_estado te
+            where te.id_tipo_estado = v_parametros.id_tipo_estado;
+            
+            IF  pxp.f_existe_parametro('p_tabla','id_depto') THEN
+             
+             v_id_depto = v_parametros.id_depto;
+            
+            END IF;            
+            
+            v_obs=v_parametros.obs;           
+                        
+             v_id_estado_actual =  wf.f_registra_estado_wf(v_parametros.id_tipo_estado, 
+                                                           v_parametros.id_funcionario, 
+                                                           v_id_estado_wf, 
+                                                           v_id_proceso_wf,
+                                                           p_id_usuario,
+                                                           v_id_depto,
+                                                           v_obs);
+            
+            
+             -- actualiza estado en el movimiento
+            
+             update alm.tmovimiento  s set 
+               id_estado_wf =  v_id_estado_actual,
+               estado_mov = v_codigo_estado_siguiente,
+               id_usuario_mod=p_id_usuario,
+               fecha_mod=now()
+               
+             where id_movimiento= v_parametros.id_movimiento;
+            
+           -- si hay mas de un estado disponible  preguntamos al usuario
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje','Se realizo el cambio de estado)'); 
+            v_respuesta = pxp.f_agrega_clave(v_respuesta,'operacion','cambio_exitoso');
+                    
+          END IF;
+        
+          --Devuelve la respuesta
+            return v_respuesta;
+        
+        end; 
   else
      raise exception 'Transaccion inexistente: %',p_transaccion;
   end if;

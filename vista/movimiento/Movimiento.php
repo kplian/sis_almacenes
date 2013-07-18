@@ -633,6 +633,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'codigo_origen',
 			type : 'string'
 		}, {
+				name : 'id_estado_wf',
+				type : 'numeric'
+		},{
 			name : 'estado_mov',
 			type : 'string'
 		}, {
@@ -666,11 +669,11 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		onTipoSelect : function(e, component, index) {
 			if (e.value == 'ingreso') {
-				this.getComponente('solicitante').setVisible(false);
-				this.getComponente('solicitante').disable();
+				//this.getComponente('solicitante').setVisible(false);
+				//this.getComponente('solicitante').disable();
 			} else {
-				this.getComponente('solicitante').setVisible(true);
-				this.getComponente('solicitante').enable();
+				//this.getComponente('solicitante').setVisible(true);
+				//this.getComponente('solicitante').enable();
 			}
 			this.getComponente('id_almacen_dest').setVisible(false);
 			this.getComponente('id_movimiento_tipo').reset();

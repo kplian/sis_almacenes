@@ -20,6 +20,7 @@ class ACTClasificacion extends ACTbase {
 
     function listarClasificacionArb() {
         $node = $this->objParam->getParametro('node');
+								$clasificacion = $this->objParam->getParametro('clasificacion');								
         $id_clasificacion = $this->objParam->getParametro('id_clasificacion');
 
         if ($node == 'id') {
@@ -27,12 +28,13 @@ class ACTClasificacion extends ACTbase {
         } else {
             $this->objParam->addParametro('id_padre', $id_clasificacion);
         }
-
+								$this->objParam->addParametro('clasificacion', $clasificacion);
+								
         $this->objFunc = $this->create('MODClasificacion');
         $this->res = $this->objFunc->listarClasificacionArb();
-
+								
         $this->res->setTipoRespuestaArbol();
-
+								
         $arreglo = array();
 
         array_push($arreglo, array('nombre' => 'id', 'valor' => 'id_clasificacion'));

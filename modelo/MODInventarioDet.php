@@ -50,6 +50,7 @@ class MODInventarioDet extends MODbase {
 
         $this->setParametro('id_item', 'id_item', 'int4');
         $this->setParametro('id_almacen', 'id_almacen', 'int4');
+								$this->setParametro('id_clasificacion','id_clasificacion','int4');
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('cantidad_real', 'cantidad_real', 'numeric');
         $this->setParametro('id_inventario', 'id_inventario', 'int4');
