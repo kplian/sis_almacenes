@@ -461,3 +461,61 @@ ALTER TABLE alm.tmovimiento_tipo
     NOT DEFERRABLE;
   
 /***********************************F-DEP-GSS-ALM-69-05/07/2013*****************************************/
+
+/***********************************I-DEP-RCM-ALM-82-18/07/2013*****************************************/
+ALTER TABLE alm.tpreingreso
+  ADD CONSTRAINT fk_tpreingreso__id_cotizacion FOREIGN KEY (id_cotizacion)
+    REFERENCES adq.tcotizacion(id_cotizacion)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tpreingreso
+  ADD CONSTRAINT fk_tpreingreso__id_almacen FOREIGN KEY (id_almacen)
+    REFERENCES alm.talmacen(id_almacen)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tpreingreso_det
+  ADD CONSTRAINT fk_tpreingreso_det__id_preingreso FOREIGN KEY (id_preingreso)
+    REFERENCES alm.tpreingreso(id_preingreso)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tpreingreso_det
+  ADD CONSTRAINT fk_tpreingreso_det__id_cotizacion_det FOREIGN KEY (id_cotizacion_det)
+    REFERENCES adq.tcotizacion_det(id_cotizacion_det)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tpreingreso_det
+  ADD CONSTRAINT fk_tpreingreso_det__id_item FOREIGN KEY (id_item)
+    REFERENCES alm.titem(id_item)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tpreingreso_det
+  ADD CONSTRAINT fk_tpreingreso_det__id_almacen FOREIGN KEY (id_almacen)
+    REFERENCES alm.talmacen(id_almacen)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.titem_concepto
+  ADD CONSTRAINT fk_titem_concepto__id_item FOREIGN KEY (id_item)
+    REFERENCES alm.titem(id_item)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.titem_concepto
+  ADD CONSTRAINT fk_titem_concepto__id_concepto_ingas FOREIGN KEY (id_concepto_ingas)
+    REFERENCES param.tconcepto_ingas(id_concepto_ingas)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-RCM-ALM-82-18/07/2013*****************************************/

@@ -381,3 +381,33 @@ ALTER TABLE alm.tmovimiento_tipo
   ADD COLUMN id_proceso_macro INTEGER;
 
 /***********************************F-SCP-GSS-ALM-69-05/07/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-82-18/07/2013*****************************************/
+CREATE TABLE alm.tpreingreso(
+	id_preingreso serial not null,
+	id_cotizacion integer not null,
+	id_almacen integer,
+	CONSTRAINT tpreingreso__id_preingreso PRIMARY KEY(id_preingreso)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+CREATE TABLE alm.tpreingreso_det(
+	id_preingreso_det serial not null,
+	id_preingreso integer not null,
+	id_cotizacion_det integer,
+	id_item integer,
+	id_almacen integer,
+	cantidad numeric(18,2),
+	precio_compra numeric(18,2),
+	CONSTRAINT tpreingreso_det__id_preingreso_det PRIMARY KEY(id_preingreso_det)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+CREATE TABLE alm.titem_concepto(
+	id_item_concepto serial not null,
+	id_item integer not null,
+	id_concepto_ingas integer not null,
+	CONSTRAINT titem_concepto__id_item_concepto PRIMARY KEY(id_item_concepto)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+/***********************************F-SCP-RCM-ALM-82-18/07/2013*****************************************/
