@@ -28,7 +28,8 @@ BEGIN
   v_nombre_funcion='alm.ft_movimiento_sel';
   v_parametros=pxp.f_get_record(p_tabla);
   
-  /*********************************   
+  
+  	/*********************************   
      #TRANSACCION:  'SAL_MOV_SEL'
      #DESCRIPCION:  Consulta de datos
      #AUTOR:        Gonzalo Sarmiento   
@@ -97,7 +98,7 @@ BEGIN
             LEFT JOIN alm.tmovimiento movorig on movorig.id_movimiento = mov.id_movimiento_origen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
-			WHERE mov.estado_reg = ''activo'' and ';
+			WHERE mov.estado_reg = ''activo'' and movtip.id_movimiento_tipo != ' ||v_id_movimiento_tipo || ' and ';
 
         v_consulta:=v_consulta||v_filtro;
     	v_consulta:=v_consulta||v_parametros.filtro;
@@ -126,7 +127,7 @@ BEGIN
             LEFT JOIN alm.tmovimiento movorig on movorig.id_movimiento = mov.id_movimiento_origen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
-			WHERE mov.estado_reg = ''activo'' and ';
+			WHERE mov.estado_reg = ''activo''  and movtip.id_movimiento_tipo != ' ||v_id_movimiento_tipo || ' and ';
         v_consulta:= v_consulta||v_parametros.filtro;
         return v_consulta;
      end;
@@ -225,11 +226,14 @@ BEGIN
 		    WHERE mov.estado_reg = ''activo'' 
 			and mov.estado_mov = ''borrador'' 
 			and mov.fecha_mov between ''' || v_fecha_ini || ''' and ''' || v_fecha_fin ||''' ;';
-	else 
-		v_consulta:='SELECT count(null);';
-	end if;
-	return v_consulta;
+		else 
+			v_consulta:='SELECT count(null);';
+		end if;
+		return v_consulta;
      end;
+     
+         
+     
   end if;
 EXCEPTION
   WHEN OTHERS THEN

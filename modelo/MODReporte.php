@@ -22,7 +22,9 @@ class MODReporte extends MODbase {
         $this->setParametro('fecha_hasta', 'fecha_hasta', 'date');
         $this->setParametro('all_items', 'all_items', 'varchar');
         $this->setParametro('id_items', 'id_items', 'varchar');
-        
+		$this->setParametro('saldo_cero', 'saldo_cero', 'varchar');
+		$this->setParametro('id_clasificacion', 'id_clasificacion', 'varchar');
+		
         $this->captura('id_item', 'integer');
         $this->captura('codigo', 'varchar');
         $this->captura('nombre', 'varchar');
@@ -32,6 +34,7 @@ class MODReporte extends MODbase {
         $this->captura('costo', 'numeric');
 
         $this->armarConsulta();
+		//echo $this->consulta;exit;
         $this->ejecutarConsulta();
 
         return $this->respuesta;

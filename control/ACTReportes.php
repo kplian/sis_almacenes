@@ -25,6 +25,7 @@ class ACTReportes extends ACTbase {
         $this->objParam->addParametroConsulta('puntero', 0);
         $this->objFunc = $this->create('MODReporte');
         $resultRepExistencias = $this->objFunc->listarItemsPorAlmacenFecha($this->objParam);
+		//var_dump($resultRepExistencias->getDatos());
         
         $dataSource = new DataSource();
         $resultData = $resultRepExistencias->getDatos();

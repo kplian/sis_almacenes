@@ -69,25 +69,29 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : true,
 			form : true
 		}, {
-			config : {
-				name : 'all_items',
-				fieldLabel : 'Todos los items',
-				allowBlank : false,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'local',
-				store : new Ext.data.ArrayStore({
-					fields : ['codigo', 'nombre'],
-					data : [['si', 'Si'], ['no', 'No']]
-				}),
-				anchor : '50%',
-				valueField : 'codigo',
-				displayField : 'nombre'
+			config: {
+				name: 'all_items',
+				fieldLabel: 'Seleccionar Criterio',
+				anchor: '100%',
+				allowBlank: false,
+				origen: 'CATALOGO',
+				gdisplayField: 'all_items',
+				gwidth: 100,
+				tinit:false,
+				baseParams:{
+						cod_subsistema:'ALM',
+						catalogo_tipo:'titem__opciones'
+				},
+				renderer:function (value, p, record){return String.format('{0}', record.data['all_items']);}
 			},
-			type : 'ComboBox',
-			id_grupo : 1,
-			form : true
-		}, {
+			type: 'ComboRec',
+			id_grupo: 0,
+			grid: true,
+			form: true
+		}, 
+		
+		
+		{
 			config : {
 				name : 'id_items',
 				fieldLabel : 'Item',
@@ -134,35 +138,105 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : false,
 			form : true
 		},
-		{
+		/*{
+			config: {
+				name: 'btn_clasif__',
+				fieldLabel: 'Clasificacion__',
+				anchor: '100%'
+			},
+			type: 'Button',
+			id_grupo: 0,
+			grid: true,
+			form: false
+		},*/ 
+		/*{
 			config : {
 				name : 'clasificacion',
 				fieldLabel : 'Clasificación',
 				allowBlank : true,
 				items: [
-                    {
+					{
                         xtype     : 'textarea',
                         name      : 'clasif_desc',
                         fieldLabel: 'Start', 
                         width:'80%',
                         disabled:true
-                    },
-                    {
+                   },{
                         xtype     : 'button',
                         name      : 'btn_clasif',
                         fieldLabel: 'B',
                         listeners: {
-					    	'click': function(a,b) {
-					     				alert('fuck fashion');
-					    			}
-					   	}
-                    }
-                ]
+					    	'click': {
+					    		fn: function(a,b) {
+					    				var data;
+					    				console.log(this)
+					    				console.log(this.idContenedor)
+					    				//alert('hhhhhhh')
+					     				Phx.CP.loadWindows('../../../sis_almacenes/vista/clasificacion/BuscarClasificacion.php',
+												'Clasificación',
+												{
+													width:'60%',
+													height:'70%',
+													evento: 'beforeclose',
+													manejadorEvento: function(){
+														alert('on close')
+													}
+											    },
+											    data,
+											    this.idContenedor,
+											    'BuscarClasificacion'
+										);
+					    	},
+					    	scope:this
+					    }
+					    	
+					  }
+                    }]
 			},
 			type : 'CompositeField',
 			id_grupo : 0,
 			grid : true,
 			form : true
+		},*/
+		{
+			config: {
+				name: 'clasificacion',
+				fieldLabel: 'Clasificación',
+				anchor: '100%'
+			},
+			type: 'TextArea',
+			id_grupo: 0,
+			grid: true,
+			form: true
+		},
+		{
+			config : {
+				name : 'saldo_cero',
+				fieldLabel : 'Items Sin Existencias',
+				allowBlank : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'local',
+				store : new Ext.data.ArrayStore({
+					fields : ['codigo', 'nombre'],
+					data : [['si', 'Si'], ['no', 'No']]
+				}),
+				anchor : '50%',
+				valueField : 'codigo',
+				displayField : 'nombre'
+			},
+			type : 'ComboBox',
+			id_grupo : 0,
+			form : true
+		},
+		{
+			config : {
+				name : 'id_clasificacion',
+				inputType:'hidden',
+				labelSeparator:'',
+			},
+			type:'Field',
+			form:true
 		}],
 		title : 'Generar Reporte Anual',
 		ActSave : '../../sis_almacenes/control/Reportes/reporteExistencias',
@@ -175,16 +249,35 @@ header("content-type: text/javascript; charset=UTF-8");
 			Phx.vista.GenerarReporteExistencias.superclass.constructor.call(this, config);
 			this.init();
 			
-			this.getComponente('all_items').on('select', function(e, component, index) {
-			    if (e.value == 'si') {
+			this.getComponente('catalogo').on('select', function(e, component, index) {
+			    if (e.value == 'Todos los Items') {
                     this.getComponente('id_items').disable();
-                } else {
+                    this.getComponente('clasificacion').disable();
+                    this.getComponente('id_items').allowBlank=true;
+                    this.getComponente('clasificacion').allowBlank=true;
+                    
+                } else if(e.value == 'Seleccionar Items') {
                     this.getComponente('id_items').enable();
+                    this.getComponente('clasificacion').disable();
+                    this.getComponente('id_items').allowBlank=false;
+                    this.getComponente('clasificacion').allowBlank=true;
+                } else if(e.value == 'Por Clasificacion') {
+                	this.getComponente('id_items').disable();
+                    this.getComponente('clasificacion').enable();
+                    this.getComponente('id_items').allowBlank=true;
+                    this.getComponente('clasificacion').allowBlank=false;
+                	
+                } else{
+                	this.getComponente('id_items').disable();
+                    this.getComponente('clasificacion').disable();
+                    this.getComponente('id_items').allowBlank=true;
+                    this.getComponente('clasificacion').allowBlank=true;
                 }
 			}, this);
 			
-			this.getComponente('all_items').setValue('si');
-			this.getComponente('id_items').disable();		},
+			this.getComponente('id_items').disable();
+			this.Cmp.clasificacion.on('focus',this.bntClasificacion,this);
+			this.Cmp.clasificacion.setReadOnly(true);		},
 		tipo : 'reporte',
 		clsSubmit : 'bprint',
 		Grupos : [{
@@ -200,7 +293,30 @@ header("content-type: text/javascript; charset=UTF-8");
 				id_grupo : 0,
 				collapsible : true
 			}]
-		}]
+		}],
+		bntClasificacion: function(){
+			var data;
+			//Valida que el combo de criterio sea por Clasificación
+			if(this.Cmp.all_items.getValue()=='Por Clasificacion'){
+				Phx.CP.loadWindows('../../../sis_almacenes/vista/clasificacion/BuscarClasificacion.php',
+						'Clasificación',
+						{
+							width:'60%',
+							height:'70%'
+					    },
+					    data,
+					    this.idContenedor,
+					    'BuscarClasificacion'
+				);
+			}
+		},
+		id_clasificacion:'',
+		agregarArgsExtraSubmit: function(){
+			//Inicializa el objeto de los argumentos extra
+			this.argumentExtraSubmit={};
+				//Añade los parámetros extra para mandar por submit
+			this.argumentExtraSubmit.id_clasificacion=this.id_clasificacion;
+		}
 
-	})
+})
 </script>

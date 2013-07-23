@@ -904,3 +904,10 @@ select pxp.f_insert_tgui ('MovimientoVb', 'movimiento vb', 'MOVVB', 'si', 2, 'si
 select pxp.f_insert_testructura_gui ('MOVVB', 'ALMOVI');
 
 /***********************************F-DAT-GSS-ALM-79-15/07/2013****************************************/
+
+
+/***********************************I-DAT-RCM-ALM-85-18/07/2013****************************************/
+select pxp.f_add_catalog('ALM','titem__opciones','Todos los Items');
+select pxp.f_add_catalog('ALM','titem__opciones','Seleccionar Items');
+select pxp.f_add_catalog('ALM','titem__opciones','Por Clasificacion');
+/***********************************F-DAT-RCM-ALM-85-18/07/2013****************************************/

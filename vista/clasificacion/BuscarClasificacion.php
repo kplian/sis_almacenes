@@ -13,9 +13,11 @@ header("content-type:text/javascript; charset=UTF-8");
         constructor : function(config) {
             this.maestro = config.maestro;
             Phx.vista.BuscarClasificacion.superclass.constructor.call(this, config);
-           
-            this.init();          
+            this.init();
+            this.getBoton('triguerreturn').enable();          
         },
+        NodoCheck:true,//si los nodos tienen los valores para el check
+		ActCheck:'../../sis_seguridad/control/GuiRol/checkGuiRol',
         title : 'Buscador de Clasificacion',
         ActList : '../../sis_almacenes/control/Clasificacion/listarClasificacionArb',
         //ActSearch : '../../sis_almacenes/control/Item/buscarClasificacionArb',
@@ -57,7 +59,57 @@ header("content-type:text/javascript; charset=UTF-8");
         sortInfo : {
             field : 'id_clasificacion',
             direction : 'ASC'
-        }        
+        },
+        onCheckchange: function(){
+			//do nothing
+        },
+	getAllChildNodes: function(node){ 
+        var allNodes = new Array();
+        //this.id_clasificacion='' 
+            if(!Ext.value(node,false)){ 
+			return []; 
+        } 
+        if(!node.hasChildNodes()){ 
+            return node; 
+        } else{ 
+            allNodes.push(node); 
+            node.eachChild(function(Mynode){
+            	allNodes = allNodes.concat(this.getAllChildNodes(Mynode));
+            	if(Mynode.attributes.checked){
+            		var _id = ','+Mynode.attributes.id_clasificacion;
+            		var _desc = ', '+Mynode.attributes.text;
+            		this.id_clasificacion = this.id_clasificacion + _id;
+            		this.desc_clasificacion = this.desc_clasificacion + _desc;  
+            	}
+            	//console.log(Mynode.attributes.nombre+' '+Mynode.attributes.id_clasificacion)
+            },this);         
+        } 
+        return allNodes; 
+	},
+	seleccionNodos: function(node){
+		this.id_clasificacion='';
+		this.desc_clasificacion='';
+		var nodes = this.getAllChildNodes(node);
+		this.id_clasificacion = this.id_clasificacion.substring(1,this.id_clasificacion.length)
+		this.desc_clasificacion = this.desc_clasificacion.substring(1,this.desc_clasificacion.length)
+		//alert(this.id_clasificacion);
+		//alert(this.desc_clasificacion);
+	},
+	id_clasificacion:'',
+	desc_clasificacion:'',
+	btriguerreturn:true,
+	onButtonTriguerreturn: function(){
+		//alert('envaiando clasificaciones');
+		this.seleccionNodos(this.root);
+		Phx.CP.getPagina(this.idContenedorPadre).Cmp.clasificacion.setValue(this.desc_clasificacion);
+		Phx.CP.getPagina(this.idContenedorPadre).id_clasificacion=this.id_clasificacion;
+		//alert(Phx.CP.getPagina(this.idContenedorPadre).ggg)
+		//console.log(this.idContenedorPadre);
+		//console.log(Phx.CP.getPagina(this.idContenedorPadre))		
+		//console.log(Phx.CP.getPagina(this.idContenedorPadre).Cmp.clasificacion);
+		this.panel.close();
+		
+	}        
         
-    }); 
+}); 
 </script>

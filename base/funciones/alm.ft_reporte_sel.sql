@@ -20,7 +20,8 @@ DECLARE
   v_parametros 		record;
   v_respuesta		varchar;
   v_id_items		varchar[];
-  v_where		varchar;
+  v_where			varchar;
+  v_ids				varchar;
 BEGIN
   v_nombre_funcion='alm.ft_reporte_sel';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -32,12 +33,25 @@ BEGIN
      #FECHA:        29-04-2013
     ***********************************/
   
-	if(p_transaccion='SAL_REPEXIST_SEL')then
+	if(p_transaccion='SAL_REPEXIST_SEL') then
 		begin
-			if (v_parametros.all_items = 'si') then
+		
+			if (v_parametros.all_items = 'Todos los Items') then
 				v_where = 'where ';
-			else
+			elsif (v_parametros.all_items = 'Seleccionar Items') then
 				v_where = 'where itm.id_item = ANY(ARRAY['||v_parametros.id_items||']) and ';
+			elsif (v_parametros.all_items = 'Por Clasificacion') then
+				--Obtener los IDs de todas las clasificaciones
+				v_ids=alm.f_get_id_clasificaciones_varios(v_parametros.id_clasificacion);
+				
+				v_where = 'where itm.id_clasificacion in (' ||v_ids||') and ';
+			else
+				raise exception 'Error desconocido';
+			end if;
+			
+			--Verifica si se debe incluir los items que tengan existencias iguales a cero a la fecha
+			if(v_parametros.saldo_cero = 'no') then
+				v_where = v_where || ' (alm.f_get_saldo_fisico_item(id_item, '||v_parametros.id_almacen||', date('''|| v_parametros.fecha_hasta||'''))) > 0 and ';
 			end if;
 	
 	    	v_consulta:='
@@ -46,15 +60,17 @@ BEGIN
 				itm.codigo,
 				itm.nombre,
 				umed.codigo unidad_medida,
-				(cla.codigo || '' - ''||cla.nombre)::varchar clasificacion,
+				(alm.f_get_codigo_clasificacion_rec(itm.id_clasificacion,''padres'') || '' - ''||cla.nombre)::varchar clasificacion,
 				alm.f_get_saldo_fisico_item(id_item, '||v_parametros.id_almacen||', date('''|| v_parametros.fecha_hasta||''')) cantidad,
 				alm.f_get_saldo_valorado_item(id_item, '||v_parametros.id_almacen||', date('''||v_parametros.fecha_hasta||''')) costo
 				from alm.titem itm
 				inner join param.tunidad_medida umed on umed.id_unidad_medida = itm.id_unidad_medida
-				inner join alm.tclasificacion cla on cla.id_clasificacion = itm.id_clasificacion ' || v_where;
+				inner join alm.tclasificacion cla on cla.id_clasificacion = itm.id_clasificacion ' ||
+				v_where||'itm.codigo is not null and ';
+                
 			
 			v_consulta:=v_consulta||v_parametros.filtro;
-	        v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;        	
+	        v_consulta:=v_consulta||' order by alm.f_get_codigo_clasificacion_rec(itm.id_clasificacion,''padres'')'||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;        	
 	        return v_consulta;	
 	    end;
   /*********************************   

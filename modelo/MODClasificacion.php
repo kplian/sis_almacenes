@@ -47,6 +47,7 @@ class MODClasificacion extends MODbase {
         $this->captura('tipo_nodo', 'varchar');
         $this->captura('codigo_largo', 'varchar');
         $this->captura('estado', 'varchar');
+		$this->captura('checked', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

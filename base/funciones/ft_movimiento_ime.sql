@@ -1241,7 +1241,9 @@ BEGIN
           --Devuelve la respuesta
             return v_respuesta;
         
-        end; 
+        end;
+        
+	
   else
      raise exception 'Transaccion inexistente: %',p_transaccion;
   end if;

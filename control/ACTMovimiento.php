@@ -12,7 +12,7 @@ require_once (dirname(__FILE__) . '/../reportes/RMovimiento.php');
 require_once (dirname(__FILE__) . '/../reportes/pxpReport/DataSource.php');
 
 class ACTMovimiento extends ACTbase {
-
+	
     function listarMovimiento() {
         $this->objParam->defecto('ordenacion', 'fecha_mov');
 
