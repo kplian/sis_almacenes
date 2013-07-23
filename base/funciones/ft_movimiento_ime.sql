@@ -377,11 +377,12 @@ BEGIN
                         
             --insertamos el nuevo estado_wf
             v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1], 
-                                                         1, 
+                                                         64, 
                                                          v_id_estado_wf, 
                                                          v_id_proceso_wf,
                                                          p_id_usuario,
                                                          NULL);
+--            raise exception 'v_id_esta %' , v_id_estado_actual;                                 
         	        
         	--1.2) Se obtienen los datos del movimiento a finalizar
 	        select mov.fecha_mov, movtip.tipo, movtip.nombre, mov.id_almacen_dest, mov.id_almacen

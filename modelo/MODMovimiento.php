@@ -20,6 +20,7 @@ class MODMovimiento extends MODbase {
         $this->transaccion = 'SAL_MOV_SEL';
         $this->tipo_procedimiento = 'SEL';
 								
+								$this->setParametro('id_funcionario_usu','id_funcionario_usu','int4');
 								$this->setParametro('tipo_interfaz','tipo_interfaz','varchar');
 
         $this->captura('id_movimiento', 'integer');
