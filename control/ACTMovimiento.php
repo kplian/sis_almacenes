@@ -27,6 +27,9 @@ class ACTMovimiento extends ACTbase {
             if ($this->objParam->getParametro('tipo') != null) {
                 $this->objParam->addFiltro(" movtip.tipo = ''" . $this->objParam->getParametro('tipo') . "'' ");
             }
+												
+												$this->objParam->addParametro('id_funcionario_usu',$_SESSION["ss_id_funcionario"]);
+            
             $this->objFunc = $this->create('MODMovimiento');
             $this->res = $this->objFunc->listarMovimiento();
         }
