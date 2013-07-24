@@ -821,8 +821,8 @@ header("content-type: text/javascript; charset=UTF-8");
 		onButtonNew : function() {
 			Phx.vista.Movimiento.superclass.onButtonNew.call(this);
 			this.getComponente('tipo').enable();
-			this.getComponente('solicitante').disable();
-			this.getComponente('solicitante').setVisible(false);
+			this.getComponente('solicitante').enable();
+			this.getComponente('solicitante').setVisible(true);
 			this.getComponente('id_proveedor').disable();
 			this.getComponente('id_proveedor').setVisible(false);
 			this.getComponente('id_funcionario').disable();

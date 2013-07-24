@@ -52,7 +52,7 @@ BEGIN
                     v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) and  (lower(mov.estado_mov)!=''borrador'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'' and lower(mov.estado_mov)!=''vbarea'') and ';
                         
                  ELSE
-                    v_filtro = ' (lower(mov.estado_mov)!=''borrador'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'' and lower(mov.estado_mov)!=''vbarea'' and lower(mov.estado_mov)!=''vbrpm'') and ';
+                    v_filtro = ' (lower(mov.estado_mov)!=''borrador'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'' and lower(mov.estado_mov)!=''vbarea'') and ';
                         
                 END IF;
             END IF;
