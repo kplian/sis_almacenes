@@ -54,18 +54,20 @@ class MODReporte extends MODbase {
         $this->setParametro('all_almacen', 'all_almacen', 'varchar');
 		
 		$this->captura('id', 'integer');
-		$this->captura('fecha', 'date');
-		$this->captura('nro_mov', 'varchar');
-		$this->captura('almacen', 'varchar');
-		$this->captura('ingreso', 'numeric');
-		$this->captura('salida', 'numeric');
-		$this->captura('saldo', 'numeric');
-		$this->captura('costo_unitario', 'numeric');
-		$this->captura('ingreso_val', 'numeric');
-		$this->captura('salida_val', 'numeric');
-		$this->captura('saldo_val', 'numeric');
+        $this->captura('fecha', 'date');
+        $this->captura('nro_mov', 'varchar');
+        $this->captura('almacen', 'varchar');
+        $this->captura('motivo', 'varchar');
+        $this->captura('ingreso', 'numeric');
+        $this->captura('salida', 'numeric');
+        $this->captura('saldo', 'numeric');
+        $this->captura('costo_unitario', 'numeric');
+        $this->captura('ingreso_val', 'numeric');
+        $this->captura('salida_val', 'numeric');
+        $this->captura('saldo_val', 'numeric');
 
         $this->armarConsulta();
+		//echo $this->consulta;exit;
         $this->ejecutarConsulta();
 
         return $this->respuesta;

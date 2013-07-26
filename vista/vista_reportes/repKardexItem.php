@@ -26,6 +26,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				}
 			});
 		},
+		tam_pag:1000,
 		Atributos : [{
 			config : {
 				labelSeparator : '',
@@ -41,7 +42,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				fieldLabel : 'Fecha',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 150,
+				gwidth : 90,
 				maxLength : 20,
 				renderer : function(value, p, record) {
 					return value ? value.dateFormat('d/m/Y') : ''
@@ -62,8 +63,20 @@ header("content-type:text/javascript; charset=UTF-8");
 				fieldLabel : 'Num.Movimiento',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 150,
-				maxLength : 20
+				gwidth : 180,
+				maxLength : 20,
+				renderer:function(value, p, record) {
+					var aux;
+					if(record.data.salida>0){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +value+'</font></b>';
+					return String.format('{0}', aux);
+				}
+				
 			},
 			type : 'Field',
 			filters : {
@@ -94,14 +107,43 @@ header("content-type:text/javascript; charset=UTF-8");
 		},
 		{
 			config : {
-				name : 'ingreso',
-				fieldLabel : 'Cantidad Ingreso',
+				name : 'motivo',
+				fieldLabel : 'Motivo',
 				allowBlank : false,
 				anchor : '100%',
 				gwidth : 150,
 				maxLength : 20
 			},
 			type : 'Field',
+			filters : {
+			    pfiltro : 'motivo',
+				type : 'string'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : true
+		},
+		{
+			config : {
+				name : 'ingreso',
+				fieldLabel : 'Cantidad Ingreso',
+				allowBlank : false,
+				anchor : '100%',
+				gwidth : 150,
+				maxLength : 20,
+				renderer:function(value, p, record) {
+					var aux;
+					if(record.data.salida>0){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +value+'</font></b>';
+					return String.format('{0}', aux);
+				}
+			},
+			type : 'NumberField',
 			filters : {
 			    pfiltro : 'ingreso',
 				type : 'numeric'
@@ -117,9 +159,20 @@ header("content-type:text/javascript; charset=UTF-8");
 				allowBlank : false,
 				anchor : '100%',
 				gwidth : 150,
-				maxLength : 20
+				maxLength : 20,
+				renderer:function(value, p, record) {
+					var aux;
+					if(record.data.salida>0){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +value+'</font></b>';
+					return String.format('{0}', aux);
+				}
 			},
-			type : 'Field',
+			type : 'NumberField',
 			filters : {
 			    pfiltro : 'salida',
 				type : 'numeric'
@@ -171,7 +224,18 @@ header("content-type:text/javascript; charset=UTF-8");
 				allowBlank : false,
 				anchor : '100%',
 				gwidth : 150,
-				maxLength : 20
+				maxLength : 20,
+				renderer:function(value, p, record) {
+					var aux;
+					if(record.data.salida>0){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +value+'</font></b>';
+					return String.format('{0}', aux);
+				}
 			},
 			type : 'Field',
 			filters : {
@@ -189,7 +253,18 @@ header("content-type:text/javascript; charset=UTF-8");
 				allowBlank : false,
 				anchor : '100%',
 				gwidth : 150,
-				maxLength : 20
+				maxLength : 20,
+				renderer:function(value, p, record) {
+					var aux;
+					if(record.data.salida>0){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +value+'</font></b>';
+					return String.format('{0}', aux);
+				}
 			},
 			type : 'Field',
 			filters : {
@@ -254,6 +329,9 @@ header("content-type:text/javascript; charset=UTF-8");
 		}, {
 			name : 'saldo_val',
 			type : 'numeric'
+		},{
+			name:'motivo',
+			type:'string'
 		}],
 		sortInfo : {
 			field : 'id',
