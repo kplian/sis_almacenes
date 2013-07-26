@@ -425,3 +425,15 @@ ALTER TABLE alm.tinventario
   ADD COLUMN id_usuario_asis INTEGER;
   
 /***********************************F-SCP-GSS-ALM-86-26/07/2013*****************************************/
+
+
+/***********************************I-SCP-GSS-ALM-87-26/07/2013*****************************************/
+
+CREATE TABLE alm.tmovimiento_tipo_item (
+  id_movimiento_tipo_item SERIAL, 
+  id_movimiento_tipo INTEGER, 
+  id_item INTEGER, 
+  CONSTRAINT pk_tmovimiento_tipo_item__id_movimiento_tipo_item PRIMARY KEY(id_movimiento_tipo_item)
+) WITHOUT OIDS;
+
+/***********************************F-SCP-GSS-ALM-87-26/07/2013*****************************************/

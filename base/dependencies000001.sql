@@ -530,3 +530,21 @@ ALTER TABLE alm.tinventario
     NOT DEFERRABLE;
 
 /***********************************F-DEP-GSS-ALM-86-26/07/2013*****************************************/
+
+/***********************************I-DEP-GSS-ALM-87-26/07/2013*****************************************/
+
+ALTER TABLE alm.tmovimiento_tipo_item
+  ADD CONSTRAINT fk_tmovimiento_tipo_item__id_movimiento_tipo FOREIGN KEY (id_movimiento_tipo)
+    REFERENCES alm.tmovimiento_tipo(id_movimiento_tipo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tmovimiento_tipo_item
+  ADD CONSTRAINT fk_tmovimiento_tipo_item__id_item FOREIGN KEY (id_item)
+    REFERENCES alm.titem(id_item)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+/***********************************F-DEP-GSS-ALM-87-26/07/2013*****************************************/
