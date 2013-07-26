@@ -1142,7 +1142,7 @@ select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVREPORT_SEL', '
 
 /***********************************F-DAT-GSS-ALM-82-22/07/2013****************************************/
 
-/***********************************F-DAT-GSS-ALM-89-26/07/2013****************************************/
+/***********************************I-DAT-GSS-ALM-89-26/07/2013****************************************/
 
 select wf.f_insert_tproceso_macro ('MV-IN-TIP1', 'Movimiento Ingresos Tipo 1', 'si', 'activo', 'Sistema de Almacenes');
 select wf.f_insert_ttipo_proceso ('', 'Ingreso Tipo 1', 'INGT1', 'alm.tmovimiento', 'id_movimiento', 'activo', 'si', 'MV-IN-TIP1');
