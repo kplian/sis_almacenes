@@ -461,7 +461,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			}
 
 			this.store.baseParams = {
-				id_inventario : this.maestro.id_inventario
+				id_inventario : this.maestro.id_inventario,
+				id_almacen : this.maestro.id_almacen
 			};
 			this.load({
 				params : {

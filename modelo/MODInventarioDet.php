@@ -19,6 +19,7 @@ class MODInventarioDet extends MODbase {
         $this->tipo_procedimiento = 'SEL';
         
         $this->setParametro('id_inventario', 'id_inventario', 'int4');
+								$this->setParametro('id_almacen', 'id_almacen', 'int4');
         
         $this->captura('id_inventario_det', 'int4');
         $this->captura('estado_reg', 'varchar');
