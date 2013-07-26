@@ -15,8 +15,8 @@ header("content-type: text/javascript; charset=UTF-8");
 		constructor : function(config) {
 			this.bsave = true;
 			if (config.nombreVista == 'EjecucionInventario') {
-				this.Atributos[5].grid = false;
 				this.Atributos[7].grid = false;
+				this.Atributos[9].grid = false;
 				this.Atributos[8].egrid = true;
 				this.Atributos[10].egrid = true;
 			}
