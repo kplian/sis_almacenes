@@ -103,7 +103,7 @@ BEGIN
             LEFT JOIN alm.tmovimiento movorig on movorig.id_movimiento = mov.id_movimiento_origen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
-            inner join wf.testado_wf ew on ew.id_estado_wf = mov.id_estado_wf
+            left join wf.testado_wf ew on ew.id_estado_wf = mov.id_estado_wf
 			WHERE mov.estado_reg = ''activo'' and ';
 
         v_consulta:=v_consulta||v_filtro;
@@ -133,7 +133,8 @@ BEGIN
             LEFT JOIN alm.tmovimiento movorig on movorig.id_movimiento = mov.id_movimiento_origen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
-			WHERE mov.estado_reg = ''activo''  and movtip.id_movimiento_tipo != ' ||v_id_movimiento_tipo || ' and ';
+			left join wf.testado_wf ew on ew.id_estado_wf = mov.id_estado_wf
+            WHERE mov.estado_reg = ''activo''  and ';
         v_consulta:= v_consulta||v_parametros.filtro;
         return v_consulta;
      end;

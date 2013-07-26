@@ -49,7 +49,8 @@ BEGIN
                 usu2.cuenta as usr_mod,
                 movdet.fecha_mod,
                 item.codigo as codigo_item,
-                (movdet.cantidad*movdet.costo_unitario) as costo_total
+                (movdet.cantidad*movdet.costo_unitario) as costo_total,
+                item.observaciones
             from alm.tmovimiento_det movdet
             inner join alm.titem item on item.id_item = movdet.id_item
             inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
