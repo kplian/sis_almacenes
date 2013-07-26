@@ -1142,3 +1142,14 @@ select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVREPORT_SEL', '
 
 /***********************************F-DAT-GSS-ALM-82-22/07/2013****************************************/
 
+/***********************************F-DAT-GSS-ALM-89-26/07/2013****************************************/
+
+select wf.f_insert_tproceso_macro ('MV-IN-TIP1', 'Movimiento Ingresos Tipo 1', 'si', 'activo', 'Sistema de Almacenes');
+select wf.f_insert_ttipo_proceso ('', 'Ingreso Tipo 1', 'INGT1', 'alm.tmovimiento', 'id_movimiento', 'activo', 'si', 'MV-IN-TIP1');
+select wf.f_insert_ttipo_estado ('borrador', 'Borrador', 'si', 'no', 'no', 'anterior', '', 'ninguno', '', '', 'activo', 'INGT1', '');
+select wf.f_insert_ttipo_estado ('vbarea', 'Visto Bueno Area', 'no', 'no', 'no', 'anterior', '', 'ninguno', '', '', 'activo', 'INGT1', '');
+select wf.f_insert_ttipo_estado ('finalizado', 'Finalizado', 'no', 'no', 'si', 'ninguno', '', 'ninguno', '', '', 'activo', 'INGT1', '');
+select wf.f_insert_testructura_estado ('borrador', 'INGT1', 'vbarea', 'INGT1', '1', '', 'activo');
+select wf.f_insert_testructura_estado ('vbarea', 'INGT1', 'finalizado', 'INGT1', '1', '', 'activo');
+
+/***********************************F-DAT-GSS-ALM-89-26/07/2013****************************************/
