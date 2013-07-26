@@ -11,6 +11,10 @@ class ACTAlmacenUsuario extends ACTbase {
 
     function listarAlmacenUsuario() {
         $this->objParam->defecto('ordenacion', 'id_almacen_usuario');
+								
+								if($this->objParam->getParametro('tipo')!=''){
+            $this->objParam->addFiltro("almusr.tipo = ''".$this->objParam->getParametro('tipo')."''");    
+        }
 
         $this->objParam->defecto('dir_ordenacion', 'asc');
         if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {

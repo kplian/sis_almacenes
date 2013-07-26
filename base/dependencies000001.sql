@@ -519,3 +519,14 @@ ALTER TABLE alm.titem_concepto
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-RCM-ALM-82-18/07/2013*****************************************/
+
+/***********************************I-DEP-GSS-ALM-86-26/07/2013*****************************************/
+
+ALTER TABLE alm.tinventario
+  ADD CONSTRAINT fk_tinventario__id_usuario_asis FOREIGN KEY (id_usuario_asis)
+    REFERENCES segu.tusuario(id_usuario)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+/***********************************F-DEP-GSS-ALM-86-26/07/2013*****************************************/

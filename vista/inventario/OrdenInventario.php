@@ -88,7 +88,7 @@ header("content-type: text/javascript; charset=UTF-8");
 					Ext.Ajax.request({
 						url : '../../sis_almacenes/control/Inventario/finalizarRegistro',
 						params : {
-							'id_inventario' : data.id_inventario,
+							'id_inventario' : data.id_inventario, 'id_almacen' : data.id_almacen
 						},
 						success : global.successSave,
 						failure : global.conexionFailure,
@@ -176,6 +176,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		onButtonNew : function() {
 			this.getComponente('id_almacen').enable();
 			this.getComponente('id_usuario_resp').disable();
+			this.getComponente('id_usuario_asis').disable();
 			this.getComponente('completo').enable();
 			this.getComponente('fecha_inv_planif').enable();
 			this.getComponente('observaciones').enable();
@@ -186,12 +187,14 @@ header("content-type: text/javascript; charset=UTF-8");
 			if (rec.data.estado == 'borrador') {
 				this.getComponente('id_almacen').enable();
 				this.getComponente('id_usuario_resp').enable();
+				this.getComponente('id_usuario_asis').enable();
 				this.getComponente('completo').enable();
 				this.getComponente('fecha_inv_planif').enable();
 				this.getComponente('observaciones').enable();
 			} else {
 				this.getComponente('id_almacen').disable();
 				this.getComponente('id_usuario_resp').disable();
+				this.getComponente('id_usuario_asis').enable();
 				this.getComponente('completo').disable();
 				this.getComponente('fecha_inv_planif').disable();
 				this.getComponente('observaciones').disable();

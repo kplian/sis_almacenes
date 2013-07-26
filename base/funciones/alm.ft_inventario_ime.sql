@@ -1,6 +1,11 @@
-CREATE OR REPLACE FUNCTION alm.ft_inventario_ime(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION alm.ft_inventario_ime (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		Sistema de Almacenes
  FUNCION: 		alm.ft_inventario_ime
@@ -61,7 +66,8 @@ BEGIN
                 fecha_reg,
                 id_usuario_reg,
                 fecha_mod,
-                id_usuario_mod
+                id_usuario_mod,
+                id_usuario_asis
           	) values(
                 'activo',
                 v_parametros.id_almacen,
@@ -74,7 +80,8 @@ BEGIN
                 now(),
                 p_id_usuario,
                 null,
-                null
+                null,
+                v_parametros.id_usuario_asis
 			)RETURNING id_inventario into v_id_inventario;
 			
             if (v_parametros.completo = 'si') then
@@ -127,7 +134,8 @@ BEGIN
                 completo = v_parametros.completo,
                 id_usuario_resp = v_parametros.id_usuario_resp,
                 fecha_mod = now(),
-                id_usuario_mod = p_id_usuario
+                id_usuario_mod = p_id_usuario,
+                id_usuario_asis = v_parametros.id_usuario_asis
 			where id_inventario=v_parametros.id_inventario;
                
 			--Definicion de la respuesta
@@ -178,6 +186,11 @@ BEGIN
             IF(v_cont = 0) THEN
             	raise exception '%', 'No se puede finalizar el registro de la Orden de Inventario: Debe tener al menos un item a inventariar.';
             END IF;
+            
+            update alm.tinventario_det invdet set
+            cantidad_sistema = alm.f_get_saldo_fisico_item(invdet.id_item, v_parametros.id_almacen, CURRENT_DATE)
+    	    where invdet.id_inventario = v_parametros.id_inventario;
+            
 			update alm.tinventario set
                 estado = 'pendiente_ejecucion'
 			where id_inventario=v_parametros.id_inventario;
@@ -521,8 +534,9 @@ EXCEPTION
 		raise exception '%',v_resp;
 				        
 END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION alm.ft_inventario_ime(integer, integer, character varying, character varying)
-  OWNER TO postgres;
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
+COST 100;

@@ -36,6 +36,8 @@ class MODInventario extends MODbase {
         $this->captura('id_usuario_mod', 'int4');
         $this->captura('usr_reg', 'varchar');
         $this->captura('usr_mod', 'varchar');
+								$this->captura('id_usuario_asis', 'int4');
+								$this->captura('nombre_usuario_asis', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -54,6 +56,7 @@ class MODInventario extends MODbase {
         $this->setParametro('fecha_inv_ejec', 'fecha_inv_ejec', 'timestamp');
         $this->setParametro('completo', 'completo', 'varchar');
         $this->setParametro('id_usuario_resp', 'id_usuario_resp', 'int4');
+								$this->setParametro('id_usuario_asis', 'id_usuario_asis', 'int4');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -73,6 +76,7 @@ class MODInventario extends MODbase {
         $this->setParametro('fecha_inv_ejec', 'fecha_inv_ejec', 'timestamp');
         $this->setParametro('completo', 'completo', 'varchar');
         $this->setParametro('id_usuario_resp', 'id_usuario_resp', 'int4');
+								$this->setParametro('id_usuario_asis', 'id_usuario_asis', 'int4');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -99,6 +103,7 @@ class MODInventario extends MODbase {
         $this->tipo_procedimiento = 'IME';
 
         $this->setParametro('id_inventario', 'id_inventario', 'int4');
+								$this->setParametro('id_almacen', 'id_almacen', 'int4');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

@@ -102,9 +102,9 @@ header("content-type: text/javascript; charset=UTF-8");
         }, {
             config : {
                 name : 'id_usuario_resp',
-                fieldLabel : 'Usuario',
+                fieldLabel : 'Almacenero',
                 allowBlank : false,
-                emptyText : 'Usuario...',
+                emptyText : 'Almacenero...',
                 store : new Ext.data.JsonStore({
                     url : '../../sis_almacenes/control/AlmacenUsuario/listarAlmacenUsuario',
                     id : 'id_usuario',
@@ -136,6 +136,53 @@ header("content-type: text/javascript; charset=UTF-8");
                 minChars : 2,
                 renderer : function(value, p, record) {
                     return String.format('{0}', record.data['nombre_usuario']);
+                },
+            },
+            type : 'ComboBox',
+            id_grupo : 0,
+            filters : {
+                pfiltro : 'usuinv.cuenta',
+                type : 'string'
+            },
+            grid : true,
+            form : true
+        },{
+            config : {
+                name : 'id_usuario_asis',
+                fieldLabel : 'Asistente',
+                allowBlank : true,
+                emptyText : 'Asistente...',
+                store : new Ext.data.JsonStore({
+                    url : '../../sis_almacenes/control/AlmacenUsuario/listarAlmacenUsuario',
+                    id : 'id_usuario',
+                    root : 'datos',
+                    sortInfo : {
+                        field : 'cuenta',
+                        direction : 'ASC'
+                    },
+                    totalProperty : 'total',
+                    fields : ['id_usuario', 'cuenta', 'desc_person'],
+                    remoteSort : true,
+                    baseParams : {
+                        par_filtro : 'USUALM.cuenta#PERSON.nombre_completo2'
+                    }
+                }),
+                tpl : '<tpl for="."><div class="x-combo-list-item"><p>Cuenta: {cuenta}</p><p>Nombre: {desc_person}</p></div></tpl>',
+                valueField : 'id_usuario',
+                displayField : 'cuenta',
+                gdisplayField : 'nombre_usuario',                
+                hiddenName : 'id_usuario_asis',
+                forceSelection : true,
+                typeAhead : true,
+                triggerAction : 'all',
+                lazyRender : true,
+                mode : 'remote',
+                pageSize : 10,
+                queryDelay : 1000,
+                anchor : '100%',
+                minChars : 2,
+                renderer : function(value, p, record) {
+                    return String.format('{0}', record.data['nombre_usuario_asis']);
                 },
             },
             type : 'ComboBox',
@@ -353,6 +400,12 @@ header("content-type: text/javascript; charset=UTF-8");
             name : 'nombre_usuario',
             type : 'string'
         }, {
+            name : 'id_usuario_asis',
+            type : 'numeric'
+        }, {
+            name : 'nombre_usuario_asis',
+            type : 'string'
+        }, {
             name : 'fecha_reg',
             type : 'date',
             dateFormat : 'Y-m-d H:i:s.u'
@@ -385,6 +438,13 @@ header("content-type: text/javascript; charset=UTF-8");
             this.getComponente('id_usuario_resp').reset();
             this.getComponente('id_usuario_resp').lastQuery = null;
             this.getComponente('id_usuario_resp').store.baseParams.id_almacen = e.value;
+            this.getComponente('id_usuario_resp').store.baseParams.tipo = 'responsable';
+            
+            this.getComponente('id_usuario_asis').enable();
+            this.getComponente('id_usuario_asis').reset();
+            this.getComponente('id_usuario_asis').lastQuery = null;
+            this.getComponente('id_usuario_asis').store.baseParams.id_almacen = e.value;
+            this.getComponente('id_usuario_asis').store.baseParams.tipo = 'asistente';
         }
     })
 </script>

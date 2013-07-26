@@ -17,6 +17,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			if (config.nombreVista == 'EjecucionInventario') {
 				this.Atributos[5].grid = false;
 				this.Atributos[7].grid = false;
+				this.Atributos[8].egrid = true;
+				this.Atributos[10].egrid = true;
 			}
 
 			Phx.vista.InventarioDet.superclass.constructor.call(this, config);
@@ -229,7 +231,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				type : 'numeric'
 			},
 			id_grupo : 1,
-			egrid : true,
+			egrid : false,
 			grid : true,
 			form : true
 		}, {
@@ -264,7 +266,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				type : 'string'
 			},
 			id_grupo : 1,
-			egrid : true,
+			egrid : false,
 			grid : true,
 			form : true
 		}, {
@@ -461,8 +463,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			}
 
 			this.store.baseParams = {
-				id_inventario : this.maestro.id_inventario,
-				id_almacen : this.maestro.id_almacen
+				id_inventario : this.maestro.id_inventario
 			};
 			this.load({
 				params : {

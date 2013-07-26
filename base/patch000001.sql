@@ -415,6 +415,13 @@ WITHOUT OIDS;
 /***********************************I-SCP-GSS-ALM-90-25/07/2013*****************************************/
 
 ALTER TABLE alm.tmovimiento_det
-  ADD COLUMN observaciones VARCHAR(1000);
+  ADD COLUMN observaciones VARCHAR(1000);  
 
 /***********************************F-SCP-GSS-ALM-90-25/07/2013*****************************************/
+
+/***********************************I-SCP-GSS-ALM-86-26/07/2013*****************************************/
+
+ALTER TABLE alm.tinventario
+  ADD COLUMN id_usuario_asis INTEGER;
+  
+/***********************************F-SCP-GSS-ALM-86-26/07/2013*****************************************/
