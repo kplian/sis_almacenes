@@ -47,7 +47,8 @@ Phx.vista.MovimientoDetalleAlm = {
 								this.getComponente('fecha_caducidad').setVisible(false);
 								this.getComponente('cantidad_solicitada').setVisible(true);
 								this.getComponente('cantidad_solicitada').disable();
-							}							
+							}
+							this.getComponente('observaciones').setVisible(true);
 							this.getComponente('id_item').disable();
 							this.getComponente('cantidad_item').setVisible(true);
 				},

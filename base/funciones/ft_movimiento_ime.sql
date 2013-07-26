@@ -340,11 +340,13 @@ BEGIN
         	select
               s.id_proceso_wf,
               s.id_estado_wf,
-              s.estado_mov
+              s.estado_mov, 
+              s.fecha_mov
             into            
               v_id_proceso_wf,
               v_id_estado_wf,
-              v_estado_mov
+              v_estado_mov,
+              v_fecha_mov
           	from alm.tmovimiento s
           	where s.id_movimiento=v_parametros.id_movimiento;
             
@@ -374,10 +376,41 @@ BEGIN
             IF  va_disparador[1]='si'  THEN
               raise exception ' El proceso de Work Flow esta mal parametrizado, antes de iniciar el proceso de compra necesita comprometer el presupuesto';
             END IF;
-                        
+            
+            v_num_funcionarios=0;
+            
+            SELECT 
+                     *
+                      into
+                     v_num_funcionarios 
+                     FROM wf.f_funcionario_wf_sel(
+                         p_id_usuario, 
+                         va_id_tipo_estado[1], 
+                         v_fecha_mov::date,
+                         v_id_estado_wf,
+                         TRUE) AS (total bigint);
+                         
+             IF v_num_funcionarios = 1 then
+             SELECT 
+                             id_funcionario
+                               into
+                             v_id_funcionario_estado
+                         FROM wf.f_funcionario_wf_sel(
+                             p_id_usuario, 
+                             va_id_tipo_estado[1], 
+                             v_fecha_mov::date,
+                             v_id_estado_wf,
+                             FALSE) 
+                             AS (id_funcionario integer,
+                               desc_funcionario text,
+                               desc_funcionario_cargo text,
+                               prioridad integer);
+               else
+               	raise exception '%', 'No existen funcionarios configurados en el workflow';
+               end if;
             --insertamos el nuevo estado_wf
             v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1], 
-                                                         64, 
+                                                         v_id_funcionario_estado, 
                                                          v_id_estado_wf, 
                                                          v_id_proceso_wf,
                                                          p_id_usuario,

@@ -74,7 +74,8 @@ BEGIN
             cantidad,
             cantidad_solicitada,
             costo_unitario,
-            fecha_caducidad
+            fecha_caducidad,
+            observaciones
         ) VALUES (
             p_id_usuario,
             now(),
@@ -84,7 +85,8 @@ BEGIN
             v_parametros.cantidad_item,
             coalesce(v_parametros.cantidad_solicitada,v_parametros.cantidad_item),
             v_parametros.costo_unitario,
-            v_parametros.fecha_caducidad
+            v_parametros.fecha_caducidad,
+            v_parametros.observaciones
         ) RETURNING id_movimiento_det into v_id_movimiento_det;
         
         insert into alm.tmovimiento_det_valorado (
@@ -133,7 +135,8 @@ BEGIN
             cantidad = v_parametros.cantidad_item,
             cantidad_solicitada = coalesce(v_parametros.cantidad_solicitada,v_parametros.cantidad_item),
             costo_unitario = v_parametros.costo_unitario,
-            fecha_caducidad = v_parametros.fecha_caducidad
+            fecha_caducidad = v_parametros.fecha_caducidad,
+            observaciones = v_parametros.observaciones
         where id_movimiento_det = v_parametros.id_movimiento_det;
         
         update alm.tmovimiento_det_valorado set

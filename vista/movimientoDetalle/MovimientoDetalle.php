@@ -208,6 +208,22 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : true,
 			form : true
 		}, {
+				config : {
+					name : 'observaciones',
+					fieldLabel : 'Observaciones',
+					allowBlank : true,
+					anchor : '100%',
+					gwidth : 120
+				},
+				type : 'TextArea',
+				filters : {
+					pfiltro : 'movdet.observaciones',
+					type : 'string'
+				},
+				id_grupo : 0,
+				grid : true,
+				form : true
+		}, {
 			config : {
 				name : 'usr_reg',
 				fieldLabel : 'Usuario Reg.',
@@ -300,6 +316,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			type : 'date',
 			dateFormat : 'Y-m-d'
 		}, {
+			name : 'observaciones',
+			type : 'string'
+		}, {
 			name : 'usr_reg',
 			type : 'string'
 		}, {
@@ -362,6 +381,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('costo_unitario').setVisible(false);
 				this.getComponente('fecha_caducidad').setVisible(false);
 				this.getComponente('cantidad_solicitada').setVisible(true);
+				this.getComponente('observaciones').setVisible(false);
 		},
 		onButtonNew : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonNew.call(this);
@@ -372,6 +392,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('fecha_caducidad').setVisible(false);								
 			 this.getComponente('cantidad_item').setVisible(false);
 				this.getComponente('cantidad_solicitada').setVisible(true);
+				this.getComponente('observaciones').setVisible(false);
 		}
 	})
 </script>

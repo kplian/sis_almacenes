@@ -45,6 +45,11 @@ BEGIN
 	if(p_transaccion='SAL_DINV_SEL')then
      				
     	begin
+        	
+            update alm.tinventario_det invdet set
+            cantidad_sistema = alm.f_get_saldo_fisico_item(invdet.id_item, v_parametros.id_almacen, CURRENT_DATE)
+    	    where invdet.id_inventario = v_parametros.id_inventario;
+            
     		--Sentencia de la consulta
 			v_consulta:='select
 						dinv.id_inventario_det,

@@ -25,6 +25,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.grid.getTopToolbar().disable();
 			this.grid.getBottomToolbar().disable();
 			this.store.removeAll();
+			this.iniciarEventos();
 		},
 		Atributos : [{
 			config : {
@@ -50,11 +51,32 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             type : 'Field',
             form : true
-        }, {
+        },
+        {
+										config:{
+											name: 'por',
+											fieldLabel: 'Por',
+											allowBlank: false,
+											anchor: '100%',
+											gwidth: 100,
+											maxLength:25,
+											typeAhead:true,
+											triggerAction:'all',
+											mode:'local',
+											store:['item','clasificacion']
+										},
+										valorInicial:'',
+										type:'ComboBox',
+										//filters:{pfiltro:'provee.tipo',type:'string'},
+										id_grupo:1,
+										grid:false,
+										form:true
+								}, 
+        {
             config : {
                 name : 'id_item',
                 fieldLabel : 'Item',
-                allowBlank : true,
+                allowBlank : false,
                 emptyText : 'Item...',
                 store : new Ext.data.JsonStore({
                     url : '../../sis_almacenes/control/Item/listarItemNotBase',
@@ -73,7 +95,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 }),
                 valueField : 'id_item',
                 displayField : 'nombre',
-                gdisplayField : 'desc_item',
+                gdisplayField : 'nombre_item',
                 tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
                 hiddenName : 'id_item',
                 forceSelection : true,
@@ -439,7 +461,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			}
 
 			this.store.baseParams = {
-				id_inventario : this.maestro.id_inventario
+				id_inventario : this.maestro.id_inventario,
+				id_almacen : this.maestro.id_almacen
 			};
 			this.load({
 				params : {
@@ -447,7 +470,37 @@ header("content-type: text/javascript; charset=UTF-8");
 					limit : 50
 				}
 			})
-		}
+		},
+		
+		iniciarEventos:function(){
+				this.getComponente('id_item').disable();
+		  this.getComponente('id_clasificacion').disable();
+		
+				this.getComponente('por').on('select',function(c,r,n){				
+						if(n=='item' || n=='0'){
+							this.getComponente('id_item').enable();
+							this.mostrarComponente(this.getComponente('id_item'));
+							this.ocultarComponente(this.getComponente('id_clasificacion'));
+							this.getComponente('id_clasificacion').reset();
+							this.getComponente('id_clasificacion').disable();
+						}else{
+							this.getComponente('id_clasificacion').enable();
+							this.ocultarComponente(this.getComponente('id_item'));
+							this.mostrarComponente(this.getComponente('id_clasificacion'));
+							this.getComponente('id_item').reset();
+							this.getComponente('id_item').disable();
+						}						
+				},this);
+		},
+		
+		onButtonEdit:function(){
+			
+				datos=this.sm.getSelected().data;
+				Phx.vista.InventarioDet.superclass.onButtonEdit.call(this); //sobrecarga enable select
+				this.ocultarComponente(this.getComponente('por'));
+				this.ocultarComponente(this.getComponente('id_clasificacion'));
+				
+			}
 	})
 </script>
 
