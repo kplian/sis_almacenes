@@ -128,6 +128,13 @@ header("content-type:text/javascript; charset=UTF-8");
             if (e.getKey() == e.ENTER) {
                 this.onBtnBuscar();
             }
-        }
+        },
+        east:{
+		  url:'../../../sis_almacenes/vista/item/ItemExistenciaAlmacen.php',
+		  title:'Existencia de Materiales por Almacén', 
+		  width:'30%',	//altura de la ventana hijo
+		  //width:'50%',		//ancho de la ventana hjo
+		  cls:'ItemExistenciaAlmacen'
+		}
     }); 
 </script>

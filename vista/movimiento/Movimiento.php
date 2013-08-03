@@ -10,11 +10,12 @@ header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
 	Phx.vista.Movimiento = Ext.extend(Phx.gridInterfaz, {
-
+		tam_pag:50,
 		constructor : function(config) {
 			this.maestro = config.maestro;
 			Phx.vista.Movimiento.superclass.constructor.call(this, config);
 			this.init();
+			this.load({params:{start:0, limit:this.tam_pag}})
 
 			this.getComponente('tipo').on('select', this.onTipoSelect, this);
 			this.getComponente('id_movimiento_tipo').on('select', this.onMovimientoTipoSelect, this);

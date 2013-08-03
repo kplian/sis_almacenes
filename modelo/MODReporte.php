@@ -73,5 +73,44 @@ class MODReporte extends MODbase {
         return $this->respuesta;
     }
 
+	function listarItemEntRec() {
+        $this->procedimiento = 'alm.ft_reporte_sel';
+        $this->transaccion = 'SAL_REITEN_SEL';
+        $this->tipo_procedimiento = 'SEL';
+		//$this->count=false;
+
+		$this->setParametro('fecha_hasta', 'fecha_hasta', 'date');
+		$this->setParametro('tipo_mov', 'tipo_mov', 'varchar');
+		$this->setParametro('tipo_sol', 'tipo_sol', 'varchar');
+        $this->setParametro('id_funcionario', 'id_funcionario', 'integer');
+		$this->setParametro('id_proveedor', 'id_proveedor', 'integer');
+		$this->setParametro('all_items', 'all_items', 'varchar');
+		$this->setParametro('id_items', 'id_items', 'varchar');
+		$this->setParametro('id_clasificacion', 'id_clasificacion', 'varchar');
+        $this->setParametro('all_alm', 'all_alm', 'varchar');
+		$this->setParametro('id_almacen', 'id_almacen', 'varchar');
+		
+		
+		$this->captura('id_movimiento_det_valorado', 'integer');
+		$this->captura('fecha_mov', 'date');
+		$this->captura('codigo', 'varchar');
+		$this->captura('nombre', 'varchar');
+		$this->captura('cantidad', 'numeric');
+        $this->captura('costo_unitario', 'numeric');
+        $this->captura('costo_total', 'numeric');
+        $this->captura('desc_funcionario1', 'text');
+        $this->captura('desc_proveedor', 'varchar');
+        $this->captura('mov_codigo', 'varchar');
+        $this->captura('tipo_nombre', 'varchar');
+        $this->captura('tipo', 'varchar');
+		$this->captura('desc_almacen', 'varchar');
+
+        $this->armarConsulta();
+		//echo $this->consulta;exit;
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
+
 }
 ?>

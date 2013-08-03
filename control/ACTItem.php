@@ -68,5 +68,19 @@ class ACTItem extends ACTbase {
         $this->res = $this->objFunc->buscarItemArb();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+	
+	function listarItemExistenciaAlmacen() {
+        $this->objParam->defecto('ordenacion', 'id_item');
+        $this->objParam->defecto('dir_ordenacion', 'asc');
+		
+        if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
+            $this->objReporte = new Reporte($this->objParam, $this);
+            $this->res = $this->objReporte->generarReporteListado('MODItem', 'listarItemExistenciaAlmacen');
+        } else {
+            $this->objFunc = $this->create('MODItem');
+            $this->res = $this->objFunc->listarItemExistenciaAlmacen();
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 }
 ?>

@@ -38,11 +38,6 @@ select pxp.f_insert_tgui ('Movimientos', 'Movimientos', 'ALMOVI', 'si', 3, '', 2
 select pxp.f_insert_tgui ('Almacenes', 'Almacenes', 'ALCRAL', 'si', 1, 'sis_almacenes/vista/almacen/Almacen.php', 3, '', 'Almacen', 'ALM');
 select pxp.f_insert_tgui ('Materiales', 'Registro de Materiales', 'ALREMA', 'si', 1, 'sis_almacenes/vista/item/Item.php', 3, '', 'Item', 'ALM');
 select pxp.f_insert_tgui ('Clasificación de materiales', 'Clasificación de materiales', 'ALCLMA', 'si', 1, 'sis_almacenes/vista/clasificacion/Clasificacion.php', 3, '', 'Clasificacion', 'ALM');
-select pxp.f_insert_tgui ('Ingresos', 'Ingresos', 'ALINGR', 'si', 2, 'sis_almacenes/vista/movimiento/Ingreso.php
-', 3, '', 'Ingreso', 'ALM');
-select pxp.f_insert_tgui ('Salidas', 'Salidas', 'ALSAGR', 'si', 2, 'sis_almacenes/vista/movimiento/Salida.php
-', 3, '', 'Salida', 'ALM');
-select pxp.f_insert_tgui ('Transferencias', 'Transferencias', 'ALTRGR', 'si', 3, 'sis_almacenes/vista/movimiento/Transferencia.php', 3, '', 'Transferencia', 'ALM');
 select pxp.f_insert_testructura_gui ('ALM', 'SISTEMA');
 select pxp.f_insert_testructura_gui ('ALDAGE', 'ALM');
 select pxp.f_insert_testructura_gui ('ALMAIN', 'ALM');
@@ -50,9 +45,7 @@ select pxp.f_insert_testructura_gui ('ALMOVI', 'ALM');
 select pxp.f_insert_testructura_gui ('ALCRAL', 'ALDAGE');
 select pxp.f_insert_testructura_gui ('ALREMA', 'ALMAIN');
 select pxp.f_insert_testructura_gui ('ALCLMA', 'ALMAIN');
-select pxp.f_insert_testructura_gui ('ALINGR', 'ALMOVI');
-select pxp.f_insert_testructura_gui ('ALSAGR', 'ALMOVI');
-select pxp.f_insert_testructura_gui ('ALTRGR', 'ALMOVI');
+
 
 
 
@@ -1153,3 +1146,14 @@ select wf.f_insert_testructura_estado ('borrador', 'INGT1', 'vbarea', 'INGT1', '
 select wf.f_insert_testructura_estado ('vbarea', 'INGT1', 'finalizado', 'INGT1', '1', '', 'activo');
 
 /***********************************F-DAT-GSS-ALM-89-26/07/2013****************************************/
+
+/***********************************I-DAT-RCM-ALM-92-01/08/2013****************************************/
+select pxp.f_insert_tgui ('Buscador de Materiales', 'Buscador de Materiales', 'ALBUSQ', 'si', 2, 'sis_almacenes/vista/item/BuscarItem.php', 3, '', 'BuscarItem', 'ALM');
+select pxp.f_insert_testructura_gui ('ALBUSQ', 'ALMOVI');
+/***********************************F-DAT-RCM-ALM-92-01/08/2013****************************************/
+
+/***********************************I-DAT-RCM-ALM-93-12/08/2013****************************************/
+select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','ingresos y salidas');
+select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','ingreso');
+select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','salida');
+/***********************************F-DAT-RCM-ALM-93-12/08/2013****************************************/
