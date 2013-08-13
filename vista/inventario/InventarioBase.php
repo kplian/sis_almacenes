@@ -170,7 +170,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 tpl : '<tpl for="."><div class="x-combo-list-item"><p>Cuenta: {cuenta}</p><p>Nombre: {desc_person}</p></div></tpl>',
                 valueField : 'id_usuario',
                 displayField : 'cuenta',
-                gdisplayField : 'nombre_usuario',                
+                gdisplayField : 'nombre_usuario_asis',                
                 hiddenName : 'id_usuario_asis',
                 forceSelection : true,
                 typeAhead : true,
@@ -188,7 +188,7 @@ header("content-type: text/javascript; charset=UTF-8");
             type : 'ComboBox',
             id_grupo : 0,
             filters : {
-                pfiltro : 'usuinv.cuenta',
+                pfiltro : 'usuasis.cuenta',
                 type : 'string'
             },
             grid : true,

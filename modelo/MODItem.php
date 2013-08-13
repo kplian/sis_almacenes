@@ -143,5 +143,25 @@ class MODItem extends MODbase {
         return $this->respuesta;
     }
 
+	function listarItemExistenciaAlmacen() {
+        $this->procedimiento = 'alm.f_item_existencia_almacen_sel';
+        $this->transaccion = 'SAL_ITMALM_SEL';
+        $this->tipo_procedimiento = 'SEL';
+        
+        $this->setParametro('id_item', 'id_item', 'int4');
+		$this->setParametro('fecha', 'fecha', 'date');
+        
+        $this->captura('id_almacen', 'int4');
+		$this->captura('id_item', 'int4');
+        $this->captura('cantidad', 'numeric');
+        $this->captura('codigo', 'varchar');
+		$this->captura('almacen', 'varchar');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
+
 }
 ?>

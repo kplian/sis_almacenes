@@ -100,6 +100,7 @@ BEGIN
 						left join segu.tusuario usu2 on usu2.id_usuario = inv.id_usuario_mod
                         inner join alm.talmacen almo on almo.id_almacen = inv.id_almacen
                         inner join segu.tusuario usuinv on usuinv.id_usuario = inv.id_usuario_resp
+						left join segu.tusuario usuasis on usuasis.id_usuario = inv.id_usuario_asis
 				        where inv.estado_reg = ''activo'' and ';
 			
 			--Definicion de la respuesta		    
