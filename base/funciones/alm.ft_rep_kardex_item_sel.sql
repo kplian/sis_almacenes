@@ -51,13 +51,13 @@ BEGIN
               nro_mov varchar,
               almacen varchar,
               motivo varchar,
-              ingreso numeric(18,2),
-              salida numeric(18,2),
-              saldo numeric (18,2),
-              costo_unitario numeric(18,2),
-              ingreso_val numeric(18,2),
-              salida_val numeric(18,2),
-              saldo_val numeric(18,2)
+              ingreso numeric(18,6),
+              salida numeric(18,6),
+              saldo numeric (18,6),
+              costo_unitario numeric(18,6),
+              ingreso_val numeric(18,6),
+              salida_val numeric(18,6),
+              saldo_val numeric(18,6)
             ) on commit drop;
             
             --2. Carga el saldo anterior
