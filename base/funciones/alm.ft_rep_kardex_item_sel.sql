@@ -9,7 +9,7 @@ $body$
 /*
 Fecha: 04/07/2013
 Autor: RCM
-PropÃ³sito: Devolver el kardex de un item de uno o varios almacenes en un periodo de tiempo
+Propósito: Devolver el kardex de un item de uno o varios almacenes en un periodo de tiempo
 */
 DECLARE
 
@@ -51,13 +51,13 @@ BEGIN
               nro_mov varchar,
               almacen varchar,
               motivo varchar,
-              ingreso numeric(18,6),
-              salida numeric(18,6),
-              saldo numeric (18,6),
-              costo_unitario numeric(18,6),
-              ingreso_val numeric(18,6),
-              salida_val numeric(18,6),
-              saldo_val numeric(18,6)
+              ingreso numeric,
+              salida numeric,
+              saldo numeric,
+              costo_unitario numeric,
+              ingreso_val numeric,
+              salida_val numeric,
+              saldo_val numeric
             ) on commit drop;
             
             --2. Carga el saldo anterior
@@ -93,29 +93,31 @@ BEGIN
             alma.codigo as almacen,
             mtipo.nombre as motivo,
             case mtipo.tipo
-                when ''ingreso'' then mdet.cantidad
+                when ''ingreso'' then mdval.cantidad
                 else 0
             end as ingreso,
             case mtipo.tipo
-                when ''salida'' then mdet.cantidad
+                when ''salida'' then mdval.cantidad
                 else 0
             end as salida,
             case mtipo.tipo
-                when ''ingreso'' then coalesce(mdet.cantidad,0) * coalesce(mdet.costo_unitario,0)
+                when ''ingreso'' then coalesce(mdval.cantidad,0) * coalesce(mdval.costo_unitario,0)
                 else 0
             end as ingreso_val,
             case mtipo.tipo
-                when ''salida'' then coalesce((select sum(costo_unitario*cantidad) from alm.tmovimiento_det_valorado where id_movimiento_det = mdet.id_movimiento_det),0)
+                when ''salida'' then coalesce(mdval.cantidad,0) * coalesce(mdval.costo_unitario,0)
                 else 0
             end as salida_val,
             case mtipo.tipo
-                when ''ingreso'' then coalesce(mdet.costo_unitario,0)
-                when ''salida'' then coalesce((select sum(costo_unitario*cantidad)/sum(cantidad) from alm.tmovimiento_det_valorado where id_movimiento_det = mdet.id_movimiento_det),0)
+                when ''ingreso'' then coalesce(mdval.costo_unitario,0)
+                when ''salida'' then coalesce(mdval.costo_unitario,0)
                 else 0
             end as costo_unitario
             from alm.tmovimiento mov
             inner join alm.tmovimiento_det mdet
             on mdet.id_movimiento = mov.id_movimiento
+            inner join alm.tmovimiento_det_valorado mdval
+            on mdval.id_movimiento_det = mdet.id_movimiento_det
             inner join alm.titem item
             on item.id_item = mdet.id_item
             inner join alm.talmacen alma
@@ -138,7 +140,7 @@ BEGIN
             
             execute(v_consulta);
             
-            --4.CÃ¡lculo de saldos
+            --4.Cálculo de saldos
             v_saldo_fis=0;
             v_saldo_val=0;
             for v_rec in (select * from tt_rep_kardex_item) loop
@@ -152,7 +154,16 @@ BEGIN
             end loop;
 
             --5.Resultado
-            for v_rec in (select * from tt_rep_kardex_item) loop
+            for v_rec in (select
+            			id,fecha,nro_mov,almacen,motivo,
+                        round(ingreso,6),
+                        round(salida,6),
+                        round(saldo,6),
+              			round(costo_unitario,6),
+                        round(ingreso_val,6),
+                        round(salida_val,6),
+              			round(saldo_val,6)
+                        from tt_rep_kardex_item) loop
                 return next v_rec;
             end loop;
 
