@@ -160,9 +160,7 @@ BEGIN
             		on movt.id_movimiento_tipo = mov.id_movimiento_tipo
             		where id_movimiento = v_parametros.id_movimiento
             		and tipo = 'salida';
-            		
-            		
-            		
+
             		if coalesce(v_id_movimiento_tipo,0)!=0 then
             			--Obtener los id_clasificacion
             			v_ids='';
@@ -176,7 +174,8 @@ BEGIN
             			v_ids=alm.f_get_id_clasificaciones_varios(v_ids);
 
 						--Definir la consulta            		
-            			if coalesce(v_ids,'')!='' then
+            			if v_ids!='null' then
+                                               
             				--Condición de Items y Clasificación
             				v_where = ' (
             								(item.id_item in (select id_item
@@ -187,14 +186,14 @@ BEGIN
             								(
             									item.id_clasificacion in ('|| v_ids||')
             								)
-            							)';
-            			
+            							) and ';
+
             			else
             				--Condición solo de Items
             				v_where = ' item.id_item in (select id_item
             											from alm.tmovimiento_tipo_item
             											where id_item is not null
-            											and id_movimiento_tipo = '||v_id_movimiento_tipo||') ';
+            											and id_movimiento_tipo = '||v_id_movimiento_tipo||') and ';
             			end if;
             											 
             		end if;
@@ -202,6 +201,7 @@ BEGIN
             	end if;
             end if;
             
+			--Consulta
             v_consulta:='
             	select
                 	item.id_item,
@@ -226,6 +226,7 @@ BEGIN
             v_consulta:=v_consulta||v_parametros.filtro;
             v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 			
+            raise notice '%',v_consulta;
             --Devuelve la respuesta
             return v_consulta;
             
@@ -256,9 +257,7 @@ BEGIN
             		on movt.id_movimiento_tipo = mov.id_movimiento_tipo
             		where id_movimiento = v_parametros.id_movimiento
             		and tipo = 'salida';
-            		
-            		
-            		
+
             		if coalesce(v_id_movimiento_tipo,0)!=0 then
             			--Obtener los id_clasificacion
             			v_ids='';
@@ -272,7 +271,8 @@ BEGIN
             			v_ids=alm.f_get_id_clasificaciones_varios(v_ids);
 
 						--Definir la consulta            		
-            			if coalesce(v_ids,'')!='' then
+            			if v_ids!='null' then
+                                               
             				--Condición de Items y Clasificación
             				v_where = ' (
             								(item.id_item in (select id_item
@@ -283,14 +283,14 @@ BEGIN
             								(
             									item.id_clasificacion in ('|| v_ids||')
             								)
-            							)';
-            			
+            							) and ';
+
             			else
             				--Condición solo de Items
             				v_where = ' item.id_item in (select id_item
             											from alm.tmovimiento_tipo_item
             											where id_item is not null
-            											and id_movimiento_tipo = '||v_id_movimiento_tipo||') ';
+            											and id_movimiento_tipo = '||v_id_movimiento_tipo||') and ';
             			end if;
             											 
             		end if;
