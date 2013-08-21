@@ -111,10 +111,10 @@ BEGIN
 		begin
            
             --Fecha
-            if v_parametros.fecha_hasta is not null then
-				v_where = ' and date_trunc(''day'',mov.fecha_mov) <=''' ||v_parametros.fecha_hasta||'''';
+            if v_parametros.fecha_ini is not null and v_parametros.fecha_fin is not null then
+				v_where = ' and date_trunc(''day'',mov.fecha_mov) between ''' ||v_parametros.fecha_ini||''' and ''' || v_parametros.fecha_fin || '''';
             else
-            	raise exception 'Fecha no definida';
+            	raise exception 'Fechas no definidas';
             end if;
             
         	--Tipo de Movimiento
@@ -126,12 +126,17 @@ BEGIN
             
             --Solicitante
             if v_parametros.tipo_sol = 'func' then
-            	if coalesce(v_parametros.id_funcionario,0) != 0 then
-            		v_where = v_where || ' and fun.id_funcionario = ' || v_parametros.id_funcionario;
-                end if;
+                if v_parametros.all_funcionario = 'Seleccionar Funcionarios' then
+	            	v_where = v_where || ' and fun.id_funcionario = ANY(ARRAY['||v_parametros.id_funcionario||'])';
+	            elsif v_parametros.all_funcionario = 'Por Organigrama' then
+	            	--Obtener los IDs de todos los organigramas
+					v_ids=orga.f_get_id_uo(v_parametros.id_estructura_uo);
+					v_where = v_where || ' and uofun.id_uo in (' ||v_ids||')';
+				end if;
+                
             elsif v_parametros.tipo_sol = 'prov' then
-            	if coalesce(v_parametros.id_proveedor,0) != 0 then
-            		v_where = v_where || ' and prov.id_proveedor = ' || v_parametros.id_proveedor;
+            	if coalesce(v_parametros.id_proveedor,'') != '' then
+            		v_where = v_where || ' and prov.id_proveedor in (' || v_parametros.id_proveedor || ')';
                 end if;
             end if;
             
@@ -148,7 +153,7 @@ BEGIN
             if v_parametros.all_alm = 'no' then
             	v_where = v_where || ' and mov.id_almacen in('||v_parametros.id_almacen||')';
             end if;
-	
+            
 	    	v_consulta:='
 	        	select
                 mval.id_movimiento_det_valorado ,mov.fecha_mov::date, item.codigo, item.nombre, mval.cantidad,
@@ -170,6 +175,12 @@ BEGIN
                 on prov.id_proveedor = mov.id_proveedor
                 inner join alm.talmacen alm
                 on alm.id_almacen = mov.id_almacen
+                left join orga.tuo_funcionario uofun
+                on uofun.id_funcionario = fun.id_funcionario
+                and uofun.fecha_asignacion <= '''||v_parametros.fecha_fin || '''
+                left join orga.tuo_funcionario uofun1
+                on uofun1.id_funcionario = fun.id_funcionario
+                and '''||v_parametros.fecha_fin || ''' BETWEEN uofun1.fecha_asignacion and uofun1.fecha_finalizacion
                 where mval.cantidad > 0
                 and mov.estado_mov = ''finalizado'' and ';
                 
@@ -190,10 +201,10 @@ BEGIN
     
         begin
         	--Fecha
-            if v_parametros.fecha_hasta is not null then
-				v_where = ' and date_trunc(''day'',mov.fecha_mov) <=''' ||v_parametros.fecha_hasta||'''';
+            if v_parametros.fecha_ini is not null and v_parametros.fecha_fin is not null then
+				v_where = ' and date_trunc(''day'',mov.fecha_mov) between ''' ||v_parametros.fecha_ini||''' and ''' || v_parametros.fecha_fin || '''';
             else
-            	raise exception 'Fecha no definida';
+            	raise exception 'Fechas no definidas';
             end if;
             
         	--Tipo de Movimiento
@@ -205,12 +216,17 @@ BEGIN
             
             --Solicitante
             if v_parametros.tipo_sol = 'func' then
-            	if coalesce(v_parametros.id_funcionario,0) != 0 then
-            		v_where = v_where || ' and fun.id_funcionario = ' || v_parametros.id_funcionario;
-                end if;
+                if v_parametros.all_funcionario = 'Seleccionar Funcionarios' then
+	            	v_where = v_where || ' and fun.id_funcionario = ANY(ARRAY['||v_parametros.id_funcionario||'])';
+	            elsif v_parametros.all_funcionario = 'Por Organigrama' then
+	            	--Obtener los IDs de todos los organigramas
+					v_ids=orga.f_get_id_uo(v_parametros.id_estructura_uo);
+					v_where = v_where || ' and uofun.id_uo in (' ||v_ids||')';
+				end if;
+                
             elsif v_parametros.tipo_sol = 'prov' then
-            	if coalesce(v_parametros.id_proveedor,0) != 0 then
-            		v_where = v_where || ' and prov.id_proveedor = ' || v_parametros.id_proveedor;
+            	if coalesce(v_parametros.id_proveedor,'') != '' then
+            		v_where = v_where || ' and prov.id_proveedor in (' || v_parametros.id_proveedor || ')';
                 end if;
             end if;
             
@@ -246,6 +262,12 @@ BEGIN
                 on prov.id_proveedor = mov.id_proveedor
                 inner join alm.talmacen alm
                 on alm.id_almacen = mov.id_almacen
+                left join orga.tuo_funcionario uofun
+                on uofun.id_funcionario = fun.id_funcionario
+                and uofun.fecha_asignacion <= '''||v_parametros.fecha_fin || '''
+                left join orga.tuo_funcionario uofun1
+                on uofun1.id_funcionario = fun.id_funcionario
+                and '''||v_parametros.fecha_fin || ''' BETWEEN uofun1.fecha_asignacion and uofun1.fecha_finalizacion
                 where mval.cantidad > 0
                 and mov.estado_mov = ''finalizado'' and ';
                 

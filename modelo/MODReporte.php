@@ -79,17 +79,19 @@ class MODReporte extends MODbase {
         $this->tipo_procedimiento = 'SEL';
 		//$this->count=false;
 
-		$this->setParametro('fecha_hasta', 'fecha_hasta', 'date');
+		$this->setParametro('fecha_ini', 'fecha_ini', 'date');
+		$this->setParametro('fecha_fin', 'fecha_fin', 'date');
 		$this->setParametro('tipo_mov', 'tipo_mov', 'varchar');
 		$this->setParametro('tipo_sol', 'tipo_sol', 'varchar');
-        $this->setParametro('id_funcionario', 'id_funcionario', 'integer');
+        $this->setParametro('id_funcionario', 'id_funcionario', 'varchar');
 		$this->setParametro('id_proveedor', 'id_proveedor', 'integer');
 		$this->setParametro('all_items', 'all_items', 'varchar');
 		$this->setParametro('id_items', 'id_items', 'varchar');
 		$this->setParametro('id_clasificacion', 'id_clasificacion', 'varchar');
         $this->setParametro('all_alm', 'all_alm', 'varchar');
 		$this->setParametro('id_almacen', 'id_almacen', 'varchar');
-		
+		$this->setParametro('all_funcionario', 'all_funcionario', 'varchar');
+		$this->setParametro('id_estructura_uo', 'id_estructura_uo', 'varchar');
 		
 		$this->captura('id_movimiento_det_valorado', 'integer');
 		$this->captura('fecha_mov', 'date');

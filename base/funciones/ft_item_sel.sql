@@ -18,11 +18,14 @@ $BODY$
 
 DECLARE
 
-    v_consulta            varchar;
-    v_parametros          record;
-    v_nombre_funcion       text;
-    v_resp                varchar;
-    v_where varchar;
+    v_consulta            	varchar;
+    v_parametros          	record;
+    v_nombre_funcion       	text;
+    v_resp                	varchar;
+    v_where 				varchar;
+	v_resp_global			varchar;
+	v_id_movimiento_tipo	integer;
+	v_ids				varchar;
                
 BEGIN
 
@@ -142,7 +145,63 @@ BEGIN
     elsif(p_transaccion='SAL_ITEMNOTBASE_SEL')then
                     
         begin
-            --Sentencia de la consulta
+            
+            v_where = '';
+            --RCM 21/08/2103: Verificación de si se debe filtrar los items por tipo de movimiento, solo para los casos que envien el parametro id_movimiento
+            if pxp.f_existe_parametro(p_tabla,'id_movimiento') then
+            	v_resp_global = pxp.f_get_variable_global('alm_filtrar_item_tipomov');
+            	if v_resp_global = 'si' then
+            		--Verifica que sea una salida y si es asi obtiene el id_movimiento_tipo
+            		select
+            		movt.id_movimiento_tipo
+            		into v_id_movimiento_tipo
+            		from alm.tmovimiento mov
+            		inner join alm.tmovimiento_tipo movt
+            		on movt.id_movimiento_tipo = mov.id_movimiento_tipo
+            		where id_movimiento = v_parametros.id_movimiento
+            		and tipo = 'salida';
+            		
+            		
+            		
+            		if coalesce(v_id_movimiento_tipo,0)!=0 then
+            			--Obtener los id_clasificacion
+            			v_ids='';
+            			select (pxp.list(id_clasificacion::text))::varchar
+            			into v_ids
+        				from alm.tmovimiento_tipo_item
+            			where id_clasificacion is not null
+            			and id_movimiento_tipo = v_id_movimiento_tipo;
+            			
+            			--Obtener los Ids recursivamente
+            			v_ids=alm.f_get_id_clasificaciones_varios(v_ids);
+
+						--Definir la consulta            		
+            			if coalesce(v_ids,'')!='' then
+            				--Condición de Items y Clasificación
+            				v_where = ' (
+            								(item.id_item in (select id_item
+            											from alm.tmovimiento_tipo_item
+            											where id_item is not null
+            											and id_movimiento_tipo = '||v_id_movimiento_tipo||')
+            								) or
+            								(
+            									item.id_clasificacion in ('|| v_ids||')
+            								)
+            							)';
+            			
+            			else
+            				--Condición solo de Items
+            				v_where = ' item.id_item in (select id_item
+            											from alm.tmovimiento_tipo_item
+            											where id_item is not null
+            											and id_movimiento_tipo = '||v_id_movimiento_tipo||') ';
+            			end if;
+            											 
+            		end if;
+            		
+            	end if;
+            end if;
+            
             v_consulta:='
             	select
                 	item.id_item,
@@ -160,6 +219,8 @@ BEGIN
                 inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
                 inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
                 where item.estado_reg = ''activo'' and ';
+                
+               v_consulta = v_consulta || v_where;
            
             --Definicion de la respuesta
             v_consulta:=v_consulta||v_parametros.filtro;
@@ -168,7 +229,6 @@ BEGIN
             --Devuelve la respuesta
             return v_consulta;
             
-                       
         end;
     
     /*********************************   
@@ -181,6 +241,63 @@ BEGIN
     elsif(p_transaccion='SAL_ITEMNOTBASE_CONT')then
 
         begin
+        
+        	v_where = '';
+            --RCM 21/08/2103: Verificación de si se debe filtrar los items por tipo de movimiento, solo para los casos que envien el parametro id_movimiento
+            if pxp.f_existe_parametro(p_tabla,'id_movimiento') then
+            	v_resp_global = pxp.f_get_variable_global('alm_filtrar_item_tipomov');
+            	if v_resp_global = 'si' then
+            		--Verifica que sea una salida y si es asi obtiene el id_movimiento_tipo
+            		select
+            		movt.id_movimiento_tipo
+            		into v_id_movimiento_tipo
+            		from alm.tmovimiento mov
+            		inner join alm.tmovimiento_tipo movt
+            		on movt.id_movimiento_tipo = mov.id_movimiento_tipo
+            		where id_movimiento = v_parametros.id_movimiento
+            		and tipo = 'salida';
+            		
+            		
+            		
+            		if coalesce(v_id_movimiento_tipo,0)!=0 then
+            			--Obtener los id_clasificacion
+            			v_ids='';
+            			select (pxp.list(id_clasificacion::text))::varchar
+            			into v_ids
+        				from alm.tmovimiento_tipo_item
+            			where id_clasificacion is not null
+            			and id_movimiento_tipo = v_id_movimiento_tipo;
+            			
+            			--Obtener los Ids recursivamente
+            			v_ids=alm.f_get_id_clasificaciones_varios(v_ids);
+
+						--Definir la consulta            		
+            			if coalesce(v_ids,'')!='' then
+            				--Condición de Items y Clasificación
+            				v_where = ' (
+            								(item.id_item in (select id_item
+            											from alm.tmovimiento_tipo_item
+            											where id_item is not null
+            											and id_movimiento_tipo = '||v_id_movimiento_tipo||')
+            								) or
+            								(
+            									item.id_clasificacion in ('|| v_ids||')
+            								)
+            							)';
+            			
+            			else
+            				--Condición solo de Items
+            				v_where = ' item.id_item in (select id_item
+            											from alm.tmovimiento_tipo_item
+            											where id_item is not null
+            											and id_movimiento_tipo = '||v_id_movimiento_tipo||') ';
+            			end if;
+            											 
+            		end if;
+            		
+            	end if;
+            end if;
+            
             --Sentencia de la consulta de conteo de registros
             v_consulta:='
             	select count(item.id_item)
@@ -188,6 +305,8 @@ BEGIN
                 inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
                 inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
                 where item.estado_reg = ''activo'' and ';
+                
+            v_consulta = v_consulta || v_where;
            
             --Definicion de la respuesta           
             v_consulta:=v_consulta||v_parametros.filtro;

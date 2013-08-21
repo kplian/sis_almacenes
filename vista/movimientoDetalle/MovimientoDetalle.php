@@ -100,7 +100,8 @@ header("content-type: text/javascript; charset=UTF-8");
 				pid : this.idContenedor,
 				renderer : function(value, p, record) {
 					return String.format('{0}', record.data['nombre_item']);
-				}
+				},
+				resizable: true
 			},
 			type : 'TrigguerCombo',
 			id_grupo : 0,
@@ -367,6 +368,11 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.grid.getBottomToolbar().disable();
 				this.store.removeAll();
 			}
+			
+			//Añade el id_movimiento al  store del item para verifica si se debe filtrar los items por el tipo de movimiento
+			Ext.apply(this.Cmp.id_item.store.baseParams,{id_movimiento: this.maestro.id_movimiento});
+			//Obliga a que el combo vuelva a la bd cuando se expanda la lista
+			this.Cmp.id_item.modificado=true;
 		},
 		east : {
 			url : '../../../sis_almacenes/vista/movimientoDetValorado/MovimientoDetValorado.php',

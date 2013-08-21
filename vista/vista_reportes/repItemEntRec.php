@@ -15,7 +15,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			Phx.vista.repItemEntRec.superclass.constructor.call(this, config);
 			this.init();
 			this.store.baseParams={
-					fecha_hasta:this.maestro.fecha_hasta,
+					fecha_fin:this.maestro.fecha_fin,
 					tipo_mov:this.maestro.tipo_mov,
 					tipo_sol:this.maestro.tipo_sol,
 					id_funcionario:this.maestro.id_funcionario,
@@ -24,7 +24,10 @@ header("content-type:text/javascript; charset=UTF-8");
 					id_items:this.maestro.id_items,
 					id_clasificacion:this.maestro.id_clasificacion,
 					all_items:this.maestro.all_items,
-					id_almacen:this.maestro.id_almacen
+					id_almacen:this.maestro.id_almacen,
+					fecha_ini:this.maestro.fecha_ini,
+					all_funcionario:this.maestro.all_funcionario,
+					id_estructura_uo:this.maestro.id_estructura_uo
 			};
 			this.load({
 				params : {

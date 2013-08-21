@@ -40,6 +40,8 @@ class MODItem extends MODbase {
         $this->procedimiento = 'alm.ft_item_sel';
         $this->transaccion = 'SAL_ITEMNOTBASE_SEL';
         $this->tipo_procedimiento = 'SEL';
+		
+		$this->setParametro('id_movimiento', 'id_movimiento', 'integer');
 
         $this->captura('id_item', 'integer');
         $this->captura('id_clasificacion', 'integer');
@@ -54,6 +56,7 @@ class MODItem extends MODbase {
         $this->captura('codigo_unidad', 'varchar');
 
         $this->armarConsulta();
+		//echo $this->consulta;exit;
         $this->ejecutarConsulta();
 
         return $this->respuesta;

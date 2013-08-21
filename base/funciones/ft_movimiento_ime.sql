@@ -745,19 +745,23 @@ BEGIN
 	                where movdet.id_movimiento = v_parametros.id_movimiento
 	                    and movdet.estado_reg = 'activo'
 	            ) LOOP
-	              v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
+	            	--Se obtiene el saldo a la fecha de los item de la salida
+	              	v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
+	              	
+	              	--Se obtiene las cantidades del stock mínimo por item y almacén
 	                select 
-	                  almstock.cantidad_alerta_amarilla,
-	                    almstock.cantidad_alerta_roja,
-	                    almstock.cantidad_min
+	                almstock.cantidad_alerta_amarilla,
+	                almstock.cantidad_alerta_roja,
+	                almstock.cantidad_min
 	                into
-	                  v_alerta_amarilla,
-	                    v_alerta_roja,
-	                    v_cantidad_minima
+	                v_alerta_amarilla,
+	                v_alerta_roja,
+	                v_cantidad_minima
 	                from alm.talmacen_stock almstock
 	                inner join alm.talmacen alma on alma.id_almacen = almstock.id_almacen
 	                where almstock.id_almacen = v_parametros.id_almacen
-	                  and almstock.id_item = g_registros.id_item;
+	                and almstock.id_item = g_registros.id_item;
+	                
 	                v_alerts = false;
 	                if (v_saldo_cantidad <= v_cantidad_minima) then
 	                  v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo del mínimo en el almacén: '||v_nombre_almacen;

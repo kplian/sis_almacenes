@@ -36,7 +36,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				fieldLabel : 'Código',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 70,
+				gwidth : 100,
 				maxLength : 10
 			},
 			type : 'TextField',
@@ -53,7 +53,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				fieldLabel : 'Nombre Movimiento',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 100,
+				gwidth : 250,
 				maxLength : 50
 			},
 			type : 'TextField',
@@ -266,6 +266,12 @@ header("content-type:text/javascript; charset=UTF-8");
                 this.getBoton('del').setDisabled(true);
 			}
 			return tb;
+		},
+		south : {
+			url : '../../../sis_almacenes/vista/movimiento_tipo_item/MovimientoTipoItem.php',
+			title : 'Tipo Movimiento/Items',
+			height : '40%',
+			cls : 'MovimientoTipoItem'
 		}
 	}); 
 </script>

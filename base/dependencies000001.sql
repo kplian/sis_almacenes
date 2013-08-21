@@ -548,3 +548,12 @@ ALTER TABLE alm.tmovimiento_tipo_item
     NOT DEFERRABLE;
     
 /***********************************F-DEP-GSS-ALM-87-26/07/2013*****************************************/
+
+/***********************************I-DEP-RCM-ALM-87-21/08/2013*****************************************/
+ALTER TABLE alm.tmovimiento_tipo_item
+  ADD CONSTRAINT fk_tmovimiento_tipo_item__id_clasificacion FOREIGN KEY (id_clasificacion)
+    REFERENCES alm.tclasificacion(id_clasificacion)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************I-DEP-RCM-ALM-87-21/08/2013*****************************************/

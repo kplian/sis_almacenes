@@ -10,16 +10,39 @@ header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
 	Phx.vista.ItemEntRec = Ext.extend(Phx.frmInterfaz, {
-		Atributos : [{
+		Atributos : [
+		{
 			config : {
-				name : 'fecha_hasta',
-				fieldLabel : 'Fecha',
+				name : 'fecha_ini',
+				id:'fecha_ini_itemrec'+this.idContenedor,
+				fieldLabel : 'Desde',
 				allowBlank : false,
 				gwidth : 100,
 				format : 'd/m/Y',
 				renderer : function(value, p, record) {
 					return value ? value.dateFormat('d/m/Y h:i:s') : ''
-				}
+				},
+				vtype: 'daterange',
+				endDateField: 'fecha_fin_itemrec'+this.idContenedor
+			},
+			type : 'DateField',
+			id_grupo : 0,
+			grid : true,
+			form : true
+		},
+		{
+			config : {
+				name : 'fecha_fin',
+				id:'fecha_fin_itemrec'+this.idContenedor,
+				fieldLabel : 'Hasta',
+				allowBlank : false,
+				gwidth : 100,
+				format : 'd/m/Y',
+				renderer : function(value, p, record) {
+					return value ? value.dateFormat('d/m/Y h:i:s') : ''
+				},
+				vtype: 'daterange',
+				startDateField: 'fecha_ini_itemrec'+this.idContenedor
 			},
 			type : 'DateField',
 			id_grupo : 0,
@@ -69,49 +92,6 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		{
 			config : {
-				name : 'id_funcionario',
-				fieldLabel : 'Funcionario',
-				emptyText : 'Funcionario...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_organigrama/control/Funcionario/listarFuncionario',
-					id : 'id_funcionario',
-					root : 'datos',
-					sortInfo : {
-						field : 'desc_person',
-						direction : 'ASC'
-					},
-					totalProperty : 'total',
-					fields : ['id_funcionario', 'desc_person'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'person.nombre_completo1'
-					}
-				}),
-				disabled : true,
-				valueField : 'id_funcionario',
-				displayField : 'desc_person',
-				gdisplayField : 'nombre_funcionario',
-				hiddenName : 'id_funcionario',
-				forceSelection : true,
-				typeAhead : false,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '99%',
-				gwidth : 100,
-				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_funcionario']);
-				}
-			},
-			type : 'ComboBox',
-			id_grupo : 1,
-			grid : true,
-			form : true
-		},{
-			config : {
 				name : 'id_proveedor',
 				fieldLabel : 'Proveedor',
 				emptyText : 'Proveedor...',
@@ -151,6 +131,106 @@ header("content-type: text/javascript; charset=UTF-8");
 			id_grupo : 1,
 			grid : true,
 			form : true
+		},
+		{
+			config: {
+				name: 'all_funcionario',
+				fieldLabel: 'Seleccionar Criterio',
+				anchor: '100%',
+				allowBlank: false,
+				origen: 'CATALOGO',
+				gdisplayField: 'all_funcionario',
+				gwidth: 100,
+				tinit:false,
+				disabled:true,
+				baseParams:{
+						cod_subsistema:'ORGA',
+						catalogo_tipo:'tfuncionario__opciones'
+				},
+				renderer:function (value, p, record){return String.format('{0}', record.data['all_funcionario']);}
+			},
+			type: 'ComboRec',
+			id_grupo: 1,
+			grid: true,
+			form: true
+		},{
+			config : {
+				name : 'id_funcionario',
+				fieldLabel : 'Funcionario',
+				allowBlank : true,
+				emptyText : 'Funcionarios...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_organigrama/control/Funcionario/listarFuncionario',
+					id : 'id_funcionario',
+					root : 'datos',
+					sortInfo : {
+						field : 'desc_person',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_funcionario', 'desc_person'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'person.nombre_completo1'
+					}
+				}),
+				valueField : 'id_funcionario',
+				hiddenValue: 'id_funcionario',
+				displayField : 'desc_person',
+				gdisplayField : 'nombre_funcionario',
+				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
+				hiddenName : 'id_funcionario',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '100%',
+				gwidth : 250,
+				minChars : 2,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['nombre_funcionario']);
+				},
+				enableMultiSelect : true
+				/*,
+				tpl: new Ext.XTemplate(
+					'<tpl for="."><div class="awesomecombo-item {checked}">',
+					'{[this.wordwrap(values.', this.displayField || 'field1', ')]}',
+					'</div></tpl>', {
+						compiled: true,
+						wordwrap: function(value) {
+							if (value.length > 45) {
+								return (value.substr(0, 45) + '...');
+							}
+							return (value);
+						}
+					})*/
+			},
+			type : 'AwesomeCombo',
+			id_grupo : 1,
+			grid : false,
+			form : true
+		},{
+			config: {
+				name: 'uo',
+				fieldLabel: 'Organigrama',
+				anchor: '100%'
+			},
+			type: 'TextArea',
+			id_grupo: 1,
+			grid: true,
+			form: true
+		},
+		{
+			config : {
+				name : 'id_estructura_uo',
+				inputType:'hidden',
+				labelSeparator:'',
+			},
+			type:'Field',
+			form:true
 		}, 
 		  {
 			config: {
@@ -357,17 +437,38 @@ header("content-type: text/javascript; charset=UTF-8");
 			
 			this.Cmp.tipo_sol.on('select',function(e, component, index){
 				if(e.value=='func'){
-					this.Cmp.id_funcionario.enable();
 					this.Cmp.id_proveedor.disable();
-				} else{
+					this.Cmp.all_funcionario.enable();
 					this.Cmp.id_funcionario.disable();
+					this.Cmp.uo.disable();
+				} else{
 					this.Cmp.id_proveedor.enable();
+					this.Cmp.all_funcionario.disable()
+					this.Cmp.id_funcionario.disable();
+					this.Cmp.uo.disable();
 				}
+			},this);
+			
+			this.Cmp.all_funcionario.on('select',function(e, component, index){
+				if(e.value=='Todos los Funcionarios'){
+					this.Cmp.id_funcionario.disable();
+					this.Cmp.uo.disable();
+				} else if(e.value=='Seleccionar Funcionarios'){
+					this.Cmp.id_funcionario.enable();
+					this.Cmp.uo.disable();
+				} else if(e.value=='Por Organigrama'){
+					this.Cmp.id_funcionario.disable();
+					this.Cmp.uo.enable();
+				}
+				
 			},this);
 			
 			this.getComponente('id_items').disable();
 			this.Cmp.clasificacion.on('focus',this.bntClasificacion,this);
-			this.Cmp.clasificacion.setReadOnly(true);		},
+			this.Cmp.clasificacion.setReadOnly(true);
+			this.Cmp.uo.on('focus',this.btnUO,this);
+			this.Cmp.uo.setReadOnly(true);
+		},
 		tipo : 'reporte',
 		clsSubmit : 'bprint',
 		Grupos : [{
@@ -430,6 +531,22 @@ header("content-type: text/javascript; charset=UTF-8");
 				);
 			}
 		},
+		btnUO: function(){
+			var data;
+			//Valida que el combo de criterio sea por Clasificación
+			if(this.Cmp.all_funcionario.getValue()=='Por Organigrama'){
+				Phx.CP.loadWindows('../../../sis_organigrama/vista/estructura_uo/EstructuraUoCheck.php',
+						'Organigrama',
+						{
+							width:'60%',
+							height:'70%'
+					    },
+					    data,
+					    this.idContenedor,
+					    'EstructuraUoCheck'
+				);
+			}
+		},
 		id_clasificacion:'',
 		agregarArgsExtraSubmit: function(){
 			//Inicializa el objeto de los argumentos extra
@@ -438,22 +555,28 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.argumentExtraSubmit.id_clasificacion=this.id_clasificacion;
 		},
 		onSubmit: function(){
-			var data={};
-			data.fecha_hasta=this.Cmp.fecha_hasta.getValue();
-			data.tipo_mov=this.Cmp.tipo_mov.getValue();
-			data.tipo_sol=this.Cmp.tipo_sol.getValue();
-			data.id_funcionario=this.Cmp.id_funcionario.getValue();
-			data.id_proveedor=this.Cmp.id_proveedor.getValue();
-			data.all_alm=this.Cmp.all_alm.getValue();
-			data.id_items=this.Cmp.id_items.getValue();
-			data.id_clasificacion=this.Cmp.id_clasificacion.getValue();
-			data.all_items=this.Cmp.all_items.getValue();
-			data.id_almacen=this.Cmp.id_almacen.getValue();
-			
-			Phx.CP.loadWindows('../../../sis_almacenes/vista/vista_reportes/repItemEntRec.php', 'Items Entregados/Recibidos', {
-					width : '90%',
-					height : '80%'
-				}, data	, this.idContenedor, 'repItemEntRec')
+			if (this.form.getForm().isValid()) {
+				var data={};
+				data.fecha_ini=this.Cmp.fecha_ini.getValue();
+				data.fecha_fin=this.Cmp.fecha_fin.getValue();
+				data.tipo_mov=this.Cmp.tipo_mov.getValue();
+				data.tipo_sol=this.Cmp.tipo_sol.getValue();
+				data.id_funcionario=this.Cmp.id_funcionario.getValue();
+				data.id_proveedor=this.Cmp.id_proveedor.getValue();
+				data.all_alm=this.Cmp.all_alm.getValue();
+				data.id_items=this.Cmp.id_items.getValue();
+				data.id_clasificacion=this.Cmp.id_clasificacion.getValue();
+				data.all_items=this.Cmp.all_items.getValue();
+				data.id_almacen=this.Cmp.id_almacen.getValue();
+				data.all_funcionario=this.Cmp.all_funcionario.getValue();
+				data.id_estructura_uo=this.Cmp.id_estructura_uo.getValue();
+				
+				console.log(data)
+				Phx.CP.loadWindows('../../../sis_almacenes/vista/vista_reportes/repItemEntRec.php', 'Items Entregados/Recibidos', {
+						width : '90%',
+						height : '80%'
+					}, data	, this.idContenedor, 'repItemEntRec')
+			}
 		}
 
 })

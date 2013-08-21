@@ -434,6 +434,12 @@ CREATE TABLE alm.tmovimiento_tipo_item (
   id_movimiento_tipo INTEGER, 
   id_item INTEGER, 
   CONSTRAINT pk_tmovimiento_tipo_item__id_movimiento_tipo_item PRIMARY KEY(id_movimiento_tipo_item)
-) WITHOUT OIDS;
+) INHERITS(pxp.tbase) 
+WITHOUT OIDS;
 
 /***********************************F-SCP-GSS-ALM-87-26/07/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-87-21/08/2013*****************************************/
+alter table alm.tmovimiento_tipo_item
+add column id_clasificacion integer;
+/***********************************F-SCP-RCM-ALM-87-21/08/2013*****************************************/

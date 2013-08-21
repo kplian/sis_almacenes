@@ -16,7 +16,7 @@ DECLARE
 BEGIN
 
   if p_id_clasificacion is null then
-      return '(null)';
+      return 'null';
   end if;
   
   create temp table tclasificaciones(

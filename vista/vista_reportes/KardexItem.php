@@ -75,18 +75,20 @@ header("content-type: text/javascript; charset=UTF-8");
 				fieldLabel: 'Item',
 				allowBlank: false,
 				emptyText: 'Elija un material...',
-				store: new Ext.data.JsonStore({
-					url: '../../sis_almacenes/control/Item/listarItem',
-					id: 'id_item',
-					root: 'datos',
-					sortInfo: {
-						field: 'nombre',
-						direction: 'ASC'
+				store : new Ext.data.JsonStore({
+					url : '../../sis_almacenes/control/Item/listarItemNotBase',
+					id : 'id_item',
+					root : 'datos',
+					sortInfo : {
+						field : 'nombre',
+						direction : 'ASC'
 					},
-					totalProperty: 'total',
-					fields: ['id_item','nombre','codigo_unidad','id_unidad_medida'],
-					remoteSort: true,
-					baseParams: {par_filtro:'item.nombre'}
+					totalProperty : 'total',
+					fields : ['id_item', 'nombre', 'codigo', 'desc_clasificacion', 'codigo_unidad'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'item.nombre#item.codigo#cla.nombre'
+					}
 				}),
 				//hidden: true,
 				valueField: 'id_item',
@@ -95,6 +97,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				forceSelection: false,
 				typeAhead: false,
     			triggerAction: 'all',
+    			tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
     			lazyRender: true,
 				mode: 'remote',
 				pageSize: 20,
@@ -201,17 +204,19 @@ header("content-type: text/javascript; charset=UTF-8");
 			}]
 		}],
 		onSubmit: function(){
-			var data={};
-			data.fecha_ini=this.getComponente('fecha_ini').getValue();
-			data.fecha_fin=this.getComponente('fecha_fin').getValue();
-			data.id_item=this.getComponente('id_item').getValue();
-			data.all_alm=this.getComponente('all_alm').getValue();
-			data.id_almacen=this.getComponente('id_almacen').getValue();
-			
-			Phx.CP.loadWindows('../../../sis_almacenes/vista/vista_reportes/repKardexItem.php', 'Kardex por Item', {
-					width : '90%',
-					height : '80%'
-				}, data	, this.idContenedor, 'repKardexItem')
+			if (this.form.getForm().isValid()) {
+				var data={};
+				data.fecha_ini=this.getComponente('fecha_ini').getValue();
+				data.fecha_fin=this.getComponente('fecha_fin').getValue();
+				data.id_item=this.getComponente('id_item').getValue();
+				data.all_alm=this.getComponente('all_alm').getValue();
+				data.id_almacen=this.getComponente('id_almacen').getValue();
+				
+				Phx.CP.loadWindows('../../../sis_almacenes/vista/vista_reportes/repKardexItem.php', 'Kardex por Item', {
+						width : '90%',
+						height : '80%'
+					}, data	, this.idContenedor, 'repKardexItem')
+			}
 		}
 
 	})

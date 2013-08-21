@@ -1157,3 +1157,8 @@ select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','ingresos y salidas');
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','ingreso');
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','salida');
 /***********************************F-DAT-RCM-ALM-93-12/08/2013****************************************/
+
+/***********************************I-DAT-RCM-ALM-87-22/08/2013****************************************/
+INSERT INTO pxp.variable_global ("variable", "valor", "descripcion")
+VALUES (E'alm_filtrar_item_tipomov', E'si', E'Bandera para verificar si se debe filtrar los Items por Tipo de movimiento al registrar cualquier movimiento');
+/***********************************F-DAT-RCM-ALM-87-22/08/2013****************************************/
