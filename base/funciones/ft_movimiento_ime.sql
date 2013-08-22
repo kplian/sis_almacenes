@@ -94,6 +94,8 @@ DECLARE
     v_obs					text;
     v_uo_sol				varchar;
     v_codigo				varchar;
+    v_asunto_alerta			varchar;
+    
 BEGIN
 
 	v_nombre_funcion='alm.ft_movimiento_ime';
@@ -256,15 +258,15 @@ BEGIN
 	elseif(p_transaccion='SAL_MOVFIN_MOD')then
 	
     	begin
+        	--0) Obtención de datos del almacén
+        	select alma.nombre, alma.estado, alma.id_departamento, alma.codigo
+	        into v_nombre_almacen, v_estado_almacen, v_id_depto, v_cod_almacen
+	        from alm.talmacen alma
+	        where alma.id_almacen = v_parametros.id_almacen;
         
         IF  v_parametros.operacion = 'verificar' THEN
 
 	      	--1.1) Verificar que el almacen esté activo
-	        select alma.nombre, alma.estado, alma.id_departamento, alma.codigo
-	        into v_nombre_almacen, v_estado_almacen, v_id_depto, v_cod_almacen
-	        from alm.talmacen alma
-	        where alma.id_almacen = v_parametros.id_almacen;
-	        
 	        if (v_estado_almacen is null or v_estado_almacen = 'inactivo') then
 	          raise exception '%', 'El Almacén seleccionado no se encuentra Activo';
 	        end if;
@@ -739,41 +741,73 @@ BEGIN
 	                select 
 	                  item.nombre as nombre_item,
 	                    movdet.id_movimiento_det,
-	                    movdet.id_item
+	                    movdet.id_item,
+                        item.codigo as codigo_item
 	                from alm.tmovimiento_det movdet
 	                inner join alm.titem item on item.id_item = movdet.id_item
 	                where movdet.id_movimiento = v_parametros.id_movimiento
 	                    and movdet.estado_reg = 'activo'
 	            ) LOOP
-	            	--Se obtiene el saldo a la fecha de los item de la salida
+                	
 	              	v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_parametros.id_almacen, date(v_fecha_mov));
-	              	
-	              	--Se obtiene las cantidades del stock mínimo por item y almacén
+
 	                select 
-	                almstock.cantidad_alerta_amarilla,
-	                almstock.cantidad_alerta_roja,
-	                almstock.cantidad_min
+	                  almstock.cantidad_alerta_amarilla,
+	                  almstock.cantidad_alerta_roja,
+	                  almstock.cantidad_min
 	                into
-	                v_alerta_amarilla,
-	                v_alerta_roja,
-	                v_cantidad_minima
+	                  v_alerta_amarilla,
+	                  v_alerta_roja,
+	                  v_cantidad_minima
 	                from alm.talmacen_stock almstock
 	                inner join alm.talmacen alma on alma.id_almacen = almstock.id_almacen
 	                where almstock.id_almacen = v_parametros.id_almacen
 	                and almstock.id_item = g_registros.id_item;
-	                
+                    
 	                v_alerts = false;
 	                if (v_saldo_cantidad <= v_cantidad_minima) then
-	                  v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo del mínimo en el almacén: '||v_nombre_almacen;
-	                    v_alerts = true;
+                    	v_asunto_alerta = 'Bajas Existencias [Almacen: '||v_cod_almacen||', Codigo: '||g_registros.codigo_item|| ']';
+                        v_descripcion_alerta = '<b>Desde: </b> '||v_fecha_mov ||'<br>
+                                                  <b>Almacén: </b> '||v_cod_almacen || ' - ' || v_nombre_almacen||'<br>
+                                                  <b>Código Item: </b> '||g_registros.codigo_item ||'<br>
+                                                  <b>Item: </b> '||g_registros.nombre_item ||'<br>
+                                                  <b>Código Item: </b> '||g_registros.codigo_item ||'<br>
+                                                  <b>Cantidad Actual: </b> '||v_saldo_cantidad ||'<br>
+                                                  <b>Cantidad Mínima: </b> '||v_cantidad_minima ||'<br>
+                                                  <b>Diferencia: </b> '||v_cantidad_minima-v_saldo_cantidad ||'<br>
+                                                  <br>
+                                                  <b>Mensaje: </b>Se está llegando a cantidades bajas de existencias. La cantidad mínima es de '||v_cantidad_minima||' y el saldo actual es de '||v_saldo_cantidad||'. Se le recomienda aumentar la cantidad en stock.';
+                        v_alerts = true;
+                      	
 	                elseif(v_saldo_cantidad <= v_alerta_roja) then
-	                  v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo de la alerta roja en el almacén: '||v_nombre_almacen;
-	                  v_alerts = true;
+                        v_asunto_alerta = 'ALERTA ROJA [Almacen: '||v_cod_almacen||', Codigo: '||g_registros.codigo_item|| '] !!!';
+                        v_descripcion_alerta = '<b>Desde: </b> '||v_fecha_mov ||'<br>
+                                                <b>Almacén: </b> '||v_cod_almacen || ' - ' || v_nombre_almacen||'<br>
+                        						<b>Código Item: </b> '||g_registros.codigo_item ||'<br>
+                                                <b>Item: </b> '||g_registros.nombre_item ||'<br>
+                                                <b>Código Item: </b> '||g_registros.codigo_item ||'<br>
+                                                <b>Cantidad Actual: </b> '||v_saldo_cantidad ||'<br>
+                                                <b>Cantidad Alerta Roja: </b> '||v_alerta_roja ||'<br>
+                                                <b>Diferencia: </b> '||v_alerta_roja-v_saldo_cantidad ||'<br>
+                                                <br>
+                                                <b>Mensaje: </b>Se ha llegado a un nivel crítico de existencias. El nivel mínimo debería ser de :'||v_alerta_roja ||', y el saldo actual es de '||v_saldo_cantidad||'. Debe abastecerse con urgencia de este material.';
+	                    v_alerts = true;
+                        
 	                elseif(v_saldo_cantidad <= v_alerta_amarilla) then
-	                  v_descripcion_alerta = 'Las existencias del item '||g_registros.nombre_item||' están por debajo de la alerta amarilla en el almacén: '||v_nombre_almacen;
-	                  v_alerts = true;
+                    	v_asunto_alerta = 'Alerta Amarilla [Almacen: '||v_cod_almacen||', Codigo: '||g_registros.codigo_item|| ']';
+                        v_descripcion_alerta = '<b>Desde: </b> '||v_fecha_mov ||'<br>
+                                                <b>Almacén: </b> '||v_cod_almacen || ' - ' || v_nombre_almacen||'<br>
+                        						<b>Código Item: </b> '||g_registros.codigo_item ||'<br>
+                                                <b>Item: </b> '||g_registros.nombre_item ||'<br>
+                                                <b>Código Item: </b> '||g_registros.codigo_item ||'<br>
+                                                <b>Cantidad Actual: </b> '||v_saldo_cantidad ||'<br>
+                                                <b>Cantidad Alerta Amarilla: </b> '||v_alerta_amarilla ||'<br>
+                                                <b>Diferencia: </b> '||v_alerta_amarilla-v_saldo_cantidad ||'<br>
+                                                <br>
+                                                <b>Mensaje: </b>Se está llegando a cantidades bajas de existencias. La cantidad de Alerta Amarilla es'||v_alerta_amarilla||' y el saldo actual es de '||v_saldo_cantidad||'. Se le recomienda aumentar la cantidad en stock.';
+	                  	v_alerts = true;
 	                end if;
-	                
+                    
 	                IF (v_alerts) THEN
 	                    FOR g_registros_2 IN (
 	                        select almu.id_usuario
@@ -789,10 +823,10 @@ BEGIN
 	                            NULL,
 	                            p_id_usuario,
 	                            NULL,
-	                            'Bajas existencias en Almacén: '||v_nombre_almacen,
+	                            v_asunto_alerta,
 	                            '{}',
 	                            g_registros_2.id_usuario,
-	                            'Bajas existencias en Almacén: '||v_nombre_almacen
+	                            v_asunto_alerta
 	                        );
 	                        IF (g_registros_2.id_usuario = p_id_usuario) THEN
 	                          v_mostrar_alerts = true;
@@ -808,8 +842,7 @@ BEGIN
         raise exception 'operacion no identificada %',COALESCE( v_parametros.operacion,'--');
             
       END IF;       
-	        --raise exception 'Done';
-	        
+    
 	  v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento finalizado');
 	  v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento',v_parametros.id_movimiento::varchar);
 	    

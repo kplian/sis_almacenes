@@ -109,7 +109,6 @@ header("content-type: text/javascript; charset=UTF-8");
 				name : 'fecha_mov',
 				fieldLabel : 'Fecha Movimiento',
 				allowBlank : false,
-				disabled: true,
 				gwidth : 100,
 				format : 'd/m/Y',
 				renderer : function(value, p, record) {
@@ -660,8 +659,8 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		bdel : true,
 		bsave : false,
-		fwidth : 420,
-		fheight : 530,
+		fwidth : '60%',
+		fheight : '80%',
 		south : {
 			url : '../../../sis_almacenes/vista/movimientoDetalle/MovimientoDetalle.php',
 			title : 'Detalle de Movimiento',

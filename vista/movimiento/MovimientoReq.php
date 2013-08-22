@@ -43,7 +43,7 @@ Phx.vista.MovimientoReq = {
     onButtonNew:function(){
        Phx.vista.MovimientoReq.superclass.onButtonNew.call(this); 
               
-       this.Cmp.fecha_mov.setValue(new Date());
+       //this.Cmp.fecha_mov.setValue(new Date());
        this.Cmp.fecha_mov.fireEvent('change');      
            
     },
@@ -96,18 +96,19 @@ Phx.vista.MovimientoReq = {
         },
      
      obtenerGestion:function(x){
-         
-         var fecha = x.getValue().dateFormat(x.format);
-            Phx.CP.loadingShow();
-            Ext.Ajax.request({
-                    url:'../../sis_parametros/control/Gestion/obtenerGestionByFecha',
-                    params:{fecha:fecha},
-                    success:this.successGestion,
-                    failure: this.conexionFailure,
-                    timeout:this.timeout,
-                    scope:this
-             });
-        }, 
+     	if(Ext.isDate(x.getValue())){
+	         var fecha = x.getValue().dateFormat(x.format);
+	            Phx.CP.loadingShow();
+	            Ext.Ajax.request({
+	                    url:'../../sis_parametros/control/Gestion/obtenerGestionByFecha',
+	                    params:{fecha:fecha},
+	                    success:this.successGestion,
+	                    failure: this.conexionFailure,
+	                    timeout:this.timeout,
+	                    scope:this
+	             });
+		}
+	}, 
         
     successGestion:function(resp){
        Phx.CP.loadingHide();
