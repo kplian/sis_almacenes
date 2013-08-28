@@ -1161,4 +1161,6 @@ select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','salida');
 /***********************************I-DAT-RCM-ALM-87-22/08/2013****************************************/
 INSERT INTO pxp.variable_global ("variable", "valor", "descripcion")
 VALUES (E'alm_filtrar_item_tipomov', E'si', E'Bandera para verificar si se debe filtrar los Items por Tipo de movimiento al registrar cualquier movimiento');
+INSERT INTO pxp.variable_global ("variable", "valor", "descripcion")
+VALUES (E'alm_filtrar_funcionario_tipomov_asistente', E'si', E'Bandera para verificar si al registrar un movimiento, filtre los funcionarios en base al tipo de movimiento y a la asistente que realiza el registro');
 /***********************************F-DAT-RCM-ALM-87-22/08/2013****************************************/

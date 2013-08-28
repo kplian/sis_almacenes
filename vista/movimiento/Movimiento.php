@@ -17,9 +17,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.init();
 			this.load({params:{start:0, limit:this.tam_pag}})
 
-			this.getComponente('tipo').on('select', this.onTipoSelect, this);
-			this.getComponente('id_movimiento_tipo').on('select', this.onMovimientoTipoSelect, this);
-			this.getComponente('solicitante').on('select', this.onSolicitanteSelect, this);
+			//Eventos
+			this.Cmp.tipo.on('select', this.onTipoSelect, this);
+			this.Cmp.id_movimiento_tipo.on('select', this.onMovimientoTipoSelect, this);
+			this.Cmp.solicitante.on('select', this.onSolicitanteSelect, this);
 	
 			this.addButton('btnCancelar', {
 				text : 'Cancelar',
@@ -312,6 +313,25 @@ header("content-type: text/javascript; charset=UTF-8");
 			form : true,
 			grid : false
 		}, {
+   			config:{
+       		    name:'id_funcionario',
+       		    hiddenName: 'id_funcionario',
+   				origen:'FUNCIONARIOCAR',
+   				fieldLabel:'Funcionario',
+   				allowBlank:false,
+                gwidth:200,
+   				valueField: 'id_funcionario',
+   			    gdisplayField: 'desc_funcionario',
+   			    baseParams: { es_combo_solicitud : 'si',fecha: new Date(), id_movimiento_tipo:0 },
+      			renderer:function(value, p, record){return String.format('{0}', record.data['desc_funcionario']);},
+      			url:'../../sis_almacenes/control/Movimiento/listarFuncionarioMovimientoTipo'
+       	     },
+   			type:'ComboRec',//ComboRec
+   			id_grupo:0,
+   			filters:{pfiltro:'fun.desc_funcionario1',type:'string'},
+   		    grid:true,
+   			form:true
+		 }/*, {
 			config : {
 				name : 'id_funcionario',
 				fieldLabel : 'Funcionario',
@@ -332,8 +352,6 @@ header("content-type: text/javascript; charset=UTF-8");
 						par_filtro : 'person.nombre_completo1'
 					}
 				}),
-				disabled : true,
-				hidden : true,
 				valueField : 'id_funcionario',
 				displayField : 'desc_person',
 				gdisplayField : 'nombre_funcionario',
@@ -360,7 +378,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			grid : true,
 			form : true
-		}, {
+		}*/, {
 			config : {
 				name : 'id_proveedor',
 				fieldLabel : 'Proveedor',
@@ -695,6 +713,11 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('id_movimiento_origen').disable();
 				this.getComponente('id_movimiento_origen').setVisible(false);
 			}
+			
+			//Setea el store del funcionario
+			Ext.apply(this.Cmp.id_funcionario.store.baseParams,{id_movimiento_tipo: component.data.id_movimiento_tipo})
+			this.Cmp.id_funcionario.setValue('');
+			this.Cmp.id_funcionario.modificado=true;
 		},
 		onSolicitanteSelect : function(e, component, index) {
 			if (e.value == 'funcionario') {
@@ -780,55 +803,64 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		onButtonEdit : function() {
 			Phx.vista.Movimiento.superclass.onButtonEdit.call(this);
-			this.getComponente('tipo').disable();
-			if (this.getComponente('tipo').value == 'salida') {
-				var comboSolicitante = this.getComponente('solicitante');
-				var comboProveedor = this.getComponente('id_proveedor');
-				var comboFuncionario = this.getComponente('id_funcionario');
-				comboSolicitante.enable();
-				comboSolicitante.setVisible(true);
-				if (comboFuncionario.value != null && comboFuncionario.value != undefined) {
-					comboSolicitante.setValue('funcionario');
-					comboFuncionario.enable();
-					comboFuncionario.setVisible(true);
-					comboProveedor.disable();
-					comboProveedor.setVisible(false);
-				} else if (comboProveedor.value != null && comboProveedor.value != undefined) {
-					comboSolicitante.setValue('proveedor');
-					comboProveedor.enable();
-					comboProveedor.setVisible(true);
-					comboFuncionario.disable();
-					comboFuncionario.setVisible(false);
+			this.Cmp.tipo.disable();
+			if (this.Cmp.tipo.value == 'salida') {
+				this.Cmp.solicitante.enable();
+				this.Cmp.solicitante.setVisible(true);
+				if (this.Cmp.id_funcionario.value != null && this.Cmp.id_funcionario.value != undefined) {
+					this.Cmp.solicitante.setValue('funcionario');
+					this.Cmp.id_funcionario.enable();
+					this.Cmp.id_funcionario.setVisible(true);
+					this.Cmp.id_proveedor.disable();
+					this.Cmp.id_proveedor.setVisible(false);
+				} else if (this.Cmp.id_proveedor.value != null && this.Cmp.id_proveedor.value != undefined) {
+					this.Cmp.solicitante.setValue('proveedor');
+					this.Cmp.id_proveedor.enable();
+					this.Cmp.id_proveedor.setVisible(true);
+					this.Cmp.id_funcionario.disable();
+					this.Cmp.id_funcionario.setVisible(false);
 				}
-				this.getComponente('id_movimiento_origen').disable();
-				this.getComponente('id_movimiento_origen').setVisible(false);
-			} else if (this.getComponente('tipo').value == 'ingreso') {
-				if (this.getComponente('id_movimiento_tipo').getRawValue().toLowerCase().indexOf('devol') != -1) {
-					this.getComponente('id_movimiento_origen').enable();
-					this.getComponente('id_movimiento_origen').setVisible(true);
+				this.Cmp.id_movimiento_origen.disable();
+				this.Cmp.id_movimiento_origen.setVisible(false);
+			} else if (this.Cmp.tipo.value == 'ingreso') {
+				if (this.Cmp.id_movimiento_tipo.getRawValue().toLowerCase().indexOf('devol') != -1) {
+					this.Cmp.id_movimiento_origen.enable();
+					this.Cmp.id_movimiento_origen.setVisible(true);
 				} else {
-					this.getComponente('id_movimiento_origen').disable();
-					this.getComponente('id_movimiento_origen').setVisible(false);
+					this.Cmp.id_movimiento_origen.disable();
+					this.Cmp.id_movimiento_origen.setVisible(false);
 				}
-				this.getComponente('solicitante').disable();
-				this.getComponente('solicitante').setVisible(false);
-				this.getComponente('id_proveedor').disable();
-				this.getComponente('id_proveedor').setVisible(false);
-				this.getComponente('id_funcionario').disable();
-				this.getComponente('id_funcionario').setVisible(false);
+				this.Cmp.solicitante.enable();
+				this.Cmp.solicitante.setVisible(true);
+				if (this.Cmp.id_funcionario.value != null && this.Cmp.id_funcionario.value != undefined) {
+					this.Cmp.solicitante.setValue('funcionario');
+					this.Cmp.id_funcionario.enable();
+					this.Cmp.id_funcionario.setVisible(true);
+					this.Cmp.id_proveedor.disable();
+					this.Cmp.id_proveedor.setVisible(false);
+				} else if (this.Cmp.id_proveedor.value != null && this.Cmp.id_proveedor.value != undefined) {
+					this.Cmp.solicitante.setValue('proveedor');
+					this.Cmp.id_proveedor.enable();
+					this.Cmp.id_proveedor.setVisible(true);
+					this.Cmp.id_funcionario.disable();
+					this.Cmp.id_funcionario.setVisible(false);
+				}
 			}
 		},
 		onButtonNew : function() {
 			Phx.vista.Movimiento.superclass.onButtonNew.call(this);
-			this.getComponente('tipo').enable();
-			this.getComponente('solicitante').enable();
-			this.getComponente('solicitante').setVisible(true);
-			this.getComponente('id_proveedor').disable();
-			this.getComponente('id_proveedor').setVisible(false);
-			this.getComponente('id_funcionario').disable();
-			this.getComponente('id_funcionario').setVisible(false);
-			this.getComponente('id_movimiento_origen').disable();
-			this.getComponente('id_movimiento_origen').setVisible(false);
+			//valor por defecto
+			this.Cmp.solicitante.setValue('Funcionario')
+			
+			this.Cmp.tipo.enable();
+			this.Cmp.solicitante.enable();
+			this.Cmp.solicitante.setVisible(true);
+			this.Cmp.id_proveedor.disable();
+			this.Cmp.id_proveedor.setVisible(false);
+			this.Cmp.id_funcionario.enable();
+			this.Cmp.id_funcionario.setVisible(true);
+			this.Cmp.id_movimiento_origen.disable();
+			this.Cmp.id_movimiento_origen.setVisible(false);
 		},
 		successSave : function(resp) {
 			Phx.vista.Movimiento.superclass.successSave.call(this, resp);

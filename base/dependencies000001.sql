@@ -556,4 +556,21 @@ ALTER TABLE alm.tmovimiento_tipo_item
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
-/***********************************I-DEP-RCM-ALM-87-21/08/2013*****************************************/
+/***********************************F-DEP-RCM-ALM-87-21/08/2013*****************************************/
+
+/***********************************I-DEP-RCM-ALM-95-22/08/2013*****************************************/
+ALTER TABLE alm.tmovimiento_tipo_uo
+  ADD CONSTRAINT fk_tmovimiento_tipo_uo__id_movimiento_tipo FOREIGN KEY (id_movimiento_tipo)
+    REFERENCES alm.tmovimiento_tipo(id_movimiento_tipo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tmovimiento_tipo_uo
+  ADD CONSTRAINT fk_tmovimiento_tipo_uo__id_uo FOREIGN KEY (id_uo)
+    REFERENCES orga.tuo(id_uo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+/***********************************F-DEP-RCM-ALM-95-22/08/2013*****************************************/

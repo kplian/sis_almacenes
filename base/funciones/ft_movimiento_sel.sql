@@ -24,6 +24,8 @@ DECLARE
   v_fecha_fin		date;
   v_periodo_subsistema_estado varchar;
   v_filtro 			varchar;
+  v_filadd           varchar;
+  v_tipo_mov		varchar;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_sel';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -190,7 +192,7 @@ BEGIN
         return v_consulta;
      end;
      
-  /*********************************   
+  	/*********************************   
      #TRANSACCION:  'SAL_MOVPENPER_SEL'
      #DESCRIPCION:  Consulta de datos
      #AUTOR:        Ariel Ayaviri Omonte
@@ -239,7 +241,151 @@ BEGIN
 		return v_consulta;
      end;
      
-         
+     /*********************************   
+     #TRANSACCION:  'SAL_FUNCIOCAR_SEL'
+     #DESCRIPCION:  Listado de los funcionarios para el registro del movimiento
+     #AUTOR:        RCM
+     #FECHA:        27/08/2013
+    ***********************************/
+	elseif(p_transaccion='SAL_FUNCIOCAR_SEL')then
+	  	begin
+	  		--Se obtiene el tipo de movimiento
+	  		select tipo
+	  		into v_tipo_mov
+	  		from alm.tmovimiento_tipo
+	  		where id_movimiento_tipo = v_parametros.id_movimiento_tipo;
+	  		
+	  		--Verifica la variable global para aplicar filtro
+	  		if pxp.f_get_variable_global('alm_filtrar_funcionario_tipomov_asistente') = 'si' and v_tipo_mov = 'salida' then
+	  			v_filadd = '0=0 and ';
+	            IF (pxp.f_existe_parametro(p_tabla,'estado_reg_asi')) THEN
+	               v_filadd = ' (FUNCAR.estado_reg_asi = '''||v_parametros.estado_reg_asi||''') and ';
+	            END IF;
+	
+	               v_consulta:='SELECT 
+	                            FUNCAR.id_uo_funcionario,
+	                            FUNCAR.id_funcionario,
+	                            FUNCAR.desc_funcionario1,
+	                            FUNCAR.desc_funcionario2,
+	                            FUNCAR.id_uo,
+	                            FUNCAR.nombre_cargo,
+	                            FUNCAR.fecha_asignacion,
+	                            FUNCAR.fecha_finalizacion,
+	                            FUNCAR.num_doc,
+	                            FUNCAR.ci,
+	                            FUNCAR.codigo,
+	                            FUNCAR.email_empresa,
+	                            FUNCAR.estado_reg_fun,
+	                            FUNCAR.estado_reg_asi
+	                            FROM orga.vfuncionario_cargo FUNCAR 
+	                            WHERE '||v_filadd || '
+	                            FUNCAR.id_funcionario IN (select * 
+															  FROM orga.f_get_funcionarios_x_usuario_asistente('''||v_parametros.fecha||''',' ||
+															  p_id_usuario || ',''norecursivo'') AS (id_funcionario INTEGER))
+								AND FUNCAR.id_uo IN (SELECT id_uo from alm.tmovimiento_tipo_uo
+													WHERE id_movimiento_tipo = '||v_parametros.id_movimiento_tipo||') AND';
+	               
+	               
+	               v_consulta:=v_consulta||v_parametros.filtro;
+	               v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion ||
+	               				' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
+	  		else
+	  			v_filadd = '0=0 and ';
+	            IF (pxp.f_existe_parametro(p_tabla,'estado_reg_asi')) THEN
+	               v_filadd = ' (FUNCAR.estado_reg_asi = '''||v_parametros.estado_reg_asi||''') and ';
+	            END IF;
+	
+	               v_consulta:='SELECT 
+	                            FUNCAR.id_uo_funcionario,
+	                            FUNCAR.id_funcionario,
+	                            FUNCAR.desc_funcionario1,
+	                            FUNCAR.desc_funcionario2,
+	                            FUNCAR.id_uo,
+	                            FUNCAR.nombre_cargo,
+	                            FUNCAR.fecha_asignacion,
+	                            FUNCAR.fecha_finalizacion,
+	                            FUNCAR.num_doc,
+	                            FUNCAR.ci,
+	                            FUNCAR.codigo,
+	                            FUNCAR.email_empresa,
+	                            FUNCAR.estado_reg_fun,
+	                            FUNCAR.estado_reg_asi
+	                            FROM orga.vfuncionario_cargo FUNCAR 
+	                            WHERE '||v_filadd || '
+	                            FUNCAR.id_funcionario IN (select * 
+															  FROM orga.f_get_funcionarios_x_usuario_asistente('''||v_parametros.fecha||''',' ||
+															  p_id_usuario || ') AS (id_funcionario INTEGER)) AND ';
+	               
+	               
+	               v_consulta:=v_consulta||v_parametros.filtro;
+	               v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion ||
+	               				' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
+
+	  			
+	  			
+	  		end if;
+	  		raise notice 'CONSULTA: %',v_consulta;
+	        return v_consulta;
+	    end;
+	/*********************************   
+     #TRANSACCION:  'SAL_FUNCIOCAR_CONT'
+     #DESCRIPCION:  Conteo de registros
+     #AUTOR:        RCM
+     #FECHA:        27/08/2013
+    ***********************************/
+	elsif(p_transaccion='SAL_FUNCIOCAR_CONT')then
+    	begin
+        	--Se obtiene el tipo de movimiento
+	  		select tipo
+	  		into v_tipo_mov
+	  		from alm.tmovimiento_tipo
+	  		where id_movimiento_tipo = v_parametros.id_movimiento_tipo;
+    		--Verifica la variable global para aplicar filtro
+	  		if pxp.f_get_variable_global('alm_filtrar_funcionario_tipomov_asistente') = 'si' and v_tipo_mov = 'salida' then
+	  			v_filadd = '0=0 and ';
+	            IF (pxp.f_existe_parametro(p_tabla,'estado_reg_asi')) THEN
+	               v_filadd = ' (FUNCAR.estado_reg_asi = '''||v_parametros.estado_reg_asi||''') and ';
+	            END IF;
+	
+               v_consulta:='SELECT 
+                            COUNT(FUNCAR.id_uo_funcionario)
+                            FROM orga.vfuncionario_cargo FUNCAR 
+                            WHERE '||v_filadd || '
+                            FUNCAR.id_funcionario IN (select * 
+                                                          FROM orga.f_get_funcionarios_x_usuario_asistente('''||v_parametros.fecha||''',' ||
+                                                          p_id_usuario || ',''norecursivo'') AS (id_funcionario INTEGER))
+                            AND FUNCAR.id_uo IN (SELECT id_uo from alm.tmovimiento_tipo_uo
+                                                WHERE id_movimiento_tipo = '||v_parametros.id_movimiento_tipo||') AND';
+	               
+	               
+               v_consulta:=v_consulta||v_parametros.filtro;
+
+	  		else
+	  			v_filadd = '0=0 and ';
+	            IF (pxp.f_existe_parametro(p_tabla,'estado_reg_asi')) THEN
+	               v_filadd = ' (FUNCAR.estado_reg_asi = '''||v_parametros.estado_reg_asi||''') and ';
+	            END IF;
+	
+	               v_consulta:='SELECT 
+	                            COUNT(FUNCAR.id_uo_funcionario)
+	                            FROM orga.vfuncionario_cargo FUNCAR 
+	                            WHERE '||v_filadd || '
+	                            FUNCAR.id_funcionario IN (select * 
+															  FROM orga.f_get_funcionarios_x_usuario_asistente('''||v_parametros.fecha||''',' ||
+															  p_id_usuario || ') AS (id_funcionario INTEGER)) AND ';
+	               
+	               
+	               v_consulta:=v_consulta||v_parametros.filtro;
+	  			
+	  		end if;
+    	
+			return v_consulta;
+     end;
+     
+     
+  else
+     
+      raise exception 'Procedimiento no encontrado';   
      
   end if;
 EXCEPTION

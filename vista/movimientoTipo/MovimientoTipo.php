@@ -267,11 +267,19 @@ header("content-type:text/javascript; charset=UTF-8");
 			}
 			return tb;
 		},
-		south : {
+		tabsouth:[{
 			url : '../../../sis_almacenes/vista/movimiento_tipo_item/MovimientoTipoItem.php',
-			title : 'Tipo Movimiento/Items',
+			title : 'Items/Clasificación',
 			height : '40%',
 			cls : 'MovimientoTipoItem'
-		}
+		},{
+			url : '../../../sis_almacenes/vista/movimiento_tipo_uo/MovimientoTipoUo.php',
+			title : 'Cargos permitidos',
+			height : '40%',
+			cls : 'MovimientoTipoUo'
+		}]
+		
+		
+		
 	}); 
 </script>

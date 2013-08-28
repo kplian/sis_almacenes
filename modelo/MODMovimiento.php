@@ -236,6 +236,40 @@ class MODMovimiento extends MODbase {
         //Devuelve la respuesta
         return $this->respuesta;
     }
+	
+	function listarFuncionarioMovimientoTipo() {
+		//Definicion de variables para ejecucion del procedimiento
+		$this->procedimiento='alm.ft_movimiento_sel';// nombre procedimiento almacenado
+		$this->transaccion='SAL_FUNCIOCAR_SEL';//nombre de la transaccion
+		$this->tipo_procedimiento='SEL';//tipo de transaccion
+		
+		//ENVIA ESTAS VARIALBES PARA EL FILTRO
+		$this->setParametro('estado_reg_fun','estado_reg_fun','varchar');
+		$this->setParametro('estado_reg_asi','estado_reg_asi','varchar');
+		$this->setParametro('id_movimiento_tipo','id_movimiento_tipo','integer');
+		$this->setParametro('fecha','fecha','date');
+		
+	
+		$this->captura('id_uo_funcionario','integer');
+		$this->captura('id_funcionario','integer');
+		$this->captura('desc_funcionario1','text');
+		$this->captura('desc_funcionario2','text');	
+		$this->captura('id_uo','integer');
+		$this->captura('nombre_cargo','varchar');
+		$this->captura('fecha_asignacion','date');
+		$this->captura('fecha_finalizacion','date');
+		$this->captura('num_doc','integer');
+		$this->captura('ci','varchar');
+		$this->captura('codigo','varchar');
+		$this->captura('email_empresa','varchar');
+		$this->captura('estado_reg_fun','varchar');
+		$this->captura('estado_reg_asi','varchar');
+		//Ejecuta la funcion
+		$this->armarConsulta();
+		//echo $this->consulta;exit;
+		$this->ejecutarConsulta();
+		return $this->respuesta;
+	}
 
 
 }

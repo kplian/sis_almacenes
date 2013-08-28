@@ -443,3 +443,13 @@ WITHOUT OIDS;
 alter table alm.tmovimiento_tipo_item
 add column id_clasificacion integer;
 /***********************************F-SCP-RCM-ALM-87-21/08/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-95-22/08/2013*****************************************/
+CREATE TABLE alm.tmovimiento_tipo_uo (
+  id_movimiento_tipo_uo SERIAL, 
+  id_movimiento_tipo INTEGER, 
+  id_uo INTEGER, 
+  CONSTRAINT pk_tmovimiento_tipo_uo__id_movimiento_tipo_uo PRIMARY KEY(id_movimiento_tipo_uo)
+) INHERITS(pxp.tbase) 
+WITHOUT OIDS;
+/***********************************F-SCP-RCM-ALM-95-22/08/2013*****************************************/

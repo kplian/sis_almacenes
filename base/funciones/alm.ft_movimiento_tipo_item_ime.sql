@@ -48,10 +48,11 @@ BEGIN
 					
         begin
         
---        raise exception 'id_items: %   id_clasificaciones: %   id_movimiento_tipo: %',v_parametros.id_items,v_parametros.id_clasificaciones,v_parametros.id_movimiento_tipo;
+        --raise exception 'id_items: %   id_clasificaciones: %   id_movimiento_tipo: %',v_parametros.id_items,v_parametros.id_clasificaciones,v_parametros.id_movimiento_tipo;
 
         	--Inserción de los Items
         	if coalesce(v_parametros.id_items,'') != '' then
+
                 v_sql = '
                         insert into alm.tmovimiento_tipo_item(
                         id_item,id_movimiento_tipo,estado_reg, id_usuario_reg, fecha_reg)
@@ -59,11 +60,11 @@ BEGIN
                         ite.id_item,' || v_parametros.id_movimiento_tipo ||', ''activo'','||p_id_usuario||',now()
                         from alm.titem ite
                         where ite.id_item = ANY(ARRAY['||v_parametros.id_items||'])
-                        and id_item not in (select id_item
+                        and ite.id_item not in (select id_item
                                             from alm.tmovimiento_tipo_item
-                                            where id_movimiento_tipo = ' || v_parametros.id_movimiento_tipo ||')';
+                                            where id_item is not null
+                                            and id_movimiento_tipo = ' || v_parametros.id_movimiento_tipo ||')';
 
-				 raise notice '%',v_sql;	            								
                 execute(v_sql);
             end if;
         	
@@ -76,10 +77,10 @@ BEGIN
                         cla.id_clasificacion,' || v_parametros.id_movimiento_tipo ||', ''activo'','||p_id_usuario||',now()
                         from alm.tclasificacion cla
                         where cla.id_clasificacion = ANY(ARRAY['||v_parametros.id_clasificaciones||'])
-                        and id_clasificacion not in (select id_clasificacion
+                        and cla.id_clasificacion not in (select id_clasificacion
                                             from alm.tmovimiento_tipo_item
-                                            where id_movimiento_tipo = ' || v_parametros.id_movimiento_tipo ||')';
-                raise notice '%',v_sql;		
+                                            where id_clasificacion is not null
+                                            and id_movimiento_tipo = ' || v_parametros.id_movimiento_tipo ||')';
                 execute(v_sql);
             end if;
         

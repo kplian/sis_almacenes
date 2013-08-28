@@ -20,6 +20,13 @@ Phx.vista.MovimientoTipoItem=Ext.extend(Phx.gridInterfaz,{
 		this.grid.getTopToolbar().disable();
 		this.grid.getBottomToolbar().disable();
 		
+		if(Phx.CP.getPagina(this.idContenedorPadre)){
+	      	var dataMaestro=Phx.CP.getPagina(this.idContenedorPadre).getSelectedData();
+		 	if(dataMaestro){
+		 	 	this.onEnablePanel(this,dataMaestro)
+			}
+		}
+		
 		//Crear ventana para registro de datos
 		this.createWindow();
 	},
