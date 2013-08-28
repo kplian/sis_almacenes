@@ -4,7 +4,7 @@
  *@file    ItemEntRec.php
  *@author  RCM
  *@date    07/08/2013
- *@description Archivo con la interfaz para generación de reporte
+ *@description Reporte Material Entregado/Recibido
  */
 header("content-type: text/javascript; charset=UTF-8");
 ?>
@@ -226,6 +226,15 @@ header("content-type: text/javascript; charset=UTF-8");
 		{
 			config : {
 				name : 'id_estructura_uo',
+				inputType:'hidden',
+				labelSeparator:'',
+			},
+			type:'Field',
+			form:true
+		}, 
+		{
+			config : {
+				name : 'id_uo',
 				inputType:'hidden',
 				labelSeparator:'',
 			},
@@ -468,6 +477,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.clasificacion.setReadOnly(true);
 			this.Cmp.uo.on('focus',this.btnUO,this);
 			this.Cmp.uo.setReadOnly(true);
+			
+			//Obtencion de componentes
+			this.uo=this.Cmp.uo;
+			this.id_uo=this.Cmp.id_uo;
+			this.id_estructura_uo=this.Cmp.id_estructura_uo;
 		},
 		tipo : 'reporte',
 		clsSubmit : 'bprint',
