@@ -21,10 +21,12 @@ Phx.vista.PeriodoAlm = {
 	constructor: function(config) {
        	Phx.vista.PeriodoAlm.superclass.constructor.call(this,config);
 		this.init();
-		this.load({params:{start:0, limit:50,codSist: this.codSist}});
+		Ext.apply(this.store.baseParams,{codSist: this.codSist});
+		this.load({params:{start:0, limit:50}});
 	},
+	
     codReporte:'S/C',
-	codSistema:'ALM',
+	codSist:'ALM',
 	pdfOrientacion:'L'
 };
 </script>
