@@ -9,7 +9,7 @@ $body$
 /*
 Fecha: 04/07/2013
 Autor: RCM
-Propósito: Devolver el kardex de un item de uno o varios almacenes en un periodo de tiempo
+Propï¿½sito: Devolver el kardex de un item de uno o varios almacenes en un periodo de tiempo
 */
 DECLARE
 
@@ -140,7 +140,7 @@ BEGIN
             
             execute(v_consulta);
             
-            --4.Cálculo de saldos
+            --4.Calculo de saldos
             v_saldo_fis=0;
             v_saldo_val=0;
             for v_rec in (select * from tt_rep_kardex_item) loop

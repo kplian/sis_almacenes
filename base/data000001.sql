@@ -170,14 +170,23 @@ select pxp.f_insert_tprocedimiento ('SAL_ALM_SEL', 'Consulta de datos
 /***********************************F-DAT-RCM-ALM-0-15/01/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-19-13/02/2013*****************************************/
+
+/*
+
 select pxp.f_insert_tgui ('Tipos de Movimientos', 'Tipos de Movimientos', 'MOVTIP', 'si', 1, 'sis_almacenes/vista/movimientoTipo/MovimientoTipo.php', 3, '', 'MovimientoTipo', 'ALM');
 select pxp.f_insert_testructura_gui ('MOVTIP', 'ALMAIN');
 
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','ingreso');
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo','salida');
+
+
+*/
 /***********************************F-DAT-AAO-ALM-19-13/02/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-24-13/02/2013*****************************************/
+
+/*
+
 select pxp.f_insert_tgui ('Métodos de Valoracion', 'Métodos de Valoracion', 'MEVAL', 'si', 1, 'sis_almacenes/vista/metodoVal/MetodoVal.php', 3, '', 'MetodoVal', 'ALM');
 select pxp.f_insert_testructura_gui ('MEVAL', 'ALMAIN');
 
@@ -189,41 +198,68 @@ VALUES (1, 1, E'2013-02-14 09:28:58.325', E'2013-02-14 09:32:45.920', E'activo',
 
 INSERT INTO alm.tmetodo_val ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_metodo_val", "codigo", "nombre", "descripcion")
 VALUES (1, NULL, E'2013-02-14 10:21:20.660', E'2013-02-14 10:21:20.660', E'activo', 4, E'PP', E'Promedio Ponderado', E'');
+
+*/
+
 /***********************************F-DAT-AAO-ALM-24-13/02/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-20-13/02/2013*****************************************/
+
+/*
+
 select pxp.f_insert_tgui ('Movimientos', 'Movimientos', 'MOV', 'si', 1, 'sis_almacenes/vista/movimiento/Movimiento.php', 3, '', 'Movimiento', 'ALM');
 select pxp.f_insert_testructura_gui ('MOV', 'ALMOVI');
+
+*/
+
 /***********************************F-DAT-AAO-ALM-20-13/02/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-31-20/02/2013*****************************************/
+
+/*
+
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
 VALUES (1, 1, E'2013-02-19 19:01:02.292', E'2013-02-19 19:03:21.553', E'activo', 1, E'SALTRNSF', E'Salida por Transferencia', E'salida');
 
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
 VALUES (1, NULL, E'2013-02-19 19:03:55.823', E'2013-02-19 19:03:55.823', E'activo', 2, E'INTRNSF', E'Ingreso por transferencia', E'ingreso');
+
+*/
 /***********************************F-DAT-AAO-ALM-31-20/02/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-29-23/02/2013*****************************************/
+
+/*
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
 VALUES (1, NULL, E'2013-02-23 18:49:21.853', E'2013-02-23 18:49:21.853', E'activo', 3, E'DEV', E'Ingreso por Devolucion', E'ingreso');
+
+*/
 /***********************************F-DAT-AAO-ALM-29-23/02/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-26-25/02/2013*****************************************/
+
+/*
 INSERT INTO param.tdocumento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_subsistema", "codigo", "descripcion", "periodo_gestion", "tipo", "tipo_numeracion", "formato")
 VALUES (1, 1, E'2013-02-24 00:00:00', E'2013-02-24 08:22:48.436', E'activo', 6, E'MOVIN', E'Movimiento tipo Ingreso al Almacen', E'periodo', E'', E'depto', E'depto-I-periodo-correlativo/gestion');
 
 INSERT INTO param.tdocumento ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_subsistema", "codigo", "descripcion", "periodo_gestion", "tipo", "tipo_numeracion", "formato")
 VALUES (1, 1, E'2013-02-24 00:00:00', E'2013-02-24 08:23:00.205', E'activo', 6, E'MOVSAL', E'Moviento tipo Salida de Almacen', E'periodo', E'', E'depto', E'depto-S-periodo-correlativo/gestion');
+
+*/
 /***********************************F-DAT-AAO-ALM-26-25/02/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-39-06/03/2013*****************************************/
+
+
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
 VALUES (1, NULL, E'2013-02-23 18:49:21.853', E'2013-02-23 18:49:21.853', E'activo', 4, E'INVINI', E'Inventario Inicial', E'ingreso');
 /***********************************F-DAT-AAO-ALM-39-06/03/2013*****************************************/
 
 
 /***********************************I-DAT-AAO-ALM-42-08/03/2013*****************************************/
+
+/*   
+
 ----------------------------------
 --COPY LINES TO data.sql FILE  
 ---------------------------------
@@ -599,9 +635,15 @@ select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_MEVA
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_MEVAL_MOD', 'MEVAL');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_MEVAL_ELI', 'MEVAL');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_MEVAL_SEL', 'MEVAL');
+
+*/
+
 /***********************************F-DAT-AAO-ALM-42-08/03/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-42-11/03/2013*****************************************/
+/*
+
+
 ---------------------------------
 --COPY LINES TO data.sql FILE  
 ---------------------------------
@@ -646,29 +688,49 @@ select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_PACAT
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_CAT_INS', 'CATLOG');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_CAT_MOD', 'CATLOG');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'PM_CAT_ELI', 'CATLOG');
+
+*/
+
 /***********************************F-DAT-AAO-ALM-42-11/03/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-60-14/03/2013*****************************************/
+
+/*
 update alm.tmovimiento_tipo set
 	read_only = TRUE;
 
 update alm.tmetodo_val set
 	read_only = TRUE;
+	
+	*/
 /***********************************F-DAT-AAO-ALM-60-14/03/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-45-15/03/2013*****************************************/
+
+/*
+
 update segu.tsubsistema set
 	nombre_carpeta = 'almacenes'
 where codigo = 'ALM';
+
+
+*/
 /***********************************F-DAT-AAO-ALM-45-15/03/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-72-18/04/2013*****************************************/
+/*
+
 select pxp.f_insert_tprocedimiento_gui ('SAL_MOVREPORT_SEL', 'MOV', 'no');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_MOVREPORT_SEL', 'MOV');
+
+*/
+
 /***********************************F-DAT-AAO-ALM-72-18/04/2013*****************************************/
 
-/***********************************I-DAT-AAO-ALM-72-23/04/2013*****************************************/
+                                 
 
+/***********************************I-DAT-AAO-ALM-72-23/04/2013*****************************************/
+/*
 select pxp.f_insert_tgui ('Items', 'Items', 'ALCRAL.2.2', 'no', 0, 'sis_almacenes/vista/item/BuscarItem.php', 5, '', 'BuscarItem', 'ALM');
 select pxp.f_insert_tgui ('Items', 'Items', 'ALREMA.1.2', 'no', 0, 'sis_almacenes/vista/item/BuscarItem.php', 5, '', 'BuscarItem', 'ALM');
 select pxp.f_insert_tgui ('Items', 'Items', 'ALCLMA.1.1.2', 'no', 0, 'sis_almacenes/vista/item/BuscarItem.php', 6, '', 'BuscarItem', 'ALM');
@@ -713,9 +775,16 @@ select pxp.f_insert_tprocedimiento ('SAL_DINV_ELI', 'Eliminacion de registros', 
 select pxp.f_insert_tprocedimiento ('SAL_ITMSRCHARB_SEL', 'Consulta de datos', 'si', '', '', 'alm.ft_item_sel');
 select pxp.f_insert_tprocedimiento ('SAL_ITMSRCHARB_CONT', 'Conteo de registros', 'si', '', '', 'alm.ft_item_sel');
 
+
+*/
 /***********************************F-DAT-AAO-ALM-72-23/04/2013*****************************************/
 
+
+
 /***********************************I-DAT-AAO-ALM-72-25/04/2013*****************************************/
+
+/*
+
 select pxp.f_insert_tgui ('Inventario', 'Inventario', 'INVMAIN', 'si', 1, 'sis_almacenes/vista/inventario/InventarioBase.php', 5, '', 'InventarioBase', 'ALM');
 select pxp.f_insert_testructura_gui ('INVMAIN', 'ALMAIN');
 select pxp.f_insert_tgui ('Orden Inventario', 'Orden Inventario', 'ORDINV', 'si', 1, 'sis_almacenes/vista/inventario/OrdenInventario.php', 5, '', 'OrdenInventario', 'ALM');
@@ -724,9 +793,15 @@ select pxp.f_insert_tgui ('Ejecucion Inventario', 'Ejecucion Inventario', 'EJEIN
 select pxp.f_insert_testructura_gui ('EJEINV', 'ALMAIN');
 select pxp.f_insert_tgui ('Periodo', 'Periodo', 'PERI', 'si', 2, 'sis_almacenes/vista/periodo_almacenes/PeriodoAlmacenes.php', 2, '', 'PeriodoAlmacenes', 'ALM');
 select pxp.f_insert_testructura_gui ('PERI', 'ALDAGE');
+
+*/
+
 /***********************************F-DAT-AAO-ALM-72-25/04/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-76-25/04/2013*****************************************/
+
+/*
+
 select pxp.f_insert_tgui ('Detalle Inventario', 'Detalle Inventario', 'ORDINV.1', 'no', 0, 'sis_almacenes/vista/inventario_det/InventarioDet.php', 6, '', 'InventarioDet', 'ALM');
 select pxp.f_insert_tgui ('Items', 'Items', 'ORDINV.1.1', 'no', 0, 'sis_almacenes/vista/item/BuscarItem.php', 7, '', 'BuscarItem', 'ALM');
 select pxp.f_insert_tgui ('Detalle Inventario', 'Detalle Inventario', 'EJEINV.1', 'no', 0, 'sis_almacenes/vista/inventario_det/InventarioDet.php', 6, '', 'InventarioDet', 'ALM');
@@ -805,9 +880,15 @@ select pxp.f_insert_tprocedimiento ('SAL_MOVTIP_ELI', 'Eliminacion de datos', 's
 select pxp.f_insert_tprocedimiento ('SAL_ITMREE_SEL', 'Consulta de datos', 'si', '', '', 'alm.ft_item_reemplazo_sel');
 select pxp.f_insert_tprocedimiento ('SAL_ITMREE_CONT', 'Conteo de registros', 'si', '', '', 'alm.ft_item_reemplazo_sel');
 select pxp.f_insert_trol ('', 'Asistente de Almacenes', 'ALM');
+
+*/
+
 /***********************************F-DAT-AAO-ALM-76-25/04/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-78-26/04/2013*****************************************/
+
+/*
+
 update param.tdocumento set
   formato = 'depto-I-correlativo-periodo/gestion'
 where codigo = 'MOVIN';
@@ -815,9 +896,15 @@ where codigo = 'MOVIN';
 update param.tdocumento set
   formato = 'depto-S-correlativo-periodo/gestion'
 where codigo = 'MOVSAL';
+
+*/
+
 /***********************************F-DAT-AAO-ALM-78-26/04/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-56-03/05/2013*****************************************/
+
+/*
+
 select pxp.f_insert_tgui ('Reportes', 'Reportes', 'REPOR', 'si', 3, '', 2, '', '', 'ALM');
 select pxp.f_insert_tgui ('Reporte de Existencias', 'Reporte de Existencias', 'REPEXIST', 'si', 1, 'sis_almacenes/vista/vista_reportes/GenerarReporteExistencias.php', 3, '', 'GenerarReporteExistencias', 'ALM');
 select pxp.f_insert_tgui ('Unidades de Medida', 'Unidades de Medida', 'ALREMA.3', 'no', 0, 'sis_parametros/vista/unidad_medida/UnidadMedida.php', 4, '', 'UnidadMedida', 'ALM');
@@ -828,9 +915,15 @@ select pxp.f_insert_tfuncion ('alm.ft_reporte_sel', 'Funcion para tabla     ', '
 select pxp.f_insert_tprocedimiento ('SAL_REPEXIST_SEL', 'Retorna las existencias de n items de un almacen.', 'si', '', '', 'alm.ft_reporte_sel');
 select pxp.f_insert_tprocedimiento ('SAL_REPEXIST_CONT', 'Conteo de registros', 'si', '', '', 'alm.ft_reporte_sel');
 
+*/
+
+
 /***********************************F-DAT-AAO-ALM-56-03/05/2013*****************************************/
 
 /***********************************I-DAT-AAO-ALM-52-06/05/2013*****************************************/
+
+/*
+
 select pxp.f_update_table_sequence('alm', 'tmovimiento_tipo');
 
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "fecha_reg", "estado_reg", "codigo", "nombre", "tipo", "read_only")
@@ -838,10 +931,13 @@ VALUES (1, E'2013-02-19 19:01:02.292', E'activo', E'INAJUST', E'Ingreso por Ajus
 
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "fecha_reg", "estado_reg", "codigo", "nombre", "tipo", "read_only")
 VALUES (1, E'2013-02-19 19:01:02.292', E'activo', E'SALAJUST', E'Salida por Ajuste de Inventario', E'salida', TRUE);
+
+*/
+
 /***********************************F-DAT-AAO-ALM-52-06/05/2013*****************************************/
 
 /***********************************I-DAT-GSS-ALM-79-08/07/2013*****************************************/
-
+/*
 select pxp.f_insert_tgui ('Periodo', 'Periodo', 'PERI', 'si', 2, 'sis_almacenes/vista/periodo_subsistema/PeriodoAlm.php', 2, '', 'PeriodoAlm', 'ALM');
 select pxp.f_insert_tgui ('Movimientos', 'Movimientos', 'MOV', 'si', 1, 'sis_almacenes/vista/movimiento/MovimientoReq.php', 3, '', 'MovimientoReq', 'ALM');
 
@@ -875,17 +971,22 @@ set id_proceso_macro = (select id_proceso_macro
 						from wf.tproceso_macro
 						where codigo = 'ALM-MOV');					
 
-  
+  */
 /***********************************F-DAT-GSS-ALM-79-08/07/2013****************************************/
 
 /***********************************I-DAT-GSS-ALM-79-10/07/2013****************************************/
-
+/*
 select pxp.f_insert_tgui ('MovimientoAlm', 'movimiento almacenero', 'MOVALM', 'si', 1, 'sis_almacenes/vista/movimiento/MovimientoAlm.php', 3, '', 'MovimientoAlm', 'ALM');
 select pxp.f_insert_testructura_gui ('MOVALM', 'ALMOVI');
 
+
+*/
 /***********************************F-DAT-GSS-ALM-79-10/07/2013****************************************/
 
 /***********************************I-DAT-GSS-ALM-79-15/07/2013****************************************/
+
+/*
+
 
 select pxp.f_insert_tgui ('Ingresos', 'Ingresos', 'ALINGR', 'si', 4, 'sis_almacenes/vista/movimiento/Ingreso.php
 ', 3, '', 'Ingreso', 'ALM');
@@ -896,15 +997,26 @@ select pxp.f_insert_tgui ('MovimientoAlm', 'movimiento almacenero', 'MOVALM', 's
 select pxp.f_insert_tgui ('MovimientoVb', 'movimiento vb', 'MOVVB', 'si', 2, 'sis_almacenes/vista/movimiento/MovimientoVb.php', 3, '', 'MovimientoVb', 'ALM');
 select pxp.f_insert_testructura_gui ('MOVVB', 'ALMOVI');
 
+*/
+
 /***********************************F-DAT-GSS-ALM-79-15/07/2013****************************************/
 
 /***********************************I-DAT-RCM-ALM-85-18/07/2013****************************************/
+
+/*
+ 
 select pxp.f_add_catalog('ALM','titem__opciones','Todos los Items');
 select pxp.f_add_catalog('ALM','titem__opciones','Seleccionar Items');
 select pxp.f_add_catalog('ALM','titem__opciones','Por Clasificacion');
+
+*/
+
 /***********************************F-DAT-RCM-ALM-85-18/07/2013****************************************/
 
 /***********************************I-DAT-GSS-ALM-82-22/07/2013****************************************/
+
+/*
+
 
 select pxp.f_insert_tgui ('PreIngreso', 'preingreso', 'PREING', 'si', 1, 'sis_almacenes/vista/preingreso/Preingreso.php', 3, '', 'Preingreso', 'ALM');
 select pxp.f_insert_testructura_gui ('PREING', 'ALMOVI');
@@ -1132,11 +1244,13 @@ select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVDET_SEL', 'MOV
 select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVDET_MOD', 'MOVALM.1');
 select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVFIN_MOD', 'MOVALM');
 select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVREPORT_SEL', 'MOVALM');
+*/
+
 
 /***********************************F-DAT-GSS-ALM-82-22/07/2013****************************************/
 
 /***********************************I-DAT-GSS-ALM-89-26/07/2013****************************************/
-
+/*
 select wf.f_insert_tproceso_macro ('MV-IN-TIP1', 'Movimiento Ingresos Tipo 1', 'si', 'activo', 'Sistema de Almacenes');
 select wf.f_insert_ttipo_proceso ('', 'Ingreso Tipo 1', 'INGT1', 'alm.tmovimiento', 'id_movimiento', 'activo', 'si', 'MV-IN-TIP1');
 select wf.f_insert_ttipo_estado ('borrador', 'Borrador', 'si', 'no', 'no', 'anterior', '', 'ninguno', '', '', 'activo', 'INGT1', '');
@@ -1145,22 +1259,38 @@ select wf.f_insert_ttipo_estado ('finalizado', 'Finalizado', 'no', 'no', 'si', '
 select wf.f_insert_testructura_estado ('borrador', 'INGT1', 'vbarea', 'INGT1', '1', '', 'activo');
 select wf.f_insert_testructura_estado ('vbarea', 'INGT1', 'finalizado', 'INGT1', '1', '', 'activo');
 
+*/
+
 /***********************************F-DAT-GSS-ALM-89-26/07/2013****************************************/
 
 /***********************************I-DAT-RCM-ALM-92-01/08/2013****************************************/
+
+/*
+ 
 select pxp.f_insert_tgui ('Buscador de Materiales', 'Buscador de Materiales', 'ALBUSQ', 'si', 2, 'sis_almacenes/vista/item/BuscarItem.php', 3, '', 'BuscarItem', 'ALM');
 select pxp.f_insert_testructura_gui ('ALBUSQ', 'ALMOVI');
+
+*/
+
 /***********************************F-DAT-RCM-ALM-92-01/08/2013****************************************/
 
 /***********************************I-DAT-RCM-ALM-93-12/08/2013****************************************/
+
+/*
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','ingresos y salidas');
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','ingreso');
 select pxp.f_add_catalog('ALM','tmovimiento_tipo_tipo1','salida');
+
+*/
 /***********************************F-DAT-RCM-ALM-93-12/08/2013****************************************/
 
 /***********************************I-DAT-RCM-ALM-87-22/08/2013****************************************/
+
+/*
 INSERT INTO pxp.variable_global ("variable", "valor", "descripcion")
 VALUES (E'alm_filtrar_item_tipomov', E'si', E'Bandera para verificar si se debe filtrar los Items por Tipo de movimiento al registrar cualquier movimiento');
 INSERT INTO pxp.variable_global ("variable", "valor", "descripcion")
 VALUES (E'alm_filtrar_funcionario_tipomov_asistente', E'si', E'Bandera para verificar si al registrar un movimiento, filtre los funcionarios en base al tipo de movimiento y a la asistente que realiza el registro');
+
+*/
 /***********************************F-DAT-RCM-ALM-87-22/08/2013****************************************/

@@ -186,6 +186,7 @@ ALTER TABLE alm.tinventario_det
 /***********************************F-DEP-AAO-ALM-45-15/03/2013*****************************************/
 
 /***********************************I-DEP-AAO-ALM-72-23/04/2013*****************************************/
+/*
 select pxp.f_insert_testructura_gui ('ALCRAL.2.2', 'ALCRAL.2');
 select pxp.f_insert_testructura_gui ('ALREMA.1.2', 'ALREMA.1');
 select pxp.f_insert_testructura_gui ('ALCLMA.1.1.2', 'ALCLMA.1.1');
@@ -295,9 +296,16 @@ select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_DINV
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'ALM_CLA_ARB_SEL', 'INVMAIN.2.1');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ARB_SEL', 'INVMAIN.2.1');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ITMSRCHARB_SEL', 'INVMAIN.2.1');
+
+*/
+
+
 /***********************************F-DEP-AAO-ALM-72-23/04/2013*****************************************/
 
 /***********************************I-DEP-AAO-ALM-76-23/04/2013*****************************************/
+
+
+/*
 
 select pxp.f_insert_testructura_gui ('ALCRAL.2.2', 'ALCRAL.2');
 select pxp.f_insert_testructura_gui ('ALREMA.1.2', 'ALREMA.1');
@@ -404,9 +412,16 @@ select pxp.f_insert_trol_procedimiento_gui ('Asistente de Almacenes', 'PM_ALARM_
 select pxp.f_insert_trol_procedimiento_gui ('Asistente de Almacenes', 'PM_ALARMCOR_SEL', 'MOV.2');
 select pxp.f_insert_trol_procedimiento_gui ('Asistente de Almacenes', 'PM_ALARM_SEL', 'MOV.2');
 select pxp.f_insert_trol_procedimiento_gui ('Asistente de Almacenes', 'SAL_MOV_ELI', 'MOV');
+
+*/
+
 /***********************************F-DEP-AAO-ALM-76-23/04/2013*****************************************/
 
 /***********************************I-DEP-AAO-ALM-56-03/05/2013*****************************************/
+
+/*
+
+
 select pxp.f_insert_testructura_gui ('REPOR', 'ALM');
 select pxp.f_insert_testructura_gui ('REPEXIST', 'REPOR');
 select pxp.f_insert_testructura_gui ('ALREMA.3', 'ALREMA');
@@ -446,12 +461,16 @@ select pxp.f_insert_tgui_rol ('REPEXIST', 'Administrador Almacenes');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ALM_SEL', 'REPEXIST');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ITEMNOTBASE_SEL', 'REPEXIST');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_REPEXIST_SEL', 'REPEXIST');
+
+*/
+
+
 /***********************************F-DEP-AAO-ALM-56-03/05/2013*****************************************/
 
 /***********************************I-DEP-GSS-ALM-69-05/07/2013*****************************************/
 
-ALTER TABLE alm.tmovimiento_tipo
-  ALTER COLUMN id_proceso_macro SET NOT NULL;
+/*ALTER TABLE alm.tmovimiento_tipo
+  ALTER COLUMN id_proceso_macro SET NOT NULL;*/
 
 ALTER TABLE alm.tmovimiento_tipo
   ADD CONSTRAINT fk_tmovimiento_tipo__id_proceso_macro FOREIGN KEY (id_proceso_macro)
