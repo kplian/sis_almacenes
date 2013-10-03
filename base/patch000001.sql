@@ -453,3 +453,34 @@ CREATE TABLE alm.tmovimiento_tipo_uo (
 ) INHERITS(pxp.tbase) 
 WITHOUT OIDS;
 /***********************************F-SCP-RCM-ALM-95-22/08/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-82-01/10/2013*****************************************/
+ALTER TABLE alm.tpreingreso
+  ADD COLUMN id_depto INTEGER;
+ALTER TABLE alm.tpreingreso
+  ADD COLUMN id_estado_wf INTEGER;
+ALTER TABLE alm.tpreingreso
+  ADD COLUMN id_proceso_wf INTEGER;
+ALTER TABLE alm.tpreingreso
+  ADD COLUMN estado varchar(50);
+ALTER TABLE alm.tpreingreso
+  ADD COLUMN id_moneda INTEGER;
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN id_depto INTEGER;
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN id_clasificacion INTEGER;
+  
+CREATE TABLE alm.titem_clasif_ingas (
+  id_item_clasif_ingas SERIAL, 
+  id_concepto_ingas INTEGER, 
+  id_item INTEGER, 
+  id_clasificacion INTEGER,
+  contador integer,
+  CONSTRAINT pk_titem_clasif_ingas__id_item_clasif_ingas PRIMARY KEY(id_item_clasif_ingas)
+) INHERITS(pxp.tbase) 
+WITHOUT OIDS;
+
+drop table alm.titem_concepto;
+/***********************************F-SCP-RCM-ALM-82-01/10/2013*****************************************/

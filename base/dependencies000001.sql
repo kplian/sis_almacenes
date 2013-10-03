@@ -523,20 +523,7 @@ ALTER TABLE alm.tpreingreso_det
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
-    
-ALTER TABLE alm.titem_concepto
-  ADD CONSTRAINT fk_titem_concepto__id_item FOREIGN KEY (id_item)
-    REFERENCES alm.titem(id_item)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-    NOT DEFERRABLE;
-    
-ALTER TABLE alm.titem_concepto
-  ADD CONSTRAINT fk_titem_concepto__id_concepto_ingas FOREIGN KEY (id_concepto_ingas)
-    REFERENCES param.tconcepto_ingas(id_concepto_ingas)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-    NOT DEFERRABLE;
+
 /***********************************F-DEP-RCM-ALM-82-18/07/2013*****************************************/
 
 /***********************************I-DEP-GSS-ALM-86-26/07/2013*****************************************/
@@ -593,3 +580,12 @@ ALTER TABLE alm.tmovimiento_tipo_uo
     NOT DEFERRABLE;
     
 /***********************************F-DEP-RCM-ALM-95-22/08/2013*****************************************/
+
+/***********************************I-DEP-RCM-ALM-82-01/10/2013*****************************************/
+ALTER TABLE alm.tpreingreso
+  ADD CONSTRAINT fk_tpreingreso__id_depto FOREIGN KEY (id_depto)
+    REFERENCES param.tdepto(id_depto)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-RCM-ALM-82-01/10/2013*****************************************/

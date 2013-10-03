@@ -286,7 +286,7 @@ BEGIN
 	        inner join segu.tsubsistema sis
 	        on sis.id_subsistema = pers.id_subsistema
 			where sis.codigo = 'ALM' 
-			and v_fecha_mov between per.fecha_ini and per.fecha_fin
+			and trunc('day',v_fecha_mov) between per.fecha_ini and per.fecha_fin
 			and pers.estado = 'abierto';
 	
 			if v_id_periodo is null then
