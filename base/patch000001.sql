@@ -483,4 +483,34 @@ CREATE TABLE alm.titem_clasif_ingas (
 WITHOUT OIDS;
 
 drop table alm.titem_concepto;
+
+ALTER TABLE alm.tpreingreso
+  ADD COLUMN tipo VARCHAR(15) NOT NULL;
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN sw_generar VARCHAR(2);
+
+ALTER TABLE alm.tpreingreso_det
+  ALTER COLUMN sw_generar SET DEFAULT 'no';
+  
+ALTER TABLE alm.tpreingreso
+  ADD COLUMN descripcion VARCHAR(1000);
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN observaciones VARCHAR(1000);
+  
+ALTER TABLE alm.tmovimiento
+  ADD COLUMN id_preingreso INTEGER;
+  
+  ALTER TABLE alm.tpreingreso_det
+  RENAME COLUMN cantidad TO cantidad_det;
 /***********************************F-SCP-RCM-ALM-82-01/10/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-0-10/10/2013*****************************************/
+alter table alm.titem
+add column precio_ref numeric(18,2);
+
+alter table alm.titem
+add column id_moneda integer;
+
+/***********************************F-SCP-RCM-ALM-0-10/10/2013*****************************************/

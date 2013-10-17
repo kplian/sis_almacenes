@@ -20,19 +20,13 @@ Phx.vista.MovimientoAlm = {
 	nombreVista: 'movimientoAlm',
 	
 	constructor: function(config) {
-	    
 	    this.maestro=config.maestro;
-        
     	Phx.vista.MovimientoAlm.superclass.constructor.call(this,config);
-    	
-    	this.addButton('sig_estado',{text:'Finalizar',iconCls: 'badelante',disabled:true,handler:this.sigEstado,tooltip: '<b>Finalizar Registro</b>'});
-     
-     this.getBoton('btnRevertir').hide();
-     this.getBoton('btnCancelar').hide();
-        
-     this.store.baseParams={tipo_interfaz:this.nombreVista};
-     this.load({params:{start:0, limit:this.tam_pag}});
-		
+    	this.addButton('sig_estado',{text:'Finalizar',iconCls: 'badelante',disabled:true,handler:this.fin_requerimiento,tooltip: '<b>Finalizar Registro</b>'});
+		this.getBoton('btnRevertir').hide();
+	    this.getBoton('btnCancelar').hide();
+	    this.store.baseParams={tipo_interfaz:this.nombreVista};
+	    this.load({params:{start:0, limit:this.tam_pag}});
 	},
     
     sigEstado:function()
@@ -44,8 +38,8 @@ Phx.vista.MovimientoAlm = {
             Ext.Ajax.request({
                 url:'../../sis_almacenes/control/Movimiento/finalizarMovimiento',
                 params:{id_movimiento:d.id_movimiento,
-                							 id_almacen:d.id_almacen, 
-                							 fecha_mov:d.fecha_mov,
+                		id_almacen:d.id_almacen, 
+                		fecha_mov:d.fecha_mov,
                         operacion:'finalizarMovimiento'},
                 success:this.successSinc,
                 argument:{data:d},

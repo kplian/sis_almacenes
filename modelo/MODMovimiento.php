@@ -123,9 +123,13 @@ class MODMovimiento extends MODbase {
         $this->setParametro('id_movimiento', 'id_movimiento', 'integer');								
         $this->setParametro('id_almacen', 'id_almacen', 'integer');
         $this->setParametro('operacion', 'operacion', 'varchar');
-								$this->setParametro('fecha_mov', 'fecha_mov', 'date');
+		$this->setParametro('fecha_mov', 'fecha_mov', 'date');
+		$this->setParametro('id_funcionario_wf', 'id_funcionario_wf', 'integer');
+		$this->setParametro('id_tipo_estado', 'id_tipo_estado', 'integer');
+		$this->setParametro('obs', 'obs', 'varchar');
 
         $this->armarConsulta();
+		//echo $this->consulta;exit;
         $this->ejecutarConsulta();
         return $this->respuesta;
     }
@@ -150,6 +154,7 @@ class MODMovimiento extends MODbase {
 
         $this->setParametro('id_movimiento', 'id_movimiento', 'integer');
         $this->setParametro('id_almacen', 'id_almacen', 'integer');
+		$this->setParametro('obs', 'obs', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

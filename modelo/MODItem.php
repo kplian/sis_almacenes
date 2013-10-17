@@ -29,6 +29,9 @@ class MODItem extends MODbase {
         $this->captura('numero_serie', 'varchar');
         $this->captura('id_unidad_medida', 'integer');
         $this->captura('codigo_unidad', 'varchar');
+		$this->captura('precio_ref', 'numeric');
+		$this->captura('id_moneda', 'integer');
+		$this->captura('desc_moneda', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -75,6 +78,7 @@ class MODItem extends MODbase {
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('numero_serie', 'numero_serie', 'varchar');
         $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
+		$this->setParametro('precio_ref', 'precio_ref', 'numeric');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -96,6 +100,7 @@ class MODItem extends MODbase {
         $this->setParametro('observaciones', 'observaciones', 'varchar');
         $this->setParametro('numero_serie', 'numero_serie', 'varchar');
         $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
+		$this->setParametro('precio_ref', 'precio_ref', 'numeric');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

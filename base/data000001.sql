@@ -1297,4 +1297,8 @@ VALUES (E'alm_filtrar_funcionario_tipomov_asistente', E'si', E'Bandera para veri
 /***********************************I-DAT-RCM-ALM-82-01/10/2013****************************************/
 select pxp.f_insert_tgui ('Preingreso', 'Preingreso', 'ALPREIN', 'si', 1, 'sis_almacenes/vista/preingreso/Preingreso.php', 3, '', 'Movimiento', 'ALM');
 select pxp.f_insert_testructura_gui ('ALPREIN', 'ALMOVI');
+
+select pxp.f_add_catalog('ALM','tpreingreso__tipo','almacen');
+select pxp.f_add_catalog('ALM','tpreingreso__tipo','activo_fijo');
+
 /***********************************F-DAT-RCM-ALM-82-01/10/2013****************************************/

@@ -15,7 +15,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.maestro = config.maestro;
 			Phx.vista.Movimiento.superclass.constructor.call(this, config);
 			this.init();
-			this.load({params:{start:0, limit:this.tam_pag}})
+			//this.load({params:{start:0, limit:this.tam_pag}})
 
 			//Eventos
 			this.Cmp.tipo.on('select', this.onTipoSelect, this);
@@ -68,6 +68,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				},
 				tooltip : '<b>Reporte de Movimiento</b><br/>Generar el reporte del Movimiento Seleccionado.'
 			});
+			
 		},
 		Atributos : [{
 			config : {
@@ -321,9 +322,9 @@ header("content-type: text/javascript; charset=UTF-8");
    				allowBlank:false,
                 gwidth:200,
    				valueField: 'id_funcionario',
-   			    gdisplayField: 'desc_funcionario',
+   			    gdisplayField: 'nombre_funcionario',
    			    baseParams: { es_combo_solicitud : 'si',fecha: new Date(), id_movimiento_tipo:0 },
-      			renderer:function(value, p, record){return String.format('{0}', record.data['desc_funcionario']);},
+      			renderer:function(value, p, record){return String.format('{0}', record.data['nombre_funcionario']);},
       			url:'../../sis_almacenes/control/Movimiento/listarFuncionarioMovimientoTipo'
        	     },
    			type:'ComboRec',//ComboRec
@@ -758,7 +759,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		liberaMenu : function() {
 			var tb = Phx.vista.Movimiento.superclass.liberaMenu.call(this);
 			this.getBoton('btnCancelar').disable();
-   this.getBoton('btnRevertir').disable();
+   			this.getBoton('btnRevertir').disable();
 			this.getBoton('btnReport').disable();
 			return tb;
 		},
@@ -791,7 +792,8 @@ header("content-type: text/javascript; charset=UTF-8");
 						url : '../../sis_almacenes/control/Movimiento/revertirMovimiento',
 						params : {
 							'id_movimiento' : data.id_movimiento,
-							'id_almacen' : data.id_almacen
+							'id_almacen' : data.id_almacen,
+							obs: 'Revertido por el usuario'
 						},
 						success : global.successSave,
 						failure : global.conexionFailure,
@@ -871,7 +873,264 @@ header("content-type: text/javascript; charset=UTF-8");
 					height : 500
 				}, null, this.idContenedor, 'AlarmaFuncionario');
 			}
-		}
-	})
+		},
+		fin_requerimiento: function(){                   
+            var d= this.sm.getSelected().data;
+            Phx.CP.loadingShow();            
+            Ext.Ajax.request({
+                url:'../../sis_almacenes/control/Movimiento/finalizarMovimiento',
+                params:{id_movimiento:d.id_movimiento, id_almacen:d.id_almacen,operacion:'verificar'},
+                success:this.onFinalizarSol,
+                failure: this.conexionFailure,
+                timeout:this.timeout,
+                scope:this
+            });     
+	},
+	crearVentanaWF: function(){
+		//Creación del formulario
+   		this.formWF = new Ext.form.FormPanel({
+            baseCls: 'x-plain',
+            autoDestroy: true,
+            layout: 'form',
+            items: [{
+                        xtype: 'combo',
+                        name: 'id_tipo_estado',
+                          hiddenName: 'id_tipo_estado',
+                        fieldLabel: 'Siguiente Estado',
+                        listWidth:280,
+                        allowBlank: false,
+                        emptyText:'Elija el estado siguiente',
+                        store:new Ext.data.JsonStore(
+                        {
+                            url: '../../sis_workflow/control/TipoEstado/listarEstadoSiguiente',
+                            id: 'id_tipo_estado',
+                            root:'datos',
+                            sortInfo:{
+                                field:'tipes.codigo',
+                                direction:'ASC'
+                            },
+                            totalProperty:'total',
+                            fields: ['id_tipo_estado','codigo_estado','nombre_estado','tipo_asignacion'],
+                            // turn on remote sorting
+                            remoteSort: true,
+                            baseParams:{par_filtro:'tipes.nombre_estado#tipes.codigo'}
+                        }),
+                        valueField: 'id_tipo_estado',
+                        displayField: 'codigo_estado',
+                        forceSelection:true,
+                        typeAhead: false,
+                        triggerAction: 'all',
+                        lazyRender:true,
+                        mode:'remote',
+                        pageSize:50,
+                        queryDelay:500,
+                        width:210,
+                        gwidth:220,
+                         listWidth:'280',
+                        minChars:2,
+                        tpl: '<tpl for="."><div class="x-combo-list-item"><p>{codigo_estado}</p>Prioridad: <strong>{nombre_estado}</strong> </div></tpl>'
+                    
+                    },
+                    {
+                        xtype: 'combo',
+                        name: 'id_funcionario_wf',
+                        hiddenName: 'id_funcionario_wf',
+                        fieldLabel: 'Funcionario Resp.',
+                        allowBlank: false,
+                        emptyText:'Elija un funcionario',
+                        listWidth:280,
+                        store:new Ext.data.JsonStore(
+                        {
+                            url: '../../sis_workflow/control/TipoEstado/listarFuncionarioWf',
+                            id: 'id_funcionario',
+                            root:'datos',
+                            sortInfo:{
+                                field:'prioridad',
+                                direction:'ASC'
+                            },
+                            totalProperty:'total',
+                            fields: ['id_funcionario','desc_funcionario','prioridad'],
+                            // turn on remote sorting
+                            remoteSort: true,
+                            baseParams:{par_filtro:'fun.desc_funcionario1'}
+                        }),
+                        valueField: 'id_funcionario',
+                        displayField: 'desc_funcionario',
+                        forceSelection:true,
+                        typeAhead: false,
+                        triggerAction: 'all',
+                        lazyRender:true,
+                        mode:'remote',
+                        pageSize:50,
+                        queryDelay:500,
+                        width:210,
+                        gwidth:220,
+                         listWidth:'280',
+                        minChars:2,
+                        tpl: '<tpl for="."><div class="x-combo-list-item"><p>{desc_funcionario}</p>Prioridad: <strong>{prioridad}</strong> </div></tpl>'
+                    
+                    },{
+                        name: 'obs',
+                        xtype: 'textarea',
+                        fieldLabel: 'Observaciones',
+                        allowBlank: false,
+                        anchor: '80%',
+                        maxLength:500
+                    }]
+        });
+        
+        //Agarra los componentes en variables globales
+        this.cmbFunWF =this.formWF.getForm().findField('id_funcionario_wf');
+        this.cmbTipoEstWF =this.formWF.getForm().findField('id_tipo_estado');
+        this.txtObs =this.formWF.getForm().findField('obs');
+        
+        //Eventos
+        this.cmbFunWF.store.on('exception', this.conexionFailure);
+        this.cmbTipoEstWF.store.on('exception', this.conexionFailure);
+        this.cmbTipoEstWF.on('select',function(cmp,rec,ind){
+        	if(rec.data.tipo_asignacion=='ninguno'){
+        		this.cmbFunWF.allowBlank=true;
+        		this.cmbFunWF.setValue('');
+        		this.cmbFunWF.disable();
+        	} else{
+        		this.cmbFunWF.enable();
+        		this.cmbFunWF.allowBlank=false;
+	            Ext.apply(this.cmbFunWF.store.baseParams,{id_tipo_estado: this.cmbTipoEstWF.getValue()});
+	            this.cmbFunWF.modificado=true;	
+        	}
+            
+        },this);
+        
+        //Creación de la ventna
+         this.winWF = new Ext.Window({
+            title: 'Workflow',
+            collapsible: true,
+            maximizable: true,
+            autoDestroy: true,
+            width: 350,
+            height: 200,
+            layout: 'fit',
+            plain: true,
+            bodyStyle: 'padding:5px;',
+            buttonAlign: 'center',
+            items: this.formWF,
+            modal:true,
+            closeAction: 'hide',
+            buttons: [{
+                text: 'Guardar',
+                handler:this.onWF,
+                argument: this.opcionWF,
+                scope:this
+                
+            },{
+                text: 'Cancelar',
+                handler:function(){this.winWF.hide()},
+                scope:this
+            }]
+        });
+   	},
+   	onFinalizarSol:function(resp){
+		Phx.CP.loadingHide();
+        var d= this.sm.getSelected().data;
+        var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+        var swWin=0;
+        var swFun=0;
+        var swEst=0;
+		//console.log(reg)
+        //Se verifica la respuesta de la verificación
+        if(!reg.ROOT.error){
+        	var data=reg.ROOT.datos;
+        	if(data.wf_cant_estados>1){
+	       		swWin=1;
+	       		swEst=1;
+	       		swFun=1;
+	       	}
+        	if(data.wf_cant_funcionarios>1){
+				swWin=1;
+				swFun=1;
+	       	} 
+	       	//Verifica si hay que desplegar el formulario de WF
+	       	if(swWin){
+	       		//Habilita/Deshabilita los combos
+	       		this.cmbTipoEstWF.disable();
+	       		this.cmbFunWF.disable();
+	       		this.txtObs.hide();
+	       		this.txtObs.allowBlank=true;
+	       		if(swEst){
+	       			this.cmbTipoEstWF.enable();		
+	       		}
+	       		if(swFun){
+	       			this.cmbFunWF.enable();		
+	       		}
+	       		//Setea parámetros del store de Estados
+	       		Ext.apply(this.cmbTipoEstWF.store.baseParams,{id_tipo_proceso: data.id_tipo_proceso, id_tipo_estado_padre: data.id_tipo_estado_padre});
+	       		
+	       		//Setea parámetros del store de funcionarios
+	       		Ext.apply(this.cmbFunWF.store.baseParams,{id_estado_wf: data.id_estado_wf, fecha: data.fecha});
+
+	       		//Muestra la ventana
+	       		this.winWF.show();
+	       	} else{
+	       		//Se hace la llamda directa porque el WF no tiene bifurcaciones
+	       		Phx.CP.loadingShow(); 
+				Ext.Ajax.request({
+					url:'../../sis_almacenes/control/Movimiento/finalizarMovimiento',
+				  	params:{
+				  		id_movimiento:d.id_movimiento,
+				  		operacion:'siguiente',
+				  		id_funcionario_wf:data.wf_id_funcionario,
+				  		id_tipo_estado: data.wf_id_tipo_estado,
+				  		id_almacen: d.id_almacen
+				      },
+				      success:this.successFinSol,
+				      failure: this.conexionFailure,
+				      timeout:this.timeout,
+				      scope:this
+				});
+	       		
+	       	}
+        	
+        	
+    	} else{
+            
+            alert('ocurrio un error durante el proceso')
+        }
+    },
+    successFinSol:function(resp){
+        Phx.CP.loadingHide();
+        var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+        if(!reg.ROOT.error){
+            this.reload();
+        }else{
+            alert('Ocurrió un error durante el proceso')
+        }
+	}, 
+	
+	onWF: function(res){
+		//Llama a la función para ir al siguiente estado
+		console.log(res)
+   		Phx.CP.loadingShow(); 
+   		var d= this.sm.getSelected().data;
+		Ext.Ajax.request({
+			url:'../../sis_almacenes/control/Movimiento/finalizarMovimiento',
+		  	params:{
+		  		id_movimiento:d.id_movimiento,
+		  		operacion:res.argument.operacion,
+		  		id_tipo_estado: this.cmbTipoEstWF.getValue(),
+		  		id_funcionario_wf:this.cmbFunWF.getValue(),
+		  		id_almacen: d.id_almacen,
+		  		obs: this.txtObs.getValue()
+		      },
+		      success:this.successFinSol,
+		      failure: this.conexionFailure,
+		      timeout:this.timeout,
+		      scope:this
+		});
+	},
+	
+	opcionWF: function(){
+		return {operacion:this.operacion};
+	}
+})
 </script>
 

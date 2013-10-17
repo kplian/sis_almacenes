@@ -55,9 +55,13 @@ BEGIN
                     item.observaciones,
                     item.numero_serie,
                     item.id_unidad_medida,
-                	umed.codigo as codigo_unidad
+                	umed.codigo as codigo_unidad,
+                	item.precio_ref,
+                	item.id_moneda,
+                	mon.codigo as desc_moneda
                 from alm.titem item
                 inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+                left join param.tmoneda mon on mon.id_moneda = item.id_moneda
                 where item.estado_reg = ''activo'' and ';
            
         	if (v_parametros.ordenacion = 'codigo') then
@@ -87,6 +91,7 @@ BEGIN
             	select count(item.id_item)
                 from alm.titem item
                 inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+                left join param.tmoneda mon on mon.id_moneda = item.id_moneda
                 where item.estado_reg = ''activo'' and ';
            
             --Definicion de la respuesta           

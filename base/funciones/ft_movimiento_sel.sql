@@ -42,23 +42,31 @@ BEGIN
   	begin
     
     	v_filtro='';
-        if(pxp.f_existe_parametro(p_tabla,'tipo_interfaz'))then
-            IF  lower(v_parametros.tipo_interfaz)='movimientoalm' THEN
-                v_filtro = ' (lower(mov.estado_mov)!=''borrador''  and lower(mov.estado_mov)!=''vbrpm'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'' and lower(mov.estado_mov)!=''pendiente'') and';
-                      
-            END IF;
-            
-            IF  lower(v_parametros.tipo_interfaz)='movimientovb' THEN
-                  IF p_administrador !=1 THEN
-                 
-                    v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) and  (lower(mov.estado_mov)!=''borrador'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'' and lower(mov.estado_mov)!=''vbarea'') and ';
-                        
-                 ELSE
-                    v_filtro = ' (lower(mov.estado_mov)!=''borrador'' and lower(mov.estado_mov)!=''finalizado'' and lower(mov.estado_mov)!=''cancelado'' and lower(mov.estado_mov)!=''vbarea'') and ';
-                        
-                END IF;
-            END IF;
-        end if;	
+        
+        if (v_parametros.id_funcionario_usu is null) then
+        	v_parametros.id_funcionario_usu = -1;
+        end if;
+
+        --if(pxp.f_existe_parametro(p_tabla,'tipo_interfaz'))then
+                
+        	if lower(v_parametros.tipo_interfaz) = 'movimientoreq' then
+            	if p_administrador !=1 then
+                	v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or mov.id_usuario_reg='||p_id_usuario||' ) and ';
+                end if;
+            elsif lower(v_parametros.tipo_interfaz) = 'movimientoalm' then
+            	--if p_administrador !=1 then
+                	v_filtro = 'lower(mov.estado_mov)=''prefin'' and ';
+                --end if;
+            elsif lower(v_parametros.tipo_interfaz) = 'movimientovb' then
+            	if p_administrador !=1 then
+                	v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) 
+                				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+                else 
+                	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+                end if;
+            	
+            end if;
+        --end if;
         
     	v_consulta:='
         	SELECT
@@ -111,6 +119,7 @@ BEGIN
         v_consulta:=v_consulta||v_filtro;
     	v_consulta:=v_consulta||v_parametros.filtro;
         v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;
+        raise notice '%',v_consulta;
         return v_consulta;
     end;
   /*********************************   

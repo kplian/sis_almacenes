@@ -1,0 +1,49 @@
+<?php
+/**
+*@package pXP
+*@file gen-ACTPreingresoDet.php
+*@author  (admin)
+*@date 07-10-2013 17:46:04
+*@description Clase que recibe los parametros enviados por la vista para mandar a la capa de Modelo
+*/
+
+class ACTPreingresoDet extends ACTbase{    
+			
+	function listarPreingresoDet(){
+		$this->objParam->defecto('ordenacion','id_preingreso_det');
+		$this->objParam->defecto('dir_ordenacion','asc');
+		
+		if($this->objParam->getParametro('id_preingreso')!=''){
+			$this->objParam->addFiltro("predet.id_preingreso = ".$this->objParam->getParametro('id_preingreso'));	
+		}
+		
+		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+			$this->objReporte = new Reporte($this->objParam,$this);
+			$this->res = $this->objReporte->generarReporteListado('MODPreingresoDet','listarPreingresoDet');
+		} else{
+			$this->objFunc=$this->create('MODPreingresoDet');
+			
+			$this->res=$this->objFunc->listarPreingresoDet($this->objParam);
+		}
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+				
+	function insertarPreingresoDet(){
+		$this->objFunc=$this->create('MODPreingresoDet');	
+		if($this->objParam->insertar('id_preingreso_det')){
+			$this->res=$this->objFunc->insertarPreingresoDet($this->objParam);			
+		} else{			
+			$this->res=$this->objFunc->modificarPreingresoDet($this->objParam);
+		}
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+						
+	function eliminarPreingresoDet(){
+			$this->objFunc=$this->create('MODPreingresoDet');	
+		$this->res=$this->objFunc->eliminarPreingresoDet($this->objParam);
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+			
+}
+
+?>

@@ -15,8 +15,8 @@ class ACTMovimiento extends ACTbase {
 	
     function listarMovimiento() {
         $this->objParam->defecto('ordenacion', 'fecha_mov');
-
         $this->objParam->defecto('dir_ordenacion', 'asc');
+		
         if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODMovimiento', 'listarMovimiento');
@@ -28,8 +28,7 @@ class ACTMovimiento extends ACTbase {
                 $this->objParam->addFiltro(" movtip.tipo = ''" . $this->objParam->getParametro('tipo') . "'' ");
             }
 												
-												$this->objParam->addParametro('id_funcionario_usu',$_SESSION["ss_id_funcionario"]);
-            
+			$this->objParam->addParametro('id_funcionario_usu',$_SESSION["ss_id_funcionario"]);
             $this->objFunc = $this->create('MODMovimiento');
             $this->res = $this->objFunc->listarMovimiento();
         }

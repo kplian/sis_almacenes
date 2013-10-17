@@ -588,4 +588,7 @@ ALTER TABLE alm.tpreingreso
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
+    
+ALTER TABLE alm.tpreingreso
+  ADD CONSTRAINT chk_tpreingreso__tipo CHECK (tipo in ('almacen','activo_fijo'));
 /***********************************F-DEP-RCM-ALM-82-01/10/2013*****************************************/

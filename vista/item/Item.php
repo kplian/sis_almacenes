@@ -196,6 +196,31 @@ header("content-type: text/javascript; charset=UTF-8");
 			id_grupo : 1,
 			grid : true,
 			form : true
+		},{
+			config:{
+				name: 'precio_ref',
+				fieldLabel: 'Precio de Ref.',
+				allowBlank: false,
+				anchor: '80%',
+				gwidth: 100,
+				maxLength:10
+			},
+			type:'NumberField',
+			filters:{pfiltro:'item.precio_ref',type:'numeric'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},{
+			config:{
+				name: 'id_moneda',
+				fieldLabel: 'Moneda',
+				gwidth: 100,
+				renderer:function (value, p, record){return String.format('{0}', record.data['desc_moneda']);}
+			},
+			type:'Field',
+			id_grupo:1,
+			grid:true,
+			form:false
 		}],
 		title : 'Item',
 		ActSave : '../../sis_almacenes/control/Item/insertarItem',
@@ -232,6 +257,15 @@ header("content-type: text/javascript; charset=UTF-8");
             type : 'integer'
         }, {
             name : 'codigo_unidad',
+            type : 'string'
+        },{
+			name : 'precio_ref',
+			type : 'numeric'
+		}, {
+            name : 'id_moneda',
+            type : 'integer'
+        }, {
+            name : 'desc_moneda',
             type : 'string'
         }],
 		sortInfo : {
