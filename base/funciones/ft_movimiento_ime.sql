@@ -1,3 +1,11 @@
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_ime (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_movimiento_ime
@@ -1240,7 +1248,7 @@ BEGIN
           --Devuelve la respuesta
             return v_respuesta;
         
-        end;
+        end; 
         
 	
   else
@@ -1254,3 +1262,9 @@ EXCEPTION
         v_respuesta = pxp.f_agrega_clave(v_respuesta,'procedimientos',v_nombre_funcion);
         raise exception '%',v_respuesta;
 END;
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
+COST 100;
