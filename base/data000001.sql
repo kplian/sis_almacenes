@@ -1302,3 +1302,12 @@ select pxp.f_add_catalog('ALM','tpreingreso__tipo','almacen');
 select pxp.f_add_catalog('ALM','tpreingreso__tipo','activo_fijo');
 
 /***********************************F-DAT-RCM-ALM-82-01/10/2013****************************************/
+
+/***********************************F-DAT-RCM-ALM-0-17/10/2013****************************************/
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg","codigo", "nombre", "tipo")
+VALUES (1, null, now(), null, E'activo', E'SALGRU', E'Salida Grupal', E'salida');
+
+select pxp.f_insert_tgui ('Salida Múltiple', 'Salida múltiple', 'SALGRU', 'si', 1, 'sis_almacenes/vista/salida_grupo/SalidaGrupo.php', 3, '', 'SalidaGrupo', 'ALM');
+select pxp.f_insert_testructura_gui ('SALGRU', 'ALMOVI');
+
+/***********************************F-DAT-RCM-ALM-0-17/10/2013****************************************/

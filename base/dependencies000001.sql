@@ -592,3 +592,55 @@ ALTER TABLE alm.tpreingreso
 ALTER TABLE alm.tpreingreso
   ADD CONSTRAINT chk_tpreingreso__tipo CHECK (tipo in ('almacen','activo_fijo'));
 /***********************************F-DEP-RCM-ALM-82-01/10/2013*****************************************/
+
+
+/***********************************I-DEP-RCM-ALM-0-17/10/2013*****************************************/
+ALTER TABLE alm.tmovimiento
+  ADD CONSTRAINT fk_tmovimiento__id_salida_grupo FOREIGN KEY (id_salida_grupo)
+    REFERENCES alm.tsalida_grupo(id_salida_grupo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tsalida_grupo
+  ADD CONSTRAINT fk_tsalida_grupo__id_almacen FOREIGN KEY (id_almacen)
+    REFERENCES alm.talmacen(id_almacen)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tsalida_grupo
+  ADD CONSTRAINT fk_tsalida_grupo__id_movimiento_tipo FOREIGN KEY (id_movimiento_tipo)
+    REFERENCES alm.tmovimiento_tipo(id_movimiento_tipo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tsalida_grupo_item
+  ADD CONSTRAINT fk_tsalida_grupo_item__id_salida_grupo FOREIGN KEY (id_salida_grupo)
+    REFERENCES alm.tsalida_grupo(id_salida_grupo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tsalida_grupo_item
+  ADD CONSTRAINT fk_tsalida_grupo_item__id_item FOREIGN KEY (id_item)
+    REFERENCES alm.titem(id_item)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tsalida_grupo_fun
+  ADD CONSTRAINT fk_tsalida_grupo_fun__id_salida_grupo_item FOREIGN KEY (id_salida_grupo_item)
+    REFERENCES alm.tsalida_grupo_item(id_salida_grupo_item)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tsalida_grupo_fun
+  ADD CONSTRAINT fk_tsalida_grupo_fun__id_funcionario FOREIGN KEY (id_funcionario)
+    REFERENCES orga.tfuncionario(id_funcionario)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-RCM-ALM-0-17/10/2013*****************************************/

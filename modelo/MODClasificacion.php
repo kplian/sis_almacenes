@@ -68,6 +68,7 @@ class MODClasificacion extends MODbase {
             $this->addConsulta();
 
             $this->setParametro('id_clasificacion', 'id_padre', 'varchar');
+			$this->setParametro('id_movimiento', 'id_movimiento', 'integer');
 
             $this->captura('id_item', 'integer');
             $this->captura('nombre', 'varchar');

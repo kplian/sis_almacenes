@@ -514,3 +514,41 @@ alter table alm.titem
 add column id_moneda integer;
 
 /***********************************F-SCP-RCM-ALM-0-10/10/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-0-17/10/2013*****************************************/
+CREATE TABLE alm.tsalida_grupo (
+  id_salida_grupo SERIAL,
+  id_almacen integer,
+  id_movimiento_tipo integer,
+  descripcion varchar(1000),
+  observaciones varchar(1000),
+  estado varchar(15), 
+  fecha date,
+  CONSTRAINT pk_tsalida_grupo__id_salida_grupo PRIMARY KEY(id_salida_grupo)
+) INHERITS(pxp.tbase) 
+WITHOUT OIDS;
+
+CREATE TABLE alm.tsalida_grupo_item (
+  id_salida_grupo_item SERIAL,
+  id_salida_grupo integer,
+  id_item integer,
+  cantidad_sol numeric(18,2),
+  observaciones varchar(1000),
+  CONSTRAINT pk_tsalida_grupo_item__id_salida_grupo_item PRIMARY KEY(id_salida_grupo_item)
+) INHERITS(pxp.tbase) 
+WITHOUT OIDS;
+
+CREATE TABLE alm.tsalida_grupo_fun (
+  id_salida_grupo_fun SERIAL,
+  id_salida_grupo_item integer,
+  id_funcionario integer,
+  cantidad_sol numeric(18,2),
+  observaciones varchar(1000),
+  CONSTRAINT pk_tsalida_grupo_fun__id_salida_grupo_fun PRIMARY KEY(id_salida_grupo_fun)
+) INHERITS(pxp.tbase) 
+WITHOUT OIDS;
+
+alter table alm.tmovimiento
+add column id_salida_grupo integer;
+
+/***********************************F-SCP-RCM-ALM-0-17/10/2013*****************************************/

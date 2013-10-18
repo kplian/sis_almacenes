@@ -11,6 +11,7 @@ header("content-type:text/javascript; charset=UTF-8");
 <script>
     Phx.vista.BuscarItem = Ext.extend(Phx.arbInterfaz, {
         constructor : function(config) {
+        	this.id_movimiento=config.id_movimiento;
             this.maestro = config.maestro;
             Phx.vista.BuscarItem.superclass.constructor.call(this, config);
 
@@ -135,6 +136,10 @@ header("content-type:text/javascript; charset=UTF-8");
 		  width:'30%',	//altura de la ventana hijo
 		  //width:'50%',		//ancho de la ventana hjo
 		  cls:'ItemExistenciaAlmacen'
-		}
-    }); 
+		},
+		onBeforeLoad : function(treeLoader, node) {
+			treeLoader.baseParams[this.id_nodo] = node.attributes[this.id_nodo];
+			Ext.apply(treeLoader.baseParams,{id_movimiento:this.id_movimiento});
+		},
+}); 
 </script>

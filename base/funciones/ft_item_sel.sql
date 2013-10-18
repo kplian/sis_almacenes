@@ -1,6 +1,11 @@
-CREATE OR REPLACE FUNCTION alm.ft_item_sel(p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION alm.ft_item_sel (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:        Almacenes
  FUNCION:        alm.ft_item_sel
@@ -115,6 +120,65 @@ BEGIN
             else
                 v_where := ' it.id_clasificacion = '||v_parametros.id_clasificacion;
             end if;
+            
+            /******************/
+            --RCM 18/10/2103: Verificación de si se debe filtrar los items por tipo de movimiento, solo para los casos que envien el parametro id_movimiento
+            if pxp.f_existe_parametro(p_tabla,'id_movimiento') then
+            	v_resp_global = pxp.f_get_variable_global('alm_filtrar_item_tipomov');
+            	if v_resp_global = 'si' then
+            		--Verifica que sea una salida y si es asi obtiene el id_movimiento_tipo
+            		select
+            		movt.id_movimiento_tipo
+            		into v_id_movimiento_tipo
+            		from alm.tmovimiento mov
+            		inner join alm.tmovimiento_tipo movt
+            		on movt.id_movimiento_tipo = mov.id_movimiento_tipo
+            		where id_movimiento = v_parametros.id_movimiento
+            		and tipo = 'salida';
+
+            		if coalesce(v_id_movimiento_tipo,0)!=0 then
+            			--Obtener los id_clasificacion
+            			v_ids='';
+            			select (pxp.list(id_clasificacion::text))::varchar
+            			into v_ids
+        				from alm.tmovimiento_tipo_item
+            			where id_clasificacion is not null
+            			and id_movimiento_tipo = v_id_movimiento_tipo;
+            			
+            			--Obtener los Ids recursivamente
+            			v_ids=alm.f_get_id_clasificaciones_varios(v_ids);
+
+						--Definir la consulta            		
+            			if v_ids!='null' then
+                                               
+            				--Condición de Items y Clasificación
+            				v_where = v_where || ' and (
+            								(it.id_item in (select id_item
+            											from alm.tmovimiento_tipo_item
+            											where id_item is not null
+            											and id_movimiento_tipo = '||v_id_movimiento_tipo||')
+            								) or
+            								(
+            									it.id_clasificacion in ('|| v_ids||')
+            								)
+            							) ';
+
+            			else
+            				--Condición solo de Items
+            				v_where = v_where || ' and it.id_item in (select id_item
+            											from alm.tmovimiento_tipo_item
+            											where id_item is not null
+            											and id_movimiento_tipo = '||v_id_movimiento_tipo||') ';
+            			end if;
+            											 
+            		end if;
+            		
+            	end if;
+            end if;
+			--FIN RCM
+            
+            
+            /**************/
         	v_consulta:='
             	select
 					it.id_item,
@@ -383,8 +447,9 @@ EXCEPTION
             v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
             raise exception '%',v_resp;
 END;
-$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION alm.ft_item_sel(integer, integer, character varying, character varying)
-  OWNER TO postgres;
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
+COST 100;
