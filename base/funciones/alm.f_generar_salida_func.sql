@@ -63,7 +63,6 @@ BEGIN
       raise exception 'No se tiene una gestion configurada para la fecha %',v_rec_cab.fecha; 
     end if;
     
-    
     --Recorre todos los funcionarios distintos para generar una salida por cada funcionario
     for v_rec in (select distinct gfun.id_funcionario
     			from alm.tsalida_grupo_item git

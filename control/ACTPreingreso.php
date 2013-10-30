@@ -45,6 +45,12 @@ class ACTPreingreso extends ACTbase{
 		$this->res=$this->objFunc->generarIngreso($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+
+	function revertirPreingreso(){
+		$this->objFunc=$this->create('MODPreingreso');	
+		$this->res=$this->objFunc->revertirPreingreso($this->objParam);
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
 			
 }
 

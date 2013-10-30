@@ -280,6 +280,7 @@ Phx.vista.SalidaGrupo=Ext.extend(Phx.gridInterfaz,{
 		var global = this;
 		Ext.Msg.confirm('Confirmación', '¿Está seguro de Finalizar la Solicitud?', function(btn) {
 			if (btn == "yes") {
+				Phx.CP.loadingShow();
 				Ext.Ajax.request({
 					url : '../../sis_almacenes/control/SalidaGrupo/finalizarSalidaGrupo',
 					params : {
@@ -299,6 +300,7 @@ Phx.vista.SalidaGrupo=Ext.extend(Phx.gridInterfaz,{
 		var global = this;
 		Ext.Msg.confirm('Confirmación', '¿Está seguro de Retroceder la Solicitud?', function(btn) {
 			if (btn == "yes") {
+				Phx.CP.loadingShow();
 				Ext.Ajax.request({
 					url : '../../sis_almacenes/control/SalidaGrupo/retrocederSalidaGrupo',
 					params : {

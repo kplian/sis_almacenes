@@ -276,6 +276,18 @@ class MODMovimiento extends MODbase {
 		return $this->respuesta;
 	}
 
+	function revertirPreingreso() {
+        $this->procedimiento = 'alm.ft_movimiento_ime';
+        $this->transaccion = 'SAL_MOVPRE_REV';
+        $this->tipo_procedimiento = 'IME';
 
+        $this->setParametro('id_movimiento', 'id_movimiento', 'integer');
+        $this->setParametro('id_almacen', 'id_almacen', 'integer');
+		$this->setParametro('obs', 'obs', 'varchar');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
 }
 ?>

@@ -31,6 +31,14 @@ DECLARE
 	v_mensaje_error         text;
 	v_id_salida_grupo	integer;
 	v_result			varchar;
+	v_total				numeric;
+	v_tot_fun 			numeric;
+    v_rec				record;
+    v_id_estado_wf		integer;
+    v_id_tipo_proceso	integer;
+    v_id_proceso_wf		integer;
+    v_id_tipo_estado	integer;
+    v_id_estado_actual	integer;
 			    
 BEGIN
 
@@ -169,6 +177,28 @@ BEGIN
 				raise exception 'La Solicitud debe estar en estado Borrador';
 			end if;
 			
+			--Verifica que se haya asignado todos los items a los funcionarios
+			v_total=0;
+			v_tot_fun=0;
+			
+			select sum(cantidad_sol)
+			into v_total 
+			from alm.tsalida_grupo_item
+			where id_salida_grupo = v_parametros.id_salida_grupo;
+			
+			select sum(gfun.cantidad_sol)
+			into v_tot_fun 
+			from alm.tsalida_grupo_item git
+			inner join alm.tsalida_grupo_fun gfun on gfun.id_salida_grupo_item = git.id_salida_grupo_item
+			where git.id_salida_grupo = v_parametros.id_salida_grupo;
+
+			if v_total < v_tot_fun then
+				raise exception 'La cantidad asignada a los funcionarios supera a la cantidad general definida';
+			elsif v_total > v_tot_fun then
+				raise exception 'Aún falta asignar items a los funcionarios para igualar a la cantidad general definida';
+			end if;
+			
+			
 			--Llamada a la función para generar las salidas por cada funcionario
 			v_result = alm.f_generar_salida_func(p_id_usuario,v_parametros.id_salida_grupo);
 
@@ -198,6 +228,10 @@ BEGIN
 	elsif(p_transaccion='SAL_SALGRU_RET')then
 
 		begin
+        
+        	--------------------
+            --(1) VALIDACIONES
+            --------------------
 			if not exists(select 1 from alm.tsalida_grupo
 						where id_salida_grupo = v_parametros.id_salida_grupo) then
 				raise exception 'Solicitud no encontrada';
@@ -214,25 +248,57 @@ BEGIN
 					and estado_mov != 'borrador') then
 				raise exception 'No es posible Retroceder la Solicitud, porque ya se aprobó alguna de las Salidas generadas';
 			else
-				--Elimina todos los movimientos
-				delete from alm.tmovimiento_det_valorado where id_movimiento_det in (select mdet.id_movimiento_det
-																					from alm.tmovimiento mov
-																					inner join alm.tmovimiento_det mdet on mdet.id_movimiento = mov.id_movimiento
-																					where mov.id_salida_grupo = v_parametros.id_salida_grupo);
-				
-				delete from alm.tmovimiento_det where id_movimiento in (select id_movimiento
-																		from alm.tmovimiento
-																		where id_salida_grupo = v_parametros.id_salida_grupo);
-																		
-				delete from alm.tmovimiento where id_salida_grupo = v_parametros.id_salida_grupo;
+                ------------------------
+                --(2)Cancela el Ingreso
+                ------------------------
+                for v_rec in (select id_movimiento
+                			from alm.tmovimiento
+                            where id_salida_grupo = v_parametros.id_salida_grupo) loop
+                    --Obtiene el Proceso WF
+                    SELECT
+                    mov.id_estado_wf, pw.id_tipo_proceso, pw.id_proceso_wf
+                    into
+                    v_id_estado_wf, v_id_tipo_proceso, v_id_proceso_wf
+                    FROM alm.tmovimiento mov
+                    inner join wf.tproceso_wf pw on pw.id_proceso_wf = mov.id_proceso_wf
+                    WHERE mov.id_movimiento = v_rec.id_movimiento;
+                      
+                    --Obtiene el estado cancelado del WF
+                    select 
+                    te.id_tipo_estado
+                    into
+                    v_id_tipo_estado
+                    from wf.tproceso_wf pw 
+                    inner join wf.ttipo_proceso tp on pw.id_tipo_proceso = tp.id_tipo_proceso
+                    inner join wf.ttipo_estado te on te.id_tipo_proceso = tp.id_tipo_proceso and te.codigo = 'cancelado'               
+                    where pw.id_proceso_wf = v_id_proceso_wf;
+                         
+                    --Se cancela el WF
+                    v_id_estado_actual =  wf.f_registra_estado_wf(v_id_tipo_estado, 
+                                                                   NULL, 
+                                                                   v_id_estado_wf, 
+                                                                   v_id_proceso_wf,
+                                                                   p_id_usuario,
+                                                                   null);
+                      
+                    --Cancela el movimiento
+                    update alm.tmovimiento set
+                    id_estado_wf =  v_id_estado_actual,
+                    estado_mov = 'cancelado',
+                    id_usuario_mod=p_id_usuario,
+                    fecha_mod=now()
+                    where id_movimiento = v_rec.id_movimiento;
+                
+                end loop;
+                
+                --Actualización del estado
+                update alm.tsalida_grupo set
+                fecha_mod = now(),
+                id_usuario_mod = p_id_usuario,
+                estado = 'borrador'
+                where id_salida_grupo = v_parametros.id_salida_grupo; 
+
 			end if;
-			
-			--Actualización del estado
-			update alm.tsalida_grupo set
-			fecha_mod = now(),
-			id_usuario_mod = p_id_usuario,
-			estado = 'borrador'
-			where id_salida_grupo = v_parametros.id_salida_grupo; 
                
             --Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Solicitud retrocedida'); 

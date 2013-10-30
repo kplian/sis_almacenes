@@ -138,6 +138,24 @@ class MODPreingreso extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
+	
+	function revertirPreingreso(){
+		//Definicion de variables para ejecucion del procedimiento
+		$this->procedimiento='alm.ft_preingreso_ime';
+		$this->transaccion='SAL_PREING_REV';
+		$this->tipo_procedimiento='IME';
+				
+		//Define los parametros para la funcion
+		$this->setParametro('id_preingreso','id_preingreso','int4');
+
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		//echo $this->consulta;exit;
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
 			
 }
 ?>

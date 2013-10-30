@@ -218,11 +218,11 @@ select pxp.f_insert_testructura_gui ('MOV', 'ALMOVI');
 
 
 
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, 1, E'2013-02-19 19:01:02.292', E'2013-02-19 19:03:21.553', E'activo', 1, E'SALTRNSF', E'Salida por Transferencia', E'salida');
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg",  "codigo", "nombre", "tipo")
+VALUES (1, null, now(), null, E'activo', E'SALTRNSF', E'Salida por Transferencia', E'salida');
 
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-19 19:03:55.823', E'2013-02-19 19:03:55.823', E'activo', 2, E'INTRNSF', E'Ingreso por transferencia', E'ingreso');
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg",  "codigo", "nombre", "tipo")
+VALUES (1, NULL, now(), null, E'activo', E'INTRNSF', E'Ingreso por transferencia', E'ingreso');
 
 
 /***********************************F-DAT-AAO-ALM-31-20/02/2013*****************************************/
@@ -230,8 +230,8 @@ VALUES (1, NULL, E'2013-02-19 19:03:55.823', E'2013-02-19 19:03:55.823', E'activ
 /***********************************I-DAT-AAO-ALM-29-23/02/2013*****************************************/
 
 
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-23 18:49:21.853', E'2013-02-23 18:49:21.853', E'activo', 3, E'DEV', E'Ingreso por Devolucion', E'ingreso');
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "codigo", "nombre", "tipo")
+VALUES (1, NULL, E'2013-02-23 18:49:21.853', E'2013-02-23 18:49:21.853', E'activo', E'DEV', E'Ingreso por Devolucion', E'ingreso');
 
 
 /***********************************F-DAT-AAO-ALM-29-23/02/2013*****************************************/
@@ -251,8 +251,8 @@ VALUES (1, 1, E'2013-02-24 00:00:00', E'2013-02-24 08:23:00.205', E'activo', 6, 
 /***********************************I-DAT-AAO-ALM-39-06/03/2013*****************************************/
 
 
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-23 18:49:21.853', E'2013-02-23 18:49:21.853', E'activo', 4, E'INVINI', E'Inventario Inicial', E'ingreso');
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "codigo", "nombre", "tipo")
+VALUES (1, NULL, E'2013-02-23 18:49:21.853', E'2013-02-23 18:49:21.853', E'activo', E'INVINI', E'Inventario Inicial', E'ingreso');
 /***********************************F-DAT-AAO-ALM-39-06/03/2013*****************************************/
 
 
@@ -960,11 +960,11 @@ select wf.f_insert_testructura_estado ('vbrpm', 'MOV', 'vbarea', 'MOV', '1', '',
 select wf.f_insert_testructura_estado ('vbarea', 'MOV', 'finalizado', 'MOV', '1', '', 'activo');
 
 -- Movimiento_tipo
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-19 19:13:12.927', E'2013-02-19 19:13:12.927', E'activo', 7, E'INCOMP', E'Ingreso por Compra', E'ingreso');
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "codigo", "nombre", "tipo")
+VALUES (1, NULL, E'2013-02-19 19:13:12.927', E'2013-02-19 19:13:12.927', E'activo', E'INCOMP', E'Ingreso por Compra', E'ingreso');
 
-INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_movimiento_tipo", "codigo", "nombre", "tipo")
-VALUES (1, NULL, E'2013-02-19 19:13:26.057', E'2013-02-19 19:13:26.057', E'activo', 8, E'SALVENT', E'Salida por Venta', E'salida');
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "codigo", "nombre", "tipo")
+VALUES (1, NULL, E'2013-02-19 19:13:26.057', E'2013-02-19 19:13:26.057', E'activo', E'SALVENT', E'Salida por Venta', E'salida');
 
 update alm.tmovimiento_tipo
 set id_proceso_macro = (select id_proceso_macro 
@@ -1303,11 +1303,16 @@ select pxp.f_add_catalog('ALM','tpreingreso__tipo','activo_fijo');
 
 /***********************************F-DAT-RCM-ALM-82-01/10/2013****************************************/
 
-/***********************************F-DAT-RCM-ALM-0-17/10/2013****************************************/
+/***********************************I-DAT-RCM-ALM-0-17/10/2013****************************************/
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg","codigo", "nombre", "tipo")
 VALUES (1, null, now(), null, E'activo', E'SALGRU', E'Salida Grupal', E'salida');
 
 select pxp.f_insert_tgui ('Salida Múltiple', 'Salida múltiple', 'SALGRU', 'si', 1, 'sis_almacenes/vista/salida_grupo/SalidaGrupo.php', 3, '', 'SalidaGrupo', 'ALM');
 select pxp.f_insert_testructura_gui ('SALGRU', 'ALMOVI');
 
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg","codigo", "nombre", "tipo")
+VALUES (1, null, now(), null, E'activo', E'INADQ', E'Ingreso desde Adquisiciones', E'ingreso');
+
+select pxp.f_insert_tgui ('Comprobante Salidas', 'Comprobante Salidas', 'MOVGRU', 'si', 8, 'sis_almacenes/vista/movimiento_grupo/MovimientoGrupo.php', 3, '', 'MovimientoGrupo', 'ALM');
+select pxp.f_insert_testructura_gui ('MOVGRU', 'ALMOVI');
 /***********************************F-DAT-RCM-ALM-0-17/10/2013****************************************/

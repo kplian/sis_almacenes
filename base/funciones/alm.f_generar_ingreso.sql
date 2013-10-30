@@ -79,7 +79,7 @@ BEGIN
     
     --Datos WF del Preingreso
     select
-    cot.id_proceso_wf, cot.id_estado_wf, cot.estado,
+    pre.id_proceso_wf, pre.id_estado_wf, pre.estado,
     sol.id_proceso_macro
     into 
     v_id_proceso_wf_cot, v_id_estado_wf_cot, v_codigo_estado_cot,
@@ -107,7 +107,7 @@ BEGIN
     end if;
     --Movimiento Tipo
     if v_id_movimiento_tipo is null then
-    	raise exception 'No existen el Tipo de Movimiento';
+    	raise exception 'No existe el Tipo de Movimiento';
     end if;
     --WF Ingreso
     if v_id_proceso_macro is null then
@@ -210,43 +210,6 @@ BEGIN
                 
             end loop;
 
-            -------------------------
-            --Finaliza el Preingreso
-            -------------------------
-            --Obtener siguiente estado correpondiente al proceso del WF del preingreso
-            SELECT 
-            ps_id_tipo_estado, ps_codigo_estado, ps_disparador, ps_regla, ps_prioridad
-            into
-            va_id_tipo_estado, va_codigo_estado, va_disparador, va_regla, va_prioridad
-            FROM wf.f_obtener_estado_wf(v_id_proceso_wf, v_id_estado_wf,NULL,'siguiente');
-
-            --Validaciones
-            if va_id_tipo_estado[2] is not null then
-            	raise exception 'El proceso se encuentra mal parametrizado dentro de Work Flow, la finalizacion del Preingreso solo admite un estado siguiente';
-          	end if;
-          
-            if  va_id_tipo_estado[1] is  null  then
-              raise exception ' El proceso de Work Flow esta mal parametrizado, no tiene un estado siguiente para la finalizacion';
-            end if;
-			raise notice '---uno---';
-            v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1], 
-                                                         NULL, 
-                                                         v_id_estado_wf, 
-                                                         v_id_proceso_wf,
-                                                         p_id_usuario,
-                                                         NULL,
-                                                         'Preingreso realizado',
-                                                         '',
-                                                         'Preingreso');
-
-            --Actualiza estado en preingreso
-            update alm.tpreingreso set 
-            id_estado_wf =  v_id_estado_actual,
-            estado = va_codigo_estado[1],
-            id_usuario_mod=p_id_usuario,
-            fecha_mod=now()
-           	where id_preingreso = v_rec.id_preingreso;
-       	
         end loop;
     
   	
@@ -261,6 +224,43 @@ BEGIN
         end if;
 
     end if;
+    
+    -------------------------
+    --Finaliza el Preingreso
+    -------------------------
+    --Obtener siguiente estado correpondiente al proceso del WF del preingreso
+    SELECT 
+    ps_id_tipo_estado, ps_codigo_estado, ps_disparador, ps_regla, ps_prioridad
+    into
+    va_id_tipo_estado, va_codigo_estado, va_disparador, va_regla, va_prioridad
+    FROM wf.f_obtener_estado_wf(v_id_proceso_wf_cot, v_id_estado_wf_cot,NULL,'siguiente');
+
+    --Validaciones
+    if va_id_tipo_estado[2] is not null then
+        raise exception 'El proceso se encuentra mal parametrizado dentro de Work Flow, la finalizacion del Preingreso solo admite un estado siguiente';
+    end if;
+          
+    if  va_id_tipo_estado[1] is  null  then
+      raise exception ' El proceso de Work Flow esta mal parametrizado, no tiene un estado siguiente para la finalizacion';
+    end if;
+
+    v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1], 
+                                                 NULL, 
+                                                 v_id_estado_wf_cot, 
+                                                 v_id_proceso_wf_cot,
+                                                 p_id_usuario,
+                                                 NULL,
+                                                 'Preingreso realizado',
+                                                 '',
+                                                 'Preingreso');
+
+    --Actualiza estado en preingreso
+    update alm.tpreingreso set 
+    id_estado_wf =  v_id_estado_actual,
+    estado = va_codigo_estado[1],
+    id_usuario_mod=p_id_usuario,
+    fecha_mod=now()
+    where id_preingreso = v_rec.id_preingreso;
 
     
     ------------

@@ -643,4 +643,162 @@ ALTER TABLE alm.tsalida_grupo_fun
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
+    
+ALTER TABLE alm.tpreingreso
+  ADD CONSTRAINT fk_tpreingreso__id_depto_conta FOREIGN KEY (id_depto_conta)
+    REFERENCES param.tdepto(id_depto)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+CREATE OR REPLACE VIEW alm.vcbte_ingreso_cab(
+    id_movimiento,
+    beneficiario,
+    id_moneda,
+    id_depto_conta,
+    codigo,
+    fecha_actual,
+    estado_mov,
+    id_gestion,
+    desc_motivo,
+    tipo,
+    id_preingreso,
+    desc_almacen,
+    id_almacen)
+AS
+  SELECT mov.id_movimiento,
+         CASE COALESCE(mov.id_funcionario, 0)
+           WHEN 0 THEN pro.desc_proveedor::text
+           ELSE fun.desc_funcionario1
+         END AS beneficiario,
+         param.f_get_moneda_base() AS id_moneda,
+         ping.id_depto_conta,
+         mov.codigo,
+         now() AS fecha_actual,
+         mov.estado_mov,
+         (
+           SELECT f_get_periodo_gestion.po_id_gestion
+           FROM param.f_get_periodo_gestion(mov.fecha_mov::date)
+            f_get_periodo_gestion(po_id_periodo, po_id_gestion,
+             po_id_periodo_subsistema)
+         ) AS id_gestion,
+         mtip.nombre AS desc_motivo,
+         mtip.tipo,
+         mov.id_preingreso,
+         (alm.codigo::text || ' - ' ::text) || alm.nombre::text AS desc_almacen,
+         mov.id_almacen
+  FROM alm.tmovimiento mov
+       LEFT JOIN orga.vfuncionario fun ON fun.id_funcionario =
+        mov.id_funcionario
+       LEFT JOIN param.vproveedor pro ON pro.id_proveedor = mov.id_proveedor
+       JOIN alm.talmacen alm ON alm.id_almacen = mov.id_almacen
+       JOIN alm.tmovimiento_tipo mtip ON mtip.id_movimiento_tipo =
+        mov.id_movimiento_tipo
+       JOIN alm.tpreingreso ping ON ping.id_preingreso = mov.id_preingreso
+  WHERE mov.id_int_comprobante IS NULL;
+  
+  CREATE VIEW alm.vcbte_ingreso_det (
+    id_movimiento_det,
+    id_movimiento,
+    cantidad,
+    costo_unitario,
+    costo_total,
+    id_item,
+    codigo_item,
+    nombre_item,
+    id_preingreso,
+    id_concepto_ingas,
+    desc_item)
+AS
+SELECT mdet.id_movimiento_det, mdet.id_movimiento, mdetva.cantidad,
+    mdetva.costo_unitario, mdetva.cantidad * mdetva.costo_unitario AS
+    costo_total, mdet.id_item, item.codigo AS codigo_item, item.nombre AS
+    nombre_item, mov.id_preingreso, sdet.id_concepto_ingas,
+    (COALESCE(item.codigo, 'S/C'::character varying)::text || ' - '::text) ||
+    item.nombre::text AS desc_item
+FROM alm.tmovimiento mov
+   JOIN alm.tmovimiento_det mdet ON mdet.id_movimiento = mov.id_movimiento
+   JOIN alm.tmovimiento_det_valorado mdetva ON mdetva.id_movimiento_det =
+       mdet.id_movimiento_det
+   JOIN alm.titem item ON item.id_item = mdet.id_item
+   JOIN alm.tpreingreso ping ON ping.id_preingreso = mov.id_preingreso
+   JOIN alm.tpreingreso_det pdet ON pdet.id_preingreso = ping.id_preingreso
+   JOIN adq.tcotizacion_det cdet ON cdet.id_cotizacion_det = pdet.id_cotizacion_det
+   JOIN adq.tsolicitud_det sdet ON sdet.id_solicitud_det = cdet.id_solicitud_det
+WHERE mov.id_int_comprobante IS NULL;
+
+CREATE VIEW alm.vcbte_ingreso_det_alm (
+    id_movimiento,
+    cantidad,
+    costo_total,
+    descripcion)
+AS
+SELECT ing.id_movimiento, sum(ing.cantidad) AS cantidad, sum(ing.costo_total)
+    AS costo_total, 'Ingreso a Almacén' AS descripcion
+FROM alm.vcbte_ingreso_det ing
+GROUP BY ing.id_movimiento;
+
+CREATE VIEW alm.vcbte_salida_cab (
+    id_movimiento_grupo,
+    benef,
+    id_moneda,
+    id_depto_conta,
+    fecha_actual,
+    id_gestion,
+    desc_almacen,
+    id_almacen)
+AS
+SELECT mgru.id_movimiento_grupo, (((((('Salida del Almacén: '::text ||
+    alm.codigo::text) || ' - '::text) || alm.nombre::text) || ', del: '::text)
+    || to_char(mgru.fecha_ini::timestamp with time zone, 'dd/mm/yyyy'::text))
+    || ' al: '::text) || to_char(mgru.fecha_fin::timestamp with time zone,
+    'dd/mm/yyyy'::text) AS benef, param.f_get_moneda_base() AS id_moneda,
+    mgru.id_depto_conta, now() AS fecha_actual, (
+    SELECT f_get_periodo_gestion.po_id_gestion
+    FROM param.f_get_periodo_gestion(mgru.fecha_ini)
+        f_get_periodo_gestion(po_id_periodo, po_id_gestion, po_id_periodo_subsistema)
+    ) AS id_gestion, (alm.codigo::text || ' - '::text) || alm.nombre::text AS
+        desc_almacen, mgru.id_almacen
+FROM alm.tmovimiento_grupo mgru
+   JOIN alm.talmacen alm ON alm.id_almacen = mgru.id_almacen;
+   
+CREATE VIEW alm.vcbte_salida_det (
+    id_movimiento_grupo,
+    cantidad,
+    costo_total,
+    id_clasificacion,
+    codigo_largo,
+    nombre,
+    descripcion)
+AS
+SELECT tab.id_movimiento_grupo, sum(tab.cantidad) AS cantidad,
+    sum(tab.costo_total) AS costo_total, tab.id_clasificacion,
+    tab.codigo_largo, tab.nombre, tab.descripcion
+FROM (
+    SELECT mgrudet.id_movimiento_grupo_det, mgrudet.id_movimiento_grupo,
+        mdetval.cantidad, mdetval.costo_unitario, mdetval.cantidad *
+        mdetval.costo_unitario AS costo_total, cla.id_clasificacion,
+        cla.codigo_largo, cla.nombre, (cla.codigo_largo::text || ' - '::text)
+        || cla.nombre::text AS descripcion
+    FROM alm.tmovimiento_grupo_det mgrudet
+      JOIN alm.tmovimiento mov ON mov.id_movimiento = mgrudet.id_movimiento
+   JOIN alm.tmovimiento_det mdet ON mdet.id_movimiento = mov.id_movimiento
+   JOIN alm.tmovimiento_det_valorado mdetval ON mdetval.id_movimiento_det =
+       mdet.id_movimiento_det
+   JOIN alm.titem ite ON ite.id_item = mdet.id_item
+   JOIN alm.tclasificacion cla ON cla.id_clasificacion = ite.id_clasificacion
+    ) tab
+GROUP BY tab.id_movimiento_grupo, tab.id_clasificacion, tab.codigo_largo,
+    tab.nombre, tab.descripcion;
+    
+CREATE VIEW alm.vcbte_salida_det_alm (
+    id_movimiento_grupo,
+    cantidad,
+    costo_total,
+    descripcion)
+AS
+SELECT sal.id_movimiento_grupo, sum(sal.cantidad) AS cantidad,
+    sum(sal.costo_total) AS costo_total, 'Salida de Almacén' AS descripcion
+FROM alm.vcbte_salida_det sal
+GROUP BY sal.id_movimiento_grupo;
 /***********************************F-DEP-RCM-ALM-0-17/10/2013*****************************************/

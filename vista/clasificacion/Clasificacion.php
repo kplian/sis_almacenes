@@ -14,8 +14,12 @@ header("content-type:text/javascript; charset=UTF-8");
 			this.maestro = config.maestro;
 			Phx.vista.Clasificacion.superclass.constructor.call(this, config);
 			this.init();
+			console.log(this.bnew)
 
-			this.tbar.items.get('b-new-' + this.idContenedor).disable();
+			if(this.bnew){
+				console.log('entra')
+				this.tbar.items.get('b-new-' + this.idContenedor).disable();
+			}
 
 			this.addButton('btnBlockUnblock', {
 				text : '',

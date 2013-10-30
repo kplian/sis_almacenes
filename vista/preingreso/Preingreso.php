@@ -19,12 +19,19 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 		this.init();
 		this.load({params:{start:0, limit:this.tam_pag}});
 		
-		 this.addButton('btnIngreso',{
-                    text :'Ingreso',
+		this.addButton('btnIngreso',{
+                    text :'Generar Ingreso',
                     iconCls : 'bchecklist',
                     disabled: true,
                     handler : this.onIngreso,
                     tooltip : '<b>Ingreso</b><br/><b>Generación del Ingreso a Almacén o Activo Fijo</b>'
+         });
+         this.addButton('btnRevertir',{
+                    text :'Revertir Preingreso',
+                    iconCls : 'bchecklist',
+                    disabled: true,
+                    handler : this.onRevertir,
+                    tooltip : '<b>Revertir Preingreso</b><br/><b>Revierte el Preingreso generado</b>'
          });
 	},
 			
@@ -370,10 +377,22 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
       
       	if(rec.estado=='borrador'){
       		this.getBoton('btnIngreso').enable();
-      	}
-      	else {
+      		this.getBoton('btnRevertir').enable();
+      		this.getBoton('edit').enable();
+      		this.getBoton('del').enable();
+      	} else if(rec.estado=='cancelado'||rec.estado=='finalizado'){
       		this.getBoton('btnIngreso').disable();
+      		this.getBoton('btnRevertir').disable();
+      		
+      		this.getBoton('edit').disable();
+      		this.getBoton('del').disable();
+      	} else {
+      		this.getBoton('btnIngreso').disable();
+      		this.getBoton('btnRevertir').disable();
+      		this.getBoton('edit').disable();
+      		this.getBoton('del').disable();
       	}
+
           
            
 	},
@@ -383,7 +402,38 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
             this.getBoton('btnIngreso').disable();
          }
        return tb
-    }
+   },
+   successSinc:function(resp){
+        Phx.CP.loadingHide();
+        var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+        if(!reg.ROOT.error){
+            this.reload();
+        }else{
+            alert('Ocurrió un error durante el proceso')
+        }
+	},
+	onRevertir:function(){
+        var rec = this.sm.getSelected();
+        if(rec.data){
+        	Ext.Msg.confirm('Confirmación','¿Está seguro de Revertir el Preingreso?', 
+			function(btn) {
+				if (btn == "yes") {
+					Phx.CP.loadingShow();
+		            Ext.Ajax.request({
+		                url:'../../sis_almacenes/control/Preingreso/revertirPreingreso',
+			                params:{id_preingreso:rec.data.id_preingreso},
+			                success:this.successSinc,
+			                failure: this.conexionFailure,
+			                timeout:this.timeout,
+			                scope:this
+			            });
+					}
+				},this);
+  
+            } else{
+            	Ext.Msg.alert('Mensaje','Seleccione un registro y vuelva a intentarlo');
+        }
+   }
 	
 })
 </script>

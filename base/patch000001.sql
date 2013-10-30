@@ -544,11 +544,41 @@ CREATE TABLE alm.tsalida_grupo_fun (
   id_funcionario integer,
   cantidad_sol numeric(18,2),
   observaciones varchar(1000),
-  CONSTRAINT pk_tsalida_grupo_fun__id_salida_grupo_fun PRIMARY KEY(id_salida_grupo_fun)
+  CONSTRAINT pk_tsalida_grupo_fun__id_salida_grupo_fun PRIMARY KEY(id_salida_grupo_fun),
+  CONSTRAINT uq_tsalida_grupo_fun__id_funcionario UNIQUE (id_salida_grupo_item,id_funcionario)
 ) INHERITS(pxp.tbase) 
 WITHOUT OIDS;
 
 alter table alm.tmovimiento
 add column id_salida_grupo integer;
 
+alter table alm.tmovimiento
+add column id_int_comprobante integer;
+
+CREATE TABLE alm.tmovimiento_grupo (
+  id_movimiento_grupo SERIAL,
+  id_almacen integer,
+  id_int_comprobante integer,
+  id_depto_conta INTEGER,
+  descripcion varchar(1000),
+  estado varchar(15), 
+  fecha_ini date,
+  fecha_fin date,
+  CONSTRAINT pk_tmovimiento_grupo__id_movimiento_grupo PRIMARY KEY(id_movimiento_grupo)
+) INHERITS(pxp.tbase) 
+WITHOUT OIDS;
+
+CREATE TABLE alm.tmovimiento_grupo_det (
+  id_movimiento_grupo_det SERIAL,
+  id_movimiento_grupo integer,
+  id_movimiento integer,
+  CONSTRAINT pk_tmovimiento_grupo_det__id_movimiento_grupo_det PRIMARY KEY(id_movimiento_grupo_det)
+) INHERITS(pxp.tbase) 
+WITHOUT OIDS;
+
+alter table alm.tpreingreso
+add column id_depto_conta integer;
+
+ALTER TABLE alm.tmovimiento
+  ALTER COLUMN estado_mov TYPE VARCHAR(20);
 /***********************************F-SCP-RCM-ALM-0-17/10/2013*****************************************/

@@ -69,6 +69,14 @@ header("content-type: text/javascript; charset=UTF-8");
 				tooltip : '<b>Reporte de Movimiento</b><br/>Generar el reporte del Movimiento Seleccionado.'
 			});
 			
+			this.addButton('btnRevertirPreing', {
+				text : 'Revertir Preingreso',
+				iconCls : 'bchecklist',
+				disabled : true,
+				handler : this.onBtnRevertirPreing,
+				tooltip : '<b>Revertir Preingreso</b><br>En caso de que el Ingreso haya sido generado desde un Preingreso, revierte todo el ingreso'
+			});
+			
 		},
 		Atributos : [{
 			config : {
@@ -754,6 +762,12 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getBoton('btnCancelar').enable();
 				this.getBoton('btnRevertir').disable();
 			}
+			//Boton reversión Preingreso
+			if(data.id_preingreso!=''&&data.estado_mov=='borrador'){
+				this.getBoton('btnRevertirPreing').enable();
+			} else{
+				this.getBoton('btnRevertirPreing').disable();
+			}
 			return tb;
 		},
 		liberaMenu : function() {
@@ -761,6 +775,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.getBoton('btnCancelar').disable();
    			this.getBoton('btnRevertir').disable();
 			this.getBoton('btnReport').disable();
+			this.getBoton('btnRevertirPreing').disable();
 			return tb;
 		},
 		onBtnCancelar : function() {
@@ -1130,7 +1145,28 @@ header("content-type: text/javascript; charset=UTF-8");
 	
 	opcionWF: function(){
 		return {operacion:this.operacion};
-	}
+	},
+	onBtnRevertirPreing: function() {
+			var rec = this.sm.getSelected();
+			var data = rec.data;
+			var global = this;
+			Ext.Msg.confirm('Confirmación', '¿Está seguro de Revertir el Preingreso?', function(btn) {
+				if (btn == "yes") {
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Movimiento/revertirPreingreso',
+						params : {
+							'id_movimiento' : data.id_movimiento,
+							'id_almacen' : data.id_almacen,
+							obs: 'Revertido por el usuario'
+						},
+						success : global.successSave,
+						failure : global.conexionFailure,
+						timeout : global.timeout,
+						scope : global
+					});
+				}
+			});
+		}
 })
 </script>
 

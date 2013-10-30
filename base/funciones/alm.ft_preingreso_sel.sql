@@ -1,7 +1,11 @@
-CREATE OR REPLACE FUNCTION "alm"."ft_preingreso_sel"(	
-				p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION alm.ft_preingreso_sel (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		Sistema de Almacenes
  FUNCION: 		alm.ft_preingreso_sel
@@ -57,10 +61,18 @@ BEGIN
 						preing.id_usuario_mod,
 						preing.fecha_mod,
 						usu1.cuenta as usr_reg,
-						usu2.cuenta as usr_mod	
+						usu2.cuenta as usr_mod,
+                        alm.codigo as codigo_almacen,
+                        depto.codigo as codigo_depto,
+                        mon.codigo codigo_moneda,
+                        cot.numero_oc
 						from alm.tpreingreso preing
 						inner join segu.tusuario usu1 on usu1.id_usuario = preing.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = preing.id_usuario_mod
+                        left join alm.talmacen alm on alm.id_almacen = preing.id_almacen
+                        left join param.tdepto depto on depto.id_depto = preing.id_depto
+                        inner join param.tmoneda mon on mon.id_moneda = preing.id_moneda
+                        inner join adq.tcotizacion cot on cot.id_cotizacion = preing.id_cotizacion
 				        where  ';
 			
 			--Definicion de la respuesta
@@ -85,8 +97,12 @@ BEGIN
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_preingreso)
 					    from alm.tpreingreso preing
-					    inner join segu.tusuario usu1 on usu1.id_usuario = preing.id_usuario_reg
+						inner join segu.tusuario usu1 on usu1.id_usuario = preing.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = preing.id_usuario_mod
+                        left join alm.talmacen alm on alm.id_almacen = preing.id_almacen
+                        left join param.tdepto depto on depto.id_depto = preing.id_depto
+                        inner join param.tmoneda mon on mon.id_moneda = preing.id_moneda
+                        inner join adq.tcotizacion cot on cot.id_cotizacion = preing.id_cotizacion
 					    where ';
 			
 			--Definicion de la respuesta		    
@@ -112,7 +128,9 @@ EXCEPTION
 			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 			raise exception '%',v_resp;
 END;
-$BODY$
-LANGUAGE 'plpgsql' VOLATILE
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
 COST 100;
-ALTER FUNCTION "alm"."ft_preingreso_sel"(integer, integer, character varying, character varying) OWNER TO postgres;

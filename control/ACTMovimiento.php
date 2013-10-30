@@ -202,6 +202,12 @@ class ACTMovimiento extends ACTbase {
 		
 		$this->res->imprimirRespuesta($this->res->generarJson());		
 	}
+	
+	function revertirPreingreso(){
+        $this->objFunc=$this->create('MODMovimiento');  
+        $this->res=$this->objFunc->revertirPreingreso($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
 }
 ?>
