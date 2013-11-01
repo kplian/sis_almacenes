@@ -18,9 +18,16 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.grid.getTopToolbar().disable();
 			this.grid.getBottomToolbar().disable();
 			
-			this.getComponente('id_item').on('select', function(comp, object, c) {
+			//Eventos
+			this.Cmp.id_item.on('select', function(comp, object, c) {
                 this.getComponente('codigo_unidad').setValue(object.data.codigo_unidad);
             }, this);
+            
+            this.Cmp.cantidad_solicitada.on('blur',function(cmp){
+            	if(this.maestro.tipo=='ingreso'){
+            		this.Cmp.cantidad_item.setValue(this.Cmp.cantidad_solicitada.getValue());
+            	}
+            },this);
             
 		},
 		Atributos : [{
@@ -426,46 +433,62 @@ header("content-type: text/javascript; charset=UTF-8");
 			width : '20%',
 			cls : 'MovimientoDetValorado'
 		},
-		onButtonEdit : function() {
+		onButtonEdit: function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonEdit.call(this);
-			this.getComponente('costo_unitario').disable();
-			this.getComponente('fecha_caducidad').disable();
-			this.getComponente('costo_unitario').setVisible(false);
-			this.getComponente('fecha_caducidad').setVisible(false);
-			this.getComponente('cantidad_solicitada').setVisible(true);
-			this.getComponente('observaciones').setVisible(false);
+			this.Cmp.fecha_caducidad.disable();
+			this.Cmp.fecha_caducidad.setVisible(false);
+			this.Cmp.cantidad_solicitada.setVisible(true);
+			this.Cmp.observaciones.setVisible(false);
 			
 			//Habilita concpto ingas solo para ingresos
 			if(this.maestro.tipo=='ingreso'){
+				//Concepto Ingas
 				this.Cmp.id_concepto_ingas.setVisible(true);
 				this.Cmp.id_concepto_ingas.enable();
 				this.Cmp.id_concepto_ingas.allowBlank=false;
+				//Costo unitario
+				this.Cmp.costo_unitario.enable();
+				this.Cmp.costo_unitario.setVisible(true);
+				this.Cmp.costo_unitario.allowBlank=false;
 			} else{
+				//Concepto Ingas
 				this.Cmp.id_concepto_ingas.setVisible(false);
 				this.Cmp.id_concepto_ingas.disable();
 				this.Cmp.id_concepto_ingas.allowBlank=true;
+				//Costo unitario
+				this.Cmp.costo_unitario.disable();
+				this.Cmp.costo_unitario.setVisible(false);
+				this.Cmp.costo_unitario.allowBlank=true;
 			}
 		},
 		onButtonNew : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonNew.call(this);
-			this.getComponente('costo_unitario').disable();
-			this.getComponente('fecha_caducidad').disable();								
-			this.getComponente('cantidad_item').disable();				
-			this.getComponente('costo_unitario').setVisible(false);
-			this.getComponente('fecha_caducidad').setVisible(false);								
-			this.getComponente('cantidad_item').setVisible(false);
-			this.getComponente('cantidad_solicitada').setVisible(true);
-			this.getComponente('observaciones').setVisible(false);
+			this.Cmp.fecha_caducidad.disable();								
+			this.Cmp.cantidad_item.disable();				
+			this.Cmp.fecha_caducidad.setVisible(false);								
+			this.Cmp.cantidad_item.setVisible(false);
+			this.Cmp.cantidad_solicitada.setVisible(true);
+			this.Cmp.observaciones.setVisible(false);
 			
 			//Habilita concpto ingas solo para ingresos
 			if(this.maestro.tipo=='ingreso'){
+				//Concepto Ingas
 				this.Cmp.id_concepto_ingas.setVisible(true);
 				this.Cmp.id_concepto_ingas.enable();
 				this.Cmp.id_concepto_ingas.allowBlank=false;
+				//Costo unitario
+				this.Cmp.costo_unitario.enable();
+				this.Cmp.costo_unitario.setVisible(true);
+				this.Cmp.costo_unitario.allowBlank=false;
 			} else{
+				//Concepto Ingas
 				this.Cmp.id_concepto_ingas.setVisible(false);
 				this.Cmp.id_concepto_ingas.disable();
 				this.Cmp.id_concepto_ingas.allowBlank=true;
+				//Costo unitario
+				this.Cmp.costo_unitario.disable();
+				this.Cmp.costo_unitario.setVisible(false);
+				this.Cmp.costo_unitario.allowBlank=true;
 			}
 		}
 	})
