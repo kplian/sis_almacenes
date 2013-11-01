@@ -131,7 +131,8 @@ BEGIN
         v_parametros.descripcion,
         v_parametros.observaciones,
         v_parametros.id_movimiento_origen,
-        v_parametros.id_gestion
+        v_parametros.id_gestion,
+        v_parametros.id_depto_conta
         into g_registros;
         
         --Llama a la función de registro del movimiento
@@ -171,7 +172,8 @@ BEGIN
             fecha_mov = date(v_parametros.fecha_mov) + interval '12 hours',
             descripcion = v_parametros.descripcion,
             observaciones = v_parametros.observaciones,
-            id_movimiento_origen = v_parametros.id_movimiento_origen
+            id_movimiento_origen = v_parametros.id_movimiento_origen,
+            id_depto_conta = v_parametros.id_depto_conta
         where id_movimiento = v_parametros.id_movimiento;
         
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento modificado con exito');

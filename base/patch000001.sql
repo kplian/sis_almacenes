@@ -582,3 +582,11 @@ add column id_depto_conta integer;
 ALTER TABLE alm.tmovimiento
   ALTER COLUMN estado_mov TYPE VARCHAR(20);
 /***********************************F-SCP-RCM-ALM-0-17/10/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-0-31/10/2013*****************************************/
+ALTER TABLE alm.tmovimiento
+  ADD COLUMN id_depto_conta integer;
+ALTER TABLE alm.tmovimiento_det
+  ADD COLUMN id_concepto_ingas integer;  
+  
+/***********************************F-SCP-RCM-ALM-0-31/10/2013*****************************************/

@@ -16,6 +16,7 @@ $body$
 ***************************************************************************/
 
 DECLARE
+
   v_nombre_funcion 		varchar;
   v_consulta			varchar;
   v_parametros  		record;
@@ -75,7 +76,8 @@ BEGIN
             cantidad_solicitada,
             costo_unitario,
             fecha_caducidad,
-            observaciones
+            observaciones,
+            id_concepto_ingas
         ) VALUES (
             p_id_usuario,
             now(),
@@ -86,7 +88,8 @@ BEGIN
             coalesce(v_parametros.cantidad_solicitada,v_parametros.cantidad_item),
             v_parametros.costo_unitario,
             v_parametros.fecha_caducidad,
-            v_parametros.observaciones
+            v_parametros.observaciones,
+            v_parametros.id_concepto_ingas
         ) RETURNING id_movimiento_det into v_id_movimiento_det;
         
         insert into alm.tmovimiento_det_valorado (
@@ -136,7 +139,8 @@ BEGIN
             cantidad_solicitada = coalesce(v_parametros.cantidad_solicitada,v_parametros.cantidad_item),
             costo_unitario = v_parametros.costo_unitario,
             fecha_caducidad = v_parametros.fecha_caducidad,
-            observaciones = v_parametros.observaciones
+            observaciones = v_parametros.observaciones,
+            id_concepto_ingas = v_parametros.id_concepto_ingas
         where id_movimiento_det = v_parametros.id_movimiento_det;
         
         update alm.tmovimiento_det_valorado set

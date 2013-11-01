@@ -77,6 +77,10 @@ header("content-type: text/javascript; charset=UTF-8");
 				tooltip : '<b>Revertir Preingreso</b><br>En caso de que el Ingreso haya sido generado desde un Preingreso, revierte todo el ingreso'
 			});
 			
+			this.Cmp.id_depto_conta.setVisible(false);
+			this.Cmp.id_depto_conta.disable();
+			this.Cmp.id_depto_conta.allowBlank=true;
+			
 		},
 		Atributos : [{
 			config : {
@@ -535,6 +539,56 @@ header("content-type: text/javascript; charset=UTF-8");
             form : true
         }, {
 			config : {
+				name : 'id_depto_conta',
+				fieldLabel : 'Depto. Conta.',
+				allowBlank : false,
+				emptyText : 'Departamento Contable...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_parametros/control/Depto/listarDepto',
+					id : 'id_depto',
+					root : 'datos',
+					sortInfo : {
+						field : 'nombre',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_depto', 'nombre', 'codigo'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'DEPPTO.nombre#DEPPTO.codigo',
+						codigo_subsistema: 'CONTA'
+					}
+				}),
+				valueField : 'id_depto',
+				displayField : 'nombre',
+				gdisplayField : 'nombre_depto',
+				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p></div></tpl>',
+				hiddenName : 'id_departamento',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '100%',
+				gwidth : 100,
+				minChars : 2,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['nombre_depto']);
+				}
+			},
+			type : 'ComboBox',
+			id_grupo : 0,
+			filters : {
+				pfiltro : 'dpto.nombre',
+				type : 'string'
+			},
+			grid : true,
+			form : true
+		}, 
+        {
+			config : {
 				name : 'usr_reg',
 				fieldLabel : 'Usuario reg.',
 				anchor : '80%',
@@ -679,7 +733,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'fecha_mod',
 			type : 'date',
 			dateFormat : 'Y-m-d H:i:s.u'
-		}],
+		},
+		{name : 'id_depto_conta',type : 'numeric'},
+		{name : 'nombre_depto',type : 'string'},
+			],
 		sortInfo : {
 			field : 'fecha_mov',
 			direction : 'DESC'
@@ -698,9 +755,15 @@ header("content-type: text/javascript; charset=UTF-8");
 			if (e.value == 'ingreso') {
 				//this.getComponente('solicitante').setVisible(false);
 				//this.getComponente('solicitante').disable();
+				this.Cmp.id_depto_conta.setVisible(true);
+				this.Cmp.id_depto_conta.enable();
+				this.Cmp.id_depto_conta.allowBlank=false;
 			} else {
 				//this.getComponente('solicitante').setVisible(true);
 				//this.getComponente('solicitante').enable();
+				this.Cmp.id_depto_conta.setVisible(false);
+				this.Cmp.id_depto_conta.disable();
+				this.Cmp.id_depto_conta.allowBlank=true;
 			}
 			this.getComponente('id_almacen_dest').setVisible(false);
 			this.getComponente('id_movimiento_tipo').reset();
@@ -839,6 +902,11 @@ header("content-type: text/javascript; charset=UTF-8");
 				}
 				this.Cmp.id_movimiento_origen.disable();
 				this.Cmp.id_movimiento_origen.setVisible(false);
+				
+				//Depto conta
+				this.Cmp.id_depto_conta.setVisible(false);
+				this.Cmp.id_depto_conta.disable();
+				this.Cmp.id_depto_conta.allowBlank=true;
 			} else if (this.Cmp.tipo.value == 'ingreso') {
 				if (this.Cmp.id_movimiento_tipo.getRawValue().toLowerCase().indexOf('devol') != -1) {
 					this.Cmp.id_movimiento_origen.enable();
@@ -862,6 +930,11 @@ header("content-type: text/javascript; charset=UTF-8");
 					this.Cmp.id_funcionario.disable();
 					this.Cmp.id_funcionario.setVisible(false);
 				}
+				
+				//Depto conta
+				this.Cmp.id_depto_conta.setVisible(true);
+				this.Cmp.id_depto_conta.enable();
+				this.Cmp.id_depto_conta.allowBlank=false;
 			}
 		},
 		onButtonNew : function() {
@@ -1070,18 +1143,25 @@ header("content-type: text/javascript; charset=UTF-8");
 	       		this.cmbTipoEstWF.disable();
 	       		this.cmbFunWF.disable();
 	       		this.txtObs.hide();
+	       		this.cmbTipoEstWF.allowBlank=true;
+	       		this.cmbFunWF.allowBlank=true;		
 	       		this.txtObs.allowBlank=true;
+	       		
 	       		if(swEst){
-	       			this.cmbTipoEstWF.enable();		
+	       			this.cmbTipoEstWF.enable();
+	       			this.cmbTipoEstWF.allowBlank=false;		
 	       		}
 	       		if(swFun){
-	       			this.cmbFunWF.enable();		
+	       			this.cmbTipoEstWF.enable();
+	       			this.cmbFunWF.enable();
+	       			this.cmbTipoEstWF.allowBlank=false;
+	       			this.cmbFunWF.allowBlank=false;		
 	       		}
 	       		//Setea parámetros del store de Estados
 	       		Ext.apply(this.cmbTipoEstWF.store.baseParams,{id_tipo_proceso: data.id_tipo_proceso, id_tipo_estado_padre: data.id_tipo_estado_padre});
 	       		
 	       		//Setea parámetros del store de funcionarios
-	       		Ext.apply(this.cmbFunWF.store.baseParams,{id_estado_wf: data.id_estado_wf, fecha: data.fecha});
+	       		Ext.apply(this.cmbFunWF.store.baseParams,{id_estado_wf: data.id_estado_wf, fecha: data.fecha, id_tipo_estado: data.wf_id_tipo_estado});
 
 	       		//Muestra la ventana
 	       		this.winWF.show();
@@ -1113,6 +1193,7 @@ header("content-type: text/javascript; charset=UTF-8");
     },
     successFinSol:function(resp){
         Phx.CP.loadingHide();
+        this.winWF.hide();
         var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
         if(!reg.ROOT.error){
             this.reload();
@@ -1130,7 +1211,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			url:'../../sis_almacenes/control/Movimiento/finalizarMovimiento',
 		  	params:{
 		  		id_movimiento:d.id_movimiento,
-		  		operacion:res.argument.operacion,
+		  		operacion:'siguiente',
 		  		id_tipo_estado: this.cmbTipoEstWF.getValue(),
 		  		id_funcionario_wf:this.cmbFunWF.getValue(),
 		  		id_almacen: d.id_almacen,

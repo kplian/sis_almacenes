@@ -651,92 +651,6 @@ ALTER TABLE alm.tpreingreso
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
     
-CREATE OR REPLACE VIEW alm.vcbte_ingreso_cab(
-    id_movimiento,
-    beneficiario,
-    id_moneda,
-    id_depto_conta,
-    codigo,
-    fecha_actual,
-    estado_mov,
-    id_gestion,
-    desc_motivo,
-    tipo,
-    id_preingreso,
-    desc_almacen,
-    id_almacen)
-AS
-  SELECT mov.id_movimiento,
-         CASE COALESCE(mov.id_funcionario, 0)
-           WHEN 0 THEN pro.desc_proveedor::text
-           ELSE fun.desc_funcionario1
-         END AS beneficiario,
-         param.f_get_moneda_base() AS id_moneda,
-         ping.id_depto_conta,
-         mov.codigo,
-         now() AS fecha_actual,
-         mov.estado_mov,
-         (
-           SELECT f_get_periodo_gestion.po_id_gestion
-           FROM param.f_get_periodo_gestion(mov.fecha_mov::date)
-            f_get_periodo_gestion(po_id_periodo, po_id_gestion,
-             po_id_periodo_subsistema)
-         ) AS id_gestion,
-         mtip.nombre AS desc_motivo,
-         mtip.tipo,
-         mov.id_preingreso,
-         (alm.codigo::text || ' - ' ::text) || alm.nombre::text AS desc_almacen,
-         mov.id_almacen
-  FROM alm.tmovimiento mov
-       LEFT JOIN orga.vfuncionario fun ON fun.id_funcionario =
-        mov.id_funcionario
-       LEFT JOIN param.vproveedor pro ON pro.id_proveedor = mov.id_proveedor
-       JOIN alm.talmacen alm ON alm.id_almacen = mov.id_almacen
-       JOIN alm.tmovimiento_tipo mtip ON mtip.id_movimiento_tipo =
-        mov.id_movimiento_tipo
-       JOIN alm.tpreingreso ping ON ping.id_preingreso = mov.id_preingreso
-  WHERE mov.id_int_comprobante IS NULL;
-  
-  CREATE VIEW alm.vcbte_ingreso_det (
-    id_movimiento_det,
-    id_movimiento,
-    cantidad,
-    costo_unitario,
-    costo_total,
-    id_item,
-    codigo_item,
-    nombre_item,
-    id_preingreso,
-    id_concepto_ingas,
-    desc_item)
-AS
-SELECT mdet.id_movimiento_det, mdet.id_movimiento, mdetva.cantidad,
-    mdetva.costo_unitario, mdetva.cantidad * mdetva.costo_unitario AS
-    costo_total, mdet.id_item, item.codigo AS codigo_item, item.nombre AS
-    nombre_item, mov.id_preingreso, sdet.id_concepto_ingas,
-    (COALESCE(item.codigo, 'S/C'::character varying)::text || ' - '::text) ||
-    item.nombre::text AS desc_item
-FROM alm.tmovimiento mov
-   JOIN alm.tmovimiento_det mdet ON mdet.id_movimiento = mov.id_movimiento
-   JOIN alm.tmovimiento_det_valorado mdetva ON mdetva.id_movimiento_det =
-       mdet.id_movimiento_det
-   JOIN alm.titem item ON item.id_item = mdet.id_item
-   JOIN alm.tpreingreso ping ON ping.id_preingreso = mov.id_preingreso
-   JOIN alm.tpreingreso_det pdet ON pdet.id_preingreso = ping.id_preingreso
-   JOIN adq.tcotizacion_det cdet ON cdet.id_cotizacion_det = pdet.id_cotizacion_det
-   JOIN adq.tsolicitud_det sdet ON sdet.id_solicitud_det = cdet.id_solicitud_det
-WHERE mov.id_int_comprobante IS NULL;
-
-CREATE VIEW alm.vcbte_ingreso_det_alm (
-    id_movimiento,
-    cantidad,
-    costo_total,
-    descripcion)
-AS
-SELECT ing.id_movimiento, sum(ing.cantidad) AS cantidad, sum(ing.costo_total)
-    AS costo_total, 'Ingreso a Almacén' AS descripcion
-FROM alm.vcbte_ingreso_det ing
-GROUP BY ing.id_movimiento;
 
 CREATE VIEW alm.vcbte_salida_cab (
     id_movimiento_grupo,
@@ -802,3 +716,87 @@ SELECT sal.id_movimiento_grupo, sum(sal.cantidad) AS cantidad,
 FROM alm.vcbte_salida_det sal
 GROUP BY sal.id_movimiento_grupo;
 /***********************************F-DEP-RCM-ALM-0-17/10/2013*****************************************/
+
+
+/***********************************I-DEP-RCM-ALM-31-10/10/2013*****************************************/
+CREATE VIEW alm.vcbte_ingreso_cab (
+    id_movimiento,
+    beneficiario,
+    id_moneda,
+    id_depto_conta,
+    codigo,
+    fecha_actual,
+    estado_mov,
+    id_gestion,
+    desc_motivo,
+    tipo,
+    id_preingreso,
+    desc_almacen,
+    id_almacen)
+AS
+SELECT mov.id_movimiento,
+        CASE COALESCE(mov.id_funcionario, 0)
+            WHEN 0 THEN pro.desc_proveedor::text
+            ELSE fun.desc_funcionario1
+        END AS beneficiario, param.f_get_moneda_base() AS id_moneda,
+            mov.id_depto_conta, mov.codigo, now() AS fecha_actual, mov.estado_mov, (
+    SELECT f_get_periodo_gestion.po_id_gestion
+    FROM param.f_get_periodo_gestion(mov.fecha_mov::date)
+        f_get_periodo_gestion(po_id_periodo, po_id_gestion, po_id_periodo_subsistema)
+    ) AS id_gestion, mtip.nombre AS desc_motivo, mtip.tipo, mov.id_preingreso,
+        (alm.codigo::text || ' - '::text) || alm.nombre::text AS desc_almacen,
+        mov.id_almacen
+FROM alm.tmovimiento mov
+   LEFT JOIN orga.vfuncionario fun ON fun.id_funcionario = mov.id_funcionario
+   LEFT JOIN param.vproveedor pro ON pro.id_proveedor = mov.id_proveedor
+   JOIN alm.talmacen alm ON alm.id_almacen = mov.id_almacen
+   JOIN alm.tmovimiento_tipo mtip ON mtip.id_movimiento_tipo = mov.id_movimiento_tipo
+WHERE mov.id_int_comprobante IS NULL;
+
+
+  
+CREATE OR REPLACE VIEW alm.vcbte_ingreso_det(
+    id_movimiento_det,
+    id_movimiento,
+    cantidad,
+    costo_unitario,
+    costo_total,
+    id_item,
+    codigo_item,
+    nombre_item,
+    id_preingreso,
+    id_concepto_ingas,
+    desc_item)
+AS
+  SELECT mdet.id_movimiento_det,
+         mdet.id_movimiento,
+         mdetva.cantidad,
+         mdetva.costo_unitario,
+         mdetva.cantidad * mdetva.costo_unitario AS costo_total,
+         mdet.id_item,
+         item.codigo AS codigo_item,
+         item.nombre AS nombre_item,
+         mov.id_preingreso,
+         mdet.id_concepto_ingas,
+         (COALESCE(item.codigo, 'S/C' ::character varying) ::text || ' - '
+          ::text) || item.nombre::text AS desc_item
+  FROM alm.tmovimiento mov
+       JOIN alm.tmovimiento_det mdet ON mdet.id_movimiento = mov.id_movimiento
+       JOIN alm.tmovimiento_det_valorado mdetva ON mdetva.id_movimiento_det =
+        mdet.id_movimiento_det
+       JOIN alm.titem item ON item.id_item = mdet.id_item
+  WHERE mov.id_int_comprobante IS NULL;
+  
+  
+
+CREATE VIEW alm.vcbte_ingreso_det_alm (
+    id_movimiento,
+    cantidad,
+    costo_total,
+    descripcion)
+AS
+SELECT ing.id_movimiento, sum(ing.cantidad) AS cantidad, sum(ing.costo_total)
+    AS costo_total, 'Ingreso a Almacén' AS descripcion
+FROM alm.vcbte_ingreso_det ing
+GROUP BY ing.id_movimiento;
+/***********************************F-DEP-RCM-ALM-31-10/10/2013*****************************************/

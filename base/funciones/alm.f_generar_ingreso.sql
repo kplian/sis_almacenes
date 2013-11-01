@@ -47,7 +47,7 @@ BEGIN
     ---------------------
     --Preingreso
     select pre.id_preingreso, pre.estado, pre.tipo, sol.id_funcionario,
-    pre.descripcion
+    pre.descripcion, pre.id_depto_conta
     into v_rec
     from alm.tpreingreso pre
     inner join adq.tcotizacion cot on cot.id_cotizacion = pre.id_cotizacion
@@ -172,19 +172,21 @@ BEGIN
             id_usuario_reg, fecha_reg, estado_reg,
             id_movimiento_tipo, id_almacen, id_funcionario, fecha_mov,
             descripcion, id_proceso_macro, id_estado_wf, id_proceso_wf,
-            estado_mov, id_preingreso
+            estado_mov, id_preingreso, id_depto_conta
             ) values(
             p_id_usuario, now(),'activo',
             v_id_movimiento_tipo, v_rec_det.id_almacen, v_rec.id_funcionario, now(),
             v_rec.descripcion, v_id_proceso_macro, v_id_estado_wf, v_id_proceso_wf,
-            v_codigo_estado, v_rec.id_preingreso
+            v_codigo_estado, v_rec.id_preingreso, v_rec.id_depto_conta
             ) returning id_movimiento into v_id_movimiento;
             
             --Detalle del ingreso
             for v_rec_val in (select
                               pdet.id_item, pdet.cantidad_det, pdet.precio_compra, 
-                              pdet.observaciones
+                              pdet.observaciones, sdet.id_concepto_ingas
                               from alm.tpreingreso_det pdet
+                              inner join adq.tcotizacion_det cdet on cdet.id_cotizacion_det = pdet.id_cotizacion_det
+					       	  inner join adq.tsolicitud_det sdet on sdet.id_solicitud_det = cdet.id_solicitud_det
                               where pdet.id_preingreso = v_rec.id_preingreso
                               and pdet.id_almacen = v_rec_det.id_almacen
                               and sw_generar = 'si') loop
@@ -192,11 +194,11 @@ BEGIN
             	insert into alm.tmovimiento_det(
                 id_usuario_reg, fecha_reg, estado_reg,
                 id_movimiento, id_item, cantidad, costo_unitario, cantidad_solicitada,
-                observaciones
+                observaciones, id_concepto_ingas
                 ) values(
                 p_id_usuario, now(),'activo',
                 v_id_movimiento, v_rec_val.id_item, v_rec_val.cantidad_det, v_rec_val.precio_compra,v_rec_val.cantidad_det,
-                v_rec_val.observaciones
+                v_rec_val.observaciones, v_rec_val.id_concepto_ingas
                 ) returning id_movimiento_det into v_id_movimiento_det;
                 
                 --Detalle valorado

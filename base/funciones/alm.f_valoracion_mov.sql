@@ -21,6 +21,7 @@ DECLARE
   	v_costo_valorado        		numeric;
 	v_cantidad_valorada     		numeric;
 	v_id_movimiento_det_val_desc  	integer;
+    v_cont							integer;
   
 BEGIN
 
@@ -109,6 +110,7 @@ BEGIN
             where id_movimiento_det_valorado = g_registros.id_movimiento_det_valorado;
 	                
             --Si todavia hay saldo que valorar
+            v_cont = 0;
 			WHILE (v_saldo_cantidad > 0) LOOP
             
 				select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
@@ -142,6 +144,12 @@ BEGIN
                       v_id_movimiento_det_val_desc
                 );
                 v_saldo_cantidad = v_saldo_cantidad - v_cantidad_valorada;
+                
+                if v_cont > 100 then
+                	raise exception 'Error al valorar: bucle infinito';
+                end if;
+                
+                v_cont = v_cont +1;
                 
 			END LOOP;
 		END LOOP;

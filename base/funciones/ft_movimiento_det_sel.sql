@@ -50,12 +50,15 @@ BEGIN
                 movdet.fecha_mod,
                 item.codigo as codigo_item,
                 (movdet.cantidad*movdet.costo_unitario) as costo_total,
-                item.observaciones
+                item.observaciones,
+                movdet.id_concepto_ingas,
+                cig.desc_ingas as desc_concepto_ingas
             from alm.tmovimiento_det movdet
             inner join alm.titem item on item.id_item = movdet.id_item
             inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
             inner join segu.tusuario usu1 on usu1.id_usuario = movdet.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = movdet.id_usuario_mod
+            left join param.tconcepto_ingas cig on cig.id_concepto_ingas = movdet.id_concepto_ingas
             where movdet.estado_reg = ''activo'' 
             	and movdet.id_movimiento = ' || v_parametros.id_movimiento || ' and ';
 
@@ -82,8 +85,9 @@ BEGIN
             inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
             inner join segu.tusuario usu1 on usu1.id_usuario = movdet.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = movdet.id_usuario_mod
+            left join param.tconcepto_ingas cig on cig.id_concepto_ingas = movdet.id_concepto_ingas
             where movdet.estado_reg = ''activo'' 
-                and movdet.id_movimiento = ' || v_parametros.id_movimiento || ' and ';
+            and movdet.id_movimiento = ' || v_parametros.id_movimiento || ' and ';
             
         v_consulta:=v_consulta||v_parametros.filtro;
         return v_consulta;

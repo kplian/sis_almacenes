@@ -224,7 +224,50 @@ header("content-type: text/javascript; charset=UTF-8");
 				id_grupo : 0,
 				grid : true,
 				form : true
-		}, {
+		},{
+            config:{
+                name: 'id_concepto_ingas',
+                fieldLabel: 'Concepto',
+                allowBlank: false,
+                emptyText : 'Concepto...',
+                store : new Ext.data.JsonStore({
+                            url:'../../sis_parametros/control/ConceptoIngas/listarConceptoIngas',
+                            id : 'id_concepto_ingas',
+                            root: 'datos',
+                            sortInfo:{
+                                    field: 'desc_ingas',
+                                    direction: 'ASC'
+                            },
+                            totalProperty: 'total',
+                            fields: ['id_concepto_ingas','tipo','movimiento','desc_ingas'],
+                            remoteSort: true,
+                            baseParams:{par_filtro:'desc_ingas',movimiento:'gasto'}
+                }),
+                valueField: 'id_concepto_ingas',
+               displayField: 'desc_ingas',
+               gdisplayField: 'desc_concepto_ingas',
+               hiddenName: 'id_concepto_ingas',
+               forceSelection:true,
+               typeAhead: true,
+               triggerAction: 'all',
+               listWidth:350,
+               lazyRender:true,
+               mode:'remote',
+               pageSize:10,
+               queryDelay:1000,
+               anchor: '100%',
+               gwidth:200,
+               minChars:2,
+               tpl: '<tpl for="."><div class="x-combo-list-item"><p>{desc_ingas}</p><strong>{tipo}</strong></div></tpl>',
+               renderer:function(value, p, record){return String.format('{0}', record.data['desc_concepto_ingas']);}
+            },
+            type:'ComboBox',
+            filters:{pfiltro:'cig.desc_ingas',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        }, 
+		{
 			config : {
 				name : 'usr_reg',
 				fieldLabel : 'Usuario Reg.',
@@ -333,7 +376,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'fecha_mod',
 			type : 'date',
 			dateFormat : 'Y-m-d H:i:s.u'
-		}, 'codigo_item', 'costo_total'],
+		}, 'codigo_item', 'costo_total',
+		{name: 'id_concepto_ingas', type: 'numeric'},
+		{name: 'desc_concepto_ingas', type: 'string'},],
 		sortInfo : {
 			field : 'id_movimiento_det',
 			direction : 'ASC'
@@ -383,23 +428,45 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		onButtonEdit : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonEdit.call(this);
-			 this.getComponente('costo_unitario').disable();
-			 this.getComponente('fecha_caducidad').disable();
-				this.getComponente('costo_unitario').setVisible(false);
-				this.getComponente('fecha_caducidad').setVisible(false);
-				this.getComponente('cantidad_solicitada').setVisible(true);
-				this.getComponente('observaciones').setVisible(false);
+			this.getComponente('costo_unitario').disable();
+			this.getComponente('fecha_caducidad').disable();
+			this.getComponente('costo_unitario').setVisible(false);
+			this.getComponente('fecha_caducidad').setVisible(false);
+			this.getComponente('cantidad_solicitada').setVisible(true);
+			this.getComponente('observaciones').setVisible(false);
+			
+			//Habilita concpto ingas solo para ingresos
+			if(this.maestro.tipo=='ingreso'){
+				this.Cmp.id_concepto_ingas.setVisible(true);
+				this.Cmp.id_concepto_ingas.enable();
+				this.Cmp.id_concepto_ingas.allowBlank=false;
+			} else{
+				this.Cmp.id_concepto_ingas.setVisible(false);
+				this.Cmp.id_concepto_ingas.disable();
+				this.Cmp.id_concepto_ingas.allowBlank=true;
+			}
 		},
 		onButtonNew : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonNew.call(this);
-				this.getComponente('costo_unitario').disable();
-				this.getComponente('fecha_caducidad').disable();								
-			 this.getComponente('cantidad_item').disable();				
-				this.getComponente('costo_unitario').setVisible(false);
-				this.getComponente('fecha_caducidad').setVisible(false);								
-			 this.getComponente('cantidad_item').setVisible(false);
-				this.getComponente('cantidad_solicitada').setVisible(true);
-				this.getComponente('observaciones').setVisible(false);
+			this.getComponente('costo_unitario').disable();
+			this.getComponente('fecha_caducidad').disable();								
+			this.getComponente('cantidad_item').disable();				
+			this.getComponente('costo_unitario').setVisible(false);
+			this.getComponente('fecha_caducidad').setVisible(false);								
+			this.getComponente('cantidad_item').setVisible(false);
+			this.getComponente('cantidad_solicitada').setVisible(true);
+			this.getComponente('observaciones').setVisible(false);
+			
+			//Habilita concpto ingas solo para ingresos
+			if(this.maestro.tipo=='ingreso'){
+				this.Cmp.id_concepto_ingas.setVisible(true);
+				this.Cmp.id_concepto_ingas.enable();
+				this.Cmp.id_concepto_ingas.allowBlank=false;
+			} else{
+				this.Cmp.id_concepto_ingas.setVisible(false);
+				this.Cmp.id_concepto_ingas.disable();
+				this.Cmp.id_concepto_ingas.allowBlank=true;
+			}
 		}
 	})
 </script>

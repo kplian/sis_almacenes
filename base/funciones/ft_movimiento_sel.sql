@@ -100,7 +100,9 @@ BEGIN
             	usu1.cuenta as usr_reg,
             	mov.fecha_reg,
             	usu2.cuenta as usr_mod,
-            	mov.fecha_mod
+            	mov.fecha_mod,
+            	mov.id_depto_conta,
+            	dpto.nombre as nombre_depto
             FROM alm.tmovimiento mov
             INNER JOIN alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
             LEFT JOIN orga.tfuncionario fun on fun.id_funcionario = mov.id_funcionario
@@ -114,6 +116,7 @@ BEGIN
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
             left join wf.testado_wf ew on ew.id_estado_wf = mov.id_estado_wf
+            left join param.tdepto dpto on dpto.id_depto = mov.id_depto_conta
 			WHERE mov.estado_reg = ''activo'' and ';
 
         v_consulta:=v_consulta||v_filtro;
@@ -145,6 +148,7 @@ BEGIN
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
 			left join wf.testado_wf ew on ew.id_estado_wf = mov.id_estado_wf
+			left join param.tdepto dpto on dpto.id_depto = mov.id_depto_conta
             WHERE mov.estado_reg = ''activo''  and ';
         v_consulta:= v_consulta||v_parametros.filtro;
         return v_consulta;
