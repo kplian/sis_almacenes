@@ -1128,11 +1128,21 @@ header("content-type: text/javascript; charset=UTF-8");
         //Se verifica la respuesta de la verificación
         if(!reg.ROOT.error){
         	var data=reg.ROOT.datos;
+        	//Verifica si hay alertas y pregunta si continuar
+        	if(data.alertas!=''){
+        		var v_aux = data.alertas+'\n\n¿Desea continuar de todos modos?';
+        		if(!confirm(v_aux)){
+        			return;
+        		}
+        	}
+        	
+        	//Obtiene la cantidad de estados posibles en el workflow
         	if(data.wf_cant_estados>1){
 	       		swWin=1;
 	       		swEst=1;
 	       		swFun=1;
 	       	}
+	       	//Obtiene la cantidad de funcionarios posibles en el workflow 
         	if(data.wf_cant_funcionarios>1){
 				swWin=1;
 				swFun=1;

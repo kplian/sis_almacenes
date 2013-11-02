@@ -64,6 +64,7 @@ BEGIN
             and alstock.estado_reg = 'activo';
 	                
             v_cant_aux = alm.f_get_saldo_fisico_item(g_registros.id_item, v_rec.id_almacen, date(v_rec.fecha_mov));
+
 				
             --RCM
             if g_registros.cantidad > v_cant_aux then

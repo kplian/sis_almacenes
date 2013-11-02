@@ -58,7 +58,11 @@ DECLARE
     v_result						varchar;
     v_id_usuario_reg				integer;
     v_id_estado_wf_ant				integer;    
-    v_id_int_comprobante			integer;       
+    v_id_int_comprobante			integer; 
+    v_alertas						varchar;
+    v_saldo_total      				numeric;
+    v_alertas_exis					varchar;
+    v_salto_total					numeric;
 
 BEGIN
 
@@ -128,6 +132,17 @@ BEGIN
     else
         v_tipo_nodo = 'intermedio';
     end if;
+    
+    --Se revisa si el periodo esta abierto
+    select pers.id_periodo into v_id_periodo --pesu.id_periodo, pesu.estado into v_id_periodo, v_estado_periodo_subsistema
+    from param.tperiodo_subsistema pers
+    inner join param.tperiodo per
+    on per.id_periodo = pers.id_periodo 
+    inner join segu.tsubsistema sis
+    on sis.id_subsistema = pers.id_subsistema
+    where sis.codigo = 'ALM' 
+    and date_trunc('day',v_fecha_mov) between per.fecha_ini and per.fecha_fin
+    and pers.estado = 'abierto';
 
     -------------------------
     --3. ACCIONES A REALIZAR
@@ -141,24 +156,7 @@ BEGIN
         if (v_estado_almacen is null or v_estado_almacen = 'inactivo') then
           raise exception '%', 'El Almacén seleccionado no se encuentra Activo';
         end if;
-    	        
-        --Se obtienen los datos del movimiento a finalizar para realizar validaciones
-        select mov.fecha_mov
-        into v_fecha_mov
-        from alm.tmovimiento mov 
-        where mov.id_movimiento = (p_parametros->'id_movimiento')::integer;
-    	        
-        --Se revisa si el periodo esta abierto
-        select pers.id_periodo into v_id_periodo --pesu.id_periodo, pesu.estado into v_id_periodo, v_estado_periodo_subsistema
-        from param.tperiodo_subsistema pers
-        inner join param.tperiodo per
-        on per.id_periodo = pers.id_periodo 
-        inner join segu.tsubsistema sis
-        on sis.id_subsistema = pers.id_subsistema
-        where sis.codigo = 'ALM' 
-        and date_trunc('day',v_fecha_mov) between per.fecha_ini and per.fecha_fin
-        and pers.estado = 'abierto';
-    	
+
         if v_id_periodo is null then
             raise exception 'El Período correspondiente a: %, no está Abierto. Comuníquese con el Encargado de Almacenes', to_char(v_fecha_mov,'mm/yyyy');
         end if;
@@ -173,18 +171,19 @@ BEGIN
         if (date(v_fecha_mov) < date(v_fecha_mov_ultima)) then
           raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
         end if;
-    	
+        
         --Verificación de existencias y algunos errores
-        select po_errores, po_contador
-        into v_errores, v_contador
-        from alm.f_verificar_existencias_item((p_parametros->'id_movimiento')::integer);
-                
+        select po_errores, po_contador, po_alertas, po_saldo_total
+        into v_errores, v_contador, v_alertas_exis, v_saldo_total
+        from alm.f_verificar_existencias_item((p_parametros->'id_movimiento')::integer,v_codigo_estado);
+        
         if v_contador = 0 then
             raise exception 'No se ha registrado ningún Item en el detalle del movimiento';
         end if;
         if v_errores != '' then
             raise exception '%',v_errores;
         end if;
+        
                 
         ---------------------------------------------
         --3.2 VALIDACIÓN ESPECÍFICA POR TIPO DE NODO
@@ -201,6 +200,11 @@ BEGIN
         ------------------------------
         --3.3 DEFINICION DE RESPUESTA
         ------------------------------
+        --Respuesta de la verificación de existencias
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'alertas',v_alertas_exis);
+        v_respuesta=pxp.f_agrega_clave(v_respuesta,'saldo_total',v_saldo_total::varchar);
+        
+        
         --WF cantidad estados
         if array_length(va_id_tipo_estado,1)>0  THEN           
             v_respuesta=pxp.f_agrega_clave(v_respuesta,'wf_cant_estados',array_length(va_id_tipo_estado,1)::varchar);
@@ -295,7 +299,6 @@ BEGIN
         --Obtención del número del movimiento
         if v_codigo_mov is null then 
             v_codigo_mov = param.f_obtener_correlativo (v_cod_documento, v_id_periodo, NULL, v_id_depto, p_id_usuario, 'ALM', null,2,3,'alm.talmacen',(p_parametros->'id_almacen')::integer,v_cod_almacen);
-                    
             update alm.tmovimiento set
             codigo = v_codigo_mov
             where id_movimiento = (p_parametros->'id_movimiento')::integer;
@@ -424,6 +427,19 @@ BEGIN
             end if;
 
         elsif v_tipo_nodo = 'final' then
+			--Verificación de existencias y algunos errores
+            select po_errores, po_contador, po_alertas, po_saldo_total
+            into v_errores, v_contador, v_alertas_exis, v_saldo_total
+            from alm.f_verificar_existencias_item((p_parametros->'id_movimiento')::integer,v_codigo_estado);
+            
+--            raise exception 'A:%  B:%  C:%  D:%  E:%',v_errores, v_contador, v_alertas_exis, v_saldo_total,v_codigo_estado;
+
+--poner raise para ver si tiene cantidad
+            
+            if v_errores != '' then
+            	raise exception '%',v_errores;
+        	end if;
+
             --Ejecuta la valoración del movimiento
             v_result = alm.f_valoracion_mov(p_id_usuario,(p_parametros->'id_movimiento')::integer);
         end if;
