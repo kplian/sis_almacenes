@@ -107,15 +107,21 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			grid : true,
 			form : true
 		},
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		{
+			config:{
+				name: 'descripcion',
+				fieldLabel: 'Descripción',
+				allowBlank: true,
+				anchor: '100%',
+				gwidth: 300,
+				maxLength:2000
+			},
+			type:'TextArea',
+			filters:{pfiltro:'sdet.descripcion',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
 		{
 			config:{
 				name: 'precio_compra',
@@ -468,7 +474,8 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 		{name:'desc_depto', type: 'string'},
 		{name:'desc_item', type: 'string'},
 		{name:'desc_clasificacion', type: 'string'},
-		{name:'desc_ingas', type: 'string'}
+		{name:'desc_ingas', type: 'string'},
+		{name:'descripcion', type: 'string'}
 	],
 	sortInfo:{
 		field: 'id_preingreso_det',

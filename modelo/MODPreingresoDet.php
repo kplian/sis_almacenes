@@ -44,6 +44,7 @@ class MODPreingresoDet extends MODbase{
 		$this->captura('desc_item','text');
 		$this->captura('desc_clasificacion','text');
 		$this->captura('desc_ingas','varchar');
+		$this->captura('descripcion','text');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();

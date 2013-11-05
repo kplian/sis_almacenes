@@ -170,7 +170,7 @@ BEGIN
                 umed.codigo as unidad_medida,
                 item.id_clasificacion,
                 cla.nombre as nombre_clasificacion,
-                detval.cantidad, 
+                coalesce(detval.cantidad, movdet.cantidad_solicitada) as cantidad,  
                 detval.costo_unitario, 
                 detval.cantidad * detval.costo_unitario as costo_total
             from alm.tmovimiento_det_valorado detval

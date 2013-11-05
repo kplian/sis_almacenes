@@ -67,7 +67,8 @@ BEGIN
                         depto.codigo || '' - '' || depto.nombre as desc_depto,
                         ite.codigo || '' - '' || ite.nombre as desc_item,
                         clas.codigo || '' - '' || clas.descripcion as desc_clasificacion,
-                        ingas.desc_ingas
+                        ingas.desc_ingas,
+                        sdet.descripcion
 						from alm.tpreingreso_det predet
 						inner join segu.tusuario usu1 on usu1.id_usuario = predet.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = predet.id_usuario_mod
