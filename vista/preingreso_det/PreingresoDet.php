@@ -114,7 +114,8 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 300,
-				maxLength:2000
+				maxLength:2000,
+				disabled:true
 			},
 			type:'TextArea',
 			filters:{pfiltro:'sdet.descripcion',type:'string'},
