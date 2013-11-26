@@ -1220,7 +1220,6 @@ header("content-type: text/javascript; charset=UTF-8");
 	
 	onWF: function(res){
 		//Llama a la función para ir al siguiente estado
-		console.log(res)
    		Phx.CP.loadingShow(); 
    		var d= this.sm.getSelected().data;
 		Ext.Ajax.request({

@@ -590,3 +590,8 @@ ALTER TABLE alm.tmovimiento_det
   ADD COLUMN id_concepto_ingas integer;  
   
 /***********************************F-SCP-RCM-ALM-0-31/10/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-0-20/11/2013*****************************************/
+ALTER TABLE alm.tmovimiento
+  ALTER COLUMN fecha_mod DROP DEFAULT;
+/***********************************F-SCP-RCM-ALM-0-20/11/2013*****************************************/
