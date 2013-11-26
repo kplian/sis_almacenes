@@ -51,6 +51,7 @@ class MODMovimiento extends MODbase {
         $this->captura('nombre_depto', 'varchar');
 
         $this->armarConsulta();
+		//echo $this->consulta;exit;
         $this->ejecutarConsulta();
 
         return $this->respuesta;

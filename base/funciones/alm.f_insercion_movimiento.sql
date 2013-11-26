@@ -66,7 +66,8 @@ BEGIN
           id_proceso_macro,
           id_proceso_wf,
           id_estado_wf,
-          id_depto_conta
+          id_depto_conta,
+          id_preingreso
         ) values (
           p_id_usuario,
           now(),
@@ -84,7 +85,8 @@ BEGIN
           v_id_proceso_macro,
           v_id_proceso_wf,
           v_id_estado_wf,
-          (p_parametros->'id_depto_conta')::integer
+          (p_parametros->'id_depto_conta')::integer,
+          (p_parametros->'id_preingreso')::integer
         ) RETURNING id_movimiento into v_id_movimiento;
 
 	--Respuesta

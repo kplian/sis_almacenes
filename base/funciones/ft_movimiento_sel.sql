@@ -59,7 +59,7 @@ BEGIN
                 --end if;
             elsif lower(v_parametros.tipo_interfaz) = 'movimientovb' then
             	if p_administrador !=1 then
-                	v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) 
+                	v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) 
                 				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
                 else 
                 	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
@@ -113,8 +113,8 @@ BEGIN
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
             LEFT JOIN alm.talmacen almd on almd.id_almacen = mov.id_almacen_dest
             LEFT JOIN alm.tmovimiento movorig on movorig.id_movimiento = mov.id_movimiento_origen
-            INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
-            LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
+            INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
+            LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = mov.id_usuario_mod
             left join wf.testado_wf ew on ew.id_estado_wf = mov.id_estado_wf
             left join param.tdepto dpto on dpto.id_depto = mov.id_depto_conta
 			WHERE mov.estado_reg = ''activo'' and ';
@@ -170,7 +170,7 @@ BEGIN
                 umed.codigo as unidad_medida,
                 item.id_clasificacion,
                 cla.nombre as nombre_clasificacion,
-                coalesce(detval.cantidad, movdet.cantidad_solicitada) as cantidad,  
+                detval.cantidad, 
                 detval.costo_unitario, 
                 detval.cantidad * detval.costo_unitario as costo_total
             from alm.tmovimiento_det_valorado detval

@@ -309,7 +309,8 @@ BEGIN
         id_estado_wf = v_id_estado_actual,           
         estado_mov = v_codigo_estado,
         fecha_mov = v_fecha_mov,
-        fecha_mod = now()
+        fecha_mod = now(),
+        id_usuario_mod = p_id_usuario
         where id_movimiento = (p_parametros->'id_movimiento')::integer;
           
         --------------------------------------------

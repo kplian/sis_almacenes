@@ -49,7 +49,8 @@ BEGIN
                         item.nombre as nombre_item,
                         movdet.id_movimiento_det,
                         movdet.cantidad as cantidad_item,
-                        movdet.cantidad_solicitada
+                        movdet.cantidad_solicitada,
+                        movdet.costo_unitario
                         from alm.tmovimiento_det movdet
                         inner join alm.titem item on item.id_item = movdet.id_item
                         where movdet.estado_reg = 'activo'
