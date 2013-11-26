@@ -82,6 +82,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.id_depto_conta.allowBlank=true;
 			
 		},
+
 		Atributos : [{
 			config : {
 				name : 'id_movimiento',
@@ -91,7 +92,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			type : 'Field',
 			form : true
 		},		
-								{
+		{
             //configuracion del componente
             config:{
                     labelSeparator:'',
@@ -100,7 +101,32 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             type:'Field',
             form:true 
-        },  
+        }, {
+			config : {
+				name : 'tipo',
+				fieldLabel : 'Tipo',
+				allowBlank : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'local',
+				store : new Ext.data.ArrayStore({
+					fields : ['codigo', 'nombre'],
+					data : [['ingreso', 'Ingreso'], ['salida', 'Salida']]
+				}),
+				anchor : '100%',
+				valueField : 'codigo',
+				displayField : 'nombre',
+				gwidth:60
+			},
+			type : 'ComboBox',
+			id_grupo : 1,
+			form : true,
+			grid : true,
+			filters: {
+				pfiltro: 'movtip.tipo',
+				type: 'string'
+			}
+		},  
 		{
 			config : {
 				name : 'estado_mov',
@@ -137,26 +163,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			id_grupo : 1,
 			grid : true,
 			form : true
-		}, {
-			config : {
-				name : 'tipo',
-				fieldLabel : 'Tipo',
-				allowBlank : false,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'local',
-				store : new Ext.data.ArrayStore({
-					fields : ['codigo', 'nombre'],
-					data : [['ingreso', 'Ingreso'], ['salida', 'Salida']]
-				}),
-				anchor : '100%',
-				valueField : 'codigo',
-				displayField : 'nombre'
-			},
-			type : 'ComboBox',
-			id_grupo : 1,
-			form : true,
-			grid : false
 		}, {
 			config : {
 				name : 'id_movimiento_tipo',
@@ -738,7 +744,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		{name : 'nombre_depto',type : 'string'},
 			],
 		sortInfo : {
-			field : 'fecha_mov',
+			field : 'mov.fecha_mov DESC ,mov.fecha_mod',
 			direction : 'DESC'
 		},
 		bdel : true,
@@ -1238,26 +1244,38 @@ header("content-type: text/javascript; charset=UTF-8");
 		return {operacion:this.operacion};
 	},
 	onBtnRevertirPreing: function() {
-			var rec = this.sm.getSelected();
-			var data = rec.data;
-			var global = this;
-			Ext.Msg.confirm('Confirmación', '¿Está seguro de Revertir el Preingreso?', function(btn) {
-				if (btn == "yes") {
-					Ext.Ajax.request({
-						url : '../../sis_almacenes/control/Movimiento/revertirPreingreso',
-						params : {
-							'id_movimiento' : data.id_movimiento,
-							'id_almacen' : data.id_almacen,
-							obs: 'Revertido por el usuario'
-						},
-						success : global.successSave,
-						failure : global.conexionFailure,
-						timeout : global.timeout,
-						scope : global
-					});
-				}
-			});
+		var rec = this.sm.getSelected();
+		var data = rec.data;
+		var global = this;
+		Ext.Msg.confirm('Confirmación', '¿Está seguro de Revertir el Preingreso?', function(btn) {
+			if (btn == "yes") {
+				Ext.Ajax.request({
+					url : '../../sis_almacenes/control/Movimiento/revertirPreingreso',
+					params : {
+						'id_movimiento' : data.id_movimiento,
+						'id_almacen' : data.id_almacen,
+						obs: 'Revertido por el usuario'
+					},
+					success : global.successSave,
+					failure : global.conexionFailure,
+					timeout : global.timeout,
+					scope : global
+				});
+			}
+		});
+	},		
+	renderMov: function(value, p, record){//tipo,cad){
+		/*var color;
+		if(tipo=='salida'){
+			color='brown';
+		} else{
+			color='green';
 		}
+		var aux='<font color="'+color+'">'+cad+'</font>';
+		return aux;*/
+		return '01/01/2013';
+	},
+	
 })
 </script>
 

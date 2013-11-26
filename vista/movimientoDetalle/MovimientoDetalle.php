@@ -28,6 +28,7 @@ header("content-type: text/javascript; charset=UTF-8");
             		this.Cmp.cantidad_item.setValue(this.Cmp.cantidad_solicitada.getValue());
             	}
             },this);
+
             
 		},
 		Atributos : [{
@@ -439,6 +440,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.fecha_caducidad.setVisible(false);
 			this.Cmp.cantidad_solicitada.setVisible(true);
 			this.Cmp.observaciones.setVisible(false);
+console.log(maestro.tipo)
 			
 			//Habilita concpto ingas solo para ingresos
 			if(this.maestro.tipo=='ingreso'){
