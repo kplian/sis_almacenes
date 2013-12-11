@@ -75,16 +75,9 @@ BEGIN
             	mov.id_movimiento_tipo,
                 movtip.nombre as nombre_movimiento_tipo,
             	mov.id_funcionario,
-                person_fun.nombre_completo1::varchar as nombre_funcionario,
+                fun.desc_funcionario1::varchar as nombre_funcionario,
             	mov.id_proveedor,
-                (case 
-                	when mov.id_proveedor is not null and pro.id_institucion is not null then
-                    	inst.nombre 
-                    when mov.id_proveedor is not null and pro.id_persona is not null then 
-                    	person.nombre_completo1
-            		else 
-                    	''''
-                end)::varchar as nombre_proveedor,
+                pro.desc_proveedor::varchar as nombre_proveedor,
                 mov.id_almacen,
                 almo.nombre as nombre_almacen,
             	mov.id_almacen_dest,
@@ -105,19 +98,15 @@ BEGIN
             	dpto.nombre as nombre_depto
             FROM alm.tmovimiento mov
             INNER JOIN alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
-            LEFT JOIN orga.tfuncionario fun on fun.id_funcionario = mov.id_funcionario
-            LEFT JOIN segu.vpersona person_fun on person_fun.id_persona = fun.id_persona
-            LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
-            LEFT JOIN segu.vpersona person on person.id_persona = pro.id_persona
-            LEFT JOIN param.tinstitucion inst on inst.id_institucion = pro.id_institucion
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
+            INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
+            LEFT JOIN orga.vfuncionario fun on fun.id_funcionario = mov.id_funcionario
+            LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
             LEFT JOIN alm.talmacen almd on almd.id_almacen = mov.id_almacen_dest
             LEFT JOIN alm.tmovimiento movorig on movorig.id_movimiento = mov.id_movimiento_origen
-            INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = mov.id_usuario_mod
-            left join wf.testado_wf ew on ew.id_estado_wf = mov.id_estado_wf
-            left join param.tdepto dpto on dpto.id_depto = mov.id_depto_conta
-			WHERE mov.estado_reg = ''activo'' and ';
+            LEFT JOIN param.tdepto dpto on dpto.id_depto = mov.id_depto_conta
+			WHERE ';
 
         v_consulta:=v_consulta||v_filtro;
     	v_consulta:=v_consulta||v_parametros.filtro;
@@ -137,19 +126,15 @@ BEGIN
         	select count(mov.id_movimiento)
         	FROM alm.tmovimiento mov
             INNER JOIN alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
-            LEFT JOIN orga.tfuncionario fun on fun.id_funcionario = mov.id_funcionario
-            LEFT JOIN segu.vpersona person_fun on person_fun.id_persona = fun.id_persona
-            LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
-            LEFT JOIN segu.vpersona person on person.id_persona = pro.id_persona
-            LEFT JOIN param.tinstitucion inst on inst.id_institucion = pro.id_institucion
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
+            INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
+            LEFT JOIN orga.vfuncionario fun on fun.id_funcionario = mov.id_funcionario
+            LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
             LEFT JOIN alm.talmacen almd on almd.id_almacen = mov.id_almacen_dest
             LEFT JOIN alm.tmovimiento movorig on movorig.id_movimiento = mov.id_movimiento_origen
-            INNER JOIN segu.tusuario usu1 on usu1.id_usuario = movtip.id_usuario_reg
-            LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = movtip.id_usuario_mod
-			left join wf.testado_wf ew on ew.id_estado_wf = mov.id_estado_wf
-			left join param.tdepto dpto on dpto.id_depto = mov.id_depto_conta
-            WHERE mov.estado_reg = ''activo''  and ';
+            LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = mov.id_usuario_mod
+            LEFT JOIN param.tdepto dpto on dpto.id_depto = mov.id_depto_conta
+            WHERE ';
         v_consulta:= v_consulta||v_parametros.filtro;
         return v_consulta;
      end;

@@ -98,14 +98,16 @@ BEGIN
             estado_reg,
             id_movimiento_det,
             cantidad,
-            costo_unitario
+            costo_unitario,
+            aux_saldo_fisico
         ) VALUES (
             p_id_usuario,
             now(),
             'activo',
             v_id_movimiento_det,
             v_parametros.cantidad_item,
-            v_parametros.costo_unitario
+            v_parametros.costo_unitario,
+            v_parametros.cantidad_item
         );
         
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Detalle de movimiento almacenado(a) con exito (id_movimiento_det'||v_id_movimiento_det||')');

@@ -1316,3 +1316,9 @@ VALUES (1, null, now(), null, E'activo', E'INADQ', E'Ingreso desde Adquisiciones
 select pxp.f_insert_tgui ('Comprobante Salidas', 'Comprobante Salidas', 'MOVGRU', 'si', 8, 'sis_almacenes/vista/movimiento_grupo/MovimientoGrupo.php', 3, '', 'MovimientoGrupo', 'ALM');
 select pxp.f_insert_testructura_gui ('MOVGRU', 'ALMOVI');
 /***********************************F-DAT-RCM-ALM-0-17/10/2013****************************************/
+
+/***********************************I-DAT-RCM-ALM-0-29/11/2013****************************************/
+select pxp.f_add_catalog('ALM','tmovimiento__all_tipo_mov','ingreso');
+select pxp.f_add_catalog('ALM','tmovimiento__all_tipo_mov','salida');
+select pxp.f_add_catalog('ALM','tmovimiento__all_tipo_mov','ingreso_salida');
+/***********************************F-DAT-RCM-ALM-0-29/11/2013****************************************/
