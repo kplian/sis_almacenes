@@ -11,8 +11,10 @@ header("content-type: text/javascript; charset=UTF-8");
 <script>
 	Phx.vista.Movimiento = Ext.extend(Phx.gridInterfaz, {
 		tam_pag:50,
+
 		constructor : function(config) {
 			this.maestro = config.maestro;
+			this.initButtons=[this.cmbMovimientoTipo];
 			Phx.vista.Movimiento.superclass.constructor.call(this, config);
 			this.init();
 			//this.load({params:{start:0, limit:this.tam_pag}})
@@ -21,7 +23,14 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.tipo.on('select', this.onTipoSelect, this);
 			this.Cmp.id_movimiento_tipo.on('select', this.onMovimientoTipoSelect, this);
 			this.Cmp.solicitante.on('select', this.onSolicitanteSelect, this);
+			this.cmbMovimientoTipo.on('select', function(){
+			    if(this.validarFiltros()){
+	                  this.aplicarFiltros();
+	           	}},this
+			);
+			this.Cmp.id_proveedor.hide();
 	
+			//Botones
 			this.addButton('btnCancelar', {
 				text : 'Cancelar',
 				iconCls : 'bchecklist',
@@ -133,8 +142,20 @@ header("content-type: text/javascript; charset=UTF-8");
 				fieldLabel : 'Estado',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 70,
-				maxLength : 10
+				gwidth : 100,
+				maxLength : 10,
+				scope:this,
+				renderer: function(value, p, record){
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +value+'</font></b>';
+					return String.format('{0}', aux);
+				}
 			},
 			type : 'TextField',
 			filters : {
@@ -147,12 +168,21 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			config : {
 				name : 'fecha_mov',
-				fieldLabel : 'Fecha Movimiento',
+				fieldLabel : 'Fecha',
 				allowBlank : false,
 				gwidth : 100,
 				format : 'd/m/Y',
-				renderer : function(value, p, record) {
-					return value ? value.dateFormat('d/m/Y h:i:s') : ''
+				renderer: function(value, p, record){
+					var aux,desc;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					desc=value ? value.dateFormat('d/m/Y h:i:s') : '';
+					aux = aux +desc+'</font></b>';
+					return String.format('{0}', aux);
 				}
 			},
 			type : 'DateField',
@@ -200,7 +230,15 @@ header("content-type: text/javascript; charset=UTF-8");
 				gwidth : 150,
 				minChars : 2,
 				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_movimiento_tipo']);
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +record.data['nombre_movimiento_tipo']+'</font></b>';
+					return String.format('{0}', aux);
 				}
 			},
 			type : 'ComboBox',
@@ -214,7 +252,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			config : {
 				name : 'id_almacen',
-				fieldLabel : 'Almacen',
+				fieldLabel : 'Almacén',
 				allowBlank : false,
 				emptyText : 'Almacen...',
 				store : new Ext.data.JsonStore({
@@ -246,8 +284,16 @@ header("content-type: text/javascript; charset=UTF-8");
 				anchor : '100%',
 				gwidth : 150,
 				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_almacen']);
+				renderer: function(value, p, record){
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +record.data['nombre_almacen']+'</font></b>';
+					return String.format('{0}', aux);
 				}
 			},
 			type : 'ComboBox',
@@ -261,11 +307,22 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			config : {
 				name : 'codigo',
-				fieldLabel : 'Codigo',
+				fieldLabel : 'Código',
 				allowBlank : true,
 				anchor : '100%',
-				gwidth : 150,
-				maxLength : 30
+				gwidth : 160,
+				maxLength : 30,
+				renderer: function(value, p, record){
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +value+'</font></b>';
+					return String.format('{0}', aux);
+				}
 			},
 			type : 'TextField',
 			filters : {
@@ -281,8 +338,19 @@ header("content-type: text/javascript; charset=UTF-8");
                 fieldLabel : 'Descripción',
                 allowBlank : true,
                 anchor : '100%',
-                gwidth : 100,
-                maxLength : 1000
+                gwidth : 250,
+                maxLength : 1000,
+                renderer: function(value, p, record){
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +value+'</font></b>';
+					return String.format('{0}', aux);
+				}
             },
             type : 'TextArea',
             filters : {
@@ -298,8 +366,19 @@ header("content-type: text/javascript; charset=UTF-8");
                 fieldLabel : 'Observaciones',
                 allowBlank : true,
                 anchor : '100%',
-                gwidth : 100,
-                maxLength : 1000
+                gwidth : 200,
+                maxLength : 1000,
+                renderer: function(value, p, record){
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +value+'</font></b>';
+					return String.format('{0}', aux);
+				}
             },
             type : 'TextArea',
             filters : {
@@ -342,62 +421,26 @@ header("content-type: text/javascript; charset=UTF-8");
    				valueField: 'id_funcionario',
    			    gdisplayField: 'nombre_funcionario',
    			    baseParams: { es_combo_solicitud : 'si',fecha: new Date(), id_movimiento_tipo:0 },
-      			renderer:function(value, p, record){return String.format('{0}', record.data['nombre_funcionario']);},
-      			url:'../../sis_almacenes/control/Movimiento/listarFuncionarioMovimientoTipo'
+      			//renderer:function(value, p, record){return String.format('{0}', record.data['nombre_funcionario']);},
+      			url:'../../sis_almacenes/control/Movimiento/listarFuncionarioMovimientoTipo',
+      			renderer: function(value, p, record){
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +record.data['nombre_funcionario']+'</font></b>';
+					return String.format('{0}', aux);
+				}
        	     },
    			type:'ComboRec',//ComboRec
    			id_grupo:0,
    			filters:{pfiltro:'fun.desc_funcionario1',type:'string'},
    		    grid:true,
    			form:true
-		 }/*, {
-			config : {
-				name : 'id_funcionario',
-				fieldLabel : 'Funcionario',
-				allowBlank : false,
-				emptyText : 'Funcionario...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_organigrama/control/Funcionario/listarFuncionario',
-					id : 'id_funcionario',
-					root : 'datos',
-					sortInfo : {
-						field : 'desc_person',
-						direction : 'ASC'
-					},
-					totalProperty : 'total',
-					fields : ['id_funcionario', 'desc_person'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'person.nombre_completo1'
-					}
-				}),
-				valueField : 'id_funcionario',
-				displayField : 'desc_person',
-				gdisplayField : 'nombre_funcionario',
-				hiddenName : 'id_funcionario',
-				forceSelection : true,
-				typeAhead : false,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '99%',
-				gwidth : 100,
-				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_funcionario']);
-				}
-			},
-			type : 'ComboBox',
-			id_grupo : 0,
-			filters : {
-				pfiltro : 'person_fun.nombre_completo1',
-				type : 'string'
-			},
-			grid : true,
-			form : true
-		}*/, {
+		 }, {
 			config : {
 				name : 'id_proveedor',
 				fieldLabel : 'Proveedor',
@@ -418,7 +461,7 @@ header("content-type: text/javascript; charset=UTF-8");
 					}
 				}),
 				disabled : true,
-				hidden : true,
+				//hidden : true,
 				valueField : 'id_proveedor',
 				displayField : 'desc_proveedor',
 				gdisplayField : 'nombre_proveedor',
@@ -432,8 +475,17 @@ header("content-type: text/javascript; charset=UTF-8");
 				queryDelay : 1000,
 				anchor : '99%',
 				enableMultiSelect : true,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_proveedor']);
+				gwidth: 200,
+				renderer: function(value, p, record){
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +record.data['nombre_proveedor']+'</font></b>';
+					return String.format('{0}', aux);
 				}
 			},
 			type : 'ComboBox',
@@ -580,9 +632,18 @@ header("content-type: text/javascript; charset=UTF-8");
 				anchor : '100%',
 				gwidth : 100,
 				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['nombre_depto']);
+				renderer: function(value, p, record){
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +record.data['nombre_depto']+'</font></b>';
+					return String.format('{0}', aux);
 				}
+				
 			},
 			type : 'ComboBox',
 			id_grupo : 0,
@@ -720,8 +781,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'codigo_origen',
 			type : 'string'
 		}, {
-				name : 'id_estado_wf',
-				type : 'numeric'
+			name : 'id_estado_wf',
+			type : 'numeric'
 		},{
 			name : 'estado_mov',
 			type : 'string'
@@ -1243,6 +1304,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		return {operacion:this.operacion};
 	},
 	onBtnRevertirPreing: function() {
+
 		var rec = this.sm.getSelected();
 		var data = rec.data;
 		var global = this;
@@ -1263,18 +1325,61 @@ header("content-type: text/javascript; charset=UTF-8");
 			}
 		});
 	},		
-	renderMov: function(value, p, record){//tipo,cad){
-		/*var color;
-		if(tipo=='salida'){
-			color='brown';
-		} else{
-			color='green';
-		}
-		var aux='<font color="'+color+'">'+cad+'</font>';
-		return aux;*/
-		return '01/01/2013';
-	},
 	
+	cmbMovimientoTipo:new Ext.form.ComboBox({
+        name: 'cmb_movimiento_tipo',
+        fieldLabel: 'Filtrar',
+        typeAhead: false,
+        forceSelection: true,
+        allowBlank: false,
+        emptyText: 'Tipo de movimiento...',
+        store: new Ext.data.JsonStore({
+            url: '../../sis_parametros/control/Catalogo/listarCatalogoCombo',
+            id: 'id_catalogo',
+            root: 'datos',
+            sortInfo: {
+                field: 'descripcion',
+                direction: 'ASC'
+            },
+            totalProperty: 'total',
+            fields: ['id_catalogo','codigo','descripcion'],
+            // turn on remote sorting
+            remoteSort: true,
+            baseParams: {
+            	par_filtro: 'descripcion',
+            	cod_subsistema:'ALM',
+				catalogo_tipo:'tmovimiento__all_tipo_mov'
+            }
+        }),
+        valueField: 'descripcion',
+		displayField: 'descripcion',
+		gdisplayField: 'catalogo',
+		hiddenName: 'catalogo',
+		forceSelection:true,
+		typeAhead: false,
+		triggerAction: 'all',
+		lazyRender:true,
+		mode:'remote',
+		pageSize:10,
+		queryDelay:1000,
+		width:155,
+		minChars:2
+    }),
+    validarFiltros:function(){
+        if(this.cmbMovimientoTipo.isValid()){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
+    },
+    aplicarFiltros: function(combo, record, index){
+        this.store.baseParams.cmb_tipo_movimiento=this.cmbMovimientoTipo.getValue();
+        this.load(); 
+    }
+    
+
 })
 </script>
 
