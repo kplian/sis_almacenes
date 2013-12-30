@@ -28,6 +28,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			
 			this.getComponente('all_alm').setValue('si');
 			this.getComponente('id_almacen').disable();
+			
+			//Eventos
+			this.getComponente('id_item').on('select',function(a,b,c){
+				this.desc_item = b.data.codigo+' - '+b.data.nombre;
+			},this);
 		},
 		
 		Atributos : [
@@ -105,6 +110,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				anchor: '99%',
 				gwidth: 150,
 				minChars: 2,
+				listWidth: 400,
 				renderer: function (value, p, record) {
 					return String.format('{0}', value?record.data['nombre_item']:'');
 				}
@@ -212,12 +218,13 @@ header("content-type: text/javascript; charset=UTF-8");
 				data.all_alm=this.getComponente('all_alm').getValue();
 				data.id_almacen=this.getComponente('id_almacen').getValue();
 				
-				Phx.CP.loadWindows('../../../sis_almacenes/vista/vista_reportes/repKardexItem.php', 'Kardex por Item', {
+				Phx.CP.loadWindows('../../../sis_almacenes/vista/vista_reportes/repKardexItem.php', 'Kardex por Item: '+this.desc_item, {
 						width : '90%',
 						height : '80%'
 					}, data	, this.idContenedor, 'repKardexItem')
 			}
-		}
+		},
+		desc_item:''
 
 	})
 </script>
