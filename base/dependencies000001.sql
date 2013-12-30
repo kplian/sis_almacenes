@@ -800,3 +800,19 @@ SELECT ing.id_movimiento, sum(ing.cantidad) AS cantidad, sum(ing.costo_total)
 FROM alm.vcbte_ingreso_det ing
 GROUP BY ing.id_movimiento;
 /***********************************F-DEP-RCM-ALM-31-10/10/2013*****************************************/
+
+/***********************************I-DEP-RCM-ALM-0-30/12/2013*****************************************/
+ALTER TABLE alm.talmacen_gestion
+  ADD CONSTRAINT fk_talmacen_gestion__id_almacen FOREIGN KEY (id_almacen)
+    REFERENCES alm.talmacen(id_almacen)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.talmacen_gestion
+  ADD CONSTRAINT fk_talmacen_gestion__id_gestion FOREIGN KEY (id_gestion)
+    REFERENCES param.tgestion(id_gestion)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-RCM-ALM-0-30/12/2013*****************************************/

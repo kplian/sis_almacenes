@@ -595,3 +595,16 @@ ALTER TABLE alm.tmovimiento_det
 ALTER TABLE alm.tmovimiento
   ALTER COLUMN fecha_mod DROP DEFAULT;
 /***********************************F-SCP-RCM-ALM-0-20/11/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-0-30/12/2013*****************************************/
+CREATE TABLE alm.talmacen_gestion (
+  id_almacen_gestion SERIAL, 
+  id_almacen INTEGER, 
+  id_gestion INTEGER, 
+  estado VARCHAR, 
+  fecha_apertura DATE, 
+  fecha_cierre DATE, 
+  PRIMARY KEY(id_almacen_gestion)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+/***********************************F-SCP-RCM-ALM-0-30/12/2013*****************************************/
