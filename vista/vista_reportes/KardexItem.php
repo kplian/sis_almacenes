@@ -110,6 +110,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				anchor: '99%',
 				gwidth: 150,
 				minChars: 2,
+				width:350,
 				listWidth: 400,
 				renderer: function (value, p, record) {
 					return String.format('{0}', value?record.data['nombre_item']:'');
