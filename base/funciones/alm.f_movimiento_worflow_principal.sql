@@ -341,16 +341,16 @@ BEGIN
                     
             --Define los parámetros para generar el ingreso
             select
-            v_id_movimiento_tipo,--(p_parametros->'id_movimiento')::integer_tipo,
-            v_id_almacen_dest,--(p_parametros->'id_almacen')::integer,
-            v_id_funcionario,--v_parametros.id_funcionario, 
-            NULL,--v_parametros.id_proveedor,
-            NULL,--v_parametros-.id_almacen_dest,
-            now(),--(v_parametros.fecha_mov,
+            v_id_movimiento_tipo as id_movimiento_tipo,--(p_parametros->'id_movimiento')::integer_tipo,
+            v_id_almacen_dest as id_almacen,--(p_parametros->'id_almacen')::integer,
+            v_id_funcionario as id_funcionario,--v_parametros.id_funcionario, 
+            NULL as id_proveedor,--v_parametros.id_proveedor,
+            NULL as id_almacen_dest,--v_parametros-.id_almacen_dest,
+            now() as fecha_mov,--(v_parametros.fecha_mov,
             'Ingreso por transferencia correspondiente a la salida: ' || coalesce(v_codigo_mov,'S/C'),--v_parametros.descripcion,
-            NULL,--(p_parametros->'obs')::varcharervaciones,
-            (p_parametros->'id_movimiento')::integer,--(p_parametros->'id_movimiento')::integer_origen
-            v_id_gestion --id_gestion
+            NULL as observaciones,--(p_parametros->'obs')::varcharervaciones,
+            (p_parametros->'id_movimiento')::integer as id_movimiento,--(p_parametros->'id_movimiento')::integer_origen
+            v_id_gestion as id_gestion --id_gestion
             into g_registros;
                 
             --Llama a la función de registro del movimiento

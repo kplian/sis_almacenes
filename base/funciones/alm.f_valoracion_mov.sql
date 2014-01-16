@@ -117,7 +117,7 @@ BEGIN
 				select r_costo_valorado, r_cantidad_valorada, r_id_movimiento_det_val_desc
                 into v_costo_valorado, v_cantidad_valorada, v_id_movimiento_det_val_desc
                 from alm.f_get_valorado_item(g_registros.id_item, v_rec.id_almacen, v_codigo_valoracion, 
-                							v_saldo_cantidad, date(v_fecha_mov));
+                							v_saldo_cantidad, date(v_rec.fecha_mov));
 	                    
                 --Se descuenta la cantidad valorada del detalle valorado que se utilizo en la valoracion
                 update alm.tmovimiento_det_valorado detval set

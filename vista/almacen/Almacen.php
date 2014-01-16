@@ -35,6 +35,14 @@ header("content-type:text/javascript; charset=UTF-8");
 				handler : this.onBtnSwitchEstado,
 				tooltip : '<b>Activar o Inactivar Almacen</b>'
 			});
+			
+			this.addButton('btnGestion', {
+				text : 'Gestiones',
+				iconCls : 'bassign',
+				disabled : true,
+				handler : this.onBtnGestion,
+				tooltip : '<b>Administración de Gestiones por almacén</b>'
+			});
 		},
 		onBtnAlmacenUsuario : function() {
 			var rec = this.sm.getSelected();
@@ -313,12 +321,18 @@ header("content-type:text/javascript; charset=UTF-8");
 		bdel : true,
 		fwidth : 420,
 		fheight : 250,
-		east : {
+		tabsouth:[{
 			url : '../../../sis_almacenes/vista/almacenStock/AlmacenStock.php',
 			title : 'Stock Minimo de almacenes',
-			width : 400,
+			height: '50%',
 			cls : 'AlmacenStock'
-		},
+		}, {
+			url : '../../../sis_parametros/vista/tabla_upload/TablaUpload.php',
+			title : 'Upload archivos',
+			height: '50%',
+			cls : 'TablaUpload',
+			params:{nombre_tabla:'alm.talmacen',tabla_id : 'id_almacen'}
+		}],
 		preparaMenu : function(tb) {
 			Phx.vista.Almacen.superclass.preparaMenu.call(this, tb);
 			this.getBoton('btnAlmacenUsuario').enable();
@@ -333,11 +347,22 @@ header("content-type:text/javascript; charset=UTF-8");
 				btnSwitchEstado.setText('Inactivar');
 			}
 			btnSwitchEstado.enable();
+			//Habilita boton  de gestiones
+			this.getBoton('btnGestion').enable();
 		},
 		liberaMenu : function() {
 			Phx.vista.Almacen.superclass.liberaMenu.call(this);
 			this.getBoton('btnAlmacenUsuario').disable();
 			this.getBoton('btnSwitchEstado').disable();
-		}
-	}); 
+			this.getBoton('btnGestion').disable();
+		},
+		onBtnGestion: function() {
+			var rec = this.sm.getSelected();
+			Phx.CP.loadWindows('../../../sis_almacenes/vista/almacen_gestion/AlmacenGestion.php', 'Gestión Almacenes', {
+				modal : true,
+				width : '70%',
+				height : '90%',
+			}, rec.data, this.idContenedor, 'AlmacenGestion');
+		},
+}); 
 </script>

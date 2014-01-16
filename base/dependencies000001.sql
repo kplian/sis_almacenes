@@ -816,3 +816,52 @@ ALTER TABLE alm.talmacen_gestion
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-RCM-ALM-0-30/12/2013*****************************************/
+
+/***********************************I-DEP-RCM-ALM-0-31/12/2013*****************************************/
+ALTER TABLE alm.talmacen_gestion_log
+  ADD CONSTRAINT fk_talmacen_gestion_log__id_almacen_gestion FOREIGN KEY (id_almacen_gestion)
+    REFERENCES alm.talmacen_gestion(id_almacen_gestion)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-RCM-ALM-0-31/12/2013*****************************************/
+
+/***********************************I-DEP-RCM-ALM-0-02/01/2014*****************************************/
+
+CREATE TRIGGER tr_talmacen_gestion BEFORE DELETE 
+ON alm.talmacen_gestion FOR EACH ROW 
+EXECUTE PROCEDURE public.f_tri_talmacen_gestion();
+
+ALTER TABLE alm.talmacen_gestion_log
+  DROP CONSTRAINT fk_talmacen_gestion_log__id_almacen_gestion RESTRICT;
+
+ALTER TABLE alm.talmacen_gestion_log
+  ADD CONSTRAINT fk_talmacen_gestion_log__id_almacen_gestion FOREIGN KEY (id_almacen_gestion)
+    REFERENCES alm.talmacen_gestion(id_almacen_gestion)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+/***********************************F-DEP-RCM-ALM-0-02/01/2014*****************************************/
+
+/***********************************I-DEP-RCM-ALM-0-15/01/2014*****************************************/
+ALTER TABLE alm.tmovimiento_det_valorado
+  DROP CONSTRAINT fk_tmovimiento_det_valorado__id_movimiento_det RESTRICT;
+
+ALTER TABLE alm.tmovimiento_det_valorado
+  ADD CONSTRAINT fk_tmovimiento_det_valorado__id_movimiento_det FOREIGN KEY (id_movimiento_det)
+    REFERENCES alm.tmovimiento_det(id_movimiento_det)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+    
+ALTER TABLE alm.tmovimiento_det
+  DROP CONSTRAINT fk_tmovimiento_det__id_movimiento RESTRICT;
+
+ALTER TABLE alm.tmovimiento_det
+  ADD CONSTRAINT fk_tmovimiento_det__id_movimiento FOREIGN KEY (id_movimiento)
+    REFERENCES alm.tmovimiento(id_movimiento)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/***********************************F-DEP-RCM-ALM-0-15/01/2014*****************************************/    

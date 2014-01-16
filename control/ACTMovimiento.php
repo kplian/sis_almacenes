@@ -17,10 +17,16 @@ class ACTMovimiento extends ACTbase {
         $this->objParam->defecto('ordenacion', 'mov.fecha_mov');
         $this->objParam->defecto('dir_ordenacion', 'asc');
 		
+		//Filtro del tipo de movimiento de la barra de herramientas
 		if($this->objParam->getParametro('cmb_tipo_movimiento')!=''){
 			if($this->objParam->getParametro('cmb_tipo_movimiento')=='ingreso'||$this->objParam->getParametro('cmb_tipo_movimiento')=='salida'){
 				$this->objParam->addFiltro("movtip.tipo = ''".$this->objParam->getParametro('cmb_tipo_movimiento')."''");	
 			}
+		}
+		
+		//Filtro para ventana de cierre de gestión
+		if($this->objParam->getParametro('ids')!=''){
+			$this->objParam->addFiltro("mov.id_movimiento in  (".$this->objParam->getParametro('ids').")");
 		}
 		
         if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {

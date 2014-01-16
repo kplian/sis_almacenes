@@ -1322,3 +1322,8 @@ select pxp.f_add_catalog('ALM','tmovimiento__all_tipo_mov','ingreso');
 select pxp.f_add_catalog('ALM','tmovimiento__all_tipo_mov','salida');
 select pxp.f_add_catalog('ALM','tmovimiento__all_tipo_mov','ingreso_salida');
 /***********************************F-DAT-RCM-ALM-0-29/11/2013****************************************/
+
+/***********************************I-DAT-RCM-ALM-0-02/01/2014****************************************/
+INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "codigo", "nombre", "tipo","read_only")
+VALUES (1, NULL, now(), NULL, E'activo', E'INVFIN', E'Inventario Final', E'salida',true);
+/***********************************F-DAT-RCM-ALM-0-02/01/2014****************************************/

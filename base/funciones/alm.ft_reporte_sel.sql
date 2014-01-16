@@ -53,26 +53,28 @@ BEGIN
 			
 			--Verifica si se debe incluir los items que tengan existencias iguales a cero a la fecha
 			if(v_parametros.saldo_cero = 'no') then
-				v_where = v_where || ' (alm.f_get_saldo_fisico_item(id_item, '||v_parametros.id_almacen||', date('''|| v_parametros.fecha_hasta||'''))) > 0 and ';
+				v_where = v_where || ' (alm.f_get_saldo_fisico_item(id_item, '||v_parametros.id_almacen||', date('''''|| v_parametros.fecha_hasta||'''''))) > 0 and ';
 			end if;
 	
-	    	v_consulta:='
-	        	select 
-				itm.id_item,
-				itm.codigo,
-				itm.nombre,
-				umed.codigo unidad_medida,
-				(alm.f_get_codigo_clasificacion_rec(itm.id_clasificacion,''padres'') || '' - ''||cla.nombre)::varchar clasificacion,
-				alm.f_get_saldo_fisico_item(id_item, '||v_parametros.id_almacen||', date('''|| v_parametros.fecha_hasta||''')) cantidad,
-				alm.f_get_saldo_valorado_item(id_item, '||v_parametros.id_almacen||', date('''||v_parametros.fecha_hasta||''')) costo
-				from alm.titem itm
-				inner join param.tunidad_medida umed on umed.id_unidad_medida = itm.id_unidad_medida
-				inner join alm.tclasificacion cla on cla.id_clasificacion = itm.id_clasificacion ' ||
-				v_where||'itm.codigo is not null and ';
-                
-			
-			v_consulta:=v_consulta||v_parametros.filtro;
-	        v_consulta:=v_consulta||' order by alm.f_get_codigo_clasificacion_rec(itm.id_clasificacion,''padres'')'||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;        	
+	    	v_consulta:='select 
+            			id_item,
+                        codigo,
+                        nombre,
+                        unidad_medida,
+                        clasificacion,
+                        cantidad,
+                        costo
+                        from alm.f_existencias_almacen_sel('||v_parametros.id_almacen||','''||v_parametros.fecha_hasta||''','''||v_where||''','''||v_parametros.filtro||''')
+                        as (id_item integer,
+                        codigo varchar,
+                        nombre varchar,
+                        unidad_medida varchar,
+                        clasificacion varchar,
+                        cantidad numeric,
+                        costo numeric)';        	
+                        
+                        raise notice '%',v_consulta;
+
 	        return v_consulta;	
 	    end;
   	/*********************************   

@@ -602,9 +602,23 @@ CREATE TABLE alm.talmacen_gestion (
   id_almacen INTEGER, 
   id_gestion INTEGER, 
   estado VARCHAR, 
-  fecha_apertura DATE, 
-  fecha_cierre DATE, 
   PRIMARY KEY(id_almacen_gestion)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
 /***********************************F-SCP-RCM-ALM-0-30/12/2013*****************************************/
+
+/***********************************I-SCP-RCM-ALM-0-31/12/2013*****************************************/
+CREATE TABLE alm.talmacen_gestion_log (
+  id_almacen_gestion_log SERIAL, 
+  id_almacen_gestion INTEGER, 
+  estado VARCHAR, 
+  PRIMARY KEY(id_almacen_gestion_log)
+) INHERITS (pxp.tbase)
+WITHOUT OIDS;
+
+alter table alm.talmacen_gestion
+add constraint uq_talmacen_gestion__id_almacen__id_gestion unique (id_almacen,id_gestion);
+
+ALTER TABLE alm.tmovimiento
+  ADD COLUMN id_almacen_gestion_log INTEGER;
+/***********************************F-SCP-RCM-ALM-0-31/12/2013*****************************************/

@@ -16,6 +16,7 @@ Phx.vista.MovimientoReq = {
 	nombreVista: 'movimientoReq',
 	
 	constructor: function(config) {
+		this.maestro = config;
     	Phx.vista.MovimientoReq.superclass.constructor.call(this,config);
     	//Botón de finalización
     	this.addButton('fin_requerimiento',{text:'Finalizar',iconCls: 'badelante',disabled:true,handler:this.fin_requerimiento,tooltip: '<b>Finalizar</b>'});
@@ -24,7 +25,7 @@ Phx.vista.MovimientoReq = {
     	
 	    this.iniciarEventos();
 		this.store.baseParams={tipo_interfaz:this.nombreVista};
-		this.load({params:{start:0, limit:this.tam_pag}});
+		this.load({params:{start:0, limit:this.tam_pag,ids:this.ids}});
 	},
     
     iniciarEventos:function(){
