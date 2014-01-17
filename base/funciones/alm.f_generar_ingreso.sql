@@ -37,6 +37,9 @@ DECLARE
     va_prioridad integer [];
     v_id_estado_actual  integer;
     v_id_movimiento_det integer;
+    v_cadena_cnx 		varchar;
+    v_consulta			varchar;
+    v_res_cone  		varchar;
     
 BEGIN
 
@@ -220,7 +223,25 @@ BEGIN
     	--Verificación de destino de generación de ingreso a activos fijos
         if pxp.f_get_variable_global('alm_migrar_af_endesis')='si' then
         	--Llama ala funcion de ENDESIS para generar el ingreso de activos fijos
-            select migra.f_generar_ingreso_af(v_rec.id_preingreso);
+            --funcion para obtener cadena de conexion
+			v_cadena_cnx =  migra.f_obtener_cadena_conexion();
+            
+            v_consulta = 'select migracion.f_af_genera_registro_af('||
+                          p_id_usuario ||',' ||
+                          COALESCE(v_rec.id_preingreso::varchar,'NULL')||')';
+                          
+			--Abre una conexion con dblink para ejecutar la consulta
+            v_resp =  (SELECT dblink_connect(v_cadena_cnx));
+    			            
+            if (v_resp!='OK') THEN
+                --Error al abrir la conexión  
+                raise exception 'FALLA CONEXION A LA BASE DE DATOS CON DBLINK';
+            else
+                PERFORM * FROM dblink(v_consulta,true) AS (resp varchar);
+                v_res_cone=(select dblink_disconnect());
+            end if;
+            
+
         else
         	raise exception 'TODO: implementar ingreso a Activos Fijos de PXP';
         end if;

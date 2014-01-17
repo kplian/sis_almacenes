@@ -138,7 +138,7 @@ BEGIN
                 where id_concepto_ingas = v_id_concepto_ingas
                 and id_item = v_parametros.id_item
                 and id_clasificacion is null;
-            elsif v_parametros.id_item is not null then
+            elsif v_parametros.id_clasificacion is not null then
             	select id_item_clasif_ingas
                 into v_id_item_clasif_ingas
                 from alm.titem_clasif_ingas
