@@ -260,7 +260,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 					totalProperty: 'total',
 					fields: ['id_clasificacion', 'descripcion', 'codigo'],
 					remoteSort: true,
-					baseParams: {par_filtro: 'clas.descripcion#clas.codigo'}
+					baseParams: {par_filtro: 'clas.descripcion#clas.codigo', tipo: 'subtipo'}
 				}),
 				valueField: 'id_clasificacion',
 				displayField: 'descripcion',

@@ -1,4 +1,4 @@
-CREATE FUNCTION f_tri_talmacen_gestion (
+CREATE OR REPLACE FUNCTION alm.f_tri_talmacen_gestion (
 )
 RETURNS trigger AS
 $body$

@@ -1326,4 +1326,9 @@ select pxp.f_add_catalog('ALM','tmovimiento__all_tipo_mov','ingreso_salida');
 /***********************************I-DAT-RCM-ALM-0-02/01/2014****************************************/
 INSERT INTO alm.tmovimiento_tipo ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "codigo", "nombre", "tipo","read_only")
 VALUES (1, NULL, now(), NULL, E'activo', E'INVFIN', E'Inventario Final', E'salida',true);
+
+INSERT INTO pxp.variable_global ("variable", "valor", "descripcion")
+VALUES (E'alm_migrar_af_endesis', E'si', E'Bandera para migrar activos fijos a Endesis');
 /***********************************F-DAT-RCM-ALM-0-02/01/2014****************************************/
+
+

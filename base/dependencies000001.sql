@@ -830,7 +830,7 @@ ALTER TABLE alm.talmacen_gestion_log
 
 CREATE TRIGGER tr_talmacen_gestion BEFORE DELETE 
 ON alm.talmacen_gestion FOR EACH ROW 
-EXECUTE PROCEDURE public.f_tri_talmacen_gestion();
+EXECUTE PROCEDURE alm.f_tri_talmacen_gestion();
 
 ALTER TABLE alm.talmacen_gestion_log
   DROP CONSTRAINT fk_talmacen_gestion_log__id_almacen_gestion RESTRICT;
