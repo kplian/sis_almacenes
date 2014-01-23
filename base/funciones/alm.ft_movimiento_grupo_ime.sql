@@ -1,8 +1,11 @@
-CREATE OR REPLACE FUNCTION "alm"."ft_movimiento_grupo_ime" (	
-				p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-RETURNS character varying AS
-$BODY$
-
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_grupo_ime (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		Sistema de Almacenes
  FUNCION: 		alm.ft_movimiento_grupo_ime
@@ -177,7 +180,7 @@ BEGIN
 						where id_movimiento_grupo = v_parametros.id_movimiento_grupo) then
 				raise exception 'Registro no encontrado';
 			end if;
-			if not exists(select 1 from alm.tmovimiento_grupo
+			if exists(select 1 from alm.tmovimiento_grupo
 						where id_movimiento_grupo = v_parametros.id_movimiento_grupo
 						and estado != 'borrador') then
 				raise exception 'El Registro debería estar en estado Borrador';
@@ -185,8 +188,8 @@ BEGIN
 			
 			--DEfine la plantilla del comprobante
 			v_plantilla_cbte = 'SALALM';
-			
-			v_id_int_comprobante = alm.f_generar_cbtes(p_id_usuario,v_plantilla_cbte,v_parametros.id_movimiento::integer,hstore(v_parametros));
+
+			v_id_int_comprobante = alm.f_generar_cbtes(p_id_usuario,v_plantilla_cbte,v_parametros.id_movimiento_grupo::integer,hstore(v_parametros));
             
             --Cambio de estado del registro
             update alm.tmovimiento_grupo set
@@ -221,7 +224,9 @@ EXCEPTION
 		raise exception '%',v_resp;
 				        
 END;
-$BODY$
-LANGUAGE 'plpgsql' VOLATILE
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
 COST 100;
-ALTER FUNCTION "alm"."ft_movimiento_grupo_ime"(integer, integer, character varying, character varying) OWNER TO postgres;
