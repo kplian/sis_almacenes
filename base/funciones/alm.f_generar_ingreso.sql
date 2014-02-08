@@ -168,7 +168,12 @@ BEGIN
             ps_num_tramite, ps_id_proceso_wf, ps_id_estado_wf, ps_codigo_estado 
             into
             v_num_tramite, v_id_proceso_wf, v_id_estado_wf, v_codigo_estado   
-            from wf.f_inicia_tramite(p_id_usuario, v_id_gestion, v_codigo_tipo_proceso, v_rec.id_funcionario);
+            from wf.f_inicia_tramite(p_id_usuario, v_id_gestion,
+            v_codigo_tipo_proceso, v_rec.id_funcionario,
+            NULL,
+            'Generación de ingreso a almacén',
+            'IN-S/N'
+            );
 
         	--Cabecera
             insert into alm.tmovimiento(
