@@ -194,6 +194,18 @@ class MODMovimiento extends MODbase {
         $this->captura('cantidad', 'numeric');
         $this->captura('costo_unitario', 'numeric');
         $this->captura('costo_total', 'numeric');
+		
+		$this->captura('codigo_mov', 'varchar');
+		$this->captura('nombre_almacen', 'varchar');
+        $this->captura('tipo', 'varchar');
+        $this->captura('nombre_movimiento_tipo', 'varchar');
+        $this->captura('descripcion', 'varchar');
+        $this->captura('observaciones', 'varchar');
+        $this->captura('fecha_mov', 'varchar');
+        $this->captura('nombre_funcionario', 'text');
+        $this->captura('nombre_proveedor', 'varchar');
+        $this->captura('fecha_mod', 'varchar');
+		$this->captura('cantidad_solicitada', 'numeric');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -201,7 +213,7 @@ class MODMovimiento extends MODbase {
         return $this->respuesta;
     }
 				
-				function siguienteEstadoMovimiento(){
+	function siguienteEstadoMovimiento(){
         //Definicion de variables para ejecucion del procedimiento
         $this->procedimiento='alm.ft_movimiento_ime';
         $this->transaccion='SAL_SIGEMOV_IME';

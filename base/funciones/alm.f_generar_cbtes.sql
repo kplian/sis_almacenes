@@ -16,7 +16,7 @@ Descripción: Generación de comprobantes de almacén a partir de una PLantilla 
 DECLARE
 
 	v_resp 		varchar;
-    v_resp_cbte integer;
+    v_id_int_comprobante integer;
 
 BEGIN
 	-------------------
@@ -50,11 +50,11 @@ BEGIN
                     and mtip.tipo = 'ingreso') then
         	--Generación de Ingreso a Almacén
             
-        	v_resp_cbte = conta.f_gen_comprobante (p_id_movimiento,p_codigo_plantilla,p_id_usuario);
+        	v_id_int_comprobante = conta.f_gen_comprobante (p_id_movimiento,p_codigo_plantilla,p_id_usuario);
 
             v_resp = 'Comprobante generado';
 		else
-        	v_resp = 'No es un ingreso, nada que hacer';
+        	raise exception 'No es un ingreso, nada que hacer';
         end if;
         
         
@@ -66,8 +66,8 @@ BEGIN
     		raise exception 'Registro inexistente';
         end if;
 
-        --Generación de Ingreso a Almacén
-        v_resp_cbte = conta.f_gen_comprobante (p_id_movimiento,p_codigo_plantilla,p_id_usuario);
+        --Generación de comprobante
+        v_id_int_comprobante = conta.f_gen_comprobante (p_id_movimiento,p_codigo_plantilla,p_id_usuario);
 		
 		v_resp = 'Comprobante generado';
 		
@@ -76,7 +76,7 @@ BEGIN
     end if;
 
 	--Respuesta
-    return v_resp_cbte;
+    return v_id_int_comprobante;
 
 END;
 $body$

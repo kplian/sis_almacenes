@@ -18,6 +18,28 @@ Phx.vista.MovimientoGrupoDet=Ext.extend(Phx.gridInterfaz,{
 		this.init();
 		this.grid.getTopToolbar().disable();
 		this.grid.getBottomToolbar().disable();
+		
+		//Botones
+		this.addButton('btnReport', {
+			text : '',
+			iconCls : 'bpdf32',
+			disabled : true,
+			handler : function() {
+				var rec = this.sm.getSelected();
+				Phx.CP.loadingShow();
+				Ext.Ajax.request({
+					url : '../../sis_almacenes/control/Movimiento/generarReporteMovimiento',
+					params : {
+						'id_movimiento' : rec.data.id_movimiento
+					},
+					success : this.successExport,
+					failure : this.conexionFailure,
+					timeout : this.timeout,
+					scope : this
+				});
+			},
+			tooltip : '<b>Reporte de Movimiento</b><br/>Generar el reporte del Movimiento Seleccionado.'
+		});
 	},
 			
 	Atributos:[

@@ -110,7 +110,7 @@ class ACTMovimiento extends ACTbase {
         $resultRepMovimiento = $this->objFunc->listarReporteMovimiento($this->objParam);
         
         $resultData = $resultRepMovimiento->getDatos();
-        
+		
         //1. En caso de que el movimiento sea un inventario Inicial
         if ($tipoMovimiento == "ingreso" && $tipoPersonalizado == "Inventario Inicial") {
             $lastNombreClasificacion = $resultData[0]['nombre_clasificacion'];

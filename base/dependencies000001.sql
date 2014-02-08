@@ -865,3 +865,9 @@ ALTER TABLE alm.tmovimiento_det
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /***********************************F-DEP-RCM-ALM-0-15/01/2014*****************************************/    
+
+/***********************************I-DEP-RCM-ALM-0-22/01/2014*****************************************/
+ALTER TABLE ONLY alm.tmovimiento_grupo_det
+    ADD CONSTRAINT fk_tmovimiento_grupo_det__id_movimiento_grupo
+    FOREIGN KEY (id_movimiento_grupo) REFERENCES alm.tmovimiento_grupo(id_movimiento_grupo);
+/***********************************F-DEP-RCM-ALM-0-22/01/2014*****************************************/

@@ -57,17 +57,7 @@ header("content-type: text/javascript; charset=UTF-8");
 					Ext.Ajax.request({
 						url : '../../sis_almacenes/control/Movimiento/generarReporteMovimiento',
 						params : {
-							'id_movimiento' : rec.data.id_movimiento,
-							'codigo' : rec.data.codigo,
-							'nombre_almacen' : rec.data.nombre_almacen,
-							'tipo' : rec.data.tipo,
-							'nombre_movimiento_tipo' : rec.data.nombre_movimiento_tipo,
-							'descripcion' : rec.data.descripcion,
-							'observaciones' : rec.data.observaciones,
-							'fecha_reg' : rec.data.fecha_reg,
-							'fecha_movimiento' : rec.data.fecha_movimiento,
-							'nombre_funcionario' : rec.data.nombre_funcionario,
-							'nombre_proveedor' : rec.data.nombre_proveedor
+							'id_movimiento' : rec.data.id_movimiento
 						},
 						success : this.successExport,
 						failure : this.conexionFailure,
@@ -1270,7 +1260,9 @@ header("content-type: text/javascript; charset=UTF-8");
     },
     successFinSol:function(resp){
         Phx.CP.loadingHide();
-        this.winWF.hide();
+        if(this.winWF){
+        	this.winWF.hide();
+        }
         var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
         if(!reg.ROOT.error){
             this.reload();
