@@ -24,7 +24,7 @@ class CustomReport extends TCPDF {
         $this->SetXY($x, $y);
 		$dataSource = $this->getDataSource();
 
-        $this->Image(dirname(__FILE__).'/../../lib/images/logo_reporte.jpg', 16, 12, 36);
+        $this->Image(dirname(__FILE__).'/../../lib/images/k_logo_reporte.jpg', 16, 12, 36);
 
         $this->SetFontSize(14);
         $this->SetFont('', 'B');
@@ -59,7 +59,7 @@ class CustomReport extends TCPDF {
         $this->setCellPaddings(2);
         $this->Cell($width1+4, $height, 'Fecha:', "B", 0, '', false, '', 0, false, 'T', 'C');
         $this->SetFont('', 'B');
-        $this->Cell($width2, $height, date("d/m/Y"), "B", 0, 'L', false, '', 0, false, 'T', 'C');
+        $this->Cell($width2, $height, $tmpDatos[0]['fecha_mov'], "B", 0, 'L', false, '', 0, false, 'T', 'C');
 
         $this->SetFont('', '');
         $y += $height;

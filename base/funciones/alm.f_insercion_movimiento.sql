@@ -46,7 +46,10 @@ BEGIN
          p_id_usuario, 
          (p_parametros->'id_gestion')::integer, 
          v_codigo_tipo_proceso, 
-         (p_parametros->'id_funcionario')::integer);
+         (p_parametros->'id_funcionario')::integer,
+         NULL,
+         'Generación del movimiento',
+         'S/N');
      
 	--Se hace el registro del movimiento   
     insert into alm.tmovimiento (

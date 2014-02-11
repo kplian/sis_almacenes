@@ -24,7 +24,7 @@ class CustomReport extends TCPDF {
         $y = $this->GetY();
         $this->SetXY($x, $y);
 
-        //$this->Image(dirname(__FILE__).'/logo-ypfb-logistica.png', 16, 12, 36);
+        $this->Image(dirname(__FILE__).'/../../lib/images/k_logo_reporte.jpg', 16, 12, 36);
 
         $this->SetFontSize(14);
         $this->SetFont('', 'B');
@@ -47,7 +47,7 @@ class CustomReport extends TCPDF {
         $this->setCellPaddings(2);
         $this->Cell($width1, $height, 'Codigo:', "B", 0, '', false, '', 0, false, 'T', 'C');
         $this->SetFont('', 'B');
-        $this->Cell($width2, $height, '', "B", 0, 'C', false, '', 0, false, 'T', 'C');
+        $this->Cell($width2, $height, 'BOA-EXIST', "B", 0, 'C', false, '', 0, false, 'T', 'C');
 
         $this->SetFont('', '');
         $y += $height;
@@ -129,7 +129,7 @@ Class RExistencias extends Report {
         $pdf->SetFontSize(7);
         $pdf->SetFont('', 'B');
         $pdf->Cell($w = $wMargin, $h = $hGlobal, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Cell($w = $wNro+$wCodigo+$wDetalle+$wTotal, $h = $hGlobal, $txt = 'Almacen X', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wNro+$wCodigo+$wDetalle+$wTotal, $h = $hGlobal, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
         $pdf->Ln();
         
         $pdf->SetFontSize(7);

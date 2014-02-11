@@ -915,8 +915,13 @@ select pxp.f_insert_tfuncion ('alm.ft_reporte_sel', 'Funcion para tabla     ', '
 select pxp.f_insert_tprocedimiento ('SAL_REPEXIST_SEL', 'Retorna las existencias de n items de un almacen.', 'si', '', '', 'alm.ft_reporte_sel');
 select pxp.f_insert_tprocedimiento ('SAL_REPEXIST_CONT', 'Conteo de registros', 'si', '', '', 'alm.ft_reporte_sel');
 
+select pxp.f_insert_tgui ('Kardex x Item', 'Reporte de Kardex por Item', 'KARITE', 'si', 1, 'sis_almacenes/vista/vista_reportes/KardexItem.php', 3, '', 'KardexItem', 'ALM');
+select pxp.f_insert_tgui ('Items Entregados/Ingresados', 'Items Entregados/Ingresados', 'ALREPIEI', 'si', 1, 'sis_almacenes/vista/vista_reportes/ItemEntRec.php', 3, '', 'ItemEntRec', 'ALM');
 
-
+select pxp.f_insert_testructura_gui ('REPOR', 'ALM');
+select pxp.f_insert_testructura_gui ('REPEXIST', 'REPOR');
+select pxp.f_insert_testructura_gui ('KARITE', 'REPOR');
+select pxp.f_insert_testructura_gui ('ALREPIEI', 'REPOR');
 
 /***********************************F-DAT-AAO-ALM-56-03/05/2013*****************************************/
 

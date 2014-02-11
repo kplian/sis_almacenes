@@ -782,14 +782,14 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			name : 'fecha_reg',
 			type : 'date',
-			dateFormat : 'Y-m-d H:i:s.u'
+			dateFormat : 'Y-m-d H:i:s'
 		}, {
 			name : 'usr_mod',
 			type : 'string'
 		}, {
 			name : 'fecha_mod',
 			type : 'date',
-			dateFormat : 'Y-m-d H:i:s.u'
+			dateFormat : 'Y-m-d H:i:s'
 		},
 		{name : 'id_depto_conta',type : 'numeric'},
 		{name : 'nombre_depto',type : 'string'},
