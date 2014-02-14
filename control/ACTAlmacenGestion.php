@@ -49,6 +49,12 @@ class ACTAlmacenGestion extends ACTbase{
 		$this->res=$this->objFunc->accionesGestion($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+	
+	function obtenerInventarios(){
+		$this->objFunc=$this->create('MODAlmacenGestion');	
+		$this->res=$this->objFunc->obtenerInventarios($this->objParam);
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
 			
 }
 

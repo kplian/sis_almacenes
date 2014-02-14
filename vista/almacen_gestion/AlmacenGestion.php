@@ -30,6 +30,22 @@ Phx.vista.AlmacenGestion=Ext.extend(Phx.gridInterfaz,{
 			tooltip : '<b>Apertura/Cierre de Gestión</b>'
 		});
 		
+		this.addButton('btnInvIni', {
+			text : 'Inv. Inicial',
+			iconCls : 'bpdf32',
+			disabled : true,
+			handler : this.onBtnInvIni,
+			tooltip : '<b>Inventario Inicial</b><br>Impresión del Inventario Inicial de la gestión'
+		});
+		
+		this.addButton('btnInvFin', {
+			text : 'Inv. Final',
+			iconCls : 'bpdf32',
+			disabled : true,
+			handler : this.onBtnInvFin,
+			tooltip : '<b>Inventario FInal</b><br>Impresión del Inventario Final de la gestión'
+		});
+		
 	},
 			
 	Atributos:[
@@ -286,6 +302,8 @@ Phx.vista.AlmacenGestion=Ext.extend(Phx.gridInterfaz,{
 		
 		//Habilita el boton de apertura/cierre
 		this.getBoton('btnAbrirCerrar').enable();
+		this.getBoton('btnInvIni').enable();
+		this.getBoton('btnInvFin').enable();
 		
 		//Cambia el icono en función del estado
 		if (data.estado == 'abierto') {
@@ -300,6 +318,80 @@ Phx.vista.AlmacenGestion=Ext.extend(Phx.gridInterfaz,{
 	liberaMenu : function() {
 		Phx.vista.AlmacenGestion.superclass.liberaMenu.call(this);
 		this.getBoton('btnAbrirCerrar').disable();
+		this.getBoton('btnInvIni').disable();
+		this.getBoton('btnInvFin').disable();
+	},
+	
+	onBtnInvIni: function(){
+		var rec = this.sm.getSelected();
+		var data = rec.data;
+		var global = this;
+		
+		Phx.CP.loadingShow();
+		Ext.Ajax.request({
+			url : '../../sis_almacenes/control/AlmacenGestion/obtenerInventarios',
+			params : {
+				id_almacen_gestion: data.id_almacen_gestion
+			},
+			success : function(resp){
+				var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+
+				if(reg.ROOT.datos.id_movimiento_apertura){
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Movimiento/generarReporteMovimiento',
+						params : {
+							id_movimiento: reg.ROOT.datos.id_movimiento_apertura
+						},
+						success : this.successExport,
+						failure : this.conexionFailure,
+						timeout : this.timeout,
+						scope : this
+					}); 
+				} else {
+					Phx.CP.loadingHide();
+					Ext.Msg.alert('Mensaje','Inventario Inicial no generado para la gestión');
+				}
+			},
+			failure : global.conexionFailure,
+			timeout : global.timeout,
+			scope : global
+		});
+	},
+	
+	onBtnInvFin: function(){
+		var rec = this.sm.getSelected();
+		var data = rec.data;
+		var global = this;
+		
+		Phx.CP.loadingShow();
+		Ext.Ajax.request({
+			url : '../../sis_almacenes/control/AlmacenGestion/obtenerInventarios',
+			params : {
+				id_almacen_gestion: data.id_almacen_gestion
+			},
+			success : function(resp){
+				var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+
+				if(reg.ROOT.datos.id_movimiento_cierre){
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Movimiento/generarReporteMovimiento',
+						params : {
+							id_movimiento: reg.ROOT.datos.id_movimiento_cierre
+						},
+						success : this.successExport,
+						failure : this.conexionFailure,
+						timeout : this.timeout,
+						scope : this
+					}); 
+				} else {
+					Phx.CP.loadingHide();
+					Ext.Msg.alert('Mensaje','Inventario Final no generado para la gestión');
+				}
+			},
+			failure : global.conexionFailure,
+			timeout : global.timeout,
+			scope : global
+		});
 	}
 	
 })
