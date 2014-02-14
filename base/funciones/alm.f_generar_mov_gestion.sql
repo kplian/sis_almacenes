@@ -115,14 +115,18 @@ BEGIN
                 NULL as id_proveedor,--v_parametros.id_proveedor,
                 NULL as id_almacen_dest,--v_parametros-.id_almacen_dest,
                 v_fecha_desde as fecha_mov,--(v_parametros.fecha_mov,
-                'Ingreso por Inventario Inicial gestión '||v_gestion+1::varchar as descripcion,--v_parametros.descripcion,
+                'Ingreso por Inventario Inicial gestión '||v_gestion::varchar as descripcion,--v_parametros.descripcion,
                 NULL as observaciones,--(p_parametros->'observaciones')::varchar,
                 NULL as id_movimiento_origen,--(p_parametros->'id_movimiento_origen')::integer
                 v_id_gestion as id_gestion --id_gestion
                 into v_registros;       
                 
                 --Crea el movimiento
-        		va_id_mov[i] = alm.f_insercion_movimiento(p_id_usuario,hstore(v_registros));
+        		va_id_mov[1] = alm.f_insercion_movimiento(p_id_usuario,hstore(v_registros));
+                
+                update alm.tmovimiento set
+                id_almacen_gestion_log = p_id_almacen_gestion_log
+                where id_movimiento = va_id_mov[1];
                 
                 for v_rec_det in (select * from alm.tmovimiento_det
                 				where id_movimiento = v_rec.id_movimiento
@@ -144,7 +148,7 @@ BEGIN
                         p_id_usuario,
                         now(),
                         'activo',
-                        va_id_mov[i],
+                        va_id_mov[1],
                         v_rec_det.id_item,
                         v_rec_det.cantidad,
                         v_rec_det.cantidad,
@@ -215,8 +219,11 @@ BEGIN
                         where cantidad > 0';  
                         
 		for v_rec in execute(v_consulta) loop
-        	v_nivel = 1;
+        	v_nivel = 0;
             v_sw_det = false;
+            
+--            raise exception '%  %  %  %',v_rec.id_item,v_id_almacen,v_fecha_desde,v_fecha_hasta;
+            
         	for v_rec_det in (select mval.*
             				from alm.tmovimiento_det mdet
                             inner join alm.tmovimiento_det_valorado mval
@@ -230,6 +237,10 @@ BEGIN
                             and mtipo.tipo = 'ingreso'
                             and mval.aux_saldo_fisico > 0
                             and date_trunc('day',mov.fecha_mov) between v_fecha_desde and v_fecha_hasta) loop
+                            
+                --Incrementa el nivel
+                v_nivel = v_nivel + 1;
+                v_sw_det = true;
                 
             	--Guarda el registro de la existencia el item  
 				insert into tt_detalle_existencias_item
@@ -239,11 +250,7 @@ BEGIN
                 v_rec_det.costo_unitario,
                 v_nivel
                 );
-                
-                --Incrementa el nivel
-                v_nivel = v_nivel + 1;
-                v_sw_det = true;
-				
+			
             end loop;
             
             --Si es que no se encontró saldo en la variable auxiliar, se toma la existencia del item a la fecha
@@ -254,7 +261,7 @@ BEGIN
                 v_rec.id_item,
                 v_rec.cantidad,
                 round(v_rec.costo/v_rec.cantidad,2),
-                v_nivel
+                1
                 );
             end if;
         
@@ -298,20 +305,30 @@ BEGIN
         v_id_gestion as id_gestion --id_gestion
         into v_registros;
          
-        for i in 1..v_max_nivel loop
+        /*for i in 1..v_max_nivel loop
         	--Crea el movimiento
         	va_id_mov[i] = alm.f_insercion_movimiento(p_id_usuario,hstore(v_registros));
             --Asocia el movimiento al almacen_gestion_log
             update alm.tmovimiento set
             id_almacen_gestion_log = p_id_almacen_gestion_log
             where id_movimiento = va_id_mov[i];
-        end loop;
-
-        --Guarda el detalle de los movimientos generados
-        for i in 1..v_max_nivel loop
+        end loop;*/
         
-        	for v_rec in (select * from tt_detalle_existencias_item
-            			where nivel = i) loop
+        --Crea el movimiento
+		va_id_mov[1] = alm.f_insercion_movimiento(p_id_usuario,hstore(v_registros));
+        
+        --Asocia el movimiento al almacen_gestion_log
+        update alm.tmovimiento set
+        id_almacen_gestion_log = p_id_almacen_gestion_log
+        where id_movimiento = va_id_mov[1];
+        
+        --Guarda el detalle de los movimientos generados
+        --for i in 1..v_max_nivel loop
+        
+        	for v_rec in (select
+            			id_item, costo_unit, sum(cantidad) as cantidad
+                        from tt_detalle_existencias_item
+                        group by id_item,costo_unit) loop
                 insert into alm.tmovimiento_det(
                     id_usuario_reg,
                     fecha_reg,
@@ -328,7 +345,7 @@ BEGIN
                     p_id_usuario,
                     now(),
                     'activo',
-                    va_id_mov[i],
+                    va_id_mov[1],
                     v_rec.id_item,
                     v_rec.cantidad,
                     v_rec.cantidad,
@@ -357,7 +374,7 @@ BEGIN
                 );
             end loop;
         	 
-        end loop;
+        --end loop;
         
     elsif p_accion = 'reabrir' then
     	--Nada por hacer

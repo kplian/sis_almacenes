@@ -201,7 +201,7 @@ BEGIN
         --Prepara la salida si es que se encuentran movimientos sin finalizar
         if v_ids_ing_cont > 0 or v_ids_sal_cont > 0 then
         
-        	/*if v_ids_ing_cont > 0 and v_ids_sal_cont > 0 then
+        	if v_ids_ing_cont > 0 and v_ids_sal_cont > 0 then
             	v_ids = v_ids_ing ||','||v_ids_sal;
             elsif v_ids_ing_cont > 0  then
             	v_ids = v_ids_ing;
@@ -209,7 +209,8 @@ BEGIN
             	v_ids = v_ids_sal;
             end if;
             
-           	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','No se pudo '||upper(p_Accion)||' el Almacén, aún existen ('||v_ids_ing_cont||')Ingresos y ('||v_ids_sal_cont||')Salidas pendientes. Finalice o anule los movimientos pendientes para realizar la acción.');
+            --habilitar para controlar movimientos pendientes
+           	/*v_resp = pxp.f_agrega_clave(v_resp,'mensaje','No se pudo '||upper(p_Accion)||' el Almacén, aún existen ('||v_ids_ing_cont||')Ingresos y ('||v_ids_sal_cont||')Salidas pendientes. Finalice o anule los movimientos pendientes para realizar la acción.');
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje_vista','No se pudo '||upper(p_Accion)||' el Almacén, aún existen ('||v_ids_ing_cont||')Ingresos y ('||v_ids_sal_cont||')Salidas pendientes. Finalice o anule los movimientos pendientes para realizar la acción.');
             v_resp = pxp.f_agrega_clave(v_resp,'total_mov',(v_ids_ing_cont+v_ids_sal_cont)::varchar); 
             v_resp = pxp.f_agrega_clave(v_resp,'cant_ing',v_ids_ing_cont::varchar); 
@@ -224,16 +225,26 @@ BEGIN
     	raise exception 'Acción inexistente';
     end if;
     
+    -------------------
+    --FIN VALIDACIONES
+    -------------------
+    
+    
+    -------------
+    --ACCIONES
+    -------------
+    
     --Si no hay errores en las validaciones continúa con el proceso
     if v_resp = '' or v_bool_prim_gest then
     
         --------------------------------------------------------------
         --(2)INSERCIÓN DEL REGISTRO EN EL LOG DE GESTION DE ALMACENES
         --------------------------------------------------------------
-        --Inactivación de todos los registros anteriores del log
+        --Inactivación de todos los registros anteriores del log dependiendo de la acción
         update alm.talmacen_gestion_log set
         estado_reg = 'inactivo'
-        where id_almacen_gestion = p_id_almacen_gestion;
+        where id_almacen_gestion = p_id_almacen_gestion
+        and estado = v_estado;
         
         --Registro del log
         insert into alm.talmacen_gestion_log(

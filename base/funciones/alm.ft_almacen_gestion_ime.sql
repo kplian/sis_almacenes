@@ -33,6 +33,8 @@ DECLARE
 	v_estado				varchar;
 	v_accion				varchar;
 	v_result				varchar;
+    v_id_movimiento_apertura integer;
+    v_id_movimiento_cierre	integer;
 			    
 BEGIN
 
@@ -182,6 +184,50 @@ BEGIN
             return v_resp;
 
 		end;
+        
+	/*********************************    
+ 	#TRANSACCION:  'SAL_AGMOV_GET'
+ 	#DESCRIPCION:	Almacen gestion obtener Movimiento
+ 	#AUTOR:			RCM	
+ 	#FECHA:			13/02/2014
+	***********************************/
+
+	elsif(p_transaccion='SAL_AGMOV_GET')then
+
+		begin
+        
+        	if not exists(select 1 from alm.talmacen_gestion
+            			where id_almacen_gestion = v_parametros.id_almacen_gestion) then
+            	raise exception 'Gestión del almacen inexistente';
+            end if;
+            
+            select 
+            mov.id_movimiento
+            into v_id_movimiento_apertura
+            from alm.talmacen_gestion_log alog
+            inner join alm.tmovimiento mov
+            on mov.id_almacen_gestion_log = alog.id_almacen_gestion_log
+            where alog.id_almacen_gestion = v_parametros.id_almacen_gestion
+            and alog.estado = 'abierto'
+            and alog.estado_reg = 'activo';
+            
+            select 
+            mov.id_movimiento
+            into v_id_movimiento_cierre
+            from alm.talmacen_gestion_log alog
+            inner join alm.tmovimiento mov
+            on mov.id_almacen_gestion_log = alog.id_almacen_gestion_log
+            where alog.id_almacen_gestion = v_parametros.id_almacen_gestion
+            and alog.estado = 'cerrado'
+            and alog.estado_reg = 'activo';
+            
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Datos obtenidos'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'id_movimiento_apertura',v_id_movimiento_apertura::varchar); 
+            v_resp = pxp.f_agrega_clave(v_resp,'id_movimiento_cierre',v_id_movimiento_cierre::varchar);
+            
+            return v_resp;
+        
+        end;
          
 	else
      
