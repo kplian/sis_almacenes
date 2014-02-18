@@ -210,13 +210,13 @@ BEGIN
             end if;
             
             --habilitar para controlar movimientos pendientes
-           	/*v_resp = pxp.f_agrega_clave(v_resp,'mensaje','No se pudo '||upper(p_Accion)||' el Almacén, aún existen ('||v_ids_ing_cont||')Ingresos y ('||v_ids_sal_cont||')Salidas pendientes. Finalice o anule los movimientos pendientes para realizar la acción.');
+           	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','No se pudo '||upper(p_Accion)||' el Almacén, aún existen ('||v_ids_ing_cont||')Ingresos y ('||v_ids_sal_cont||')Salidas pendientes. Finalice o anule los movimientos pendientes para realizar la acción.');
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje_vista','No se pudo '||upper(p_Accion)||' el Almacén, aún existen ('||v_ids_ing_cont||')Ingresos y ('||v_ids_sal_cont||')Salidas pendientes. Finalice o anule los movimientos pendientes para realizar la acción.');
             v_resp = pxp.f_agrega_clave(v_resp,'total_mov',(v_ids_ing_cont+v_ids_sal_cont)::varchar); 
             v_resp = pxp.f_agrega_clave(v_resp,'cant_ing',v_ids_ing_cont::varchar); 
             v_resp = pxp.f_agrega_clave(v_resp,'cant_sal',v_ids_sal_cont::varchar); 
             v_resp = pxp.f_agrega_clave(v_resp,'ids',v_ids::varchar); 
-            v_resp = pxp.f_agrega_clave(v_resp,'error_logico','si'::varchar);*/
+            v_resp = pxp.f_agrega_clave(v_resp,'error_logico','si'::varchar);
 
         else
 			v_resp = '';
