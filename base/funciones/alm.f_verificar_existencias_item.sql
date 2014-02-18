@@ -42,8 +42,51 @@ BEGIN
     po_alertas = '';
     po_contador = 0;
     po_saldo_total = 0;
+    
+    --Controla las existencias por el total solicitado agrupado por item
+	for g_registros in (select 
+                        movdet.id_item,
+                        item.nombre as nombre_item,
+                        sum(movdet.cantidad) as cantidad_item,
+                        sum(movdet.cantidad_solicitada) as cantidad_solicitada
+                        from alm.tmovimiento_det movdet
+                        inner join alm.titem item on item.id_item = movdet.id_item
+                        where movdet.estado_reg = 'activo'
+                        and movdet.id_movimiento = p_id_movimiento
+                        group by movdet.id_item,item.nombre) loop
+                        
+		po_contador = po_contador + 1;
+        
+        v_cantidad = coalesce(g_registros.cantidad_item,coalesce(g_registros.cantidad_solicitada,-1));
+            
+        if v_rec.tipo = 'ingreso' then	
+            if v_cantidad <= 0 then
+                po_errores = po_errores || '\nEl item ' || g_registros.nombre_item || ' debe tener registrada una cantidad mayor a cero';
+            end if;
+        else
+            --Verificamos que la cantidad no sea nula y que la cantidad requerida no sea mayor que el saldo 
+            v_saldo_cantidad = alm.f_get_saldo_fisico_item(g_registros.id_item, v_rec.id_almacen, date(v_rec.fecha_mov));
+                
+            po_saldo_total = po_saldo_total + v_saldo_cantidad;
+                
+--            raise exception '1:%   2:%   3:%',g_registros.cantidad_item, g_registros.cantidad_solicitada, v_cantidad;
+                
+            --Alertas
+            if v_saldo_cantidad = 0 then
+                po_alertas = po_alertas || '\n- Existencias agotadas para el item: ' || g_registros.nombre_item;             	
+            end if;
+            if v_cantidad > v_saldo_cantidad then
+                po_alertas = po_alertas || '\n- En la validación del total pedido para el item: ' || g_registros.nombre_item || ', no hay Existencias suficientes (Disponible: '||v_saldo_cantidad||'; Total solicitado:'||v_cantidad||')';
+            end if;	
+            
+        end if;
+    end loop;
 
-    --Recorre todo el movimiento
+	--Reinicialización de variables
+    po_contador = 0;
+    po_saldo_total = 0;
+	
+    --Recorre todo el movimiento y verifica existencias por registro
     for g_registros in (select 
                         movdet.id_item,
                         item.nombre as nombre_item,
