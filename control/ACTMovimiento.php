@@ -102,7 +102,8 @@ class ACTMovimiento extends ACTbase {
         
         $dataSource = new DataSource();
         $this->objParam->addParametroConsulta('filtro', ' movdet.id_movimiento = ' . $idMovimiento);
-        $this->objParam->addParametroConsulta('ordenacion', 'cla.id_clasificacion');
+        //$this->objParam->addParametroConsulta('ordenacion', 'cla.id_clasificacion');
+        $this->objParam->addParametroConsulta('ordenacion', 'item.codigo');
         $this->objParam->addParametroConsulta('dir_ordenacion', 'asc');
         $this->objParam->addParametroConsulta('cantidad', 1000);
         $this->objParam->addParametroConsulta('puntero', 0);
