@@ -29,7 +29,6 @@ header("content-type: text/javascript; charset=UTF-8");
             	}
             },this);
 
-            
 		},
 		Atributos : [{
 			config : {
@@ -394,6 +393,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		bsave : false,
 		fwidth : 420,
 		fheight : 300,
+		
 		onReloadPage : function(m) {
 			this.maestro = m;
 			this.Atributos[1].valorInicial = this.maestro.id_movimiento;
@@ -427,6 +427,17 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.id_item.tdata={id_movimiento: this.maestro.id_movimiento};
 			//Obliga a que el combo vuelva a la bd cuando se expanda la lista
 			this.Cmp.id_item.modificado=true;
+			
+			//Cambia la etiqueta del componente cantidad solicitada, Oculta/muestra la columna de columna
+			//real si es ingreso o salida
+            if(this.maestro.tipo=='ingreso'){
+            	this.Cmp.cantidad_solicitada.fieldLabel='Cantidad';
+            } else{
+            	this.Cmp.cantidad_solicitada.fieldLabel='Cantidad Sol.';
+            }
+            
+            
+            
 		},
 		east : {
 			url : '../../../sis_almacenes/vista/movimientoDetValorado/MovimientoDetValorado.php',

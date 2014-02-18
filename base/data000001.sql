@@ -1336,4 +1336,9 @@ INSERT INTO pxp.variable_global ("variable", "valor", "descripcion")
 VALUES (E'alm_migrar_af_endesis', E'si', E'Bandera para migrar activos fijos a Endesis');
 /***********************************F-DAT-RCM-ALM-0-02/01/2014****************************************/
 
+/***********************************I-DAT-RCM-ALM-0-17/02/2014****************************************/
 
+select pxp.f_insert_tgui ('Salidas', 'Salidas', 'ALSALID', 'si', 5, 'sis_almacenes/vista/movimiento/MovimientoReqSalida.php', 3, '', 'MovimientoReqSalida', 'ALM');
+select pxp.f_insert_testructura_gui ('ALSALID', 'ALMOVI');
+
+/***********************************F-DAT-RCM-ALM-0-17/02/2014****************************************/

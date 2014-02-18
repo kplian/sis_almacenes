@@ -29,24 +29,7 @@ header("content-type: text/javascript; charset=UTF-8");
 	           	}},this
 			);
 			this.Cmp.id_proveedor.hide();
-	
-			//Botones
-			this.addButton('btnCancelar', {
-				text : 'Cancelar',
-				iconCls : 'bchecklist',
-				disabled : true,
-				handler : this.onBtnCancelar,
-				tooltip : '<b>Cancelar Movimiento</b>'
-			});
-
-			this.addButton('btnRevertir', {
-				text : 'Revertir',
-				iconCls : 'bchecklist',
-				disabled : true,
-				handler : this.onBtnRevertir,
-				tooltip : '<b>Revertir Movimiento</b>'
-			});
-
+			
 			this.addButton('btnReport', {
 				text : '',
 				iconCls : 'bpdf32',
@@ -67,10 +50,27 @@ header("content-type: text/javascript; charset=UTF-8");
 				},
 				tooltip : '<b>Reporte de Movimiento</b><br/>Generar el reporte del Movimiento Seleccionado.'
 			});
-			
+	
+			//Botones
+			this.addButton('btnCancelar', {
+				text : 'Cancelar',
+				iconCls : 'block',
+				disabled : true,
+				handler : this.onBtnCancelar,
+				tooltip : '<b>Cancelar Movimiento</b>'
+			});
+
+			this.addButton('btnRevertir', {
+				text : 'Revertir a Borrador',
+				iconCls : 'breload2',
+				disabled : true,
+				handler : this.onBtnRevertir,
+				tooltip : '<b>Revertir Movimiento</b><br>Revierte un movimiento finalizado a Borrador'
+			});
+
 			this.addButton('btnRevertirPreing', {
 				text : 'Revertir Preingreso',
-				iconCls : 'bchecklist',
+				iconCls : 'breload1',
 				disabled : true,
 				handler : this.onBtnRevertirPreing,
 				tooltip : '<b>Revertir Preingreso</b><br>En caso de que el Ingreso haya sido generado desde un Preingreso, revierte todo el ingreso'
@@ -809,7 +809,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			cls : 'MovimientoDetalle'
 		},
 		onTipoSelect : function(e, component, index) {
-			if (e.value == 'ingreso') {
+			this.setFiltroMovTipo(e.value);
+		},
+		setFiltroMovTipo: function(pTipo){
+			if (pTipo == 'ingreso') {
 				//this.getComponente('solicitante').setVisible(false);
 				//this.getComponente('solicitante').disable();
 				this.Cmp.id_depto_conta.setVisible(true);
@@ -825,7 +828,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.getComponente('id_almacen_dest').setVisible(false);
 			this.getComponente('id_movimiento_tipo').reset();
 			this.getComponente('id_movimiento_tipo').lastQuery = null;
-			this.getComponente('id_movimiento_tipo').store.baseParams.tipo = e.value;
+			this.getComponente('id_movimiento_tipo').store.baseParams.tipo = pTipo;			
 		},
 		onMovimientoTipoSelect : function(e, component, index) {
 			if (this.getComponente('tipo').value.indexOf('salida') != -1 && component.data.nombre.toLowerCase().indexOf('transferencia') != -1) {
@@ -883,11 +886,13 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getBoton('btnRevertir').disable();
 			}
 			//Boton reversión Preingreso
-			if(data.id_preingreso!=''&&data.estado_mov=='borrador'){
-				this.getBoton('btnRevertirPreing').enable();
-			} else{
-				this.getBoton('btnRevertirPreing').disable();
-			}
+			this.getBoton('btnRevertirPreing').hide();
+			if(data.id_preingreso){
+				if(data.estado_mov=='borrador'){
+					this.getBoton('btnRevertirPreing').show();
+				} 
+			} 
+			
 			return tb;
 		},
 		liberaMenu : function() {
@@ -895,7 +900,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.getBoton('btnCancelar').disable();
    			this.getBoton('btnRevertir').disable();
 			this.getBoton('btnReport').disable();
-			this.getBoton('btnRevertirPreing').disable();
+			this.getBoton('btnRevertirPreing').hide();
 			return tb;
 		},
 		onBtnCancelar : function() {

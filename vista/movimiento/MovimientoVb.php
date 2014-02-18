@@ -185,7 +185,6 @@ Phx.vista.MovimientoVb = {
 	},
 	
 	retroceder: function(resp){
-		console.log(resp)
 		var d= this.sm.getSelected().data;
 		Phx.CP.loadingShow(); 
 		Ext.Ajax.request({

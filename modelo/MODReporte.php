@@ -65,6 +65,7 @@ class MODReporte extends MODbase {
         $this->captura('ingreso_val', 'numeric');
         $this->captura('salida_val', 'numeric');
         $this->captura('saldo_val', 'numeric');
+		$this->captura('id_movimiento', 'integer');
 
         $this->armarConsulta();
 	//echo $this->consulta;exit;
