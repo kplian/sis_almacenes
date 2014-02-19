@@ -155,10 +155,9 @@ BEGIN
                 umed.codigo as unidad_medida,
                 item.id_clasificacion,
                 cla.nombre as nombre_clasificacion,
-                detval.cantidad, 
+                sum(detval.cantidad) as cantidad, 
                 detval.costo_unitario, 
-                detval.cantidad * detval.costo_unitario as costo_total,
-                
+                sum(detval.cantidad) * detval.costo_unitario as costo_total,
                 mov.codigo as codigo_mov,
                 almac.nombre as nombre_almacen,
                 mtipo.tipo,
@@ -183,6 +182,23 @@ BEGIN
             where ';
             
     	v_consulta:=v_consulta||v_parametros.filtro;
+        v_consulta = v_consulta || ' group by item.codigo, 
+                item.nombre, 
+                umed.codigo,
+                item.id_clasificacion,
+                cla.nombre,
+                detval.costo_unitario, 
+                mov.codigo,
+                almac.nombre,
+                mtipo.tipo,
+                mtipo.nombre,
+                mov.descripcion,
+                mov.observaciones,
+                mov.fecha_mov,
+                fun.desc_funcionario1,
+                prov.desc_proveedor,
+                mov.fecha_mod,
+                movdet.cantidad_solicitada ';
         v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;
         return v_consulta;
     end;
@@ -396,7 +412,6 @@ BEGIN
     	
 			return v_consulta;
      end;
-     
      
   else
      

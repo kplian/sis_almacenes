@@ -5,6 +5,7 @@ require_once dirname(__FILE__) . '/pxpReport/Report.php';
 class CustomReport extends TCPDF {
 
     private $dataSource;
+	public $headerFistPage=true;
 
     public function setDataSource(DataSource $dataSource) {
         $this->dataSource = $dataSource;
@@ -24,7 +25,7 @@ class CustomReport extends TCPDF {
         $this->SetXY($x, $y);
 		$dataSource = $this->getDataSource();
 
-        $this->Image(dirname(__FILE__).'/../../lib/images/k_logo_reporte.jpg', 16, 12, 36);
+        $this->Image(dirname(__FILE__).'/../../lib/images/k_logo_reporte.jpg', 19, 9, 36);
 
         $this->SetFontSize(14);
         $this->SetFont('', 'B');
@@ -68,6 +69,36 @@ class CustomReport extends TCPDF {
         $this->Cell($width1, $height, 'Página:', "B", 0, '', false, '', 0, false, 'T', 'C');
         $this->SetFont('', 'B');
         $this->Cell($w = $width2, $h = $height, $txt = $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages(), $border = "B", $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+		
+		
+		$wNro = 10;
+        $wCodigo = 15;
+        $wDescripcionItem = 90;
+        $wUnidad = 15;
+        $wCantidad = 20;
+        $wCostoUnitario = 15;
+        $wCostoTotal = 20;
+		$cantTot=0;
+		$costoUnitTot=0;
+		$hGlobal = 5;
+		
+		if($this->headerFistPage==false){
+			$this->headerFistPage=true;
+		} else{
+			$this->Ln();
+			$this->SetFontSize(6.5);
+	        $this->SetFont('', 'B');
+	        $this->Cell($w = $wNro-2, $h = $hGlobal, $txt = 'Nro.', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+	        $this->Cell($w = $wCodigo, $h = $hGlobal, $txt = 'Código', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+	        $this->Cell($w = $wDescripcionItem-10, $h = $hGlobal, $txt = 'Descripcion del Material', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+	        $this->Cell($w = $wUnidad, $h = $hGlobal, $txt = 'Unidad', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+	        $this->Cell($w = $wCantidad, $h = $hGlobal, $txt = 'Cantidad Sol.', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+			$this->Cell($w = $wCantidad, $h = $hGlobal, $txt = 'Cantidad Real', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+	        $this->Cell($w = $wCostoUnitario, $h = $hGlobal, $txt = 'Costo Unit.', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+	        $this->Cell($w = $wCostoTotal, $h = $hGlobal, $txt = 'Costo Total', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+	        $this->Ln();			
+		}
+
     }
 
     public function Footer() {
@@ -80,6 +111,7 @@ Class RMovimiento extends Report {
 
     function write($fileName) {
         $pdf = new CustomReport(PDF_PAGE_ORIENTATION, PDF_UNIT, "LETTER", true, 'UTF-8', false);
+		$pdf->headerFistPage=false;
         $pdf->setDataSource($this->getDataSource());
         $dataSource = $this->getDataSource();
         // set document information
@@ -95,7 +127,7 @@ Class RMovimiento extends Report {
 
         //set margins
         $pdf->SetMargins(PDF_MARGIN_LEFT, 30, PDF_MARGIN_RIGHT);
-        $pdf->SetHeaderMargin(10);
+        $pdf->SetHeaderMargin(7);
         $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
         //set auto page breaks
