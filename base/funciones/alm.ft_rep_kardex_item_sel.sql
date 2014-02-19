@@ -57,7 +57,8 @@ BEGIN
               costo_unitario numeric,
               ingreso_val numeric,
               salida_val numeric,
-              saldo_val numeric
+              saldo_val numeric,
+              id_movimiento integer
             ) on commit drop;
             
             --2. Carga el saldo anterior
@@ -85,7 +86,7 @@ BEGIN
             v_consulta = '
             insert into tt_rep_kardex_item(
             fecha,nro_mov,almacen,motivo,ingreso,salida,
-            ingreso_val,salida_val,costo_unitario
+            ingreso_val,salida_val,costo_unitario,id_movimiento
             )
             select
             date_trunc(''day'',mov.fecha_mov) as fecha,
@@ -112,7 +113,8 @@ BEGIN
                 when ''ingreso'' then coalesce(mdval.costo_unitario,0)
                 when ''salida'' then coalesce(mdval.costo_unitario,0)
                 else 0
-            end as costo_unitario
+            end as costo_unitario,
+            mov.id_movimiento
             from alm.tmovimiento mov
             inner join alm.tmovimiento_det mdet
             on mdet.id_movimiento = mov.id_movimiento
@@ -162,7 +164,8 @@ BEGIN
               			round(costo_unitario,6),
                         round(ingreso_val,6),
                         round(salida_val,6),
-              			round(saldo_val,6)
+              			round(saldo_val,6),
+                        id_movimiento
                         from tt_rep_kardex_item) loop
                 return next v_rec;
             end loop;
