@@ -168,7 +168,7 @@ BEGIN
                 fun.desc_funcionario1 as nombre_funcionario,
                 prov.desc_proveedor as nombre_proveedor,
                 to_char(mov.fecha_mod,''dd/mm/yyyy'')::varchar as fecha_mod,
-                movdet.cantidad_solicitada
+                sum(detval.cantidad) as cantidad_solicitada
             from alm.tmovimiento_det_valorado detval
             inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
             inner join alm.titem item on item.id_item = movdet.id_item
@@ -197,8 +197,7 @@ BEGIN
                 mov.fecha_mov,
                 fun.desc_funcionario1,
                 prov.desc_proveedor,
-                mov.fecha_mod,
-                movdet.cantidad_solicitada ';
+                mov.fecha_mod ';
         v_consulta:=v_consulta||' order by '||v_parametros.ordenacion||' '||v_parametros.dir_ordenacion||' limit '||v_parametros.cantidad||' offset '||v_parametros.puntero;
         return v_consulta;
     end;
