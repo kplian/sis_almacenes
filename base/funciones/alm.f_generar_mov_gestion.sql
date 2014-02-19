@@ -166,15 +166,18 @@ BEGIN
                         cantidad,
                         costo_unitario,
                         aux_saldo_fisico
-                    ) VALUES (
-                        p_id_usuario,
+                    ) 
+                    select 
+                    p_id_usuario,
                         now(),
                         'activo',
                         v_id_movimiento_det,
-                        v_rec_det.cantidad,
-                        v_rec_det.costo_unitario,
-                        v_rec_det.cantidad
-                    );
+                        a.cantidad,
+                        a.costo_unitario,
+                        a.cantidad
+                    from alm.tmovimiento_det_valorado a
+                    where id_movimiento_det = v_rec_det.id_movimiento_det;
+
                 end loop;
 
             	v_sw_det = true;
