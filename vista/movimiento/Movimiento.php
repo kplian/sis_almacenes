@@ -400,7 +400,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			id_grupo : 1,
 			form : true,
 			grid : false
-		}, {
+		}, 
+		//RCM: comentado para deshabilitar el filtro por tipo de movimiento
+		/*{
    			config:{
        		    name:'id_funcionario',
        		    hiddenName: 'id_funcionario',
@@ -430,7 +432,40 @@ header("content-type: text/javascript; charset=UTF-8");
    			filters:{pfiltro:'fun.desc_funcionario1',type:'string'},
    		    grid:true,
    			form:true
-		 }, {
+		 },*/
+		 
+		 {
+   			config:{
+       		    name:'id_funcionario',
+       		    hiddenName: 'id_funcionario',
+   				origen:'FUNCIONARIO',
+   				fieldLabel:'Funcionario',
+   				allowBlank:false,
+                gwidth:200,
+   				valueField: 'id_funcionario',
+   			    gdisplayField: 'nombre_funcionario',
+   			    baseParams: { es_combo_solicitud : 'si',fecha: new Date(), id_movimiento_tipo:0 },
+      			//renderer:function(value, p, record){return String.format('{0}', record.data['nombre_funcionario']);},
+      			renderer: function(value, p, record){
+					var aux;
+					if(record.data.tipo=='salida'){
+						aux='<b><font color="brown">';
+					}
+					else {
+						aux='<b><font color="green">';
+					}
+					aux = aux +record.data['nombre_funcionario']+'</font></b>';
+					return String.format('{0}', aux);
+				}
+       	     },
+   			type:'ComboRec',//ComboRec
+   			id_grupo:0,
+   			filters:{pfiltro:'fun.desc_funcionario1',type:'string'},
+   		    grid:true,
+   			form:true
+		 },
+		 
+		  {
 			config : {
 				name : 'id_proveedor',
 				fieldLabel : 'Proveedor',
