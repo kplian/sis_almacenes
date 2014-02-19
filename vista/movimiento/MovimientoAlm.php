@@ -29,6 +29,9 @@ Phx.vista.MovimientoAlm = {
 	    this.getBoton('btnCancelar').hide();
 	    this.store.baseParams={tipo_interfaz:this.nombreVista};
 	    this.load({params:{start:0, limit:this.tam_pag}});
+	    
+	    //Creación de ventana para workflow
+		this.crearVentanaWF();
 	},
     
     sigEstado:function(){                   
