@@ -436,16 +436,16 @@ BEGIN
             --Ejecuta la valoración del movimiento
             v_result = alm.f_valoracion_mov(p_id_usuario,(p_parametros->'id_movimiento')::integer);
             
-            --Actualiza estado de WF
-            update alm.tmovimiento set
-            id_estado_wf = v_id_estado_actual,           
-            estado_mov = v_codigo_estado,
-            fecha_mov = v_fecha_mov,
-            fecha_mod = now(),
-            id_usuario_mod = p_id_usuario
-            where id_movimiento = (p_parametros->'id_movimiento')::integer;
-          
         end if;
+        
+        --Actualiza estado de WF
+	    update alm.tmovimiento set
+	    id_estado_wf = v_id_estado_actual,           
+	    estado_mov = v_codigo_estado,
+	    fecha_mov = v_fecha_mov,
+	    fecha_mod = now(),
+	    id_usuario_mod = p_id_usuario
+	    where id_movimiento = (p_parametros->'id_movimiento')::integer;
                 
     ELSIF (p_parametros->'operacion')::varchar = 'anterior' THEN
             
