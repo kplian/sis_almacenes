@@ -852,7 +852,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				//this.getComponente('solicitante').disable();
 				this.Cmp.id_depto_conta.setVisible(true);
 				this.Cmp.id_depto_conta.enable();
-				this.Cmp.id_depto_conta.allowBlank=false;
+				this.Cmp.id_depto_conta.allowBlank=true;//=false;
 			} else {
 				//this.getComponente('solicitante').setVisible(true);
 				//this.getComponente('solicitante').enable();
@@ -1031,7 +1031,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				//Depto conta
 				this.Cmp.id_depto_conta.setVisible(true);
 				this.Cmp.id_depto_conta.enable();
-				this.Cmp.id_depto_conta.allowBlank=false;
+				this.Cmp.id_depto_conta.allowBlank=true;//=false;
 			}
 		},
 		onButtonNew : function() {
@@ -1226,6 +1226,7 @@ header("content-type: text/javascript; charset=UTF-8");
         if(!reg.ROOT.error){
         	var data=reg.ROOT.datos;
         	//Verifica si hay alertas y pregunta si continuar
+        	console.log(data);
         	if(data.alertas!=''){
         		var v_aux = data.alertas+'\n\n¿Desea continuar de todos modos?';
         		if(!confirm(v_aux)){

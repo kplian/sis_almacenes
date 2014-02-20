@@ -458,7 +458,7 @@ console.log(maestro.tipo)
 				//Concepto Ingas
 				this.Cmp.id_concepto_ingas.setVisible(true);
 				this.Cmp.id_concepto_ingas.enable();
-				this.Cmp.id_concepto_ingas.allowBlank=false;
+				this.Cmp.id_concepto_ingas.allowBlank=true;//false;
 				//Costo unitario
 				this.Cmp.costo_unitario.enable();
 				this.Cmp.costo_unitario.setVisible(true);
@@ -488,7 +488,7 @@ console.log(maestro.tipo)
 				//Concepto Ingas
 				this.Cmp.id_concepto_ingas.setVisible(true);
 				this.Cmp.id_concepto_ingas.enable();
-				this.Cmp.id_concepto_ingas.allowBlank=false;
+				this.Cmp.id_concepto_ingas.allowBlank=true;//false;
 				//Costo unitario
 				this.Cmp.costo_unitario.enable();
 				this.Cmp.costo_unitario.setVisible(true);
