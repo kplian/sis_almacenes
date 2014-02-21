@@ -53,8 +53,8 @@ class MODReporte extends MODbase {
         $this->setParametro('id_almacen', 'id_almacen', 'varchar');
         $this->setParametro('all_almacen', 'all_almacen', 'varchar');
 		
-		$this->captura('id', 'integer');
-        $this->captura('fecha', 'date');
+		//$this->captura('id', 'integer');
+        $this->captura('fecha', 'timestamp');
         $this->captura('nro_mov', 'varchar');
         $this->captura('almacen', 'varchar');
         $this->captura('motivo', 'varchar');

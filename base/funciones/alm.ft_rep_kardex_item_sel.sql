@@ -47,7 +47,7 @@ BEGIN
             --1. Crear tabla temporal con un solo mes, que adelante sera complementada con mas campos para mas meses si es el caso
             create temp table tt_rep_kardex_item(
               id serial,
-              fecha date,
+              fecha timestamp,
               nro_mov varchar,
               almacen varchar,
               motivo varchar,
@@ -89,24 +89,24 @@ BEGIN
             ingreso_val,salida_val,costo_unitario,id_movimiento
             )
             select
-            date_trunc(''day'',mov.fecha_mov) as fecha,
+            mov.fecha_mov as fecha,
             mov.codigo as nro_mov,
             alma.codigo as almacen,
             mtipo.nombre as motivo,
             case mtipo.tipo
-                when ''ingreso'' then mdval.cantidad
+                when ''ingreso'' then sum(mdval.cantidad)
                 else 0
             end as ingreso,
             case mtipo.tipo
-                when ''salida'' then mdval.cantidad
+                when ''salida'' then sum(mdval.cantidad)
                 else 0
             end as salida,
             case mtipo.tipo
-                when ''ingreso'' then coalesce(mdval.cantidad,0) * coalesce(mdval.costo_unitario,0)
+                when ''ingreso'' then coalesce(sum(mdval.cantidad),0) * coalesce(mdval.costo_unitario,0)
                 else 0
             end as ingreso_val,
             case mtipo.tipo
-                when ''salida'' then coalesce(mdval.cantidad,0) * coalesce(mdval.costo_unitario,0)
+                when ''salida'' then coalesce(sum(mdval.cantidad),0) * coalesce(mdval.costo_unitario,0)
                 else 0
             end as salida_val,
             case mtipo.tipo
@@ -136,9 +136,9 @@ BEGIN
             v_consulta = v_consulta || '
             and date_trunc(''day'',mov.fecha_mov) between ''' || v_parametros.fecha_ini||''' and ''' || v_parametros.fecha_fin ||'''
             and mdet.id_item = ' || v_parametros.id_item ||'
-            order by mov.fecha_mov,mov.codigo';
+            group by mov.fecha_mov, mov.codigo, alma.codigo, mtipo.nombre, mov.id_movimiento, mtipo.tipo,mdval.costo_unitario';
             
---            raise notice 'RRR: %',v_consulta;
+            raise notice 'RRR: %',v_consulta;
             
             execute(v_consulta);
             
@@ -157,7 +157,7 @@ BEGIN
 
             --5.Resultado
             for v_rec in (select
-            			id,fecha,nro_mov,almacen,motivo,
+            			fecha,nro_mov,almacen,motivo,
                         round(ingreso,6),
                         round(salida,6),
                         round(saldo,6),
@@ -166,7 +166,8 @@ BEGIN
                         round(salida_val,6),
               			round(saldo_val,6),
                         id_movimiento
-                        from tt_rep_kardex_item) loop
+                        from tt_rep_kardex_item
+                        order by fecha, nro_mov) loop
                 return next v_rec;
             end loop;
 

@@ -301,7 +301,8 @@ header("content-type:text/javascript; charset=UTF-8");
 			name : 'id'
 		}, {
 			name : 'fecha',
-			type : 'date'
+			type : 'date',
+			dateFormat : 'Y-m-d H:i:s'
 		}, {
 			name : 'nro_mov',
 			type : 'string'
