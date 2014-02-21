@@ -51,7 +51,7 @@ BEGIN
                 
         	if lower(v_parametros.tipo_interfaz) = 'movimientoreq' then
             	if p_administrador !=1 then
-                	v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or mov.id_usuario_reg='||p_id_usuario||' ) and ';
+                	--v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or mov.id_usuario_reg='||p_id_usuario||' ) and ';
                 end if;
             elsif lower(v_parametros.tipo_interfaz) = 'movimientoalm' then
             	--if p_administrador !=1 then
