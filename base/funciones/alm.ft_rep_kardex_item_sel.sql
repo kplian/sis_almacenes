@@ -136,7 +136,8 @@ BEGIN
             v_consulta = v_consulta || '
             and date_trunc(''day'',mov.fecha_mov) between ''' || v_parametros.fecha_ini||''' and ''' || v_parametros.fecha_fin ||'''
             and mdet.id_item = ' || v_parametros.id_item ||'
-            group by mov.fecha_mov, mov.codigo, alma.codigo, mtipo.nombre, mov.id_movimiento, mtipo.tipo,mdval.costo_unitario';
+            group by mov.fecha_mov, mov.codigo, alma.codigo, mtipo.nombre, mov.id_movimiento, mtipo.tipo,mdval.costo_unitario
+            order by mov.fecha_mov, mov.codigo';
             
             raise notice 'RRR: %',v_consulta;
             
@@ -145,7 +146,8 @@ BEGIN
             --4.Calculo de saldos
             v_saldo_fis=0;
             v_saldo_val=0;
-            for v_rec in (select * from tt_rep_kardex_item) loop
+            for v_rec in (select * from tt_rep_kardex_item
+            			order by fecha, nro_mov) loop
 				v_saldo_fis = v_saldo_fis + coalesce(v_rec.ingreso,0) - coalesce(v_rec.salida,0);
                 v_saldo_val = v_saldo_val + coalesce(v_rec.ingreso_val,0) - coalesce(v_rec.salida_val,0);
                 
