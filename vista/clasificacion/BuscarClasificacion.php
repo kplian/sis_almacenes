@@ -96,7 +96,7 @@ header("content-type:text/javascript; charset=UTF-8");
 	btriguerreturn:true,
 	onButtonTriguerreturn: function(){
 		this.seleccionNodos(this.root);
-		Phx.CP.getPagina(this.idContenedorPadre).clasificacion.setValue(this.desc_clasificacion);
+		Phx.CP.getPagina(this.idContenedorPadre).Cmp.clasificacion.setValue(this.desc_clasificacion);
 		Phx.CP.getPagina(this.idContenedorPadre).id_clasificacion=this.id_clasificacion;
 		this.panel.close();
 	}        
