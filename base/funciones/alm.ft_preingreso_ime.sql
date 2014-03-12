@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.ft_preingreso_ime (
   p_administrador integer,
   p_id_usuario integer,
@@ -123,9 +125,7 @@ BEGIN
 			id_cotizacion = v_parametros.id_cotizacion,
 			id_almacen = v_parametros.id_almacen,
 			id_depto = v_parametros.id_depto,
-			id_estado_wf = v_parametros.id_estado_wf,
-			id_proceso_wf = v_parametros.id_proceso_wf,
-			estado = v_parametros.estado,
+			
 			id_moneda = v_parametros.id_moneda,
 			tipo = v_parametros.tipo,
 			descripcion = v_parametros.descripcion,

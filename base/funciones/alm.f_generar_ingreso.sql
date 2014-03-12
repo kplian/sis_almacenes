@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.f_generar_ingreso (
   p_id_usuario integer,
   p_id_preingreso integer
@@ -44,7 +46,7 @@ DECLARE
 BEGIN
 
 	v_nombre_funcion = 'alm.f_generar_ingreso';
-
+ 
 	---------------------
     --OBTENCION DE DATOS
     ---------------------
@@ -92,6 +94,7 @@ BEGIN
     inner join adq.tproceso_compra pro on pro.id_proceso_compra = cot.id_proceso_compra
     inner join adq.tsolicitud sol on sol.id_solicitud = pro.id_solicitud
     where pre.id_preingreso = p_id_preingreso;
+    
     
     ---------------
     --VALIDACIONES 
@@ -152,6 +155,47 @@ BEGIN
                 and pdet.id_depto is null) then
     	raise exception 'Datos incompletos, defina la Clasificación y el Depto. destino';
     end if;
+    
+     -------------------------
+    --Finaliza el Preingreso
+    -------------------------
+    --Obtener siguiente estado correpondiente al proceso del WF del preingreso
+    SELECT 
+    ps_id_tipo_estado, ps_codigo_estado, ps_disparador, ps_regla, ps_prioridad
+    into
+    va_id_tipo_estado, va_codigo_estado, va_disparador, va_regla, va_prioridad
+    FROM wf.f_obtener_estado_wf(v_id_proceso_wf_cot, v_id_estado_wf_cot,NULL,'siguiente');
+
+    --Validaciones
+    if va_id_tipo_estado[2] is not null then
+        raise exception 'El proceso se encuentra mal parametrizado dentro de Work Flow, la finalizacion del Preingreso solo admite un estado siguiente';
+    end if;
+          
+    if  va_id_tipo_estado[1] is  null  then
+      raise exception ' El proceso de Work Flow esta mal parametrizado, no tiene un estado siguiente para la finalizacion';
+    end if;
+    
+   -- raise exception '%  -  %',va_id_tipo_estado[1],va_codigo_estado[1];
+   
+    v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1], 
+                                                 NULL, 
+                                                 v_id_estado_wf_cot, 
+                                                 v_id_proceso_wf_cot,
+                                                 p_id_usuario,
+                                                 NULL,
+                                                 'Preingreso realizado',
+                                                 '',
+                                                 'Preingreso');
+
+    --Actualiza estado en preingreso
+    update alm.tpreingreso set 
+    id_estado_wf =  v_id_estado_actual,
+    estado = va_codigo_estado[1],
+    id_usuario_mod=p_id_usuario,
+    fecha_mod=now()
+    where id_preingreso = v_rec.id_preingreso;
+    
+    
     
     ---------------------------------------------------
     --GENERACION DE INGRESOS A ALMACEN O ACTIVOS FIJOS 
@@ -224,7 +268,7 @@ BEGIN
     
   	
     elsif v_rec.tipo = 'activo_fijo' then
-    
+     
     	--Verificación de destino de generación de ingreso a activos fijos
         if pxp.f_get_variable_global('alm_migrar_af_endesis')='si' then
         	--Llama ala funcion de ENDESIS para generar el ingreso de activos fijos
@@ -242,7 +286,7 @@ BEGIN
                 --Error al abrir la conexión  
                 raise exception 'FALLA CONEXION A LA BASE DE DATOS CON DBLINK';
             else
-                PERFORM * FROM dblink(v_consulta,true) AS (resp varchar);
+                SELECT * FROM dblink(v_consulta,true) AS (resp varchar);
                 v_res_cone=(select dblink_disconnect());
             end if;
             
@@ -253,44 +297,10 @@ BEGIN
 
     end if;
     
-    -------------------------
-    --Finaliza el Preingreso
-    -------------------------
-    --Obtener siguiente estado correpondiente al proceso del WF del preingreso
-    SELECT 
-    ps_id_tipo_estado, ps_codigo_estado, ps_disparador, ps_regla, ps_prioridad
-    into
-    va_id_tipo_estado, va_codigo_estado, va_disparador, va_regla, va_prioridad
-    FROM wf.f_obtener_estado_wf(v_id_proceso_wf_cot, v_id_estado_wf_cot,NULL,'siguiente');
-
-    --Validaciones
-    if va_id_tipo_estado[2] is not null then
-        raise exception 'El proceso se encuentra mal parametrizado dentro de Work Flow, la finalizacion del Preingreso solo admite un estado siguiente';
-    end if;
-          
-    if  va_id_tipo_estado[1] is  null  then
-      raise exception ' El proceso de Work Flow esta mal parametrizado, no tiene un estado siguiente para la finalizacion';
-    end if;
-
-    v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1], 
-                                                 NULL, 
-                                                 v_id_estado_wf_cot, 
-                                                 v_id_proceso_wf_cot,
-                                                 p_id_usuario,
-                                                 NULL,
-                                                 'Preingreso realizado',
-                                                 '',
-                                                 'Preingreso');
-
-    --Actualiza estado en preingreso
-    update alm.tpreingreso set 
-    id_estado_wf =  v_id_estado_actual,
-    estado = va_codigo_estado[1],
-    id_usuario_mod=p_id_usuario,
-    fecha_mod=now()
-    where id_preingreso = v_rec.id_preingreso;
+   
 
     
+  
     ------------
     --RESPUESTA
     ------------
