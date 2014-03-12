@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.ft_movimiento_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -100,6 +102,9 @@ BEGIN
             INNER JOIN alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
+            
+            INNER JOIN wf.testado_wf ew on  ew.id_estado_wf = mov.id_estado_wf and ew.estado_reg = ''activo''
+            
             LEFT JOIN orga.vfuncionario fun on fun.id_funcionario = mov.id_funcionario
             LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
             LEFT JOIN alm.talmacen almd on almd.id_almacen = mov.id_almacen_dest
@@ -122,12 +127,44 @@ BEGIN
     ***********************************/
   elsif(p_transaccion='SAL_MOV_CONT')then
     begin
+        v_filtro='';
+        
+        if (v_parametros.id_funcionario_usu is null) then
+        	v_parametros.id_funcionario_usu = -1;
+        end if;
+
+        --if(pxp.f_existe_parametro(p_tabla,'tipo_interfaz'))then
+                
+        	if lower(v_parametros.tipo_interfaz) = 'movimientoreq' then
+            	if p_administrador !=1 then
+                	--v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or mov.id_usuario_reg='||p_id_usuario||' ) and ';
+                end if;
+            elsif lower(v_parametros.tipo_interfaz) = 'movimientoalm' then
+            	--if p_administrador !=1 then
+                	v_filtro = 'lower(mov.estado_mov)=''prefin'' and ';
+                --end if;
+            elsif lower(v_parametros.tipo_interfaz) = 'movimientovb' then
+            	if p_administrador !=1 then
+                	v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) 
+                				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+                else 
+                	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+                end if;
+            	
+            end if;
+        --end if;
+    
+    
+    
     	v_consulta:='
         	select count(mov.id_movimiento)
         	FROM alm.tmovimiento mov
             INNER JOIN alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
+           
+            INNER JOIN wf.testado_wf ew on  ew.id_estado_wf = mov.id_estado_wf and ew.estado_reg = ''activo''
+            
             LEFT JOIN orga.vfuncionario fun on fun.id_funcionario = mov.id_funcionario
             LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
             LEFT JOIN alm.talmacen almd on almd.id_almacen = mov.id_almacen_dest
@@ -135,8 +172,15 @@ BEGIN
             LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = mov.id_usuario_mod
             LEFT JOIN param.tdepto dpto on dpto.id_depto = mov.id_depto_conta
             WHERE ';
-        v_consulta:= v_consulta||v_parametros.filtro;
+        
+        
+        v_consulta:=v_consulta||v_filtro;
+    	v_consulta:=v_consulta||v_parametros.filtro;
+        raise notice '%',v_consulta;
         return v_consulta;
+        
+        
+        
      end;
      
   /*********************************   

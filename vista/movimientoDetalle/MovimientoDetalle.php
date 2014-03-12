@@ -155,6 +155,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				allowBlank : false,
 				anchor : '100%',
 				gwidth : 120,
+				
 				maxLength : 6
 			},
 			type : 'NumberField',
@@ -163,7 +164,8 @@ header("content-type: text/javascript; charset=UTF-8");
 				type : 'numeric'
 			},
 			grid : true,
-			form : true
+			form : true,
+            egrid:true
 		}, {
 			config : {
 				name : 'costo_unitario',
