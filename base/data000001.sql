@@ -1022,10 +1022,6 @@ select pxp.f_add_catalog('ALM','titem__opciones','Por Clasificacion');
 
 
 
-
-select pxp.f_insert_tgui ('PreIngreso', 'preingreso', 'PREING', 'si', 1, 'sis_almacenes/vista/preingreso/Preingreso.php', 3, '', 'Preingreso', 'ALM');
-select pxp.f_insert_testructura_gui ('PREING', 'ALMOVI');
-
 select pxp.f_insert_tgui ('Clasificacion', 'Clasificacion', 'INVMAIN.1.2', 'no', 0, 'sis_almacenes/vista/clasificacion/BuscarClasificacion.php', 7, '', 'BuscarClasificacion', 'ALM');
 select pxp.f_insert_tgui ('Clasificacion', 'Clasificacion', 'ORDINV.1.2', 'no', 0, 'sis_almacenes/vista/clasificacion/BuscarClasificacion.php', 7, '', 'BuscarClasificacion', 'ALM');
 select pxp.f_insert_tgui ('Clasificacion', 'Clasificacion', 'EJEINV.1.2', 'no', 0, 'sis_almacenes/vista/clasificacion/BuscarClasificacion.php', 7, '', 'BuscarClasificacion', 'ALM');
@@ -1300,7 +1296,7 @@ VALUES (E'alm_filtrar_funcionario_tipomov_asistente', E'si', E'Bandera para veri
 /***********************************F-DAT-RCM-ALM-87-22/08/2013****************************************/
 
 /***********************************I-DAT-RCM-ALM-82-01/10/2013****************************************/
-select pxp.f_insert_tgui ('Preingreso', 'Preingreso', 'ALPREIN', 'si', 1, 'sis_almacenes/vista/preingreso/Preingreso.php', 3, '', 'Movimiento', 'ALM');
+select pxp.f_insert_tgui ('Preingreso', 'Preingreso', 'ALPREIN', 'si', 1, 'sis_almacenes/vista/preingreso/PreingresoAlm.php', 3, '', 'PreingresoAlm', 'ALM');
 select pxp.f_insert_testructura_gui ('ALPREIN', 'ALMOVI');
 
 select pxp.f_add_catalog('ALM','tpreingreso__tipo','almacen');

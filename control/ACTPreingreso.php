@@ -13,6 +13,19 @@ class ACTPreingreso extends ACTbase{
 		$this->objParam->defecto('ordenacion','id_preingreso');
 
 		$this->objParam->defecto('dir_ordenacion','asc');
+		
+		
+		//si es un preingreso de almances
+		if($this->objParam->getParametro('tipo_interfaz')=='preingresoAlm'){
+            $this->objParam->addFiltro("tipo = ''almacen''");  
+        }
+        //si es un preingreso de activos fijos
+        if($this->objParam->getParametro('tipo_interfaz')=='preingresoAct'){
+            $this->objParam->addFiltro("tipo = ''activo_fijo''");  
+        }
+		
+		
+		
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);
 			$this->res = $this->objReporte->generarReporteListado('MODPreingreso','listarPreingreso');

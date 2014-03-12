@@ -11,13 +11,13 @@ header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
 Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
-
+    bedit:false,
 	constructor:function(config){
 		this.maestro=config.maestro;
     	//llama al constructor de la clase padre
 		Phx.vista.Preingreso.superclass.constructor.call(this,config);
 		this.init();
-		this.load({params:{start:0, limit:this.tam_pag}});
+		
 		
 		this.addButton('btnIngreso',{
                     text :'Generar Ingreso',
