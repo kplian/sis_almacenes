@@ -269,6 +269,8 @@ BEGIN
   	
     elsif v_rec.tipo = 'activo_fijo' then
      
+   
+    
     	--Verificación de destino de generación de ingreso a activos fijos
         if pxp.f_get_variable_global('alm_migrar_af_endesis')='si' then
         	--Llama ala funcion de ENDESIS para generar el ingreso de activos fijos
@@ -281,12 +283,14 @@ BEGIN
                           
 			--Abre una conexion con dblink para ejecutar la consulta
             v_resp =  (SELECT dblink_connect(v_cadena_cnx));
-    			            
+    			 
+            
+                       
             if (v_resp!='OK') THEN
                 --Error al abrir la conexión  
                 raise exception 'FALLA CONEXION A LA BASE DE DATOS CON DBLINK';
             else
-                SELECT * FROM dblink(v_consulta,true) AS (resp varchar);
+                PERFORM * FROM dblink(v_consulta,true) AS (resp varchar);
                 v_res_cone=(select dblink_disconnect());
             end if;
             

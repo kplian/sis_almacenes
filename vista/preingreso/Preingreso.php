@@ -33,7 +33,51 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
                     handler : this.onRevertir,
                     tooltip : '<b>Revertir Preingreso</b><br/><b>Revierte el Preingreso generado</b>'
          });
+         
+         this.addButton('btnChequeoDocumentosWf',
+            {
+                text: 'Chequear Documentos',
+                iconCls: 'bchecklist',
+                disabled: true,
+                handler: this.loadCheckDocumentosSolWf,
+                tooltip: '<b>Documentos de la Solicitud</b><br/>Subir los documetos requeridos en la solicitud seleccionada.'
+            }
+        );
+        
+        this.addButton('diagrama_gantt',{text:'Gant',iconCls: 'bgantt',disabled:true,handler:diagramGantt,tooltip: '<b>Diagrama Gantt de proceso macro</b>'});
+  
+        function diagramGantt(){            
+            var data=this.sm.getSelected().data.id_proceso_wf;
+            Phx.CP.loadingShow();
+            Ext.Ajax.request({
+                url:'../../sis_workflow/control/ProcesoWf/diagramaGanttTramite',
+                params:{'id_proceso_wf':data},
+                success:this.successExport,
+                failure: this.conexionFailure,
+                timeout:this.timeout,
+                scope:this
+            });         
+        }
+    
+        
+        
+         
 	},
+	
+	loadCheckDocumentosSolWf:function() {
+            var rec=this.sm.getSelected();
+            rec.data.nombreVista = this.nombreVista;
+            Phx.CP.loadWindows('../../../sis_workflow/vista/documento_wf/DocumentoWf.php',
+                    'Chequear documento del WF',
+                    {
+                        width:'90%',
+                        height:500
+                    },
+                    rec.data,
+                    this.idContenedor,
+                    'DocumentoWf'
+        )
+    },
 			
 	Atributos:[
 		{
@@ -378,20 +422,23 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
       	if(rec.estado=='borrador'){
       		this.getBoton('btnIngreso').enable();
       		this.getBoton('btnRevertir').enable();
-      		this.getBoton('edit').enable();
+      		//this.getBoton('edit').enable();
       		this.getBoton('del').enable();
       	} else if(rec.estado=='cancelado'||rec.estado=='finalizado'){
       		this.getBoton('btnIngreso').disable();
       		this.getBoton('btnRevertir').disable();
       		
-      		this.getBoton('edit').disable();
+      		//this.getBoton('edit').disable();
       		this.getBoton('del').disable();
       	} else {
       		this.getBoton('btnIngreso').disable();
       		this.getBoton('btnRevertir').disable();
-      		this.getBoton('edit').disable();
+      		//this.getBoton('edit').disable();
       		this.getBoton('del').disable();
       	}
+      	
+      	 this.getBoton('diagrama_gantt').enable();
+         this.getBoton('btnChequeoDocumentosWf').enable();
 
           
            
@@ -400,6 +447,8 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
         var tb = Phx.vista.Preingreso.superclass.liberaMenu.call(this);
         if(tb){
             this.getBoton('btnIngreso').disable();
+            this.getBoton('diagrama_gantt').disable();
+            this.getBoton('btnChequeoDocumentosWf').disable();
          }
        return tb
    },

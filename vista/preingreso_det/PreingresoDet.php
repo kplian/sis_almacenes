@@ -294,7 +294,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: false,
 				emptyText: 'Elija una opción...',
 				store: new Ext.data.JsonStore({
-					url: '../../sis_parametros/control/Depto/listarDeptoFiltradoXUsuario',
+					url: '../../sis_parametros/control/Depto/listarDeptoFiltradoDeptoUsuario',
 					id: 'id_',
 					root: 'datos',
 					sortInfo: {
@@ -486,9 +486,24 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 	bsave:false,
 	bnew:false,
 	bdel:false,
+	preparaMenu:function(n){
+	    
+	       Phx.vista.PreingresoDet.superclass.preparaMenu.call(this,n);
+	       if(this.maestro.estado=='borrador'){
+	           this.getBoton('edit').enable();
+	       }
+	       else{
+	           this.getBoton('edit').disable();
+	       }
+      
+	},
+	
+	
 	loadValoresIniciales:function(){
 		Phx.vista.PreingresoDet.superclass.loadValoresIniciales.call(this);
-		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);		
+		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);
+		
+				
 	},
 	onReloadPage:function(m){
 		this.maestro=m;						
@@ -510,37 +525,39 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			codSis='AF';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
 			
+			
 			//Habilita componentes
-			this.setAllowBlank(this.Cmp.id_clasificacion,false);
 			this.Cmp.id_clasificacion.enable();
-			this.setAllowBlank(this.Cmp.id_depto,false);
-			this.Cmp.id_depto.enable();
+            this.mostrarComponente(this.Cmp.id_clasificacion);
+            this.Cmp.id_depto.enable();
+            this.mostrarComponente(this.Cmp.id_depto);
+			
 			
 			//Deshabilita componentes
-			this.setAllowBlank(this.Cmp.id_almacen,true);
 			this.Cmp.id_almacen.disable();
-			this.setAllowBlank(this.Cmp.id_item,true);
-			this.Cmp.id_item.disable();
-			
+            this.ocultarComponente(this.Cmp.id_almacen);
+            this.Cmp.id_item.disable();
+            this.ocultarComponente(this.Cmp.id_item);
 			
 		} else if(pMaestro.tipo=='almacen'){
 			//Setea store del departamento
 			codSis='ALM';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
 			console.log(this.Cmp.id_almacen)
+			
 			//Habilita componentes
-			this.setAllowBlank(this.Cmp.id_almacen,false);
 			this.Cmp.id_almacen.enable();
-			this.setAllowBlank(this.Cmp.id_item,false);
-			this.Cmp.id_item.enable();
+            this.mostrarComponente(this.Cmp.id_almacen);
+            this.Cmp.id_item.enable();
+            this.mostrarComponente(this.Cmp.id_item);
 			
 			//Deshabilita componentes
-			this.setAllowBlank(this.Cmp.id_clasificacion,true);
 			this.Cmp.id_clasificacion.disable();
-			this.setAllowBlank(this.Cmp.id_depto,true);
-			this.Cmp.id_depto.disable();
-
-		} else {
+            this.ocultarComponente(this.Cmp.id_clasificacion);
+            this.Cmp.id_depto.disable();
+            this.ocultarComponente(this.Cmp.id_depto);
+            
+        } else {
 			//Setea store del departamento
 			codSis='error';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
