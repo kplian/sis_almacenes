@@ -11,11 +11,23 @@ header("content-type:text/javascript; charset=UTF-8");
 <script>
     Phx.vista.BuscarClasificacion = Ext.extend(Phx.arbInterfaz, {
         constructor : function(config) {
+        	alert('llega');
             this.maestro = config.maestro;
             Phx.vista.BuscarClasificacion.superclass.constructor.call(this, config);
             this.init();
             this.getBoton('triguerreturn').enable();          
         },
+        Atributos:[
+		{
+			//configuracion del componente
+			config:{
+					labelSeparator:'',
+					inputType:'hidden',
+					name: 'id_clasificacion'
+			},
+			type:'Field',
+			form:true 
+		}],
         NodoCheck:true,//si los nodos tienen los valores para el check
 		ActCheck:'../../sis_seguridad/control/GuiRol/checkGuiRol',
         title : 'Buscador de Clasificacion',
@@ -94,7 +106,7 @@ header("content-type:text/javascript; charset=UTF-8");
 	id_clasificacion:'',
 	desc_clasificacion:'',
 	btriguerreturn:true,
-	onButtonTriguerreturn: function(){
+	onButtonTriguerreturn: function(){		
 		this.seleccionNodos(this.root);
 		Phx.CP.getPagina(this.idContenedorPadre).Cmp.clasificacion.setValue(this.desc_clasificacion);
 		Phx.CP.getPagina(this.idContenedorPadre).id_clasificacion=this.id_clasificacion;
