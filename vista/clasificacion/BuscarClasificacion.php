@@ -10,8 +10,7 @@ header("content-type:text/javascript; charset=UTF-8");
 ?>
 <script>
     Phx.vista.BuscarClasificacion = Ext.extend(Phx.arbInterfaz, {
-        constructor : function(config) {
-        	alert('llega');
+        constructor : function(config) {        	
             this.maestro = config.maestro;
             Phx.vista.BuscarClasificacion.superclass.constructor.call(this, config);
             this.init();
