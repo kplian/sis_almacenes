@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.ft_reporte_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -46,6 +48,12 @@ BEGIN
 				--Obtener los IDs de todas las clasificaciones
 				v_ids=alm.f_get_id_clasificaciones_varios(v_parametros.id_clasificacion);
 				
+                IF (v_ids = '') THEN
+                
+                   v_ids = '0';
+                
+                END IF;
+                
 				v_where = 'where itm.id_clasificacion in (' ||v_ids||') and ';
 			else
 				raise exception 'Error desconocido';
@@ -89,6 +97,11 @@ BEGIN
         if (v_parametros.all_items = 'si') then
             v_where = 'where ';
         else
+             IF v_parametros.id_items='' THEN
+                 v_parametros.id_items='0';
+             END IF;
+        
+        
             v_where = 'where itm.id_item = ANY(ARRAY['||v_parametros.id_items||']) and ';
         end if;
 
