@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.f_get_saldo_item_val (
   p_id_item integer,
   p_id_almacen varchar,
@@ -12,7 +14,14 @@ $body$
  RETORNA:		Devuelve el valor de la cantidad disponible para el item: p_id_item
  AUTOR: 		RCM
  FECHA:	        26/07/2013
- COMENTARIOS:	
+ COMENTARIOS:
+ *********************************** CAMBIOS
+  DESCRIPCION:  se agrega el filtro al tipo demovimeinto de invetarios final para no ser considerado en el calculo
+                por ejemplo el repote de kardek al 31 de diciembre no tiene que considerar la salida realizada por el inventario final
+ AUTOR: 		    RAC
+ FECHA:	        10/04/2014
+ 
+ 	
 ***************************************************************************/
 
 DECLARE
@@ -24,10 +33,26 @@ DECLARE
     v_saldo				numeric;
     v_sql 				varchar;
     v_cond_almacen 		varchar;
+    v_fecha_fin         date;
+    va_id_movimiento_inv_fin  integer[];
 
 BEGIN
+    v_fecha_fin = p_fecha_hasta::date;
+
     p_fecha_hasta = p_fecha_hasta + interval '1 day';
     v_nombre_funcion = 'alm.f_get_saldo_valorado_item';
+    
+    -- identifica si tiene cirres al dia solicitado 
+    select 
+      pxp.aggarray(id_movimiento)
+    into
+     va_id_movimiento_inv_fin
+    from alm.tmovimiento m 
+    inner join alm.tmovimiento_tipo mt  
+       on   mt.id_movimiento_tipo = m.id_movimiento_tipo  
+       and  mt.codigo ='INVFIN' and m.fecha_mov::date = v_fecha_fin;
+    
+    
     
     v_cond_almacen='';
 	if coalesce(p_id_almacen,'') != '' then
@@ -60,9 +85,11 @@ BEGIN
     union all
     select -sum(detval.cantidad * detval.costo_unitario) as valor
     from alm.tmovimiento_det_valorado detval
-    inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
+    inner join alm.tmovimiento_det movdet on 
+             movdet.id_movimiento_det = detval.id_movimiento_det
+         and mov.id_movimiento not in ('||COALESCE(array_to_string(va_id_movimiento_inv_fin,','),'0')||')
     inner join alm.tmovimiento mov on mov.id_movimiento = movdet.id_movimiento
-    inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
+    inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo mov.id_movimiento_tipo  
     where movdet.estado_reg = ''activo''
     and movtip.tipo = ''salida''
     and movdet.id_item = '  || p_id_item ||'
