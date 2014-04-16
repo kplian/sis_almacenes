@@ -39,10 +39,11 @@ DECLARE
 
 BEGIN
 
+  --raise exception '%',p_fecha_hasta;
 
     v_fecha_fin = p_fecha_hasta::DATE;
     p_fecha_hasta = p_fecha_hasta + interval '1 day';
-    v_nombre_funcion = 'alm.f_get_saldo_fisico_item1';
+    v_nombre_funcion = 'alm.f_get_saldo_fisico_item';
     v_item_saldo := 0;
     
     --  identifica si tiene cirres al dia solcitado 

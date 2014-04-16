@@ -37,11 +37,15 @@ DECLARE
     va_id_movimiento_inv_fin  integer[];
 
 BEGIN
+
+
+
     v_fecha_fin = p_fecha_hasta::date;
 
     p_fecha_hasta = p_fecha_hasta + interval '1 day';
     v_nombre_funcion = 'alm.f_get_saldo_valorado_item';
     
+   
     -- identifica si tiene cirres al dia solicitado 
     select 
       pxp.aggarray(id_movimiento)
@@ -87,9 +91,10 @@ BEGIN
     from alm.tmovimiento_det_valorado detval
     inner join alm.tmovimiento_det movdet on 
              movdet.id_movimiento_det = detval.id_movimiento_det
-         and mov.id_movimiento not in ('||COALESCE(array_to_string(va_id_movimiento_inv_fin,','),'0')||')
+         
     inner join alm.tmovimiento mov on mov.id_movimiento = movdet.id_movimiento
-    inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo mov.id_movimiento_tipo  
+    			and mov.id_movimiento not in ('||COALESCE(array_to_string(va_id_movimiento_inv_fin,','),'0')||')
+    inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo   
     where movdet.estado_reg = ''activo''
     and movtip.tipo = ''salida''
     and movdet.id_item = '  || p_id_item ||'
@@ -104,6 +109,8 @@ BEGIN
     select
     sum(valor) as saldo
     from saldos';
+    
+    raise notice '%',v_sql;
     
     execute(v_sql);
     
