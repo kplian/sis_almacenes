@@ -1,9 +1,8 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.f_get_saldo_fisico_item (
   p_id_item integer,
   p_id_almacen integer,
-  p_fecha_hasta date
+  p_fecha_hasta date,
+  p_incluir_pendientes varchar = 'no'::character varying
 )
 RETURNS numeric AS
 $body$
@@ -21,6 +20,11 @@ $body$
  AUTOR: 		RAC
  FECHA:	        10/04/2014
  
+  *********************************** CAMBIOS
+  DESCRIPCION:  Se agrega parametro p_incluir_pendientes para tomar las salidas q no han sido finalizadas
+ AUTOR: 		JRR
+ FECHA:	        02/05/2014
+ 
 ***************************************************************************/
 
 DECLARE
@@ -36,7 +40,7 @@ DECLARE
     
     v_fecha_fin date;
     va_id_movimiento_inv_fin integer[];
-
+	v_estado_salida		varchar;
 BEGIN
 
   --raise exception '%',p_fecha_hasta;
@@ -72,7 +76,11 @@ BEGIN
     
    --salidas 
 
-
+	if (p_incluir_pendientes = 'si') then
+    	v_estado_salida = ' and mov.estado_mov not in(''anulado'', ''eliminado'') ';
+    else
+    	v_estado_salida = ' and mov.estado_mov = ''finalizado'' ';    
+    end if;
         
         
     execute('select coalesce(sum(movdet.cantidad),0)  
@@ -84,8 +92,8 @@ BEGIN
     inner join alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo 
     where movdet.estado_reg = ''activo''  
         and movtip.tipo like ''%salida%''  
-        and movdet.id_item = '||p_id_item||'  
-        and mov.estado_mov = ''finalizado''  
+        and movdet.id_item = '||p_id_item|| v_estado_salida || '  
+          
         and mov.id_almacen = '||p_id_almacen|| '   
         and mov.fecha_mov < '''||p_fecha_hasta||'''') into v_salidas;  
         
