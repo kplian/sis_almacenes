@@ -526,6 +526,181 @@ ALTER TABLE alm.tpreingreso_det
 
 /***********************************F-DEP-RCM-ALM-82-18/07/2013*****************************************/
 
+/***********************************I-DEP-GSS-ALM-82-22/07/2013****************************************/
+select pxp.f_insert_testructura_gui ('INVMAIN.1.2', 'INVMAIN.1');
+select pxp.f_insert_testructura_gui ('ORDINV.1.2', 'ORDINV.1');
+select pxp.f_insert_testructura_gui ('EJEINV.1.2', 'EJEINV.1');
+select pxp.f_insert_testructura_gui ('MOVALM.1', 'MOVALM');
+select pxp.f_insert_testructura_gui ('MOVALM.2', 'MOVALM');
+select pxp.f_insert_testructura_gui ('MOVALM.3', 'MOVALM');
+select pxp.f_insert_testructura_gui ('MOVALM.1.1', 'MOVALM.1');
+select pxp.f_insert_testructura_gui ('MOVALM.1.2', 'MOVALM.1');
+select pxp.f_insert_testructura_gui ('MOVALM.2.1', 'MOVALM.2');
+select pxp.f_insert_testructura_gui ('MOVALM.2.2', 'MOVALM.2');
+select pxp.f_insert_testructura_gui ('MOVVB.1', 'MOVVB');
+select pxp.f_insert_testructura_gui ('MOVVB.2', 'MOVVB');
+select pxp.f_insert_testructura_gui ('MOVVB.3', 'MOVVB');
+select pxp.f_insert_testructura_gui ('MOVVB.1.1', 'MOVVB.1');
+select pxp.f_insert_testructura_gui ('MOVVB.1.2', 'MOVVB.1');
+select pxp.f_insert_testructura_gui ('MOVVB.2.1', 'MOVVB.2');
+select pxp.f_insert_testructura_gui ('MOVVB.2.2', 'MOVVB.2');
+select pxp.f_insert_testructura_gui ('PREING.1', 'PREING');
+
+select pxp.f_insert_tprocedimiento_gui ('PM_GETGES_ELI', 'MOV', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOV_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_DEPUSUCOMB_SEL', 'ALCRAL', 'no');
+select pxp.f_insert_tprocedimiento_gui ('WF_PROMAC_SEL', 'MOVTIP', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_SEL', 'INVMAIN.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'INVMAIN.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'INVMAIN.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'INVMAIN.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'INVMAIN.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_INVNIVMOV_MOD', 'ORDINV', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_SEL', 'ORDINV.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'ORDINV.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'ORDINV.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'ORDINV.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'ORDINV.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_SEL', 'EJEINV.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'EJEINV.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'EJEINV.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'EJEINV.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'EJEINV.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVFIN_MOD', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVREPORT_SEL', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVTIP_SEL', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ALM_SEL', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('RH_FUNCIO_SEL', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('RH_FUNCIOCAR_SEL', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_PROVEEV_SEL', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOV_SEL', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOV_INS', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOV_MOD', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOV_ELI', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVCNL_MOD', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVREV_MOD', 'MOVALM', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITEMNOTBASE_SEL', 'MOVALM.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_INS', 'MOVALM.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_MOD', 'MOVALM.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_ELI', 'MOVALM.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_SEL', 'MOVALM.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'MOVALM.1.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'MOVALM.1.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'MOVALM.1.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DETVAL_SEL', 'MOVALM.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITEMNOTBASE_SEL', 'MOVALM.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_INS', 'MOVALM.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_MOD', 'MOVALM.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_ELI', 'MOVALM.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_SEL', 'MOVALM.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'MOVALM.2.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'MOVALM.2.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'MOVALM.2.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DETVAL_SEL', 'MOVALM.2.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARM_INS', 'MOVALM.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARM_MOD', 'MOVALM.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARM_ELI', 'MOVALM.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARMCOR_SEL', 'MOVALM.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARM_SEL', 'MOVALM.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('WF_TIPES_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('WF_FUNTIPES_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_SIGEMOV_IME', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ANTEMOV_IME', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVREPORT_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVTIP_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ALM_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('RH_FUNCIO_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('RH_FUNCIOCAR_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_PROVEEV_SEL', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOV_INS', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOV_MOD', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOV_ELI', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVCNL_MOD', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVREV_MOD', 'MOVVB', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITEMNOTBASE_SEL', 'MOVVB.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_INS', 'MOVVB.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_MOD', 'MOVVB.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_ELI', 'MOVVB.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_SEL', 'MOVVB.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'MOVVB.1.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'MOVVB.1.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'MOVVB.1.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DETVAL_SEL', 'MOVVB.1.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITEMNOTBASE_SEL', 'MOVVB.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_INS', 'MOVVB.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_MOD', 'MOVVB.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_ELI', 'MOVVB.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_MOVDET_SEL', 'MOVVB.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('ALM_CLA_ARB_SEL', 'MOVVB.2.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ARB_SEL', 'MOVVB.2.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ITMSRCHARB_SEL', 'MOVVB.2.1', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_DETVAL_SEL', 'MOVVB.2.2', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARM_INS', 'MOVVB.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARM_MOD', 'MOVVB.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARM_ELI', 'MOVVB.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARMCOR_SEL', 'MOVVB.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('PM_ALARM_SEL', 'MOVVB.3', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_ALM_SEL', 'PREING', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_PREINGR_INS', 'PREING', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_PREINGR_MOD', 'PREING', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_PREINGR_ELI', 'PREING', 'no');
+select pxp.f_insert_tprocedimiento_gui ('SAL_PREINGR_SEL', 'PREING', 'no');
+
+select pxp.f_insert_tgui_rol ('MOV', 'Solicitante de Almacenes');
+select pxp.f_insert_tgui_rol ('ALMOVI', 'Solicitante de Almacenes');
+select pxp.f_insert_tgui_rol ('ALM', 'Solicitante de Almacenes');
+select pxp.f_insert_tgui_rol ('MOV.1', 'Solicitante de Almacenes');
+select pxp.f_insert_tgui_rol ('MOV.1.1', 'Solicitante de Almacenes');
+select pxp.f_insert_tgui_rol ('MOV.1.2', 'Solicitante de Almacenes');
+select pxp.f_insert_tgui_rol ('MOV.1.3', 'Solicitante de Almacenes');
+select pxp.f_insert_tgui_rol ('MOV.2', 'Solicitante de Almacenes');
+select pxp.f_insert_tgui_rol ('MOVVB', 'Visto Bueno Solicitud Almacen');
+select pxp.f_insert_tgui_rol ('ALMOVI', 'Visto Bueno Solicitud Almacen');
+select pxp.f_insert_tgui_rol ('ALM', 'Visto Bueno Solicitud Almacen');
+select pxp.f_insert_tgui_rol ('MOVALM', 'Asistente de Almacenes');
+select pxp.f_insert_tgui_rol ('MOVALM', 'Almacenero');
+select pxp.f_insert_tgui_rol ('ALMOVI', 'Almacenero');
+select pxp.f_insert_tgui_rol ('ALM', 'Almacenero');
+
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOVTIP_SEL', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_ALM_SEL', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOV_SEL', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'RH_FUNCIO_SEL', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'RH_FUNCIOCAR_SEL', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'PM_PROVEEV_SEL', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOV_INS', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOV_MOD', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOV_ELI', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOVFIN_MOD', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOVCNL_MOD', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOVREV_MOD', 'MOV');
+
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOVDET_SEL', 'MOV.1');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'PM_GETGES_ELI', 'MOV');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_ITEMNOTBASE_SEL', 'MOV.1');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOVDET_INS', 'MOV.1');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_DETVAL_SEL', 'MOV.1.1');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOVDET_MOD', 'MOV.1');
+select pxp.f_insert_trol_procedimiento_gui ('Solicitante de Almacenes', 'SAL_MOVDET_ELI', 'MOV.1');
+
+select pxp.f_insert_tgui_rol ('MOVALM.1', 'Almacenero');
+select pxp.f_insert_trol_procedimiento_gui ('Visto Bueno Solicitud Almacen', 'SAL_MOV_SEL', 'MOVVB');
+select pxp.f_insert_trol_procedimiento_gui ('Visto Bueno Solicitud Almacen', 'SAL_MOVDET_SEL', 'MOVVB');
+select pxp.f_insert_trol_procedimiento_gui ('Visto Bueno Solicitud Almacen', 'SAL_ANTEMOV_IME', 'MOVVB');
+select pxp.f_insert_trol_procedimiento_gui ('Visto Bueno Solicitud Almacen', 'SAL_SIGEMOV_IME', 'MOVVB');
+select pxp.f_insert_trol_procedimiento_gui ('Visto Bueno Solicitud Almacen', 'WF_TIPES_SEL', 'MOVVB');
+select pxp.f_insert_trol_procedimiento_gui ('Visto Bueno Solicitud Almacen', 'WF_FUNTIPES_SEL', 'MOVVB');
+select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOV_SEL', 'MOVALM');
+select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVDET_SEL', 'MOVALM.1');
+select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVDET_MOD', 'MOVALM.1');
+select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVFIN_MOD', 'MOVALM');
+select pxp.f_insert_trol_procedimiento_gui ('Almacenero', 'SAL_MOVREPORT_SEL', 'MOVALM');
+
+/***********************************F-DEP-GSS-ALM-82-22/07/2013****************************************/
+
+
+
 /***********************************I-DEP-GSS-ALM-86-26/07/2013*****************************************/
 
 ALTER TABLE alm.tinventario
