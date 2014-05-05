@@ -1020,7 +1020,8 @@ select pxp.f_add_catalog('ALM','titem__opciones','Por Clasificacion');
 
 /***********************************I-DAT-GSS-ALM-82-22/07/2013****************************************/
 
-
+select pxp.f_insert_tgui ('PreIngreso', 'preingreso', 'PREING', 'si', 1, 'sis_almacenes/vista/preingreso/Preingreso.php', 3, '', 'Preingreso', 'ALM');
+select pxp.f_insert_testructura_gui ('PREING', 'ALMOVI');
 
 select pxp.f_insert_tgui ('Clasificacion', 'Clasificacion', 'INVMAIN.1.2', 'no', 0, 'sis_almacenes/vista/clasificacion/BuscarClasificacion.php', 7, '', 'BuscarClasificacion', 'ALM');
 select pxp.f_insert_tgui ('Clasificacion', 'Clasificacion', 'ORDINV.1.2', 'no', 0, 'sis_almacenes/vista/clasificacion/BuscarClasificacion.php', 7, '', 'BuscarClasificacion', 'ALM');
