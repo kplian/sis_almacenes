@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.ft_movimiento_ime (
   p_administrador integer,
   p_id_usuario integer,
@@ -173,7 +175,9 @@ BEGIN
             descripcion = v_parametros.descripcion,
             observaciones = v_parametros.observaciones,
             id_movimiento_origen = v_parametros.id_movimiento_origen,
-            id_depto_conta = v_parametros.id_depto_conta
+            id_depto_conta = v_parametros.id_depto_conta,
+            id_usuario_ai = v_parametros._id_usuario_ai,
+            usuario_ai = v_parametros._nombre_usuario_ai
         where id_movimiento = v_parametros.id_movimiento;
         
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento modificado con exito');
@@ -227,6 +231,8 @@ BEGIN
 	
     	begin
         
+        
+        
         	--Llama a la función de registro del movimiento
 	        v_respuesta = alm.f_movimiento_workflow_principal(p_id_usuario,hstore(v_parametros));
  
@@ -279,6 +285,8 @@ BEGIN
                                                            v_id_estado_wf, 
                                                            v_id_proceso_wf,
                                                            p_id_usuario,
+                                                           v_parametros._id_usuario_ai,
+            											   v_parametros._nombre_usuario_ai,
                                                            null);
             
             --Cancela el movimiento
@@ -286,7 +294,9 @@ BEGIN
             id_estado_wf =  v_id_estado_actual,
           	estado_mov = 'cancelado',
             id_usuario_mod=p_id_usuario,
-            fecha_mod=now()
+            fecha_mod=now(),
+            id_usuario_ai = v_parametros._id_usuario_ai,
+            usuario_ai = v_parametros._nombre_usuario_ai
         	where id_movimiento = v_parametros.id_movimiento;
 
             v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento cancelado');
@@ -413,6 +423,8 @@ BEGIN
                 v_id_estado_wf, 
                 v_id_proceso_wf, 
                 p_id_usuario,
+                v_parametros._id_usuario_ai,
+                v_parametros._nombre_usuario_ai,
                 v_id_depto,
                 v_parametros.obs);
                       
@@ -421,7 +433,9 @@ BEGIN
          id_estado_wf = v_id_estado_actual,
          estado_mov = v_codigo_estado,
          id_usuario_mod = p_id_usuario,
-         fecha_mod = now()
+         fecha_mod = now(),
+         id_usuario_ai =  v_parametros._id_usuario_ai,
+         usuario_ai = v_parametros._nombre_usuario_ai
          where id_movimiento = v_parametros.id_movimiento;             
         
          v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento revertido');
@@ -480,6 +494,8 @@ BEGIN
                           v_parametros.id_estado_wf, 
                           v_id_proceso_wf, 
                           p_id_usuario,
+                          v_parametros._id_usuario_ai,
+                          v_parametros._nombre_usuario_ai,
                           v_id_depto,
                           v_parametros.obs);
                       
@@ -488,7 +504,9 @@ BEGIN
                            id_estado_wf =  v_id_estado_actual,
                            estado_mov = v_codigo_estado,
                            id_usuario_mod=p_id_usuario,
-                           fecha_mod=now()
+                           fecha_mod=now(),
+                           id_suario_ai = v_parametros._id_usuario_ai,
+                           usuario_ai = v_parametros._nombre_usuario_ai
                          where id_movimiento = v_parametros.id_movimiento;
                          
                         -- si hay mas de un estado disponible  preguntamos al usuario
@@ -552,6 +570,8 @@ BEGIN
                   v_parametros.id_estado_wf, 
                   v_id_proceso_wf, 
                   p_id_usuario,
+                  v_parametros._id_usuario_ai,
+                  v_parametros._nombre_usuario_ai,
                   v_id_depto,
                   v_parametros.obs);
                       
@@ -560,7 +580,9 @@ BEGIN
                    id_estado_wf =  v_id_estado_actual,
                    estado_mov = v_codigo_estado,
                    id_usuario_mod=p_id_usuario,
-                   fecha_mod=now()
+                   fecha_mod=now(),
+                   id_usuario_ai = v_parametros._id_usuario_ai,
+                   usuario_ai = v_parametros._nombre_usuario_ai
                  where id_movimiento = v_parametros.id_movimiento;             
             
                -- si hay mas de un estado disponible  preguntamos al usuario
@@ -754,6 +776,8 @@ BEGIN
                                                            v_id_estado_wf, 
                                                            v_id_proceso_wf,
                                                            p_id_usuario,
+                                                           v_parametros._id_usuario_ai,
+                                                           v_parametros._nombre_usuario_ai,
                                                            v_id_depto,
                                                            v_obs);
             
@@ -764,7 +788,9 @@ BEGIN
                id_estado_wf =  v_id_estado_actual,
                estado_mov = v_codigo_estado_siguiente,
                id_usuario_mod=p_id_usuario,
-               fecha_mod=now()
+               fecha_mod=now(),
+               id_usuario_ai = v_parametros._id_usuario_ai,
+               usuario_ai = v_parametros._nombre_usuario_ai
                
              where id_movimiento= v_parametros.id_movimiento;
             
@@ -827,6 +853,8 @@ BEGIN
                                                            v_id_estado_wf, 
                                                            v_id_proceso_wf,
                                                            p_id_usuario,
+                                                           v_parametros._id_usuario_ai,
+                                                           v_parametros._nombre_usuario_ai,
                                                            null);
             
             --Cancela el movimiento
@@ -834,7 +862,9 @@ BEGIN
             id_estado_wf =  v_id_estado_actual,
           	estado_mov = 'cancelado',
             id_usuario_mod=p_id_usuario,
-            fecha_mod=now()
+            fecha_mod=now(),
+            id_usuario_ai = v_parametros._id_usuario_ai,
+            usuario_ai = v_parametros._nombre_usuario_ai
         	where id_movimiento = v_parametros.id_movimiento;
             
             ---------------------------
@@ -878,6 +908,8 @@ BEGIN
                           v_id_estado_wf, 
                           v_id_proceso_wf, 
                           p_id_usuario,
+                          v_parametros._id_usuario_ai,
+                          v_parametros._nombre_usuario_ai,
                           v_id_depto,
                           'Reversión del ingreso generado');
                       
@@ -886,7 +918,9 @@ BEGIN
             id_estado_wf = v_id_estado_actual,
             estado = v_codigo_estado,
             id_usuario_mod = p_id_usuario,
-            fecha_mod = now()
+            fecha_mod = now(),
+            id_usuario_ai = v_parametros._id_usuario_ai,
+            usuario_ai = v_parametros._nombre_usuario_ai
             where id_preingreso = v_id_preingreso;
             
 			--Respuesta

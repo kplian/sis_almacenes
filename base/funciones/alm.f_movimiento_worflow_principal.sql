@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.f_movimiento_workflow_principal (
   p_id_usuario integer,
   p_parametros public.hstore
@@ -63,8 +65,13 @@ DECLARE
     v_saldo_total      				numeric;
     v_alertas_exis					varchar;
     v_salto_total					numeric;
+    
+    v_nombre_funcion  				varchar;
+    v_resp            				varchar;
 
 BEGIN
+
+   v_nombre_funcion = 'alm.f_movimiento_workflow_principal ';
 
 	------------------------------
     --1.OBTENCION DATOS MOVIMIENTO
@@ -211,6 +218,7 @@ BEGIN
                     
             if array_length(va_id_tipo_estado,1)= 1 then
                 v_respuesta=pxp.f_agrega_clave(v_respuesta,'wf_id_tipo_estado',va_id_tipo_estado[1]::varchar);
+                v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_tipo_estado_wf',va_id_tipo_estado[1]::varchar);
             end if;
                     
             v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_tipo_proceso',v_id_tipo_proceso::varchar);
@@ -251,6 +259,7 @@ BEGIN
 
             if v_num_funcionarios = 1 then
                 v_respuesta=pxp.f_agrega_clave(v_respuesta,'wf_id_funcionario',v_id_funcionario_estado::varchar);
+                v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_funcionario_wf',v_id_funcionario_estado::varchar);
             end if;
 
         else
@@ -271,7 +280,11 @@ BEGIN
                                                       v_id_estado_wf, 
                                                       v_id_proceso_wf,
                                                       p_id_usuario,
+                                                      (p_parametros->'_id_usuario_ai')::integer,
+                                                      (p_parametros->'_nombre_usuario_ai')::varchar,
                                                       NULL);
+                                                      
+       
              	
         --Obtiene el código del estado obtenido                      
         select te.codigo
@@ -398,6 +411,8 @@ BEGIN
             end loop;
                         
         end if;
+        
+        
                 
         --------------------------------
         --3.4 ACCIONES POR TIPO DE NODO
@@ -444,11 +459,13 @@ BEGIN
 	    estado_mov = v_codigo_estado,
 	    fecha_mov = v_fecha_mov,
 	    fecha_mod = now(),
-	    id_usuario_mod = p_id_usuario
+	    id_usuario_mod = p_id_usuario,
+        id_usuario_ai = (p_parametros->'_id_usuario_ai')::integer,
+        usuario_ai = (p_parametros->'_nombre_usuario_ai')::varchar
 	    where id_movimiento = (p_parametros->'id_movimiento')::integer;
-                
+              
     ELSIF (p_parametros->'operacion')::varchar = 'anterior' THEN
-            
+          
         --Recupera estado anterior segun Log del WF
         SELECT  
         ps_id_tipo_estado,ps_id_funcionario,ps_id_usuario_reg,
@@ -471,6 +488,8 @@ BEGIN
                       v_id_estado_wf, 
                       v_id_proceso_wf, 
                       p_id_usuario,
+                      (p_parametros->'_id_usuario_ai')::integer,
+                      (p_parametros->'_nombre_usuario_ai')::varchar,
                       v_id_depto,
                       (p_parametros->'obs')::varchar);
                           
@@ -479,7 +498,9 @@ BEGIN
         id_estado_wf = v_id_estado_actual,
         estado_mov = v_codigo_estado,
         id_usuario_mod = p_id_usuario,
-        fecha_mod = now()
+        fecha_mod = now(),
+        id_usuario_ai = (p_parametros->'_id_usuario_ai')::integer,
+        usuario_ai = (p_parametros->'_nombre_usuario_ai')::varchar
         where id_movimiento = (p_parametros->'id_movimiento')::integer;
                              
         v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje','Se retrocedió el movimiento al estado anterior)'); 
@@ -515,6 +536,8 @@ BEGIN
                 v_id_estado_wf, 
                 v_id_proceso_wf, 
                 p_id_usuario,
+                (p_parametros->'_id_usuario_ai')::integer,
+                (p_parametros->'_nombre_usuario_ai')::varchar,
                 v_id_depto,
                 (p_parametros->'obs')::varchar);
                           
@@ -523,7 +546,9 @@ BEGIN
          id_estado_wf = v_id_estado_actual,
          estado_mov = v_codigo_estado,
          id_usuario_mod = p_id_usuario,
-         fecha_mod = now()
+         fecha_mod = now(),
+         id_usuario_ai = (p_parametros->'_id_usuario_ai')::integer,
+         usuario_ai = (p_parametros->'_nombre_usuario_ai')::VARCHAR
          where id_movimiento = (p_parametros->'id_movimiento')::integer;             
                 
          --Respuesta
@@ -537,7 +562,15 @@ BEGIN
     
     --Respuesta
     return v_respuesta;
-
+    
+EXCEPTION
+					
+	WHEN OTHERS THEN
+			v_resp='';
+			v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
+			v_resp = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);
+			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
+			raise exception '%',v_resp;
 
 END;
 $body$

@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.f_registrar_almacen_gestion_log (
   p_id_usuario integer,
   p_id_almacen_gestion integer,

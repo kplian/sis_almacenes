@@ -69,7 +69,9 @@ BEGIN
 			id_usuario_reg,
 			fecha_reg,
 			id_usuario_mod,
-			fecha_mod
+			fecha_mod,
+            id_usuario_ai,
+            usuario_ai
           	) values(
 			'activo',
 			v_parametros.id_cotizacion,
@@ -84,7 +86,9 @@ BEGIN
 			p_id_usuario,
 			now(),
 			null,
-			null
+			null,
+            v_parametros._id_usuario_ai,
+            v_parametros._nombre_usuario_ai
 							
 			)RETURNING id_preingreso into v_id_preingreso;
 			
@@ -130,7 +134,9 @@ BEGIN
 			tipo = v_parametros.tipo,
 			descripcion = v_parametros.descripcion,
 			id_usuario_mod = p_id_usuario,
-			fecha_mod = now()
+			fecha_mod = now(),
+            id_usuario_ai = v_parametros._id_usuario_ai,
+            usuario_ai = v_parametros._nombre_usuario_ai
 			where id_preingreso=v_parametros.id_preingreso;
                
 			--Definicion de la respuesta
@@ -196,7 +202,10 @@ BEGIN
             end if;
         
 			--Llamada a la función de generación de ingreso
-			v_result = alm.f_generar_ingreso(p_id_usuario, v_parametros.id_preingreso);
+			v_result = alm.f_generar_ingreso(p_id_usuario,
+                                              v_parametros._id_usuario_ai,
+                                              v_parametros._nombre_usuario_ai, 
+            								  v_parametros.id_preingreso);
                
 			--Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Detalle Preingreso modificado(a)'); 

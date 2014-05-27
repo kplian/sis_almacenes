@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.f_get_saldo_fisico_item (
   p_id_item integer,
   p_id_almacen integer,

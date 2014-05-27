@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.f_generar_mov_gestion (
   p_id_usuario integer,
   p_id_almacen_gestion_log integer,

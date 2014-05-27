@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.f_insercion_movimiento (
   p_id_usuario integer,
   p_parametros public.hstore
@@ -44,6 +46,8 @@ BEGIN
     v_num_tramite, v_id_proceso_wf, v_id_estado_wf, v_codigo_estado   
     from wf.f_inicia_tramite(
          p_id_usuario, 
+         (p_parametros->'_id_usuario_ai')::integer,
+         (p_parametros->'_nombre_usuario_ai')::varchar,
          (p_parametros->'id_gestion')::integer, 
          v_codigo_tipo_proceso, 
          (p_parametros->'id_funcionario')::integer,
@@ -70,7 +74,9 @@ BEGIN
           id_proceso_wf,
           id_estado_wf,
           id_depto_conta,
-          id_preingreso
+          id_preingreso,
+          id_usuario_ai,
+          usuario_ai
         ) values (
           p_id_usuario,
           now(),
@@ -89,7 +95,9 @@ BEGIN
           v_id_proceso_wf,
           v_id_estado_wf,
           (p_parametros->'id_depto_conta')::integer,
-          (p_parametros->'id_preingreso')::integer
+          (p_parametros->'id_preingreso')::integer,
+          (p_parametros->'_id_usuario_ai')::integer,
+          (p_parametros->'_nombre_usuario_ai')::varchar
         ) RETURNING id_movimiento into v_id_movimiento;
 
 	--Respuesta

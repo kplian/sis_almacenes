@@ -2,6 +2,8 @@
 
 CREATE OR REPLACE FUNCTION alm.f_generar_ingreso (
   p_id_usuario integer,
+  p_id_usuario_ai integer,
+  p_usuario varchar,
   p_id_preingreso integer
 )
 RETURNS varchar AS
@@ -182,6 +184,8 @@ BEGIN
                                                  v_id_estado_wf_cot, 
                                                  v_id_proceso_wf_cot,
                                                  p_id_usuario,
+                                                 p_id_usuario_ai,
+                                                 p_usuario,
                                                  NULL,
                                                  'Preingreso realizado',
                                                  '',
@@ -212,8 +216,13 @@ BEGIN
             ps_num_tramite, ps_id_proceso_wf, ps_id_estado_wf, ps_codigo_estado 
             into
             v_num_tramite, v_id_proceso_wf, v_id_estado_wf, v_codigo_estado   
-            from wf.f_inicia_tramite(p_id_usuario, v_id_gestion,
-            v_codigo_tipo_proceso, v_rec.id_funcionario,
+            from wf.f_inicia_tramite(
+               p_id_usuario, 
+               p_id_usuario_ai,
+               p_usuario,
+               v_id_gestion,
+               v_codigo_tipo_proceso, 
+               v_rec.id_funcionario,
             NULL,
             'Generación de ingreso a almacén',
             'IN-S/N'
@@ -224,12 +233,12 @@ BEGIN
             id_usuario_reg, fecha_reg, estado_reg,
             id_movimiento_tipo, id_almacen, id_funcionario, fecha_mov,
             descripcion, id_proceso_macro, id_estado_wf, id_proceso_wf,
-            estado_mov, id_preingreso, id_depto_conta
+            estado_mov, id_preingreso, id_depto_conta, id_usuario_ai, usuario_ai
             ) values(
             p_id_usuario, now(),'activo',
             v_id_movimiento_tipo, v_rec_det.id_almacen, v_rec.id_funcionario, now(),
             v_rec.descripcion, v_id_proceso_macro, v_id_estado_wf, v_id_proceso_wf,
-            v_codigo_estado, v_rec.id_preingreso, v_rec.id_depto_conta
+            v_codigo_estado, v_rec.id_preingreso, v_rec.id_depto_conta, p_id_usuario_ai, p_usuario
             ) returning id_movimiento into v_id_movimiento;
             
             --Detalle del ingreso

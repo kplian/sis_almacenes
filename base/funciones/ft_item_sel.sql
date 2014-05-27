@@ -1,3 +1,5 @@
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.ft_item_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -401,9 +403,9 @@ BEGIN
                 	it.id_item id, 
                 	case 
                         when (it.id_clasificacion is null) then
-                            ''{}''::INT[]
+                            ''''::varchar
                         else 
-                            alm.f_get_ruta_clasificacion(it.id_clasificacion)
+                           array_to_string(alm.f_get_ruta_clasificacion(it.id_clasificacion), '','') ::varchar
                     end as ruta
 				from alm.titem it
                 where it.estado_reg = ''activo'' and it.nombre ilike ''%' || v_parametros.text_search || '%'' ';
