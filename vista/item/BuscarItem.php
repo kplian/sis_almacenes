@@ -120,33 +120,43 @@ header("content-type:text/javascript; charset=UTF-8");
             var reg = Ext.util.JSON.decode(Ext.util.Format.trim(response.responseText));
             var pathTxt;
             for (var i = 0; i < reg.datos.length; i++) {
-                pathTxt = Ext.util.Format.trim(reg.datos[i].ruta);
-                pathTxt = pathTxt.replace('{', '[');
-                pathTxt = pathTxt.replace('}', ']');
-                var path = eval(pathTxt);
-                if (path.length == 0) {
-                    this.showPath(path, '0_'+reg.datos[i].id.toString());
-                } else {
-                    this.showPath(path, path[path.length - 1].toString()+'_'+reg.datos[i].id.toString());
-                }
+                pathTxt = reg.datos[i].id_rutas;
+                pathTxt = pathTxt.split(',');
+                var path = pathTxt;
+                this.showPath(path, this.treePanel.getRootNode(), reg.datos[i].id.toString())
+               
             }
         },
-        showPath : function(pathArray, foundId) {
+        
+        showPath : function(pathArray, menode, foundId) {
             var global = this;
-            if (pathArray.length > 0) {
-                var currentNode = this.treePanel.getNodeById(pathArray[0].toString());
-                currentNode.expand(false, true, function(node, b, c, d) {
-                    pathArray.shift();
-                    global.showPath(pathArray, foundId);
-                    
-                }, global);
-            } else {
-                var foundNode = global.treePanel.getNodeById(foundId.toString());
-                foundNode.setCls('light-node');
-                global.lightNodes[global.lightNodes.length] = foundNode;
+            if (pathArray.length >0) {
+                var currentNode = menode.findChild( 'id_item', pathArray[0].toString()) 
+                if(!currentNode){
+                    currentNode = menode.findChild('id_clasificacion', pathArray[0].toString()) 
+                }
+               
+               if(currentNode){
+                    currentNode.expand(false, true, function(node, b, c, d) {
+                            pathArray.shift();
+                            global.showPath(pathArray, currentNode,foundId);
+                       }, global);
+                }
+               
+             } else {
+                var foundNode = menode.findChild('id_item',foundId.toString()) 
+                if(!foundNode){
+                   foundNode = menode.findChild('id_clasificacion', foundId.toString()) 
+               }
+                if(foundNode){
+                    foundNode.setCls('light-node');
+                    global.lightNodes[global.lightNodes.length] = foundNode;
+                }
+                
             }
             
         },
+        
         clearLightNodes : function() {
             if (this.lightNodes != undefined && this.lightNodes != null) {
                 for (var i = 0; i < this.lightNodes.length; i++) {

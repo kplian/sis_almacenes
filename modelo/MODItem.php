@@ -143,7 +143,7 @@ class MODItem extends MODbase {
         $this->setParametro('text_search', 'text_search', 'varchar');
         
         $this->captura('id', 'int4');
-        $this->captura('ruta', 'integer[]');
+        $this->captura('id_rutas', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

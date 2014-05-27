@@ -20,7 +20,11 @@ header("content-type: text/javascript; charset=UTF-8");
 			
 			//Eventos
 			this.Cmp.id_item.on('select', function(comp, object, c) {
-                this.getComponente('codigo_unidad').setValue(object.data.codigo_unidad);
+                 if(object.data){
+                     this.getComponente('codigo_unidad').setValue(object.data.codigo_unidad);
+                 } 
+                
+                
             }, this);
             
             this.Cmp.cantidad_solicitada.on('blur',function(cmp){
