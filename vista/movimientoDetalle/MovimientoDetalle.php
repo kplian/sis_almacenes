@@ -129,7 +129,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 disabled : true
             },
             type : 'TextField',
-            id_grupo : 1,
+            id_grupo : 0,
             grid : false,
             form : true
         }, {
@@ -214,7 +214,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				pfiltro : 'movdet.fecha_caducidad',
 				type : 'date'
 			},
-			id_grupo : 1,
+			id_grupo : 0,
 			grid : true,
 			form : true
 		}, {
@@ -272,7 +272,7 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             type:'ComboBox',
             filters:{pfiltro:'cig.desc_ingas',type:'string'},
-            id_grupo:1,
+            id_grupo:0,
             grid:true,
             form:true
         }, 
@@ -453,7 +453,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.fecha_caducidad.setVisible(false);
 			this.Cmp.cantidad_solicitada.setVisible(true);
 			this.Cmp.observaciones.setVisible(false);
-console.log(maestro.tipo)
+
 			
 			//Habilita concpto ingas solo para ingresos
 			if(this.maestro.tipo=='ingreso'){

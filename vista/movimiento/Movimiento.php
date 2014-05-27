@@ -1269,7 +1269,7 @@ header("content-type: text/javascript; charset=UTF-8");
 	       		Ext.apply(this.cmbTipoEstWF.store.baseParams,{id_tipo_proceso: data.id_tipo_proceso, id_tipo_estado_padre: data.id_tipo_estado_padre});
 	       		
 	       		//Setea parámetros del store de funcionarios
-	       		Ext.apply(this.cmbFunWF.store.baseParams,{id_estado_wf: data.id_estado_wf, fecha: data.fecha, id_tipo_estado: data.wf_id_tipo_estado});
+	       		Ext.apply(this.cmbFunWF.store.baseParams,{id_estado_wf: data.id_estado_wf, fecha: data.fecha, id_tipo_estado: data.id_tipo_estado_wf});
 
 	       		//Muestra la ventana
 	       		this.winWF.show();
@@ -1281,8 +1281,8 @@ header("content-type: text/javascript; charset=UTF-8");
 				  	params:{
 				  		id_movimiento:d.id_movimiento,
 				  		operacion:'siguiente',
-				  		id_funcionario_wf:data.wf_id_funcionario,
-				  		id_tipo_estado: data.wf_id_tipo_estado,
+				  		id_funcionario_wf:data.id_funcionario_wf,
+				  		id_tipo_estado: data.id_tipo_estado_wf,
 				  		id_almacen: d.id_almacen
 				      },
 				      success:this.successFinSol,

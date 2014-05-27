@@ -26,6 +26,36 @@ header("content-type:text/javascript; charset=UTF-8");
                 handler : this.onBtnBuscar
             });
         },
+        
+        Atributos :[
+          //Primera posicion va el identificador de nodo
+        {
+            // configuracion del componente (el primero siempre es el
+            // identificador)
+            config:{
+                labelSeparator:'',
+                inputType:'hidden',
+                name: 'id_clasificacion'
+
+            },
+            type:'Field',
+            form:true  
+
+        },
+         //En segunda posicion siempre va el identificador del nodo padre
+            {
+            // configuracin del componente
+            config:{
+                labelSeparator:'',
+                inputType:'hidden',
+                name:'id_clasificacion_fk'
+
+            },
+            type:'Field',
+            form:true
+
+        }],
+        
         title : 'Buscador de Items',
         ActList : '../../sis_almacenes/control/Clasificacion/listarClasificacionArb',
         ActSearch : '../../sis_almacenes/control/Item/buscarItemArb',
