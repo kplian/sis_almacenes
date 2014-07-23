@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.ft_movimiento_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -103,7 +101,7 @@ BEGIN
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
             
-            INNER JOIN wf.testado_wf ew on  ew.id_estado_wf = mov.id_estado_wf and ew.estado_reg = ''activo''
+            LEFT JOIN wf.testado_wf ew on  ew.id_estado_wf = mov.id_estado_wf and ew.estado_reg = ''activo''
             
             LEFT JOIN orga.vfuncionario fun on fun.id_funcionario = mov.id_funcionario
             LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
@@ -163,7 +161,7 @@ BEGIN
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
            
-            INNER JOIN wf.testado_wf ew on  ew.id_estado_wf = mov.id_estado_wf and ew.estado_reg = ''activo''
+            LEFT JOIN wf.testado_wf ew on  ew.id_estado_wf = mov.id_estado_wf and ew.estado_reg = ''activo''
             
             LEFT JOIN orga.vfuncionario fun on fun.id_funcionario = mov.id_funcionario
             LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor

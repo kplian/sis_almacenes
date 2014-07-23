@@ -178,7 +178,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				hiddenValue: 'id_funcionario',
 				displayField : 'desc_person',
 				gdisplayField : 'nombre_funcionario',
-				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
+				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {desc_person}</p></div></tpl>',
 				hiddenName : 'id_funcionario',
 				forceSelection : true,
 				typeAhead : false,
