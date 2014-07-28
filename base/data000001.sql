@@ -1395,3 +1395,15 @@ select pxp.f_insert_trol ('Registra salidas de almacenes', 'ALM - Asistente de A
 select pxp.f_insert_trol ('ingreso a Reportes', 'ALM - Consulta', 'ALM');
 
 /***********************************F-DAT-JRR-ALM-0-24/04/2014****************************************/
+
+
+
+
+/***********************************I-DAT-RAC-ALM-0-24/06/2014****************************************/
+select pxp.f_insert_tgui ('PreIngreso', 'preingreso', 'PREING', 'si', 1, 'sis_almacenes/vista/preingreso/PreingresoAlm.php', 3, '', 'PreingresoAlm', 'ALM');
+
+
+/***********************************F-DAT-RAC-ALM-0-24/06/2014****************************************/
+
+
+

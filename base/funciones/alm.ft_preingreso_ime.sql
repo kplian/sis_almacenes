@@ -263,7 +263,12 @@ BEGIN
                                                            v_id_estado_wf, 
                                                            v_id_proceso_wf,
                                                            p_id_usuario,
-                                                           null);
+                                                           v_parametros._id_usuario_ai,
+                                                           v_parametros._nombre_usuario_ai,
+                                                           null,
+                                                           'Eliminacion de la preingreso de almacenes ');
+                                                           
+                                                         
             
             --Cancela el movimiento
             update alm.tpreingreso set
