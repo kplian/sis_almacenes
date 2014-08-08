@@ -149,6 +149,7 @@ BEGIN
         	id_usuario_mod = p_id_usuario,
             fecha_mod = now(),
             cantidad = v_parametros.cantidad_item,
+            aux_saldo_fisico = v_parametros.cantidad_item,
             costo_unitario = v_parametros.costo_unitario
         where id_movimiento_det = v_parametros.id_movimiento_det;
         

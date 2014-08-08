@@ -402,7 +402,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		botones : false,
 		labelSubmit : 'Imprimir',
 		tooltipSubmit : '<b>Generar Reporte</b>',
-
+		clasificacion : '',
 		constructor : function(config) {
 			Phx.vista.ItemEntRec.superclass.constructor.call(this, config);
 			this.init();
@@ -482,6 +482,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.uo=this.Cmp.uo;
 			this.id_uo=this.Cmp.id_uo;
 			this.id_estructura_uo=this.Cmp.id_estructura_uo;
+			this.clasificacion = this.Cmp.clasificacion;
 		},
 		tipo : 'reporte',
 		clsSubmit : 'bprint',

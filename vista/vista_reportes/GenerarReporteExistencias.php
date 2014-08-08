@@ -277,7 +277,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			
 			this.getComponente('id_items').disable();
 			this.Cmp.clasificacion.on('focus',this.bntClasificacion,this);
-			this.Cmp.clasificacion.setReadOnly(true);		},
+			this.Cmp.clasificacion.setReadOnly(true);
+			this.clasificacion = this.Cmp.clasificacion;		},
 		tipo : 'reporte',
 		clsSubmit : 'bprint',
 		Grupos : [{
@@ -311,6 +312,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			}
 		},
 		id_clasificacion:'',
+		clasificacion:'',
 		agregarArgsExtraSubmit: function(){
 			//Inicializa el objeto de los argumentos extra
 			this.argumentExtraSubmit={};
