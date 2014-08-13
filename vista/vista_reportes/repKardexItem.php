@@ -12,6 +12,7 @@ header("content-type:text/javascript; charset=UTF-8");
 	Phx.vista.repKardexItem = Ext.extend(Phx.gridInterfaz, {
 		constructor : function(config) {
 			this.maestro = config;
+			this.description = this.maestro.item;
 			Phx.vista.repKardexItem.superclass.constructor.call(this, config);
 			this.init();
 			this.load({

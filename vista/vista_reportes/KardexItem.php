@@ -214,6 +214,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			if (this.form.getForm().isValid()) {
 				var data={};
 				data.fecha_ini=this.getComponente('fecha_ini').getValue();
+				data.item=this.getComponente('id_item').getRawValue();
 				data.fecha_fin=this.getComponente('fecha_fin').getValue();
 				data.id_item=this.getComponente('id_item').getValue();
 				data.all_alm=this.getComponente('all_alm').getValue();
