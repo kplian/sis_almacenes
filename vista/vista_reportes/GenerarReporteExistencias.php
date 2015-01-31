@@ -211,6 +211,26 @@ header("content-type: text/javascript; charset=UTF-8");
 		},
 		{
 			config : {
+				name : 'alertas',
+				fieldLabel : 'Generar reporte de alertas',
+				allowBlank : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'local',
+				store : new Ext.data.ArrayStore({
+					fields : ['codigo', 'nombre'],
+					data : [['no', 'No'],['cantidad_minima', 'Cantidad mínima']/*, ['cantidad_amarilla', 'Cantidad alerta amarilla'], ['cantidad_roja', 'Cantidad alerta roja']*/]
+				}),
+				anchor : '50%',
+				valueField : 'codigo',
+				displayField : 'nombre'
+			},
+			type : 'ComboBox',
+			id_grupo : 0,
+			form : true
+		},
+		{
+			config : {
 				name : 'saldo_cero',
 				fieldLabel : 'Items Sin Existencias',
 				allowBlank : false,
@@ -278,7 +298,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.getComponente('id_items').disable();
 			this.Cmp.clasificacion.on('focus',this.bntClasificacion,this);
 			this.Cmp.clasificacion.setReadOnly(true);
-			this.clasificacion = this.Cmp.clasificacion;		},
+			this.clasificacion = this.Cmp.clasificacion;
+			this.Cmp.alertas.setValue('no');    		},
 		tipo : 'reporte',
 		clsSubmit : 'bprint',
 		Grupos : [{

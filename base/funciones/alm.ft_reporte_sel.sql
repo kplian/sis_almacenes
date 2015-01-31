@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.ft_reporte_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -60,9 +58,19 @@ BEGIN
 			end if;
 			
 			--Verifica si se debe incluir los items que tengan existencias iguales a cero a la fecha
-			if(v_parametros.saldo_cero = 'no') then
-				v_where = v_where || ' (alm.f_get_saldo_fisico_item(id_item, '||v_parametros.id_almacen||', date('''''|| v_parametros.fecha_hasta||'''''))) > 0 and ';
-			end if;
+			if (v_parametros.alertas != 'todos') THEN
+            	if(v_parametros.alertas = 'cantidad_minima') then
+                    v_where = v_where || ' (alm.f_get_saldo_fisico_item(itm.id_item, '||v_parametros.id_almacen||', date('''''|| v_parametros.fecha_hasta||'''''))) < almsto.cantidad_min and ';
+                elsif(v_parametros.alertas = 'cantidad_amarilla') then
+                    v_where = v_where || ' (alm.f_get_saldo_fisico_item(itm.id_item, '||v_parametros.id_almacen||', date('''''|| v_parametros.fecha_hasta||'''''))) < almsto.cantidad_alerta_amarilla and ';
+                elsif(v_parametros.alertas = 'cantidad_roja') then
+                    v_where = v_where || ' (alm.f_get_saldo_fisico_item(itm.id_item, '||v_parametros.id_almacen||', date('''''|| v_parametros.fecha_hasta||'''''))) < almsto.cantidad_alerta_roja and ';
+                end if;
+            else
+                if(v_parametros.saldo_cero = 'no') then
+                    v_where = v_where || ' (alm.f_get_saldo_fisico_item(itm.id_item, '||v_parametros.id_almacen||', date('''''|| v_parametros.fecha_hasta||'''''))) > 0 and ';
+                end if;
+            end if;
 	
 	    	v_consulta:='select 
             			id_item,
@@ -71,7 +79,10 @@ BEGIN
                         unidad_medida,
                         clasificacion,
                         cantidad,
-                        costo
+                        costo,
+                        cantidad_min,
+                        cantidad_alerta_roja,
+                        cantidad_alerta_amarilla
                         from alm.f_existencias_almacen_sel('||v_parametros.id_almacen||','''||v_parametros.fecha_hasta||''','''||v_where||''','''||v_parametros.filtro||''')
                         as (id_item integer,
                         codigo varchar,
@@ -79,7 +90,10 @@ BEGIN
                         unidad_medida varchar,
                         clasificacion varchar,
                         cantidad numeric,
-                        costo numeric)';        	
+                        costo numeric,
+                        cantidad_min numeric,
+                        cantidad_alerta_roja numeric,
+                        cantidad_alerta_amarilla numeric)';        	
                         
                         raise notice '%',v_consulta;
 

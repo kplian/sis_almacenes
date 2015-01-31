@@ -44,10 +44,15 @@ BEGIN
 				itm.nombre,
 				umed.codigo unidad_medida,
 				(alm.f_get_codigo_clasificacion_rec(itm.id_clasificacion,''padres'') || '' - ''||cla.nombre)::varchar clasificacion,
-				alm.f_get_saldo_fisico_item(id_item, '||p_id_almacen||', date('''|| p_fecha_hasta||''')) cantidad,
-				alm.f_get_saldo_valorado_item(id_item, '||p_id_almacen||', date('''||p_fecha_hasta||''')) costo
+				alm.f_get_saldo_fisico_item(itm.id_item, '||p_id_almacen||', date('''|| p_fecha_hasta||''')) cantidad,
+				alm.f_get_saldo_valorado_item(itm.id_item, '||p_id_almacen||', date('''||p_fecha_hasta||''')) costo,
+                almsto.cantidad_min,
+                almsto.cantidad_alerta_amarilla,
+                almsto.cantidad_alerta_roja                
 				from alm.titem itm
 				inner join param.tunidad_medida umed on umed.id_unidad_medida = itm.id_unidad_medida
+                inner join alm.talmacen_stock almsto on almsto.id_item = itm.id_item and 
+                							almsto.estado_reg = ''activo'' and  almsto.id_almacen = ' || p_id_almacen ||'               								
 				inner join alm.tclasificacion cla on cla.id_clasificacion = itm.id_clasificacion ' ||
 				p_condicion||'itm.codigo is not null and ';
 			

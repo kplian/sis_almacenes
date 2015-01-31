@@ -23,6 +23,7 @@ class MODReporte extends MODbase {
         $this->setParametro('all_items', 'all_items', 'varchar');
         $this->setParametro('id_items', 'id_items', 'varchar');
 		$this->setParametro('saldo_cero', 'saldo_cero', 'varchar');
+		$this->setParametro('alertas', 'alertas', 'varchar');
 		$this->setParametro('id_clasificacion', 'id_clasificacion', 'varchar');
 		
         $this->captura('id_item', 'integer');
@@ -32,6 +33,9 @@ class MODReporte extends MODbase {
         $this->captura('clasificacion', 'varchar');
         $this->captura('cantidad', 'numeric');
         $this->captura('costo', 'numeric');
+		$this->captura('cantidad_min', 'numeric');
+		$this->captura('cantidad_alerta_amarilla', 'numeric');
+		$this->captura('cantidad_alerta_roja', 'numeric');
 
         $this->armarConsulta();
 		//echo $this->consulta;exit;
