@@ -89,6 +89,7 @@ class ACTMovimiento extends ACTbase {
 
     function generarReporteMovimiento() {
         $idMovimiento = $this->objParam->getParametro('id_movimiento');
+		$costos = $this->objParam->getParametro('costos');
         $tipoMovimiento = $this->objParam->getParametro('tipo');
         $tipoPersonalizado = $this->objParam->getParametro('nombre_movimiento_tipo');
         $codigoMovimiento = $this->objParam->getParametro('codigo');
@@ -114,6 +115,7 @@ class ACTMovimiento extends ACTbase {
 		
         //1. En caso de que el movimiento sea un inventario Inicial
         if ($tipoMovimiento == "ingreso" && $tipoPersonalizado == "Inventario Inicial") {
+            	
             $lastNombreClasificacion = $resultData[0]['nombre_clasificacion'];
             $dataSourceArray = Array();
             $dataSourceClasificacion = new DataSource();
@@ -121,6 +123,7 @@ class ACTMovimiento extends ACTbase {
             $totalCostoClasificacion = 0;
             $mainDataSet = array();
             $costoTotal = 0;
+			
             foreach ($resultData as $row) {
                 if ($row['nombre_clasificacion'] != $lastNombreClasificacion) {
                     $costoTotal += $totalCostoClasificacion;
@@ -166,6 +169,8 @@ class ACTMovimiento extends ACTbase {
         $dataSource->putParameter('observaciones', $observacionesMovimiento);
         $dataSource->putParameter('fechaRemision', $fechaRegMovimiento);
         $dataSource->putParameter('fechaMovimiento', $fechaMovimiento);
+		$dataSource->putParameter('costos', $costos);
+		
         
         if ($nombreFuncionario != null && $nombreFuncionario != '') {
             $dataSource->putParameter('solicitante', $nombreFuncionario);
