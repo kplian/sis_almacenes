@@ -2742,3 +2742,69 @@ select pxp.f_insert_trol_procedimiento_gui ('ALM - Consulta', 'PM_ALARMCOR_SEL',
 select pxp.f_insert_trol_procedimiento_gui ('ALM - Consulta', 'PM_ALARM_SEL', 'MOV.2');
 
 /***********************************F-DEP-JRR-ALM-0-24/04/2014****************************************/
+
+/***********************************I-DEP-JRR-ALM-0-22/03/2014****************************************/
+
+CREATE OR REPLACE VIEW alm.vmovimiento(
+    codigo_movimiento_tipo,
+    id_usuario_reg,
+    id_usuario_mod,
+    fecha_reg,
+    fecha_mod,
+    estado_reg,
+    id_usuario_ai,
+    usuario_ai,
+    id_movimiento,
+    id_movimiento_tipo,
+    id_almacen,
+    id_funcionario,
+    id_proveedor,
+    id_almacen_dest,
+    fecha_mov,
+    codigo,
+    descripcion,
+    observaciones,
+    estado_mov,
+    id_movimiento_origen,
+    id_proceso_macro,
+    id_estado_wf,
+    id_proceso_wf,
+    id_preingreso,
+    id_salida_grupo,
+    id_int_comprobante,
+    id_depto_conta,
+    id_almacen_gestion_log)
+AS
+  SELECT mt.codigo AS codigo_movimiento_tipo,
+         mov.id_usuario_reg,
+         mov.id_usuario_mod,
+         mov.fecha_reg,
+         mov.fecha_mod,
+         mov.estado_reg,
+         mov.id_usuario_ai,
+         mov.usuario_ai,
+         mov.id_movimiento,
+         mov.id_movimiento_tipo,
+         mov.id_almacen,
+         mov.id_funcionario,
+         mov.id_proveedor,
+         mov.id_almacen_dest,
+         mov.fecha_mov,
+         mov.codigo,
+         mov.descripcion,
+         mov.observaciones,
+         mov.estado_mov,
+         mov.id_movimiento_origen,
+         mov.id_proceso_macro,
+         mov.id_estado_wf,
+         mov.id_proceso_wf,
+         mov.id_preingreso,
+         mov.id_salida_grupo,
+         mov.id_int_comprobante,
+         mov.id_depto_conta,
+         mov.id_almacen_gestion_log
+  FROM alm.tmovimiento mov
+       JOIN alm.tmovimiento_tipo mt ON mt.id_movimiento_tipo =
+        mov.id_movimiento_tipo;
+        
+/***********************************F-DEP-JRR-ALM-0-22/03/2014****************************************/

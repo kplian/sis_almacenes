@@ -624,7 +624,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			config : {
 				name : 'id_depto_conta',
 				fieldLabel : 'Depto. Conta.',
-				allowBlank : false,
+				allowBlank : true,
 				emptyText : 'Departamento Contable...',
 				store : new Ext.data.JsonStore({
 					url : '../../sis_parametros/control/Depto/listarDepto',

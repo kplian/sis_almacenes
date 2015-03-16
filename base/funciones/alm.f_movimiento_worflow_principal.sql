@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.f_movimiento_workflow_principal (
   p_id_usuario integer,
   p_parametros public.hstore
@@ -337,7 +335,7 @@ BEGIN
             select ges.id_gestion
             into v_id_gestion
             from param.tgestion ges
-            where ges.gestion = to_char(now(),'yyyy'::integer)
+            where ges.gestion = to_char(now(),'yyyy')::integer
             limit 1 offset 0;
                     
             if v_id_gestion is null then

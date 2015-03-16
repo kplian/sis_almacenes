@@ -241,7 +241,7 @@ header("content-type: text/javascript; charset=UTF-8");
             config:{
                 name: 'id_concepto_ingas',
                 fieldLabel: 'Concepto',
-                allowBlank: false,
+                allowBlank: true,
                 emptyText : 'Concepto...',
                 store : new Ext.data.JsonStore({
                             url:'../../sis_parametros/control/ConceptoIngas/listarConceptoIngas',
@@ -493,6 +493,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			if(this.maestro.tipo=='ingreso'){
 				//Concepto Ingas
 				this.Cmp.id_concepto_ingas.setVisible(true);
+				this.Cmp.id_concepto_ingas.setVisible(false);
 				this.Cmp.id_concepto_ingas.enable();
 				this.Cmp.id_concepto_ingas.allowBlank=true;//false;
 				//Costo unitario

@@ -622,3 +622,10 @@ add constraint uq_talmacen_gestion__id_almacen__id_gestion unique (id_almacen,id
 ALTER TABLE alm.tmovimiento
   ADD COLUMN id_almacen_gestion_log INTEGER;
 /***********************************F-SCP-RCM-ALM-0-31/12/2013*****************************************/
+
+/***********************************I-SCP-JRR-ALM-0-21/03/2015*****************************************/
+
+ALTER TABLE alm.tmovimiento_det
+  ADD COLUMN id_movimiento_det_ingreso INTEGER;
+  
+/***********************************F-SCP-JRR-ALM-0-21/03/2015*****************************************/

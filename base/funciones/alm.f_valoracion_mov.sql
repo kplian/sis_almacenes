@@ -109,7 +109,18 @@ BEGIN
             costo_unitario = v_costo_valorado,
             id_mov_det_val_origen = v_id_movimiento_det_val_desc
             where id_movimiento_det_valorado = g_registros.id_movimiento_det_valorado;
-	                
+            
+            /*
+            jrr: el id_movimiento_det_ingreso se creara al momento de la transferencia y generara una relacion entre
+            el movimiento det de salida y el movimiento det de ingreso
+            
+            update alm.tmovimiento_det_valorado set
+            id_usuario_mod = p_id_usuario,
+            fecha_mod = now(),
+            cantidad = v_cantidad_valorada,
+	        costo_unitario = v_costo_valorado,
+            id_mov_det_val_origen = v_id_movimiento_det_val_desc
+            where id_movimiento_det = g_registros.id_movimiento_det_ingreso;*/       
             --Si todavia hay saldo que valorar
             v_cont = 0;
 			WHILE (v_saldo_cantidad > 0) LOOP
@@ -144,6 +155,25 @@ BEGIN
                       v_costo_valorado,
                       v_id_movimiento_det_val_desc
                 );
+                /*
+                insert into alm.tmovimiento_det_valorado (
+                      id_usuario_reg,
+                      fecha_reg,
+                      estado_reg,
+                      id_movimiento_det,
+                      cantidad,
+                      costo_unitario,
+                      id_mov_det_val_origen
+                ) VALUES (
+                      p_id_usuario,
+                      now(),
+                      'activo',
+                      g_registros.id_movimiento_det_ingreso,
+                      v_cantidad_valorada,
+                      v_costo_valorado,
+                      NULL
+                );
+                */
                 v_saldo_cantidad = v_saldo_cantidad - v_cantidad_valorada;
                 
                 if v_cont > 100 then
