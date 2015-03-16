@@ -11,7 +11,22 @@ header("content-type: text/javascript; charset=UTF-8");
 <script>
 	Phx.vista.Movimiento = Ext.extend(Phx.gridInterfaz, {
 		tam_pag:50,
-
+        generaReporte: function(){
+        	var rec = this.sm.getSelected();
+					Phx.CP.loadingShow();
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Movimiento/generarReporteMovimiento',
+						params : {
+							'id_movimiento' : rec.data.id_movimiento,
+							'costos': 'si'
+						},
+						success : this.successExport,
+						failure : this.conexionFailure,
+						timeout : this.timeout,
+						scope : this
+					});
+        	
+        },
 		constructor : function(config) {
 			this.maestro = config.maestro;
 			this.initButtons=[this.cmbMovimientoTipo];
@@ -31,23 +46,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.id_proveedor.hide();
 			
 			this.addButton('btnReport', {
-				text : '',
+				text : 'Reporte',
 				iconCls : 'bpdf32',
 				disabled : true,
-				handler : function() {
-					var rec = this.sm.getSelected();
-					Phx.CP.loadingShow();
-					Ext.Ajax.request({
-						url : '../../sis_almacenes/control/Movimiento/generarReporteMovimiento',
-						params : {
-							'id_movimiento' : rec.data.id_movimiento
-						},
-						success : this.successExport,
-						failure : this.conexionFailure,
-						timeout : this.timeout,
-						scope : this
-					});
-				},
+				handler : this.generaReporte,
 				tooltip : '<b>Reporte de Movimiento</b><br/>Generar el reporte del Movimiento Seleccionado.'
 			});
 	
