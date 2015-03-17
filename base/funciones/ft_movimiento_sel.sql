@@ -74,7 +74,7 @@ BEGIN
         		v_filtro = ' lower(mov.estado_mov)=''prefin'' and ';
         	end if;
         	if p_administrador != 1 then
-            	v_filtro = v_filtro || 'mov.id_almacen in (	select id_alamacen 
+            	v_filtro = v_filtro || 'mov.id_almacen in (	select id_almacen 
             									from alm.talmacen_usuario 
             									where estado_reg = ''activo'' and id_usuario = '||p_id_usuario ||' ) and ';
             end if;
@@ -158,13 +158,14 @@ BEGIN
         
         END IF;
         
+        
         if (v_parametros.id_funcionario_usu is null) then
         	v_parametros.id_funcionario_usu = -1;
         end if;
 
         
                 
-    	if lower(v_parametros.tipo_interfaz) = 'movimientoreq' then
+    	if lower(v_parametros.tipo_interfaz) = 'movimientoreq' or  lower(v_parametros.tipo_interfaz) = 'movimientoreqsalida' then
         	if p_administrador !=1 then
             	v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or mov.id_usuario_reg='||p_id_usuario||' ) and ';
             end if;
@@ -177,7 +178,7 @@ BEGIN
         		v_filtro = ' lower(mov.estado_mov)=''prefin'' and ';
         	end if;
         	if p_administrador != 1 then
-            	v_filtro = v_filtro || 'mov.id_almacen in (	select id_alamacen 
+            	v_filtro = v_filtro || 'mov.id_almacen in (	select id_almacen 
             									from alm.talmacen_usuario 
             									where estado_reg = ''activo'' and id_usuario = '||p_id_usuario ||' ) and ';
             end if;

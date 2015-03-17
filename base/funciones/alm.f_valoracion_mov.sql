@@ -47,7 +47,8 @@ BEGIN
                           movdet.id_item,
                           itm.nombre as nombre_item,
                           movdet.cantidad,
-                          detval.id_movimiento_det_valorado
+                          detval.id_movimiento_det_valorado,
+                          movdet.id_movimiento_det_ingreso
                           from alm.tmovimiento_det_valorado detval
                           inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
                           inner join alm.titem itm on itm.id_item = movdet.id_item
@@ -113,14 +114,14 @@ BEGIN
             /*
             jrr: el id_movimiento_det_ingreso se creara al momento de la transferencia y generara una relacion entre
             el movimiento det de salida y el movimiento det de ingreso
-            
+            */
             update alm.tmovimiento_det_valorado set
             id_usuario_mod = p_id_usuario,
             fecha_mod = now(),
             cantidad = v_cantidad_valorada,
 	        costo_unitario = v_costo_valorado,
             id_mov_det_val_origen = v_id_movimiento_det_val_desc
-            where id_movimiento_det = g_registros.id_movimiento_det_ingreso;*/       
+            where id_movimiento_det = g_registros.id_movimiento_det_ingreso;       
             --Si todavia hay saldo que valorar
             v_cont = 0;
 			WHILE (v_saldo_cantidad > 0) LOOP
@@ -155,7 +156,7 @@ BEGIN
                       v_costo_valorado,
                       v_id_movimiento_det_val_desc
                 );
-                /*
+                
                 insert into alm.tmovimiento_det_valorado (
                       id_usuario_reg,
                       fecha_reg,
@@ -173,7 +174,7 @@ BEGIN
                       v_costo_valorado,
                       NULL
                 );
-                */
+                
                 v_saldo_cantidad = v_saldo_cantidad - v_cantidad_valorada;
                 
                 if v_cont > 100 then

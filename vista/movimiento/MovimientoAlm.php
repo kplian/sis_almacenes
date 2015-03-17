@@ -229,7 +229,23 @@ Phx.vista.MovimientoAlm = {
 		      scope:this
 		});
 		
-	}
+	},
+	generaReporte: function(){
+            var rec = this.sm.getSelected();
+                    Phx.CP.loadingShow();
+                    Ext.Ajax.request({
+                        url : '../../sis_almacenes/control/Movimiento/generarReporteMovimiento',
+                        params : {
+                            'id_movimiento' : rec.data.id_movimiento,
+                            'costos': 'no' 
+                        },
+                        success : this.successExport,
+                        failure : this.conexionFailure,
+                        timeout : this.timeout,
+                        scope : this
+                    });
+            
+     }
          
          
 };
