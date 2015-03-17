@@ -20,7 +20,8 @@ Phx.vista.MovimientoDetalleAlm = {
 	nombreVista: 'movimientoDetalleAlm',
 	
 	constructor: function(config) {
-	    
+	    this.Atributos[this.getIndAtributo('costo_unitario')].grid=false; 
+        this.Atributos[this.getIndAtributo('costo_total')].grid=false; 
 	    this.maestro=config.maestro;
      Phx.vista.MovimientoDetalleAlm.superclass.constructor.call(this,config);
         
