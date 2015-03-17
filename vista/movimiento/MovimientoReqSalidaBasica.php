@@ -17,7 +17,9 @@ Phx.vista.MovimientoReqSalidaBasica= {
 	
 	constructor: function(config) {
 		this.maestro = config;
+		
     	Phx.vista.MovimientoReqSalidaBasica.superclass.constructor.call(this,config);
+    	this.Cmp.id_almacen.store.baseParams.solo_almaceneros = 'si';
     	//Botón de finalización
     	this.addButton('fin_requerimiento',{text:'Finalizar',iconCls: 'badelante',disabled:true,handler:this.fin_requerimiento,tooltip: '<b>Finalizar</b>'});
 		//Creación de ventana para workflow

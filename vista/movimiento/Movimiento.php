@@ -893,6 +893,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.getComponente('id_almacen_dest').reset();
 				this.getComponente('id_almacen_dest').lastQuery = null;
 				this.getComponente('id_almacen_dest').setVisible(true);
+				this.getComponente('id_almacen_dest').allowBlank = false;
 			} else if (this.getComponente('tipo').value.indexOf('ingreso') != -1 && component.data.nombre.toLowerCase().indexOf('devol') != -1) {
 				this.getComponente('id_movimiento_origen').reset();
 				this.getComponente('id_movimiento_origen').lastQuery = null;

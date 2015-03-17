@@ -13,6 +13,12 @@ class ACTAlmacen extends ACTbase {
         $this->objParam->defecto('ordenacion', 'codigo');
 
         $this->objParam->defecto('dir_ordenacion', 'asc');
+        if ($this->objParam->getParametro('solo_almaceneros') == 'si') {
+            $this->objParam->addFiltro(" alm.id_almacen IN (    select id_almacen 
+                                                from alm.talmacen_usuario 
+                                                where estado_reg = ''activo'' and id_usuario = " . $_SESSION["ss_id_usuario"] . ")");
+        }
+        
         if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODAlmacen', 'listarAlmacen');
