@@ -10,6 +10,7 @@ header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
 	Phx.vista.Movimiento = Ext.extend(Phx.gridInterfaz, {
+	    
 		tam_pag:50,
         generaReporte: function(){
         	var rec = this.sm.getSelected();
@@ -29,6 +30,26 @@ header("content-type: text/javascript; charset=UTF-8");
         },
 		constructor : function(config) {
 			this.maestro = config.maestro;
+			this.historico = 'no';
+            this.tbarItems = ['-',{
+                text: 'Histórico',
+                enableToggle: true,
+                pressed: false,
+                toggleHandler: function(btn, pressed) {
+                   
+                    if(pressed){
+                        this.historico = 'si';
+                        this.desBotoneshistorico();
+                    }
+                    else{
+                       this.historico = 'no' 
+                    }
+                    
+                    this.store.baseParams.historico = this.historico;
+                    this.onButtonAct();
+                 },
+                scope: this
+               }];
 			this.initButtons=[this.cmbMovimientoTipo];
 			Phx.vista.Movimiento.superclass.constructor.call(this, config);
 			this.init();
@@ -911,6 +932,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			var tb = Phx.vista.Movimiento.superclass.preparaMenu.call(this);
 			var data = this.getSelectedData();
 			this.getBoton('btnReport').enable();
+			
 			if (data.estado_mov == 'finalizado' || data.estado_mov == 'cancelado') {				
 				this.getBoton('btnCancelar').disable();
 				if (data.estado_mov == 'finalizado') {
@@ -929,7 +951,9 @@ header("content-type: text/javascript; charset=UTF-8");
 					this.getBoton('btnRevertirPreing').show();
 				} 
 			} 
-			
+			if(this.historico == 'si'){
+			     this.desBotoneshistorico();
+			}
 			return tb;
 		},
 		liberaMenu : function() {
@@ -1408,6 +1432,41 @@ header("content-type: text/javascript; charset=UTF-8");
             return false;
         }
         
+    },
+    //deshabilitas botones para informacion historica
+    desBotoneshistorico:function(){
+          if (this.getBoton('btnRevertir')) {
+              this.getBoton('btnRevertir').disable();
+          }
+          
+          if (this.getBoton('fin_requerimiento')) {
+              this.getBoton('fin_requerimiento').disable();
+          }
+          
+          if (this.getBoton('ant_estado')) {
+              this.getBoton('ant_estado').disable();
+          }
+          
+          if (this.getBoton('sig_estado')) {
+              this.getBoton('sig_estado').disable();
+          }
+          
+          if (this.getBoton('ini_estado')) {
+              this.getBoton('ini_estado').disable();
+          }
+          
+          if(this.bedit){
+            this.getBoton('edit').disable();  
+          }
+          
+          if(this.bdel){
+               this.getBoton('del').disable();
+          }
+          if(this.bnew){
+               this.getBoton('new').disable();
+          }
+         
+          
     },
     aplicarFiltros: function(combo, record, index){
         this.store.baseParams.cmb_tipo_movimiento=this.cmbMovimientoTipo.getValue();

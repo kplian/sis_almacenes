@@ -22,6 +22,7 @@ class MODMovimiento extends MODbase {
 								
 		$this->setParametro('id_funcionario_usu','id_funcionario_usu','int4');
 		$this->setParametro('tipo_interfaz','tipo_interfaz','varchar');
+        $this->setParametro('historico','historico','varchar');
 
         $this->captura('id_movimiento', 'integer');
         $this->captura('tipo', 'varchar');

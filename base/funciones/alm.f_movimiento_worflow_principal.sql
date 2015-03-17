@@ -66,6 +66,8 @@ DECLARE
     
     v_nombre_funcion  				varchar;
     v_resp            				varchar;
+    v_id_movimiento_salida			integer;
+    v_valores						text[];
 
 BEGIN
 
@@ -208,7 +210,7 @@ BEGIN
         --Respuesta de la verificación de existencias
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'alertas',v_alertas_exis);
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'saldo_total',v_saldo_total::varchar);
-        
+       
         
         --WF cantidad estados
         if array_length(va_id_tipo_estado,1)>0  THEN           
@@ -320,13 +322,14 @@ BEGIN
         --6.VERIFICA SI ES SALIDA POR TRANSFERENCIA
         --------------------------------------------
         --Si es una salida por transferencia genera un ingreso
-        if v_codigo_mov_tipo = 'SALTRNSF' then
+        --raise exception '%',v_codigo_estado;
+        if v_codigo_mov_tipo = 'SALTRNSF' and v_codigo_estado = 'pendiente' then
             --Obtiene el movimiento tipo de ingreso por transferencia
             select id_movimiento_tipo
             into v_id_movimiento_tipo
             from alm.tmovimiento_tipo
             where codigo = 'INTRNSF';
-                    
+            
             if v_id_movimiento_tipo is null then
                 raise exception 'Error al generar el ingreso por Transferencia, no se encuentra el Tipo de Movimiento para Ingreso por Transferencia';
             end if;
@@ -352,18 +355,20 @@ BEGIN
             now() as fecha_mov,--(v_parametros.fecha_mov,
             'Ingreso por transferencia correspondiente a la salida: ' || coalesce(v_codigo_mov,'S/C'),--v_parametros.descripcion,
             NULL as observaciones,--(p_parametros->'obs')::varcharervaciones,
-            (p_parametros->'id_movimiento')::integer as id_movimiento,--(p_parametros->'id_movimiento')::integer_origen
+            (p_parametros->'id_movimiento')::integer as id_movimiento_origen,--(p_parametros->'id_movimiento')::integer_origen
             v_id_gestion as id_gestion --id_gestion
             into g_registros;
-                
+            --raise exception '%', g_registros.id_movimiento_origen;    
             --Llama a la función de registro del movimiento
+                  
             v_id_movimiento_dest = alm.f_insercion_movimiento(p_id_usuario,hstore(g_registros));
-                   
+                    
             --Copia el detalle del movimiento de salida por transferencia pero sin costos unitarios.
             for g_registros in (select 
                                 movdet.id_movimiento_det,
                                 movdet.id_item,
                                 movdet.cantidad,
+                                movdet.cantidad_solicitada,
                                 movdet.costo_unitario,
                                 movdet.observaciones
                                 from alm.tmovimiento_det movdet
@@ -379,18 +384,23 @@ BEGIN
                     cantidad_solicitada,
                     costo_unitario,
                     observaciones
+                    
                 ) values (
                     p_id_usuario,
                     now(),
                     'activo',
                     v_id_movimiento_dest,
                     g_registros.id_item,
-                    g_registros.cantidad,
-                    g_registros.cantidad,
+                    g_registros.cantidad_solicitada,
+                    g_registros.cantidad_solicitada,
                     g_registros.costo_unitario,
                     g_registros.observaciones
                 ) returning id_movimiento_det into v_id_movimiento_det_dest;
-        	                    
+        	    
+                update alm.tmovimiento_det
+                set id_movimiento_det_ingreso = v_id_movimiento_det_dest
+                where id_movimiento_det = g_registros.id_movimiento_det;
+                                
                 insert into alm.tmovimiento_det_valorado (
                     id_usuario_reg,
                     fecha_reg,
@@ -407,7 +417,27 @@ BEGIN
                     g_registros.costo_unitario
                 );
             end loop;
-                        
+            --Cambiar al estado siguiente el movimiento registrado
+            --obtener el almacen del movimiento de salida
+            select m.id_almacen,m.id_movimiento,'verificar'::varchar as operacion,
+            NULL as id_tipo_estado,NULL as id_funcionario_wf,
+            (p_parametros->'_id_usuario_ai')::integer as id_usuario_ai,
+            (p_parametros->'_nombre_usuario_ai')::varchar as _nombre_usuario_ai,m.estado_mov
+            into g_registros
+            from alm.tmovimiento m            
+            where m.id_movimiento = v_id_movimiento_dest;
+                
+            --primero se llama a la funcion de verificar
+            v_respuesta = alm.f_movimiento_workflow_principal(p_id_usuario,hstore(g_registros));
+                
+            v_valores = pxp.f_recupera_clave(v_respuesta, 'id_tipo_estado_wf');
+               
+            g_registros.id_tipo_estado = v_valores[1];
+            g_registros.operacion = 'siguiente';
+            --ahora se llama a la funcion para pasar al siguiente estado 
+            
+            v_respuesta = alm.f_movimiento_workflow_principal(p_id_usuario,hstore(g_registros));
+                      
         end if;
         
         
@@ -434,21 +464,45 @@ BEGIN
 
         elsif v_tipo_nodo = 'final' then
 			--Verificación de existencias y algunos errores
-            select po_errores, po_contador, po_alertas, po_saldo_total
-            into v_errores, v_contador, v_alertas_exis, v_saldo_total
-            from alm.f_verificar_existencias_item((p_parametros->'id_movimiento')::integer,v_codigo_estado);
             
---            raise exception 'A:%  B:%  C:%  D:%  E:%',v_errores, v_contador, v_alertas_exis, v_saldo_total,v_codigo_estado;
+            if v_codigo_mov_tipo = 'INTRNSF' then
+            	--obtener el almacen del movimiento de salida
+                select salida.id_almacen,salida.id_movimiento,'verificar'::varchar as operacion,
+                NULL as id_tipo_estado,NULL as id_funcionario_wf,
+                (p_parametros->'_id_usuario_ai')::integer as id_usuario_ai,
+        		(p_parametros->'_nombre_usuario_ai')::varchar as _nombre_usuario_ai
+                into g_registros
+                from alm.tmovimiento m
+                inner join alm.tmovimiento salida on salida.id_movimiento = m.id_movimiento_origen
+                where m.id_movimiento = (p_parametros->'id_movimiento')::integer;
+                
+                --primero se llama a la funcion de verificar
+                v_respuesta = alm.f_movimiento_workflow_principal(p_id_usuario,hstore(g_registros));
+                
+                v_valores = pxp.f_recupera_clave(v_respuesta, 'id_tipo_estado_wf');
+                
+                g_registros.id_tipo_estado = v_valores[1];
+                g_registros.operacion = 'siguiente';
+                --ahora se llama a la funcion para pasar al siguiente estado 
+                
+                v_respuesta = alm.f_movimiento_workflow_principal(p_id_usuario,hstore(g_registros));
+                
+            else
+                select po_errores, po_contador, po_alertas, po_saldo_total
+                into v_errores, v_contador, v_alertas_exis, v_saldo_total
+                from alm.f_verificar_existencias_item((p_parametros->'id_movimiento')::integer,v_codigo_estado);
+                
+    --            raise exception 'A:%  B:%  C:%  D:%  E:%',v_errores, v_contador, v_alertas_exis, v_saldo_total,v_codigo_estado;
 
---poner raise para ver si tiene cantidad
-            
-            if v_errores != '' then
-            	raise exception '%',v_errores;
-        	end if;
+    --poner raise para ver si tiene cantidad
+                
+                if v_errores != '' then
+                    raise exception '%',v_errores;
+                end if;
 
-            --Ejecuta la valoración del movimiento
-            v_result = alm.f_valoracion_mov(p_id_usuario,(p_parametros->'id_movimiento')::integer);
-            
+                --Ejecuta la valoración del movimiento
+                v_result = alm.f_valoracion_mov(p_id_usuario,(p_parametros->'id_movimiento')::integer);
+            end if; 
         end if;
         
         --Actualiza estado de WF
@@ -463,43 +517,79 @@ BEGIN
 	    where id_movimiento = (p_parametros->'id_movimiento')::integer;
               
     ELSIF (p_parametros->'operacion')::varchar = 'anterior' THEN
+    	--Si es un ingreso por transferencia se elimina el ingreso y se retrocede el estado de 
+        --la salida por transferencia
+    	if (v_codigo_mov_tipo = 'INTRNSF' and v_codigo_estado = 'prefin') then
+        		--primero cambiamos el estado de la salida al estado anterior
+            	--obtener el almacen del movimiento de salida
+                select salida.id_almacen,salida.id_movimiento,'anterior'::varchar as operacion,
+                (p_parametros->'obs')::varchar as obs,
+                (p_parametros->'_id_usuario_ai')::integer as id_usuario_ai,
+        		(p_parametros->'_nombre_usuario_ai')::varchar as _nombre_usuario_ai
+                into g_registros
+                from alm.tmovimiento m
+                inner join alm.tmovimiento salida on salida.id_movimiento = m.id_movimiento_origen
+                where m.id_movimiento = (p_parametros->'id_movimiento')::integer;
+                
+                --ahora se llama a la funcion para pasar al anterior estado                
+                v_respuesta = alm.f_movimiento_workflow_principal(p_id_usuario,hstore(g_registros));
+                
+                --Se elimina el ingreso
+                --eliminar movimiento det valorado
+                delete from alm.tmovimiento_det_valorado using alm.tmovimiento_det
+                where alm.tmovimiento_det_valorado.id_movimiento_det = alm.tmovimiento_det.id_movimiento_det and 
+                alm.tmovimiento_det.id_movimiento = (p_parametros->'id_movimiento')::integer;
+                
+                --eliminar movimiento det valorado
+                delete from alm.tmovimiento_det
+                where id_movimiento =  (p_parametros->'id_movimiento')::integer;
+                
+                --eliminar movimiento det valorado
+                delete from alm.tmovimiento
+                where id_movimiento =  (p_parametros->'id_movimiento')::integer;
+                
+                update alm.tmovimiento SET
+                id_movimiento_origen = NULL
+                where id_movimiento = g_registros.id_movimiento;            
+        else
           
-        --Recupera estado anterior segun Log del WF
-        SELECT  
-        ps_id_tipo_estado,ps_id_funcionario,ps_id_usuario_reg,
-        ps_id_depto,ps_codigo_estado,ps_id_estado_wf_ant
-        into
-        v_id_tipo_estado,v_id_funcionario,v_id_usuario_reg,
-        v_id_depto,v_codigo_estado,v_id_estado_wf_ant 
-        FROM wf.f_obtener_estado_ant_log_wf(v_id_estado_wf);
-                            
-        --Encuentra el proceso
-        select ew.id_proceso_wf 
-        into v_id_proceso_wf
-        from wf.testado_wf ew
-        where ew.id_estado_wf= v_id_estado_wf_ant;
-                          
-        --Registra nuevo estado
-        v_id_estado_actual = wf.f_registra_estado_wf(
-                      v_id_tipo_estado, 
-                      v_id_funcionario, 
-                      v_id_estado_wf, 
-                      v_id_proceso_wf, 
-                      p_id_usuario,
-                      (p_parametros->'_id_usuario_ai')::integer,
-                      (p_parametros->'_nombre_usuario_ai')::varchar,
-                      v_id_depto,
-                      (p_parametros->'obs')::varchar);
-                          
-        --Actualiza estado del movimiento
-        update alm.tmovimiento  set 
-        id_estado_wf = v_id_estado_actual,
-        estado_mov = v_codigo_estado,
-        id_usuario_mod = p_id_usuario,
-        fecha_mod = now(),
-        id_usuario_ai = (p_parametros->'_id_usuario_ai')::integer,
-        usuario_ai = (p_parametros->'_nombre_usuario_ai')::varchar
-        where id_movimiento = (p_parametros->'id_movimiento')::integer;
+                --Recupera estado anterior segun Log del WF
+                SELECT  
+                ps_id_tipo_estado,ps_id_funcionario,ps_id_usuario_reg,
+                ps_id_depto,ps_codigo_estado,ps_id_estado_wf_ant
+                into
+                v_id_tipo_estado,v_id_funcionario,v_id_usuario_reg,
+                v_id_depto,v_codigo_estado,v_id_estado_wf_ant 
+                FROM wf.f_obtener_estado_ant_log_wf(v_id_estado_wf);
+                                    
+                --Encuentra el proceso
+                select ew.id_proceso_wf 
+                into v_id_proceso_wf
+                from wf.testado_wf ew
+                where ew.id_estado_wf= v_id_estado_wf_ant;
+                                  
+                --Registra nuevo estado
+                v_id_estado_actual = wf.f_registra_estado_wf(
+                              v_id_tipo_estado, 
+                              v_id_funcionario, 
+                              v_id_estado_wf, 
+                              v_id_proceso_wf, 
+                              p_id_usuario,
+                              (p_parametros->'_id_usuario_ai')::integer,
+                              (p_parametros->'_nombre_usuario_ai')::varchar,
+                              v_id_depto,
+                              (p_parametros->'obs')::varchar);
+                                  
+                --Actualiza estado del movimiento
+                update alm.tmovimiento  set 
+                id_estado_wf = v_id_estado_actual,
+                estado_mov = v_codigo_estado,
+                id_usuario_mod = p_id_usuario,
+                fecha_mod = now(),
+                id_usuario_ai = (p_parametros->'_id_usuario_ai')::integer,
+                usuario_ai = (p_parametros->'_nombre_usuario_ai')::varchar
+                where id_movimiento = (p_parametros->'id_movimiento')::integer;
+        end if;
                              
         v_respuesta = pxp.f_agrega_clave(v_respuesta,'mensaje','Se retrocedió el movimiento al estado anterior)'); 
             

@@ -26,6 +26,7 @@ DECLARE
   v_filtro 			varchar;
   v_filadd           varchar;
   v_tipo_mov		varchar;
+  v_historico		varchar;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_sel';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -42,31 +43,50 @@ BEGIN
   	begin
     
     	v_filtro='';
+    	
+    	IF  pxp.f_existe_parametro(p_tabla,'historico') THEN
+             
+         	v_historico =  v_parametros.historico;
+        
+        ELSE
+        
+        	v_historico = 'no';
+        
+        END IF;
         
         if (v_parametros.id_funcionario_usu is null) then
         	v_parametros.id_funcionario_usu = -1;
         end if;
 
-        --if(pxp.f_existe_parametro(p_tabla,'tipo_interfaz'))then
+        
                 
-        	if lower(v_parametros.tipo_interfaz) = 'movimientoreq' then
-            	if p_administrador !=1 then
-                	--v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or mov.id_usuario_reg='||p_id_usuario||' ) and ';
-                end if;
-            elsif lower(v_parametros.tipo_interfaz) = 'movimientoalm' then
-            	--if p_administrador !=1 then
-                	v_filtro = 'lower(mov.estado_mov)=''prefin'' and ';
-                --end if;
-            elsif lower(v_parametros.tipo_interfaz) = 'movimientovb' then
-            	if p_administrador !=1 then
-                	v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) 
-                				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
-                else 
-                	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
-                end if;
-            	
+    	if lower(v_parametros.tipo_interfaz) = 'movimientoreq' then
+        	if p_administrador !=1 then
+            	v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or mov.id_usuario_reg='||p_id_usuario||' ) and ';
             end if;
-        --end if;
+            
+            if v_historico = 'no' then
+            	v_filtro = v_filtro || ' lower(mov.estado_mov)=''borrador'' and ';
+            end if;
+        elsif lower(v_parametros.tipo_interfaz) = 'movimientoalm' then
+        	if v_historico = 'no' then
+        		v_filtro = ' lower(mov.estado_mov)=''prefin'' and ';
+        	end if;
+        	if p_administrador != 1 then
+            	v_filtro = v_filtro || 'mov.id_almacen in (	select id_alamacen 
+            									from alm.talmacen_usuario 
+            									where estado_reg = ''activo'' and id_usuario = '||p_id_usuario ||' ) and ';
+            end if;
+        elsif lower(v_parametros.tipo_interfaz) = 'movimientovb' then
+        	if p_administrador !=1 then
+            	v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) 
+            				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+            else 
+            	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+            end if;
+        	
+        end if;
+        
         
     	v_consulta:='
         	SELECT
@@ -126,31 +146,49 @@ BEGIN
   elsif(p_transaccion='SAL_MOV_CONT')then
     begin
         v_filtro='';
+    	
+    	IF  pxp.f_existe_parametro(p_tabla,'historico') THEN
+             
+         	v_historico =  v_parametros.historico;
+        
+        ELSE
+        
+        	v_historico = 'no';
+        
+        END IF;
         
         if (v_parametros.id_funcionario_usu is null) then
         	v_parametros.id_funcionario_usu = -1;
         end if;
 
-        --if(pxp.f_existe_parametro(p_tabla,'tipo_interfaz'))then
+        
                 
-        	if lower(v_parametros.tipo_interfaz) = 'movimientoreq' then
-            	if p_administrador !=1 then
-                	--v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or mov.id_usuario_reg='||p_id_usuario||' ) and ';
-                end if;
-            elsif lower(v_parametros.tipo_interfaz) = 'movimientoalm' then
-            	--if p_administrador !=1 then
-                	v_filtro = 'lower(mov.estado_mov)=''prefin'' and ';
-                --end if;
-            elsif lower(v_parametros.tipo_interfaz) = 'movimientovb' then
-            	if p_administrador !=1 then
-                	v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) 
-                				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
-                else 
-                	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
-                end if;
-            	
+    	if lower(v_parametros.tipo_interfaz) = 'movimientoreq' then
+        	if p_administrador !=1 then
+            	v_filtro = '(mov.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' or mov.id_usuario_reg='||p_id_usuario||' ) and ';
             end if;
-        --end if;
+            
+            if v_historico = 'no' then
+            	v_filtro = v_filtro || ' lower(mov.estado_mov)=''borrador'' and ';
+            end if;
+        elsif lower(v_parametros.tipo_interfaz) = 'movimientoalm' then
+        	if v_historico = 'no' then
+        		v_filtro = ' lower(mov.estado_mov)=''prefin'' and ';
+        	end if;
+        	if p_administrador != 1 then
+            	v_filtro = v_filtro || 'mov.id_almacen in (	select id_alamacen 
+            									from alm.talmacen_usuario 
+            									where estado_reg = ''activo'' and id_usuario = '||p_id_usuario ||' ) and ';
+            end if;
+        elsif lower(v_parametros.tipo_interfaz) = 'movimientovb' then
+        	if p_administrador !=1 then
+            	v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' ) 
+            				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+            else 
+            	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+            end if;
+        	
+        end if;
     
     
     
