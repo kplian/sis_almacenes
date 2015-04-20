@@ -25,7 +25,7 @@ class CustomReport extends TCPDF {
         $y = $this->GetY();
         $this->SetXY($x, $y);
 
-        $this->Image(dirname(__FILE__).$_SESSION['_DIR_LOGO'], 16, 12, 36);
+        //$this->Image(dirname(__FILE__).$_SESSION['_DIR_LOGO'], 16, 12, 36);
 
         $this->SetFontSize(14);
         $this->SetFont('', 'B');
@@ -46,9 +46,9 @@ class CustomReport extends TCPDF {
 
         $this->SetXY($x, $y);
         $this->setCellPaddings(2);
-        $this->Cell($width1, $height, 'Codigo:', "B", 0, '', false, '', 0, false, 'T', 'C');
+        //$this->Cell($width1, $height, 'Codigo:', "B", 0, '', false, '', 0, false, 'T', 'C');
         $this->SetFont('', 'B');
-        $this->Cell($width2, $height, $dataSource->getParameter('almacen'), "B", 0, 'C', false, '', 0, false, 'T', 'C');
+        $this->Cell($width1 + $width2, $height, $dataSource->getParameter('almacen'), "B", 0, 'C', false, '', 0, false, 'T', 'C');
 
         $this->SetFont('', '');
         $y += $height;
