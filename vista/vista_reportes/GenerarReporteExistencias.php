@@ -339,6 +339,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.argumentExtraSubmit={};
 				//Añade los parámetros extra para mandar por submit
 			this.argumentExtraSubmit.id_clasificacion=this.id_clasificacion;
+			this.argumentExtraSubmit.almacen=this.Cmp.id_almacen.getRawValue();
 		}
 
 })

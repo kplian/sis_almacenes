@@ -16,6 +16,7 @@ class CustomReport extends TCPDF {
     }
 
     public function Header() {
+        $dataSource = $this->getDataSource();
         $height = 6;
         $midHeight = 9;
         $longHeight = 18;
@@ -47,7 +48,7 @@ class CustomReport extends TCPDF {
         $this->setCellPaddings(2);
         $this->Cell($width1, $height, 'Codigo:', "B", 0, '', false, '', 0, false, 'T', 'C');
         $this->SetFont('', 'B');
-        $this->Cell($width2, $height, 'BOA-EXIST', "B", 0, 'C', false, '', 0, false, 'T', 'C');
+        $this->Cell($width2, $height, $dataSource->getParameter('alamcen'), "B", 0, 'C', false, '', 0, false, 'T', 'C');
 
         $this->SetFont('', '');
         $y += $height;
