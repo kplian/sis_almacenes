@@ -48,7 +48,7 @@ class CustomReport extends TCPDF {
         $this->setCellPaddings(2);
         $this->Cell($width1, $height, 'Codigo:', "B", 0, '', false, '', 0, false, 'T', 'C');
         $this->SetFont('', 'B');
-        $this->Cell($width2, $height, $dataSource->getParameter('alamcen'), "B", 0, 'C', false, '', 0, false, 'T', 'C');
+        $this->Cell($width2, $height, $dataSource->getParameter('almacen'), "B", 0, 'C', false, '', 0, false, 'T', 'C');
 
         $this->SetFont('', '');
         $y += $height;
