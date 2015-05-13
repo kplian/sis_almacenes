@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.f_generar_ingreso (
   p_id_usuario integer,
   p_id_usuario_ai integer,
@@ -15,8 +13,8 @@ Descripción: Genera el ingreso a Almacén o a Activos Fijos a partir de un prei
 */
 DECLARE
 
-	v_resp varchar;
-  	v_rec record;
+  v_resp varchar;
+    v_rec record;
     v_rec_det record;
     v_rec_val record;
     v_id_movimiento integer;
@@ -41,15 +39,15 @@ DECLARE
     va_prioridad integer [];
     v_id_estado_actual  integer;
     v_id_movimiento_det integer;
-    v_cadena_cnx 		varchar;
-    v_consulta			varchar;
-    v_res_cone  		varchar;
+    v_cadena_cnx    varchar;
+    v_consulta      varchar;
+    v_res_cone      varchar;
     
 BEGIN
 
-	v_nombre_funcion = 'alm.f_generar_ingreso';
+  v_nombre_funcion = 'alm.f_generar_ingreso';
  
-	---------------------
+  ---------------------
     --OBTENCION DE DATOS
     ---------------------
     --Preingreso
@@ -103,38 +101,39 @@ BEGIN
     ---------------
     --Existencia del preingreso
     if v_rec.id_preingreso is null then
-    	raise exception 'Preingreso inexistente';
+      raise exception 'Preingreso inexistente';
     end if;
     --Estado
     if v_rec.estado != 'borrador' then
-    	raise exception 'El estado del Preingreso debe ser "Borrador", está en "%"',v_rec.estado;
+      raise exception 'El estado del Preingreso debe ser "Borrador", está en "%"',v_rec.estado;
     end if;
     --Tipo de ingreso
     if v_rec.tipo not in ('almacen','activo_fijo') then
-    	raise exception 'Tipo Preingreso no válido: "%"',v_rec.tipo;
+      raise exception 'Tipo Preingreso no válido: "%"',v_rec.tipo;
     end if;
     --Movimiento Tipo
     if v_id_movimiento_tipo is null then
-    	raise exception 'No existe el Tipo de Movimiento';
+      raise exception 'No existe el Tipo de Movimiento';
     end if;
     --WF Ingreso
     if v_id_proceso_macro is null then
-    	raise exception 'El Workflow para el ingreso no está configurado';
+      raise exception 'El Workflow para el ingreso no está configurado';
     end if;
     --Gestión
     if v_id_gestion is null then
-    	raise exception 'Gestión no encontrada';
+      raise exception 'Gestión no encontrada';
     end if;
     --WF Preingreso
     if v_id_proceso_macro_cot is null then
-    	raise exception 'El Workflow del Preingreso no está configurado';
+      raise exception 'El Workflow del Preingreso no está configurado';
     end if;
     --Items listos para generación de ingreso
     if not exists(select 1
                   from alm.tpreingreso_det
                   where id_preingreso = v_rec.id_preingreso
-                  and sw_generar = 'si') then
-    	raise exception 'El detalle de Preingreso no tiene los Registros marcados para Generación del Ingreso';
+                  and sw_generar = 'si'
+                  and estado = 'mod') then
+      raise exception 'El detalle de Preingreso no tiene los Registros marcados para Generación del Ingreso';
     end if;
     --Verifica si es por Almacen o Activo que tengan los datos mínimos
     if exists(select 1
@@ -145,7 +144,7 @@ BEGIN
                 and ping.tipo='almacen'
                 and pdet.id_item is null 
                 and pdet.id_almacen is null) then
-    	raise exception 'Datos incompletos, defina el Item y el Almacén destino';
+      raise exception 'Datos incompletos, defina el Item y el Almacén destino';
     end if;
     if exists(select 1
                 from alm.tpreingreso_det pdet
@@ -155,7 +154,7 @@ BEGIN
                 and ping.tipo='activo_fijo'
                 and pdet.id_clasificacion is null 
                 and pdet.id_depto is null) then
-    	raise exception 'Datos incompletos, defina la Clasificación y el Depto. destino';
+      raise exception 'Datos incompletos, defina la Clasificación y el Depto. destino';
     end if;
     
      -------------------------
@@ -206,12 +205,13 @@ BEGIN
     ---------------------------------------------------
     if v_rec.tipo = 'almacen' then
     
-    	for v_rec_det in (select distinct id_almacen
+      for v_rec_det in (select distinct id_almacen
                           from alm.tpreingreso_det
                           where id_preingreso = v_rec.id_preingreso
-                          and sw_generar = 'si') loop
+                          and sw_generar = 'si'
+                          and estado = 'mod') loop
                           
-        	--Inicio del tramite en el sistema de WF
+          --Inicio del tramite en el sistema de WF
             select 
             ps_num_tramite, ps_id_proceso_wf, ps_id_estado_wf, ps_codigo_estado 
             into
@@ -228,7 +228,7 @@ BEGIN
             'IN-S/N'
             );
 
-        	--Cabecera
+          --Cabecera
             insert into alm.tmovimiento(
             id_usuario_reg, fecha_reg, estado_reg,
             id_movimiento_tipo, id_almacen, id_funcionario, fecha_mov,
@@ -247,12 +247,13 @@ BEGIN
                               pdet.observaciones, sdet.id_concepto_ingas
                               from alm.tpreingreso_det pdet
                               inner join adq.tcotizacion_det cdet on cdet.id_cotizacion_det = pdet.id_cotizacion_det
-					       	  inner join adq.tsolicitud_det sdet on sdet.id_solicitud_det = cdet.id_solicitud_det
+                    inner join adq.tsolicitud_det sdet on sdet.id_solicitud_det = cdet.id_solicitud_det
                               where pdet.id_preingreso = v_rec.id_preingreso
                               and pdet.id_almacen = v_rec_det.id_almacen
-                              and sw_generar = 'si') loop
+                              and pdet.sw_generar = 'si'
+                              and pdet.estado = 'mod') loop
                               
-            	insert into alm.tmovimiento_det(
+              insert into alm.tmovimiento_det(
                 id_usuario_reg, fecha_reg, estado_reg,
                 id_movimiento, id_item, cantidad, costo_unitario, cantidad_solicitada,
                 observaciones, id_concepto_ingas
@@ -275,24 +276,24 @@ BEGIN
 
         end loop;
     
-  	
+    
     elsif v_rec.tipo = 'activo_fijo' then
      
    
     
-    	--Verificación de destino de generación de ingreso a activos fijos
+      --Verificación de destino de generación de ingreso a activos fijos
         if pxp.f_get_variable_global('alm_migrar_af_endesis')='si' then
-        	--Llama ala funcion de ENDESIS para generar el ingreso de activos fijos
+          --Llama ala funcion de ENDESIS para generar el ingreso de activos fijos
             --funcion para obtener cadena de conexion
-			v_cadena_cnx =  migra.f_obtener_cadena_conexion();
+      v_cadena_cnx =  migra.f_obtener_cadena_conexion();
             
             v_consulta = 'select migracion.f_af_genera_registro_af('||
                           p_id_usuario ||',' ||
                           COALESCE(v_rec.id_preingreso::varchar,'NULL')||')';
                           
-			--Abre una conexion con dblink para ejecutar la consulta
+      --Abre una conexion con dblink para ejecutar la consulta
             v_resp =  (SELECT dblink_connect(v_cadena_cnx));
-    			 
+           
             
                        
             if (v_resp!='OK') THEN
@@ -305,7 +306,7 @@ BEGIN
             
 
         else
-        	raise exception 'TODO: implementar ingreso a Activos Fijos de PXP';
+          raise exception 'TODO: implementar ingreso a Activos Fijos de PXP';
         end if;
 
     end if;
@@ -321,7 +322,7 @@ BEGIN
 
 
 EXCEPTION
-	WHEN OTHERS THEN
+  WHEN OTHERS THEN
       v_resp='';
       v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
       v_resp = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);

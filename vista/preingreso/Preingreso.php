@@ -58,9 +58,6 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
                 scope:this
             });         
         }
-    
-        
-        
          
 	},
 	
@@ -189,7 +186,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 				pfiltro : 'alm.codigo',
 				type : 'string'
 			},
-			grid : true,
+			grid : false,
 			form : true
 		},
 		{
@@ -210,7 +207,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
    			type:'ComboRec',
    			id_grupo:0,
    			filters:{pfiltro:'dep.codigo',type:'string'},
-   		    grid:true,
+   		    grid:false,
    			form:true
        	},
        	{
@@ -383,7 +380,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 	bnew:false,
 	south:{
 		  url:'../../../sis_almacenes/vista/preingreso_det/PreingresoDet.php',
-		  title:'Detalle Preingreso', 
+		  title:'Adquisiciones', 
 		  height:'50%',	//altura de la ventana hijo
 		  cls:'PreingresoDet'
 	},
@@ -482,7 +479,33 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
             } else{
             	Ext.Msg.alert('Mensaje','Seleccione un registro y vuelva a intentarlo');
         }
-   }
+   },
+   onEnablePanel: function(idPanel, data) {
+        var myPanel
+        if (typeof idPanel == 'object') {
+            myPanel = idPanel
+        } else {
+            myPanel = Phx.CP.getPagina(idPanel);
+        }
+
+        if (idPanel && myPanel) {
+			//Accede al panel derecho        	
+        	myPanelEast = Phx.CP.getPagina(idPanel+'-east');
+
+			//Desbloquea panel izquierdo y derecho
+            myPanel.desbloquearMenus();
+            myPanelEast.desbloquearMenus()
+			
+			//Carga los datos de ambos paneles
+			myPanel.onReloadPage(data);
+			myPanelEast.onReloadPage(data);
+			
+        }
+
+        delete myPanel;
+        delete myPanelEast;
+
+    },
 	
 })
 </script>

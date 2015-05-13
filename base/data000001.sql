@@ -1406,4 +1406,10 @@ select pxp.f_insert_tgui ('PreIngreso', 'preingreso', 'PREING', 'si', 1, 'sis_al
 /***********************************F-DAT-RAC-ALM-0-24/06/2014****************************************/
 
 
-
+/***********************************I-DAT-RCM-ALM-0-05/05/2015****************************************/
+update alm.tpreingreso_det set
+estado = 'orig'
+from alm.tpreingreso pre
+where alm.tpreingreso_det.id_preingreso = pre.id_preingreso
+and pre.estado = 'borrador'
+/***********************************F-DAT-RCM-ALM-0-05/05/2015****************************************/

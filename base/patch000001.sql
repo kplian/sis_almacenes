@@ -629,3 +629,10 @@ ALTER TABLE alm.tmovimiento_det
   ADD COLUMN id_movimiento_det_ingreso INTEGER;
   
 /***********************************F-SCP-JRR-ALM-0-21/03/2015*****************************************/
+
+/***********************************I-SCP-RCM-ALM-0-03/05/2015*****************************************/
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN estado VARCHAR(10);
+COMMENT ON COLUMN alm.tpreingreso_det.estado
+IS 'Indica si el registro es creado desde adquisiciones al generar el preingreso (''orig''), si es modificado desde preingreso (''mod'')';  
+/***********************************F-SCP-RCM-ALM-0-03/05/2015*****************************************/  

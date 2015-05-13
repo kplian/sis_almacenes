@@ -11,6 +11,8 @@ header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
 Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
+	
+	estado: 'orig',
 
 	constructor:function(config){
 		this.maestro=config.maestro;
@@ -18,7 +20,17 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 		Phx.vista.PreingresoDet.superclass.constructor.call(this,config);
 		this.grid.getTopToolbar().disable();
 		this.grid.getBottomToolbar().disable();
+		this.grid.addListener('cellclick', this.oncellclick,this);
 		this.init();
+		
+		//Se agrega el botón para adicionar todos
+		this.addButton('btnAgTodos', {
+				text : 'Agregar Todos',
+				iconCls : 'bright-all',
+				disabled : true,
+				handler : this.agregarTodos,
+				tooltip : '<b>Agregar Todos</b><br/>Agrega todos los items para el preingreso.'
+			});
 	},
 			
 	Atributos:[
@@ -42,17 +54,49 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			form:true 
 		},
 		{
+            config:{
+                name: 'agregar',
+                fieldLabel: 'Agregar',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 50,
+                scope: this,
+                renderer:function (value, p, record, rowIndex, colIndex){  
+					return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Agregar' src = '../../../lib/imagenes/icono_awesome/awe_rigth_arrow.png' align='center' width='30' height='30'></div>";
+                }
+            },
+            type:'Checkbox',
+            id_grupo:1,
+            grid:true,
+            form:false
+        },
+		{
 			config:{
 				name: 'cantidad_det',
 				fieldLabel: 'Cantidad',
 				allowBlank: true,
 				anchor: '80%',
-				gwidth: 100,
+				gwidth: 55,
 				maxLength:200,
 				disabled:true
 			},
 			type:'NumberField',
 			filters:{pfiltro:'predet.cantidad_det',type:'numeric'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
+		{
+			config:{
+				name: 'precio_compra',
+				fieldLabel: 'Costo',
+				allowBlank: true,
+				anchor: '80%',
+				gwidth: 75,
+				maxLength:1179650
+			},
+			type:'NumberField',
+			filters:{pfiltro:'predet.precio_compra',type:'numeric'},
 			id_grupo:1,
 			grid:true,
 			form:true
@@ -124,21 +168,6 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			form:true
 		},
 		{
-			config:{
-				name: 'precio_compra',
-				fieldLabel: 'Costo',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-				maxLength:1179650
-			},
-			type:'NumberField',
-			filters:{pfiltro:'predet.precio_compra',type:'numeric'},
-			id_grupo:1,
-			grid:true,
-			form:true
-		},
-		{
 			config : {
 				name : 'id_item',
 				fieldLabel : 'Item',
@@ -192,7 +221,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 				pfiltro : 'item.nombre',
 				type : 'string'
 			},
-			grid : true,
+			grid : false,
 			form : true
 		},
 		{
@@ -240,7 +269,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 				pfiltro : 'alm.codigo',
 				type : 'string'
 			},
-			grid : true,
+			grid : false,
 			form : true
 		},
 		{
@@ -284,7 +313,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			type: 'ComboBox',
 			id_grupo: 0,
 			filters: {pfiltro: 'cla.nombre',type: 'string'},
-			grid: true,
+			grid: false,
 			form: true
 		},
 		{
@@ -328,7 +357,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			type: 'ComboBox',
 			id_grupo: 5,
 			filters: {pfiltro: 'depto.nombre',type: 'string'},
-			grid: true,
+			grid: false,
 			form: true
 		},
 		{
@@ -350,7 +379,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			type: 'ComboRec',
 			id_grupo: 0,
 			filters:{pfiltro:'predet.sw_generar',type:'string'},
-			grid: true,
+			grid: false,
 			form: true
 		},
 		{
@@ -447,7 +476,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 		}
 	],
 	tam_pag:50,	
-	title:'Detalle Preingreso',
+	title:'Adquisiciones',
 	ActSave:'../../sis_almacenes/control/PreingresoDet/insertarPreingresoDet',
 	ActDel:'../../sis_almacenes/control/PreingresoDet/eliminarPreingresoDet',
 	ActList:'../../sis_almacenes/control/PreingresoDet/listarPreingresoDet',
@@ -476,17 +505,19 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 		{name:'desc_item', type: 'string'},
 		{name:'desc_clasificacion', type: 'string'},
 		{name:'desc_ingas', type: 'string'},
-		{name:'descripcion', type: 'string'}
+		{name:'descripcion', type: 'string'},
+		{name:'estado', type: 'string'},
+		{name:'tipo', type: 'string'}
 	],
 	sortInfo:{
 		field: 'id_preingreso_det',
 		direction: 'ASC'
 	},
-	bdel:true,
+	bdel:false,
 	bsave:false,
 	bnew:false,
-	bdel:false,
-	preparaMenu:function(n){
+	bedit:false,
+	/*preparaMenu:function(n){
 	    
 	       Phx.vista.PreingresoDet.superclass.preparaMenu.call(this,n);
 	       if(this.maestro.estado=='borrador'){
@@ -496,18 +527,16 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 	           this.getBoton('edit').disable();
 	       }
       
-	},
+	},*/
 	
 	
 	loadValoresIniciales:function(){
 		Phx.vista.PreingresoDet.superclass.loadValoresIniciales.call(this);
 		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);
-		
-				
 	},
 	onReloadPage:function(m){
-		this.maestro=m;						
-		this.store.baseParams={id_preingreso:this.maestro.id_preingreso};
+		this.maestro=m;	
+		Ext.apply(this.store.baseParams,{id_preingreso:this.maestro.id_preingreso,estado: this.estado});
 		this.load({params:{start:0, limit:this.tam_pag}});
 	},
 	onButtonEdit: function (){
@@ -562,7 +591,92 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			codSis='error';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
 		}
-	}
+	},
+   east: {
+		url : '../../../sis_almacenes/vista/preingreso_det/PreingresoDetMod.php',
+		title : 'Preingreso',
+		width : '50%',
+		cls : 'PreingresoDetMod'
+	}, 
+	
+	aplicarFiltro: function(){
+		this.store.baseParams.estado=this.estado;
+        this.load(); 
+	},
+	
+	oncellclick : function(grid, rowIndex, columnIndex, e) {
+		
+	    var record = this.store.getAt(rowIndex),
+	        fieldName = grid.getColumnModel().getDataIndex(columnIndex); // Get field name
+	        
+	    if (fieldName == 'agregar') {
+	    	
+			var myPanelEast = Phx.CP.getPagina(this.idContenedor+'-east');
+			
+	    	Phx.CP.loadingShow();
+				Ext.Ajax.request({
+					url : '../../sis_almacenes/control/PreingresoDet/preparaPreingreso',
+					params : {
+						id_preingreso_det:	record.data.id_preingreso_det,
+						data: record
+					},
+					success : function(a,b,c){
+						Phx.CP.loadingHide();
+						this.reload();
+						//Carga datos del panel derecho
+						myPanelEast.onReloadPage(this.maestro);
+						delete myPanelEast;
+					},
+					failure : this.conexionFailure,
+					timeout : this.timeout,
+					scope : this
+				});
+	    } 
+		
+	},
+	
+	agregarTodos: function(){
+		Ext.Msg.show({
+		   title:'Confirmación',
+		   msg: '¿Está seguro de agregar todos los items al Preingreso?',
+		   buttons: Ext.Msg.YESNO,
+		   fn: function(a,b,c){
+		   		if(a=='yes'){
+		   			var myPanelEast = Phx.CP.getPagina(this.idContenedor+'-east');
+					Phx.CP.loadingShow();
+					Ext.Ajax.request({
+						url: '../../sis_almacenes/control/PreingresoDet/preparaPreingresoAll',
+						params: {
+							id_preingreso: this.maestro.id_preingreso
+						},
+						success: function(a,b,c){
+							Phx.CP.loadingHide();
+							this.reload();
+							//Carga datos del panel derecho
+							myPanelEast.onReloadPage(this.maestro);
+							delete myPanelEast;
+						},
+						failure: this.conexionFailure,
+						timeout: this.timeout,
+						scope: this
+					});	
+		   		}
+		   },
+		   icon: Ext.MessageBox.QUESTION,
+		   scope: this
+		});
+
+	},
+	
+	DisableSelect: function(n) {
+        this.liberaMenu(n)
+   	},
+   
+   	EnableSelect: function(n,extra) {
+		var data = this.getSelectedData();
+        Ext.apply(data,extra);
+       	this.preparaMenu(n);
+    }
 	
 	
 })
