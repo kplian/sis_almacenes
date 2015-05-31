@@ -56,7 +56,7 @@ BEGIN
       id_cotizacion_det,
       id_item,
       id_almacen,
-      cantidad,
+      cantidad_det,
       precio_compra,
       id_depto,
       id_clasificacion,
@@ -72,7 +72,7 @@ BEGIN
       v_parametros.id_cotizacion_det,
       v_parametros.id_item,
       v_parametros.id_almacen,
-      v_parametros.cantidad,
+      v_parametros.cantidad_det,
       v_parametros.precio_compra,
       v_parametros.id_depto,
       v_parametros.id_clasificacion,
@@ -105,18 +105,18 @@ BEGIN
 
     begin
         
-      --Sentencia de la modificacion
-      update alm.tpreingreso_det set
-      id_item = v_parametros.id_item,
-      id_almacen = v_parametros.id_almacen,
-      precio_compra = v_parametros.precio_compra,
-      id_depto = v_parametros.id_depto,
-      id_clasificacion = v_parametros.id_clasificacion,
-      sw_generar = v_parametros.sw_generar,
-      observaciones = v_parametros.observaciones,
-      id_usuario_mod = p_id_usuario,
-      fecha_mod = now()
-      where id_preingreso_det=v_parametros.id_preingreso_det;
+        --Sentencia de la modificacion
+        update alm.tpreingreso_det set
+        id_item = v_parametros.id_item,
+        id_almacen = v_parametros.id_almacen,
+        precio_compra = v_parametros.precio_compra,
+        cantidad_det = v_parametros.cantidad_det,
+        id_depto = v_parametros.id_depto,
+        id_clasificacion = v_parametros.id_clasificacion,
+        observaciones = v_parametros.observaciones,
+        id_usuario_mod = p_id_usuario,
+        fecha_mod = now()
+        where id_preingreso_det=v_parametros.id_preingreso_det;
             
             ---------------------------------------------------------------
             --Actualizar la tabla de conceptos de gasto item clasificacion
@@ -146,42 +146,43 @@ BEGIN
                 and id_item is null
                 and id_clasificacion = v_parametros.id_clasificacion;
             else
-              raise exception 'No puede almacenarse tabla de aprendizaje de los Conceptos de Gasto porque el Item o Clasificación son nulos';
+              --raise exception 'No puede almacenarse tabla de aprendizaje de los Conceptos de Gasto porque el Item o Clasificación son nulos';
             end if;
             
             
-            if v_id_item_clasif_ingas is not null then
-              --Actualiza el contado
-                update alm.titem_clasif_ingas set
-                contador = contador + 1
-                where id_item_clasif_ingas = v_id_item_clasif_ingas;
-            else
-              --Registra la nueva relación
-                INSERT INTO alm.titem_clasif_ingas(
-                id_usuario_reg,
-                id_usuario_mod,
-                fecha_reg,
-                fecha_mod,
-                estado_reg,
-                id_concepto_ingas,
-                id_item,
-                id_clasificacion,
-                contador
-                ) VALUES (
-                p_id_usuario,
-                NULL,
-                now(),
-                NULL,
-                'activo',
-                v_id_concepto_ingas,
-                v_parametros.id_item,
-                v_parametros.id_clasificacion,
-                1
-                );
-                
+            if v_parametros.id_item is not null or v_parametros.id_clasificacion is not null then
+              
+              if v_id_item_clasif_ingas is not null then
+                --Actualiza el contado
+                  update alm.titem_clasif_ingas set
+                  contador = contador + 1
+                  where id_item_clasif_ingas = v_id_item_clasif_ingas;
+              else
+                --Registra la nueva relación
+                  INSERT INTO alm.titem_clasif_ingas(
+                  id_usuario_reg,
+                  id_usuario_mod,
+                  fecha_reg,
+                  fecha_mod,
+                  estado_reg,
+                  id_concepto_ingas,
+                  id_item,
+                  id_clasificacion,
+                  contador
+                  ) VALUES (
+                  p_id_usuario,
+                  NULL,
+                  now(),
+                  NULL,
+                  'activo',
+                  v_id_concepto_ingas,
+                  v_parametros.id_item,
+                  v_parametros.id_clasificacion,
+                  1
+                  );
+                  
+              end if;
             end if;
-            
-            
                
       --Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Detalle Preingreso modificado(a)'); 
@@ -250,6 +251,7 @@ BEGIN
   elsif(p_transaccion='SAL_PREPPRE_INS')then
 
     begin
+
       insert into alm.tpreingreso_det(
       estado_reg,
       id_preingreso,

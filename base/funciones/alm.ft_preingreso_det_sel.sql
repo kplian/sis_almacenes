@@ -74,9 +74,9 @@ BEGIN
             from alm.tpreingreso_det predet
             inner join segu.tusuario usu1 on usu1.id_usuario = predet.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = predet.id_usuario_mod
-                        inner join adq.tcotizacion_det cdet on cdet.id_cotizacion_det = predet.id_cotizacion_det
-                        inner join adq.tsolicitud_det sdet on sdet.id_solicitud_det = cdet.id_solicitud_det
-                        inner join param.tconcepto_ingas ingas on ingas.id_concepto_ingas = sdet.id_concepto_ingas
+                        left join adq.tcotizacion_det cdet on cdet.id_cotizacion_det = predet.id_cotizacion_det
+                        left join adq.tsolicitud_det sdet on sdet.id_solicitud_det = cdet.id_solicitud_det
+                        left join param.tconcepto_ingas ingas on ingas.id_concepto_ingas = sdet.id_concepto_ingas
                         left join alm.talmacen alm on alm.id_almacen = predet.id_almacen
                         left join param.tdepto depto on depto.id_depto = predet.id_depto
                         left join alm.titem ite on ite.id_item = predet.id_item
@@ -108,9 +108,9 @@ BEGIN
               from alm.tpreingreso_det predet
             inner join segu.tusuario usu1 on usu1.id_usuario = predet.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = predet.id_usuario_mod
-                        inner join adq.tcotizacion_det cdet on cdet.id_cotizacion_det = predet.id_cotizacion_det
-                        inner join adq.tsolicitud_det sdet on sdet.id_solicitud_det = cdet.id_solicitud_det
-                        inner join param.tconcepto_ingas ingas on ingas.id_concepto_ingas = sdet.id_concepto_ingas
+                        left join adq.tcotizacion_det cdet on cdet.id_cotizacion_det = predet.id_cotizacion_det
+                        left join adq.tsolicitud_det sdet on sdet.id_solicitud_det = cdet.id_solicitud_det
+                        left join param.tconcepto_ingas ingas on ingas.id_concepto_ingas = sdet.id_concepto_ingas
                         left join alm.talmacen alm on alm.id_almacen = predet.id_almacen
                         left join param.tdepto depto on depto.id_depto = predet.id_depto
                         left join alm.titem ite on ite.id_item = predet.id_item
