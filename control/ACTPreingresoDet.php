@@ -17,12 +17,15 @@ class ACTPreingresoDet extends ACTbase{
 			$this->objParam->addFiltro("predet.id_preingreso = ".$this->objParam->getParametro('id_preingreso'));	
 		}
 		
+		if($this->objParam->getParametro('estado')!=''){
+			$this->objParam->addFiltro("predet.estado = ''".$this->objParam->getParametro('estado')."''");	
+		}
+		
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);
 			$this->res = $this->objReporte->generarReporteListado('MODPreingresoDet','listarPreingresoDet');
 		} else{
 			$this->objFunc=$this->create('MODPreingresoDet');
-			
 			$this->res=$this->objFunc->listarPreingresoDet($this->objParam);
 		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
@@ -30,6 +33,7 @@ class ACTPreingresoDet extends ACTbase{
 				
 	function insertarPreingresoDet(){
 		$this->objFunc=$this->create('MODPreingresoDet');	
+		
 		if($this->objParam->insertar('id_preingreso_det')){
 			$this->res=$this->objFunc->insertarPreingresoDet($this->objParam);			
 		} else{			
@@ -39,8 +43,43 @@ class ACTPreingresoDet extends ACTbase{
 	}
 						
 	function eliminarPreingresoDet(){
-			$this->objFunc=$this->create('MODPreingresoDet');	
+		$this->objFunc=$this->create('MODPreingresoDet');	
 		$this->res=$this->objFunc->eliminarPreingresoDet($this->objParam);
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+	
+	function preparaPreingreso(){
+		$this->objFunc=$this->create('MODPreingresoDet');	
+		$this->res=$this->objFunc->preparaPreingreso($this->objParam);
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+	
+	function insertarPreingresoDetPreparacion(){
+		$this->objFunc=$this->create('MODPreingresoDet');	
+		
+		if($this->objParam->insertar('id_preingreso_det')){
+			$this->res=$this->objFunc->insertarPreingresoDetPreparacion($this->objParam);			
+		} else{
+			$this->res=$this->objFunc->modificarPreingresoDet($this->objParam);
+		}
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+	
+	function eliminarPreingresoDetPreparacion(){
+		$this->objFunc=$this->create('MODPreingresoDet');	
+		$this->res=$this->objFunc->eliminarPreingresoDetPreparacion($this->objParam);
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+	
+	function preparaPreingresoAll(){
+		$this->objFunc=$this->create('MODPreingresoDet');	
+		$this->res=$this->objFunc->preparaPreingresoAll($this->objParam);
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+	
+	function quitaPreingresoAll(){
+		$this->objFunc=$this->create('MODPreingresoDet');	
+		$this->res=$this->objFunc->quitaPreingresoAll($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 			

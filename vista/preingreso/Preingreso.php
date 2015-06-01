@@ -58,10 +58,17 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
                 scope:this
             });         
         }
+        
+        this.addButton('btnGraf',
+            {
+                text: 'Gráficas',
+                iconCls: 'bchecklist',
+                disabled: true,
+                handler: this.RepEst,
+                tooltip: '<b>Gráficas</b><br/>Generación de gráficas'
+            }
+        );
     
-        
-        
-         
 	},
 	
 	loadCheckDocumentosSolWf:function() {
@@ -189,7 +196,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 				pfiltro : 'alm.codigo',
 				type : 'string'
 			},
-			grid : true,
+			grid : false,
 			form : true
 		},
 		{
@@ -210,7 +217,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
    			type:'ComboRec',
    			id_grupo:0,
    			filters:{pfiltro:'dep.codigo',type:'string'},
-   		    grid:true,
+   		    grid:false,
    			form:true
        	},
        	{
@@ -383,7 +390,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 	bnew:false,
 	south:{
 		  url:'../../../sis_almacenes/vista/preingreso_det/PreingresoDet.php',
-		  title:'Detalle Preingreso', 
+		  title:'Adquisiciones', 
 		  height:'50%',	//altura de la ventana hijo
 		  cls:'PreingresoDet'
 	},
@@ -439,6 +446,8 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
       	
       	 this.getBoton('diagrama_gantt').enable();
          this.getBoton('btnChequeoDocumentosWf').enable();
+         
+         this.getBoton('btnGraf').enable();
 
           
            
@@ -482,7 +491,100 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
             } else{
             	Ext.Msg.alert('Mensaje','Seleccione un registro y vuelva a intentarlo');
         }
-   }
+   },
+   onEnablePanel: function(idPanel, data) {
+        var myPanel
+        if (typeof idPanel == 'object') {
+            myPanel = idPanel
+        } else {
+            myPanel = Phx.CP.getPagina(idPanel);
+        }
+
+        if (idPanel && myPanel) {
+			//Accede al panel derecho        	
+        	myPanelEast = Phx.CP.getPagina(idPanel+'-east');
+
+			//Desbloquea panel izquierdo y derecho
+            myPanel.desbloquearMenus();
+            myPanelEast.desbloquearMenus()
+			
+			//Carga los datos de ambos paneles
+			myPanel.onReloadPage(data);
+			myPanelEast.onReloadPage(data);
+			
+        }
+
+        delete myPanel;
+        delete myPanelEast;
+
+    },
+    
+    RepEst: function (){
+		
+		var storeGraf = new Ext.data.JsonStore({
+	        fields: ['season', 'total'],
+	        data: [{
+	            season: 'Summer',
+	            total: 150
+	        },{
+	            season: 'Fall',
+	            total: 245
+	        },{
+	            season: 'Winter',
+	            total: 117
+	        },{
+	            season: 'Spring',
+	            total: 184
+	        }]
+	    });
+	    
+	    console.log(storeGraf)
+	    
+	    var graf = new Ext.Panel({
+	        width: 400,
+	        height: 400,
+	        //title: 'Pie Chart with Legend - Favorite Season',
+	        region: 'center',
+	        items: {
+	            store: storeGraf,
+	            xtype: 'piechart',
+	            dataField: 'total',
+	            categoryField: 'season',
+	            //extra styles get applied to the chart defaults
+	            extraStyle:
+	            {
+	                legend:
+	                {
+	                    display: 'bottom',
+	                    padding: 5,
+	                    font:
+	                    {
+	                        family: 'Tahoma',
+	                        size: 13
+	                    }
+	                }
+	            }
+	        }
+	    });
+	    
+	    console.log(graf)
+	    
+	    var win = new Ext.Window({
+            title: 'Gráficas',
+            closable:true,
+            width:750,
+            height:500,
+            //border:false,
+            region: 'center',
+            plain:true,
+            layout: 'border',
+            items: [graf]
+        });
+
+        win.show(this);
+        alert('fffff');
+	    
+	}
 	
 })
 </script>
