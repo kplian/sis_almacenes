@@ -33,6 +33,7 @@ class ACTPreingresoDet extends ACTbase{
 				
 	function insertarPreingresoDet(){
 		$this->objFunc=$this->create('MODPreingresoDet');	
+		
 		if($this->objParam->insertar('id_preingreso_det')){
 			$this->res=$this->objFunc->insertarPreingresoDet($this->objParam);			
 		} else{			
@@ -55,7 +56,12 @@ class ACTPreingresoDet extends ACTbase{
 	
 	function insertarPreingresoDetPreparacion(){
 		$this->objFunc=$this->create('MODPreingresoDet');	
-		$this->res=$this->objFunc->insertarPreingresoDetPreparacion($this->objParam);
+		
+		if($this->objParam->insertar('id_preingreso_det')){
+			$this->res=$this->objFunc->insertarPreingresoDetPreparacion($this->objParam);			
+		} else{
+			$this->res=$this->objFunc->modificarPreingresoDet($this->objParam);
+		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 	

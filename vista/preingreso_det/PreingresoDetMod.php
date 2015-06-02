@@ -62,7 +62,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
                 gwidth: 50,
                 scope: this,
                 renderer:function (value, p, record, rowIndex, colIndex){  
-					return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Agregar' src = '../../../lib/imagenes/icono_awesome/awe_left_arrow.png' align='center' width='30' height='30'></div>";
+					return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Quitar' src = '../../../lib/imagenes/icono_awesome/awe_left_arrow.png' align='center' width='30' height='30'></div>";
                 }
             },
             type:'Checkbox',
@@ -79,7 +79,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
                 gwidth: 50,
                 scope: this,
                 renderer:function (value, p, record, rowIndex, colIndex){  
-					return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Agregar' src = '../../../lib/imagenes/icono_awesome/awe_ok.png' align='center' width='30' height='30'></div>";
+					return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' src = '../../../lib/imagenes/icono_awesome/awe_ok.png' align='center' width='30' height='30'></div>";
                 }
             },
             type:'Checkbox',
@@ -574,16 +574,16 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.mostrarComponente(this.Cmp.id_clasificacion);
             this.Cmp.id_depto.enable();
             this.mostrarComponente(this.Cmp.id_depto);
-            this.mostrarColumna(6);
             this.mostrarColumna(7);
+            this.mostrarColumna(8);
 			
 			//Deshabilita componentes
 			this.Cmp.id_almacen.disable();
             this.ocultarComponente(this.Cmp.id_almacen);
             this.Cmp.id_item.disable();
             this.ocultarComponente(this.Cmp.id_item);
-            this.ocultarColumna(4);
             this.ocultarColumna(5);
+            this.ocultarColumna(6);
 			
 		} else if(pMaestro.tipo=='almacen'){
 			//Setea store del departamento
@@ -595,25 +595,25 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.mostrarComponente(this.Cmp.id_almacen);
             this.Cmp.id_item.enable();
             this.mostrarComponente(this.Cmp.id_item);
-            this.mostrarColumna(4);
             this.mostrarColumna(5);
+            this.mostrarColumna(6);
 			
 			//Deshabilita componentes
 			this.Cmp.id_clasificacion.disable();
             this.ocultarComponente(this.Cmp.id_clasificacion);
             this.Cmp.id_depto.disable();
             this.ocultarComponente(this.Cmp.id_depto);
-            this.ocultarColumna(6);
             this.ocultarColumna(7);
+            this.ocultarColumna(8);
             
         } else {
 			//Setea store del departamento
 			codSis='error';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
-			this.ocultarColumna(4);
 			this.ocultarColumna(5);
-            this.ocultarColumna(6);
-			this.ocultarColumna(7);
+			this.ocultarColumna(6);
+            this.ocultarColumna(7);
+			this.ocultarColumna(8);
 		}
 	},
 	
