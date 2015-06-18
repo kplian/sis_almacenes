@@ -35,6 +35,12 @@ class ACTItem extends ACTbase {
     function listarItemNotBase() {
         $this->objParam->defecto('ordenacion', 'id_item');
         $this->objParam->defecto('dir_ordenacion', 'asc');
+        if($this->objParam->getParametro('id_sucursal') != '') {
+                $this->objParam->addFiltro(" (select s.clasificaciones_para_venta 
+                                                from vef.tsucursal s 
+                                                where s.id_sucursal = " . $this->objParam->getParametro('id_sucursal') . " ) && string_to_array(alm.f_get_id_clasificaciones(item.id_clasificacion,''padres''), '','')::integer[] ");
+        }
+        
         $this->objFunc = $this->create('MODItem');
         $this->res = $this->objFunc->listarItemNotBase();
 
