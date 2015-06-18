@@ -383,7 +383,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 	],
 	sortInfo:{
 		field: 'id_preingreso',
-		direction: 'ASC'
+		direction: 'desc'
 	},
 	bdel:true,
 	bsave:true,
