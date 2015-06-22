@@ -19,16 +19,16 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 		this.init();
 		
 		
-		this.addButton('btnIngreso',{
+		/*this.addButton('btnIngreso',{
                     text :'Generar Ingreso',
                     iconCls : 'bchecklist',
                     disabled: true,
                     handler : this.onIngreso,
                     tooltip : '<b>Ingreso</b><br/><b>Generación del Ingreso a Almacén o Activo Fijo</b>'
-         });
+         });*/
          this.addButton('btnRevertir',{
                     text :'Revertir Preingreso',
-                    iconCls : 'bchecklist',
+                    iconCls : 'batras',
                     disabled: true,
                     handler : this.onRevertir,
                     tooltip : '<b>Revertir Preingreso</b><br/><b>Revierte el Preingreso generado</b>'
@@ -98,9 +98,57 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 			form:true 
 		},
 		{
+			config:{
+				name: 'nro_tramite',
+				fieldLabel: 'Num.Tramite',
+				allowBlank: true,
+				anchor: '80%',
+				gwidth: 130,
+				maxLength:50
+			},
+			type:'TextField',
+			filters:{pfiltro:'pw.nro_tramite',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:false,
+			bottom_filter:true
+		},
+		{
+			config:{
+				name: 'desc_funcionario1',
+				fieldLabel: 'Solicitante',
+				allowBlank: true,
+				anchor: '80%',
+				gwidth: 180,
+				maxLength:50
+			},
+			type:'TextField',
+			filters:{pfiltro:'fun.desc_funcionario1',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:false,
+			bottom_filter:true
+		},
+		{
+			config:{
+				name: 'desc_proveedor',
+				fieldLabel: 'Proveedor',
+				allowBlank: true,
+				anchor: '80%',
+				gwidth: 180,
+				maxLength:50
+			},
+			type:'TextField',
+			filters:{pfiltro:'pro.desc_proveedor',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:false,
+			bottom_filter:true
+		},
+		{
 			config: {
 				name: 'id_cotizacion',
-				fieldLabel: 'Cotización',
+				fieldLabel: 'Orden de Compra',
 				allowBlank: false,
 				renderer : function(value, p, record) {
 					return String.format('{0}', record.data['numero_oc']);
@@ -112,7 +160,8 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 			id_grupo: 0,
 			filters: {pfiltro: 'cot.numero_oc',type: 'string'},
 			grid: true,
-			form: true
+			form: true,
+			bottom_filter:true
 		},
 		{
 			config:{
@@ -233,7 +282,8 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 				filters:{pfiltro:'preing.descripcion',type:'string'},
 				id_grupo:1,
 				grid:true,
-				form:true
+				form:true,
+				egrid:true
 		},
        	{
             config:{
@@ -379,7 +429,10 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 		{name:'codigo_almacen', type: 'string'},
 		{name:'codigo_depto', type: 'string'},
 		{name:'codigo_moneda', type: 'string'},
-		{name:'descripcion', type: 'string'}
+		{name:'descripcion', type: 'string'},
+		{name:'nro_tramite', type: 'string'},
+		{name:'desc_funcionario1', type: 'string'},
+		{name:'desc_proveedor', type: 'string'}
 	],
 	sortInfo:{
 		field: 'id_preingreso',
@@ -398,11 +451,11 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
         var rec = this.sm.getSelected();
         if(rec.data){
         	var aux;
-        	aux='Almacenes';
+        	aux='Ingreso a Almacén';
         	if(rec.data.tipo=='activo_fijo'){
-				aux='Activos Fijos';        		
+				aux='Alta de Activos Fijos';        		
         	} 
-        	Ext.Msg.confirm('Confirmación','¿Está seguro de generar el Ingreso a '+aux+'?', 
+        	Ext.Msg.confirm('Confirmación','¿Está seguro de generar el '+aux+'?', 
 			function(btn) {
 				if (btn == "yes") {
 					Phx.CP.loadingShow();
@@ -427,18 +480,18 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
       	Phx.vista.Preingreso.superclass.preparaMenu.call(this,n);
       
       	if(rec.estado=='borrador'){
-      		this.getBoton('btnIngreso').enable();
+      		//this.getBoton('btnIngreso').enable();
       		this.getBoton('btnRevertir').enable();
       		//this.getBoton('edit').enable();
       		this.getBoton('del').enable();
       	} else if(rec.estado=='cancelado'||rec.estado=='finalizado'){
-      		this.getBoton('btnIngreso').disable();
+      		//this.getBoton('btnIngreso').disable();
       		this.getBoton('btnRevertir').disable();
       		
       		//this.getBoton('edit').disable();
       		this.getBoton('del').disable();
       	} else {
-      		this.getBoton('btnIngreso').disable();
+      		//this.getBoton('btnIngreso').disable();
       		this.getBoton('btnRevertir').disable();
       		//this.getBoton('edit').disable();
       		this.getBoton('del').disable();
@@ -449,13 +502,12 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
          
          this.getBoton('btnGraf').enable();
 
-          
-           
 	},
+	
 	liberaMenu:function(){
         var tb = Phx.vista.Preingreso.superclass.liberaMenu.call(this);
         if(tb){
-            this.getBoton('btnIngreso').disable();
+            //this.getBoton('btnIngreso').disable();
             this.getBoton('diagrama_gantt').disable();
             this.getBoton('btnChequeoDocumentosWf').disable();
          }
