@@ -467,7 +467,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 gwidth:200,
    				valueField: 'id_funcionario',
    			    gdisplayField: 'nombre_funcionario',
-   			    baseParams: { es_combo_solicitud : 'si',fecha: new Date(), id_movimiento_tipo:0 },
+   			    baseParams: { fecha: new Date(), id_movimiento_tipo:0 },
       			//renderer:function(value, p, record){return String.format('{0}', record.data['nombre_funcionario']);},
       			renderer: function(value, p, record){
 					var aux;
