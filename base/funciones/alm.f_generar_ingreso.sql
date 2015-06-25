@@ -142,8 +142,8 @@ BEGIN
                 where pdet.id_preingreso = v_rec.id_preingreso
                 and pdet.sw_generar = 'si'
                 and ping.tipo='almacen'
-                and pdet.id_item is null 
-                and pdet.id_almacen is null) then
+                and (pdet.id_item is null or pdet.id_almacen is null)
+                and pdet.estado = 'mod') then
       raise exception 'Datos incompletos, defina el Item y el Almacén destino';
     end if;
     if exists(select 1
@@ -152,8 +152,8 @@ BEGIN
                 where pdet.id_preingreso = v_rec.id_preingreso
                 and pdet.sw_generar = 'si'
                 and ping.tipo='activo_fijo'
-                and pdet.id_clasificacion is null 
-                and pdet.id_depto is null) then
+                and (pdet.id_clasificacion is null or pdet.id_depto is null)
+                and pdet.estado = 'mod') then
       raise exception 'Datos incompletos, defina la Clasificación y el Depto. destino';
     end if;
     
@@ -228,7 +228,7 @@ BEGIN
             'IN-S/N'
             );
 
-          --Cabecera
+            --Cabecera
             insert into alm.tmovimiento(
             id_usuario_reg, fecha_reg, estado_reg,
             id_movimiento_tipo, id_almacen, id_funcionario, fecha_mov,
@@ -237,7 +237,7 @@ BEGIN
             ) values(
             p_id_usuario, now(),'activo',
             v_id_movimiento_tipo, v_rec_det.id_almacen, v_rec.id_funcionario, now(),
-            v_rec.descripcion, v_id_proceso_macro, v_id_estado_wf, v_id_proceso_wf,
+            coalesce(v_rec.descripcion,'[Registrado desde Preingreso]'), v_id_proceso_macro, v_id_estado_wf, v_id_proceso_wf,
             v_codigo_estado, v_rec.id_preingreso, v_rec.id_depto_conta, p_id_usuario_ai, p_usuario
             ) returning id_movimiento into v_id_movimiento;
             

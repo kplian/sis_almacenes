@@ -285,7 +285,8 @@ BEGIN
                     item.codigo_fabrica,
                     item.observaciones,
                     item.numero_serie,
-                    umed.codigo as codigo_unidad
+                    umed.codigo as codigo_unidad,
+                    item.precio_ref
                 from alm.titem item
                 inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
                 inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida

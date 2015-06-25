@@ -13,7 +13,11 @@ class ACTClasificacion extends ACTbase {
         $this->objParam->defecto('ordenacion', 'codigo');
 
         $this->objParam->defecto('dir_ordenacion', 'asc');
+        if ($this->objParam->getParametro('primer_nivel') == 'si') {
+            $this->objParam->addFiltro(" cla.id_clasificacion_fk is null");
+        }
         $this->objFunc = $this->create('MODClasificacion');
+        
         $this->res = $this->objFunc->listarClasificacion();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }

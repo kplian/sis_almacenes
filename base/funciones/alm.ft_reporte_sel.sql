@@ -66,11 +66,11 @@ BEGIN
                 elsif(v_parametros.alertas = 'cantidad_roja') then
                     v_where = v_where || ' (alm.f_get_saldo_fisico_item(itm.id_item, '||v_parametros.id_almacen||', date('''''|| v_parametros.fecha_hasta||'''''))) < almsto.cantidad_alerta_roja and ';
                 end if;
-            else
+            end if;
                 if(v_parametros.saldo_cero = 'no') then
                     v_where = v_where || ' (alm.f_get_saldo_fisico_item(itm.id_item, '||v_parametros.id_almacen||', date('''''|| v_parametros.fecha_hasta||'''''))) > 0 and ';
                 end if;
-            end if;
+            
 	
 	    	v_consulta:='select 
             			id_item,
