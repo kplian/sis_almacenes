@@ -532,28 +532,21 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 	bsave:false,
 	bnew:true,
 	bedit:true,
-	/*preparaMenu:function(n){
-	    
-	       Phx.vista.PreingresoDetMod.superclass.preparaMenu.call(this,n);
-	       if(this.maestro.estado=='borrador'){
-	           this.getBoton('edit').enable();
-	       }
-	       else{
-	           this.getBoton('edit').disable();
-	       }
-      
-	},*/
-	
+	preparaMenu:function(n){
+       	Phx.vista.PreingresoDetMod.superclass.preparaMenu.call(this,n);
+		this.preparaComponentes(this.maestro)
+	},
 	
 	loadValoresIniciales:function(){
 		Phx.vista.PreingresoDetMod.superclass.loadValoresIniciales.call(this);
 		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);
 	},
+	
 	onReloadPage:function(m){
 		this.maestro=m;	
 		Ext.apply(this.store.baseParams,{id_preingreso:this.maestro.id_preingreso,estado: this.estado});
+		this.preparaComponentes(this.maestro);
 		this.load({params:{start:0, limit:this.tam_pag}});
-		this.preparaComponentes(this.maestro)
 	},
 	onButtonEdit: function (){
 		//Prepara los componentes en función de si el preingreso es para Almacén o para Activos Fijos
@@ -615,6 +608,19 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.ocultarColumna(7);
 			this.ocultarColumna(8);
 		}
+		
+		console.log(pMaestro.estado);
+		
+		//Habilita los componentes
+		if(pMaestro.estado=='borrador'){
+           this.getBoton('new').enable();
+           this.getBoton('edit').enable();
+           this.getBoton('btnAgTodos').enable();
+      	} else{
+       	   this.getBoton('new').disable();
+           this.getBoton('edit').disable();
+           this.getBoton('btnAgTodos').disable();
+       	}
 	},
 	
 	aplicarFiltro: function(){
@@ -623,36 +629,39 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 	},
 	
 	quitarTodos: function(){
-		Ext.Msg.show({
-		   title:'Confirmación',
-		   msg: '¿Está seguro de quitar todos los items del Preingreso?',
-		   buttons: Ext.Msg.YESNO,
-		   fn: function(a,b,c){
-		   		if(a=='yes'){
-		   			var myPanel = Phx.CP.getPagina(this.idContenedorPadre);
-					Phx.CP.loadingShow();
-					Ext.Ajax.request({
-						url: '../../sis_almacenes/control/PreingresoDet/quitaPreingresoAll',
-						params: {
-							id_preingreso: this.maestro.id_preingreso
-						},
-						success: function(a,b,c){
-							Phx.CP.loadingHide();
-							this.reload();
-							//Carga datos del panel derecho
-							myPanel.onReloadPage(this.maestro);
-							delete myPanel;
-						},
-						failure: this.conexionFailure,
-						timeout: this.timeout,
-						scope: this
-					});	
-		   		}
-		   },
-		   icon: Ext.MessageBox.QUESTION,
-		   scope: this
-		});
-
+		//Verifica si el grid tiene registros cargados
+		if(this.store.getTotalCount()>0){
+			Ext.Msg.show({
+			   title:'Confirmación',
+			   msg: '¿Está seguro de quitar todos los items del Preingreso?',
+			   buttons: Ext.Msg.YESNO,
+			   fn: function(a,b,c){
+			   		if(a=='yes'){
+			   			var myPanel = Phx.CP.getPagina(this.idContenedorPadre);
+						Phx.CP.loadingShow();
+						Ext.Ajax.request({
+							url: '../../sis_almacenes/control/PreingresoDet/quitaPreingresoAll',
+							params: {
+								id_preingreso: this.maestro.id_preingreso
+							},
+							success: function(a,b,c){
+								Phx.CP.loadingHide();
+								this.reload();
+								//Carga datos del panel derecho
+								myPanel.onReloadPage(this.maestro);
+								delete myPanel;
+							},
+							failure: this.conexionFailure,
+							timeout: this.timeout,
+							scope: this
+						});	
+			   		}
+			   },
+			   icon: Ext.MessageBox.QUESTION,
+			   scope: this
+			});
+			
+		}
 	},
 	
 	successDel:function(resp){
@@ -669,12 +678,15 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		
 	    var record = this.store.getAt(rowIndex),
 	        fieldName = grid.getColumnModel().getDataIndex(columnIndex); // Get field name
-	        
-	    if (fieldName == 'quitar') {
-	    	
+	    
+		if (fieldName == 'quitar') {
+    	
 			var myPanel = Phx.CP.getPagina(this.idContenedorPadre);
 			
-	    	Phx.CP.loadingShow();
+			if(this.maestro.estado == 'finalizado'){
+				Ext.Msg.alert('Acción no permitida','El preingreso ya fue finalizado, no puede hacerse ninguna modificación.');
+			} else {
+				Phx.CP.loadingShow();
 				Ext.Ajax.request({
 					url : '../../sis_almacenes/control/PreingresoDet/eliminarPreingresoDetPreparacion',
 					params : {
@@ -692,10 +704,11 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 					timeout : this.timeout,
 					scope : this
 				});
-	    } 
+			}
+	    	
+	    }
 		
 	}
-	
 	
 })
 </script>
