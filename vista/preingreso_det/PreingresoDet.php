@@ -591,6 +591,16 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			codSis='error';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
 		}
+		
+		if(pMaestro.estado=='borrador'){
+           this.getBoton('new').enable();
+           this.getBoton('edit').enable();
+           this.getBoton('btnAgTodos').enable();
+      	} else{
+       	   this.getBoton('new').disable();
+           this.getBoton('edit').disable();
+           this.getBoton('btnAgTodos').disable();
+       	}
 	},
    east: {
 		url : '../../../sis_almacenes/vista/preingreso_det/PreingresoDetMod.php',
@@ -613,58 +623,69 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 	    	
 			var myPanelEast = Phx.CP.getPagina(this.idContenedor+'-east');
 			
-	    	Phx.CP.loadingShow();
-				Ext.Ajax.request({
-					url : '../../sis_almacenes/control/PreingresoDet/preparaPreingreso',
-					params : {
-						id_preingreso_det:	record.data.id_preingreso_det,
-						data: record
-					},
-					success : function(a,b,c){
-						Phx.CP.loadingHide();
-						this.reload();
-						//Carga datos del panel derecho
-						myPanelEast.onReloadPage(this.maestro);
-						delete myPanelEast;
-					},
-					failure : this.conexionFailure,
-					timeout : this.timeout,
-					scope : this
-				});
-	    } 
-		
-	},
-	
-	agregarTodos: function(){
-		Ext.Msg.show({
-		   title:'Confirmación',
-		   msg: '¿Está seguro de agregar todos los items al Preingreso?',
-		   buttons: Ext.Msg.YESNO,
-		   fn: function(a,b,c){
-		   		if(a=='yes'){
-		   			var myPanelEast = Phx.CP.getPagina(this.idContenedor+'-east');
-					Phx.CP.loadingShow();
+			if(this.maestro.estado == 'finalizado'){
+				Ext.Msg.alert('Acción no permitida','El preingreso ya fue finalizado, no puede hacerse ninguna modificación.');
+			} else {
+				Phx.CP.loadingShow();
 					Ext.Ajax.request({
-						url: '../../sis_almacenes/control/PreingresoDet/preparaPreingresoAll',
-						params: {
-							id_preingreso: this.maestro.id_preingreso
+						url : '../../sis_almacenes/control/PreingresoDet/preparaPreingreso',
+						params : {
+							id_preingreso_det:	record.data.id_preingreso_det,
+							data: record
 						},
-						success: function(a,b,c){
+						success : function(a,b,c){
 							Phx.CP.loadingHide();
 							this.reload();
 							//Carga datos del panel derecho
 							myPanelEast.onReloadPage(this.maestro);
 							delete myPanelEast;
 						},
-						failure: this.conexionFailure,
-						timeout: this.timeout,
-						scope: this
-					});	
-		   		}
-		   },
-		   icon: Ext.MessageBox.QUESTION,
-		   scope: this
-		});
+						failure : this.conexionFailure,
+						timeout : this.timeout,
+						scope : this
+					});
+			}
+
+	    } 
+		
+	},
+	
+	agregarTodos: function(){
+		//Verifica si el grid tiene registros cargados
+		if(this.store.getTotalCount()>0){
+			Ext.Msg.show({
+			   title:'Confirmación',
+			   msg: '¿Está seguro de agregar todos los items al Preingreso?',
+			   buttons: Ext.Msg.YESNO,
+			   fn: function(a,b,c){
+			   		if(a=='yes'){
+			   			var myPanelEast = Phx.CP.getPagina(this.idContenedor+'-east');
+						Phx.CP.loadingShow();
+						Ext.Ajax.request({
+							url: '../../sis_almacenes/control/PreingresoDet/preparaPreingresoAll',
+							params: {
+								id_preingreso: this.maestro.id_preingreso
+							},
+							success: function(a,b,c){
+								Phx.CP.loadingHide();
+								this.reload();
+								//Carga datos del panel derecho
+								myPanelEast.onReloadPage(this.maestro);
+								delete myPanelEast;
+							},
+							failure: this.conexionFailure,
+							timeout: this.timeout,
+							scope: this
+						});	
+			   		}
+			   },
+			   icon: Ext.MessageBox.QUESTION,
+			   scope: this
+			});	
+		}
+
+		
+		
 
 	},
 	

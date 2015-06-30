@@ -105,6 +105,15 @@ BEGIN
 
     begin
         
+        if not exists (select 1 from alm.tpreingreso_det pdet 
+                    inner join alm.tpreingreso ping
+                    on ping.id_preingreso = pdet.id_preingreso
+                    where pdet.id_preingreso_det = v_parametros.id_preingreso_det
+                    and ping.estado = 'borrador' ) then
+          raise exception 'El preingreso debe estar en estado Borrador';
+                    
+      end if;
+        
         --Sentencia de la modificacion
         update alm.tpreingreso_det set
         id_item = v_parametros.id_item,
@@ -203,6 +212,16 @@ BEGIN
   elsif(p_transaccion='SAL_PREDET_ELI')then
 
     begin
+      
+      if not exists (select 1 from alm.tpreingreso_det pdet 
+                    inner join alm.tpreingreso ping
+                    on ping.id_preingreso = pdet.id_preingreso
+                    where pdet.id_preingreso_det = v_parametros.id_preingreso_det
+                    and ping.estado = 'borrador' ) then
+          raise exception 'El preingreso debe estar en estado Borrador';
+                    
+      end if;
+      
       --Sentencia de la eliminacion
       delete from alm.tpreingreso_det
             where id_preingreso_det=v_parametros.id_preingreso_det;
@@ -226,6 +245,16 @@ BEGIN
   elsif(p_transaccion='SAL_PREPPRE_MOD')then
 
     begin
+      
+       if not exists (select 1 from alm.tpreingreso_det pdet 
+                    inner join alm.tpreingreso ping
+                    on ping.id_preingreso = pdet.id_preingreso
+                    where pdet.id_preingreso_det = v_parametros.id_preingreso_det
+                    and ping.estado = 'borrador' ) then
+          raise exception 'El preingreso debe estar en estado Borrador';
+                    
+      end if;
+      
       --Sentencia de la eliminacion
       update alm.tpreingreso_det set
             sw_generar = 'si',
@@ -251,6 +280,13 @@ BEGIN
   elsif(p_transaccion='SAL_PREPPRE_INS')then
 
     begin
+      
+      if not exists (select 1 from alm.tpreingreso ping
+                    where ping.id_preingreso = v_parametros.id_preingreso
+                    and ping.estado = 'borrador' ) then
+          raise exception 'El preingreso debe estar en estado Borrador';
+                    
+      end if;
 
       insert into alm.tpreingreso_det(
       estado_reg,
@@ -305,6 +341,16 @@ BEGIN
   elsif(p_transaccion='SAL_PREDETPRE_ELI')then
 
     begin
+      
+      if not exists (select 1 from alm.tpreingreso_det pdet 
+                    inner join alm.tpreingreso ping
+                    on ping.id_preingreso = pdet.id_preingreso
+                    where pdet.id_preingreso_det = v_parametros.id_preingreso_det
+                    and ping.estado = 'borrador' ) then
+          raise exception 'El preingreso debe estar en estado Borrador';
+                    
+      end if;
+      
       --Sentencia de la eliminacion
       update alm.tpreingreso_det set
             estado = 'orig',
@@ -330,6 +376,14 @@ BEGIN
   elsif(p_transaccion='SAL_PREPPREALL_MOD')then
 
     begin
+      
+      if not exists (select 1 from alm.tpreingreso ping
+                    where ping.id_preingreso = v_parametros.id_preingreso
+                    and ping.estado = 'borrador' ) then
+          raise exception 'El preingreso debe estar en estado Borrador';
+                    
+      end if;
+      
       --Sentencia de la eliminacion
       update alm.tpreingreso_det set
             sw_generar = 'si',
@@ -355,6 +409,14 @@ BEGIN
   elsif(p_transaccion='SAL_QUITAPREALL_MOD')then
 
     begin
+      
+      if not exists (select 1 from alm.tpreingreso ping
+                    where ping.id_preingreso = v_parametros.id_preingreso
+                    and ping.estado = 'borrador' ) then
+          raise exception 'El preingreso debe estar en estado Borrador';
+                    
+      end if;
+      
       --Sentencia de la eliminacion
       update alm.tpreingreso_det set
             sw_generar = 'no',
