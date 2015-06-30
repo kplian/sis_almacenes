@@ -1411,5 +1411,5 @@ update alm.tpreingreso_det set
 estado = 'orig'
 from alm.tpreingreso pre
 where alm.tpreingreso_det.id_preingreso = pre.id_preingreso
-and pre.estado = 'borrador'
+and pre.estado = 'borrador';
 /***********************************F-DAT-RCM-ALM-0-05/05/2015****************************************/
