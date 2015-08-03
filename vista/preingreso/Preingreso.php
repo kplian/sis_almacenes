@@ -483,18 +483,18 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
       		//this.getBoton('btnIngreso').enable();
       		this.getBoton('btnRevertir').enable();
       		//this.getBoton('edit').enable();
-      		this.getBoton('del').enable();
+      		//this.getBoton('del').enable();
       	} else if(rec.estado=='cancelado'||rec.estado=='finalizado'){
       		//this.getBoton('btnIngreso').disable();
       		this.getBoton('btnRevertir').disable();
       		
       		//this.getBoton('edit').disable();
-      		this.getBoton('del').disable();
+      		//this.getBoton('del').disable();
       	} else {
       		//this.getBoton('btnIngreso').disable();
       		this.getBoton('btnRevertir').disable();
       		//this.getBoton('edit').disable();
-      		this.getBoton('del').disable();
+      		//this.getBoton('del').disable();
       	}
       	
       	 this.getBoton('diagrama_gantt').enable();
