@@ -27,11 +27,11 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
                     tooltip : '<b>Ingreso</b><br/><b>Generación del Ingreso a Almacén o Activo Fijo</b>'
          });*/
          this.addButton('btnRevertir',{
-                    text :'Revertir Preingreso',
+                    text :'Cancelar Preingreso',
                     iconCls : 'batras',
                     disabled: true,
                     handler : this.onRevertir,
-                    tooltip : '<b>Revertir Preingreso</b><br/><b>Revierte el Preingreso generado</b>'
+                    tooltip : '<b>Cancelar Preingreso</b><br/><b>Cancela el Preingreso generado</b>'
          });
          
          this.addButton('btnChequeoDocumentosWf',
@@ -438,7 +438,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 		field: 'id_preingreso',
 		direction: 'desc'
 	},
-	bdel:true,
+	bdel:false,
 	bsave:true,
 	bnew:false,
 	south:{
