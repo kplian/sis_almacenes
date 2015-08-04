@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.ft_preingreso_ime (
   p_administrador integer,
   p_id_usuario integer,

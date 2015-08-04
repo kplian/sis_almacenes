@@ -2808,3 +2808,14 @@ AS
         mov.id_movimiento_tipo;
         
 /***********************************F-DEP-JRR-ALM-0-22/03/2014****************************************/
+
+
+/***********************************I-DEP-JRR-ALM-0-04/08/2015*****************************************/
+ALTER TABLE alm.tpreingreso_det
+  ADD CONSTRAINT fk_tpreingreso_det__id_lugar FOREIGN KEY (id_lugar)
+    REFERENCES param.tlugar(id_lugar)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+/***********************************F-DEP-JRR-ALM-0-04/08/2015*****************************************/

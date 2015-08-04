@@ -67,10 +67,16 @@ BEGIN
                         depto.codigo || '' - '' || depto.nombre as desc_depto,
                         ite.codigo || '' - '' || ite.nombre as desc_item,
                         clas.codigo || '' - '' || clas.descripcion as desc_clasificacion,
-                        ingas.desc_ingas,
-                        sdet.descripcion,
+                        ingas.desc_ingas,                        
                         predet.estado,
-                        pre.tipo
+                        pre.tipo,
+                        predet.nombre,
+                        predet.descripcion,
+                        predet.precio_compra_87,
+                        predet.id_lugar,
+                        lug.nombre as nombre_lugar,
+                        predet.ubicacion
+                        
             from alm.tpreingreso_det predet
             inner join segu.tusuario usu1 on usu1.id_usuario = predet.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = predet.id_usuario_mod
@@ -81,6 +87,7 @@ BEGIN
                         left join param.tdepto depto on depto.id_depto = predet.id_depto
                         left join alm.titem ite on ite.id_item = predet.id_item
                         left join af.tclasificacion clas on clas.id_clasificacion = predet.id_clasificacion
+                        left join param.tlugar lug on lug.id_lugar = predet.id_lugar
                         inner join alm.tpreingreso pre on pre.id_preingreso = predet.id_preingreso
                 where  ';
       
@@ -115,6 +122,7 @@ BEGIN
                         left join param.tdepto depto on depto.id_depto = predet.id_depto
                         left join alm.titem ite on ite.id_item = predet.id_item
                         left join af.tclasificacion clas on clas.id_clasificacion = predet.id_clasificacion
+                        left join param.tlugar lug on lug.id_lugar = predet.id_lugar
                         inner join alm.tpreingreso pre on pre.id_preingreso = predet.id_preingreso
               where ';
       

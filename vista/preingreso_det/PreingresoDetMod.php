@@ -105,7 +105,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'precio_compra',
-				fieldLabel: 'Costo',
+				fieldLabel: 'Costo al 100%',
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 75,
@@ -113,6 +113,22 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 			},
 			type:'NumberField',
 			filters:{pfiltro:'predet.precio_compra',type:'numeric'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
+		
+		{
+			config:{
+				name: 'precio_compra_87',
+				fieldLabel: 'Costo',
+				allowBlank: true,
+				anchor: '80%',
+				gwidth: 75,
+				maxLength:1179650
+			},
+			type:'NumberField',
+			filters:{pfiltro:'predet.precio_compra_87',type:'numeric'},
 			id_grupo:1,
 			grid:true,
 			form:true
@@ -311,54 +327,19 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 			form: true
 		},
 		{
-			config : {
-				name : 'id_cotizacion_det',
-				fieldLabel : 'Concepto Gasto',
-				allowBlank : false,
-				emptyText : 'Elija un Concepto...',
-				store : new Ext.data.JsonStore({
-					url : '../../sis_almacenes/control/Item/listarItemNotBase',
-					id : 'id_item',
-					root : 'datos',
-					sortInfo : {
-						field : 'nombre',
-						direction : 'ASC'
-					},
-					totalProperty : 'total',
-					fields : ['id_item', 'nombre', 'codigo', 'desc_clasificacion', 'codigo_unidad'],
-					remoteSort : true,
-					baseParams : {
-						par_filtro : 'item.nombre#item.codigo#cla.nombre'
-					}
-				}),
-				valueField : 'id_cotizacion_det',
-				displayField : 'desc_ingas',
-				gdisplayField : 'desc_ingas',
-				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
-				hiddenName : 'id_cotizacion_det',
-				forceSelection : true,
-				typeAhead : false,
-				triggerAction : 'all',
-				lazyRender : true,
-				mode : 'remote',
-				pageSize : 10,
-				queryDelay : 1000,
-				anchor : '100%',
-				gwidth : 250,
-				minChars : 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['desc_ingas']);
-				},
-				resizable: true
+			config:{
+				name: 'nombre',
+				fieldLabel: 'Nombre',
+				allowBlank: false,
+				anchor: '100%',
+				gwidth: 180,
+				maxLength:100
 			},
-			type : 'ComboBox',
-			id_grupo : 0,
-			filters : {
-				pfiltro : 'ingas.desc_ingas',
-				type : 'string'
-			},
-			grid : true,
-			form : false
+			type:'TextArea',
+			filters:{pfiltro:'predet.nombre',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:true
 		},
 		{
 			config:{
@@ -370,11 +351,69 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 				maxLength:2000
 			},
 			type:'TextArea',
-			filters:{pfiltro:'sdet.descripcion',type:'string'},
+			filters:{pfiltro:'predet.descripcion',type:'string'},
 			id_grupo:1,
 			grid:true,
 			form:true
 		},
+		{
+			config:{
+				name: 'id_lugar',
+				fieldLabel: 'Lugar',
+				allowBlank: false,
+				emptyText:'Lugar...',
+				store:new Ext.data.JsonStore(
+				{
+					url: '../../sis_parametros/control/Lugar/listarLugar',
+					id: 'id_lugar',
+					root: 'datos',
+					sortInfo:{
+						field: 'nombre',
+						direction: 'ASC'
+					},
+					totalProperty: 'total',
+					fields: ['id_lugar','id_lugar_fk','codigo','nombre','tipo','sw_municipio','sw_impuesto','codigo_largo'],
+					// turn on remote sorting
+					remoteSort: true,
+					baseParams:{par_filtro:'lug.nombre',tipo:'departamento'}
+				}),
+				valueField: 'id_lugar',
+				displayField: 'nombre',
+				gdisplayField:'nombre_lugar',
+				hiddenName: 'id_lugar',
+    			triggerAction: 'all',
+    			lazyRender:true,
+				mode:'remote',
+				pageSize:50,
+				queryDelay:500,
+				anchor:"100%",
+				gwidth:150,
+				minChars:2,
+				renderer:function (value, p, record){return String.format('{0}', record.data['nombre_lugar']);}
+			},
+			type:'ComboBox',
+			filters:{pfiltro:'lug.nombre',type:'string'},
+			id_grupo:0,
+			grid:true,
+			form:true
+		},
+		{
+			config:{
+				name: 'ubicacion',
+				fieldLabel: 'Ubicación',
+				allowBlank: false,
+				anchor: '100%',
+				gwidth: 180,
+				maxLength:255
+			},
+			type:'TextArea',
+			filters:{pfiltro:'predet.ubicacion',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
+		
+		
 		{
 			config: {
 				name: 'sw_generar',
@@ -502,9 +541,11 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		{name:'id_preingreso', type: 'numeric'},
 		{name:'id_cotizacion_det', type: 'numeric'},
 		{name:'id_item', type: 'numeric'},
+		{name:'id_lugar', type: 'numeric'},
 		{name:'id_almacen', type: 'numeric'},
 		{name:'cantidad_det', type: 'numeric'},
 		{name:'precio_compra', type: 'numeric'},
+		{name:'precio_compra_87', type: 'numeric'},
 		{name:'id_depto', type: 'numeric'},
 		{name:'id_clasificacion', type: 'numeric'},
 		{name:'sw_generar', type: 'string'},
@@ -519,7 +560,9 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		{name:'desc_depto', type: 'string'},
 		{name:'desc_item', type: 'string'},
 		{name:'desc_clasificacion', type: 'string'},
-		{name:'desc_ingas', type: 'string'},
+		{name:'nombre', type: 'string'},
+		{name:'nombre_lugar', type: 'string'},
+		{name:'ubicacion', type: 'string'},
 		{name:'descripcion', type: 'string'},
 		{name:'estado', type: 'string'},
 		{name:'tipo', type: 'string'}
@@ -559,16 +602,30 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		if(pMaestro.tipo=='activo_fijo'){
 			//Setea store del departamento
 			codSis='AF';
-			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
-			
+			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});			
 			
 			//Habilita componentes
+			this.Cmp.precio_compra_87.enable();
+            this.mostrarComponente(this.Cmp.precio_compra_87);
 			this.Cmp.id_clasificacion.enable();
             this.mostrarComponente(this.Cmp.id_clasificacion);
             this.Cmp.id_depto.enable();
             this.mostrarComponente(this.Cmp.id_depto);
-            this.mostrarColumna(7);
+            this.Cmp.nombre.enable();
+            this.mostrarComponente(this.Cmp.nombre);
+            this.Cmp.descripcion.enable();
+            this.mostrarComponente(this.Cmp.descripcion);
+            this.Cmp.id_lugar.enable();
+            this.mostrarComponente(this.Cmp.id_lugar);
+            this.Cmp.ubicacion.enable();
+            this.mostrarComponente(this.Cmp.ubicacion);
+            this.mostrarColumna(5);
             this.mostrarColumna(8);
+            this.mostrarColumna(9);
+            this.mostrarColumna(10);
+            this.mostrarColumna(11);
+            this.mostrarColumna(12);
+            this.mostrarColumna(13);
 			
 			//Deshabilita componentes
 			this.Cmp.id_almacen.disable();
@@ -592,12 +649,27 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.mostrarColumna(6);
 			
 			//Deshabilita componentes
+			this.Cmp.precio_compra_87.disable();
+            this.ocultarComponente(this.Cmp.precio_compra_87);
 			this.Cmp.id_clasificacion.disable();
             this.ocultarComponente(this.Cmp.id_clasificacion);
             this.Cmp.id_depto.disable();
             this.ocultarComponente(this.Cmp.id_depto);
-            this.ocultarColumna(7);
+            this.Cmp.nombre.disable();
+            this.ocultarComponente(this.Cmp.nombre);
+            this.Cmp.descripcion.disable();
+            this.ocultarComponente(this.Cmp.descripcion);
+            this.Cmp.id_lugar.disable();
+            this.ocultarComponente(this.Cmp.id_lugar);
+            this.Cmp.ubicacion.disable();
+            this.ocultarComponente(this.Cmp.ubicacion);
+            this.ocultarColumna(5);
             this.ocultarColumna(8);
+            this.ocultarColumna(9);
+            this.ocultarColumna(10);
+            this.ocultarColumna(11);
+            this.ocultarColumna(12);
+            this.ocultarColumna(13);
             
         } else {
 			//Setea store del departamento
