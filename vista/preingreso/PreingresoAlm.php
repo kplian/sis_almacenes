@@ -29,6 +29,14 @@ Phx.vista.PreingresoAlm = {
 	        handler : this.onIngreso,
 	        tooltip : '<b>Ingreso</b><br/><b>Generación del Ingreso a Almacén</b>'
 	   });
+	   
+	   this.addButton('btnRevertir',{
+                    text :'Cancelar Preingreso',
+                    iconCls : 'batras',
+                    disabled: true,
+                    handler : this.onRevertir,
+                    tooltip : '<b>Cancelar Preingreso</b><br/><b>Cancela el Preingreso generado</b>'
+         });
    },
    
     preparaMenu:function(n){

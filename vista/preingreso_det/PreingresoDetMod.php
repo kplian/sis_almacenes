@@ -242,7 +242,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 			config: {
 				name: 'id_clasificacion',
 				fieldLabel: 'Clasificación',
-				allowBlank: true,
+				allowBlank: false,
 				emptyText: 'Elija una opción...',
 				store: new Ext.data.JsonStore({
 					url: '../../sis_activos_fijos/control/Clasificacion/listarClasificacion',
@@ -413,6 +413,39 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 			form:true
 		},
 		
+		{
+			config:{
+				name: 'c31',
+				fieldLabel: 'C31',
+				allowBlank: false,
+				anchor: '100%',
+				gwidth: 180,
+				maxLength:255
+			},
+			type:'TextField',
+			filters:{pfiltro:'predet.c31',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
+		
+		{
+			config:{
+				name: 'fecha_conformidad',
+				fieldLabel: 'Fecha Ini/Dep',
+				allowBlank: false,
+				anchor: '80%',
+				gwidth: 100,
+							format: 'd/m/Y', 
+							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+			},
+			type:'DateField',
+			filters:{pfiltro:'predet.fecha_conformidad',type:'date'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
+		
 		
 		{
 			config: {
@@ -554,6 +587,8 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		{name:'fecha_reg', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
 		{name:'id_usuario_mod', type: 'numeric'},
 		{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
+		{name:'fecha_conformidad', type: 'date',dateFormat:'Y-m-d'},
+		{name:'c31', type: 'string'},
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
 		{name:'desc_almacen', type: 'string'},
@@ -583,10 +618,13 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 	loadValoresIniciales:function(){
 		Phx.vista.PreingresoDetMod.superclass.loadValoresIniciales.call(this);
 		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);
+		this.Cmp.fecha_conformidad.setValue(this.maestro.fecha_conformidad);
+		this.Cmp.c31.setValue(this.Cmp.c31.getValue());
 	},
 	
 	onReloadPage:function(m){
 		this.maestro=m;	
+		
 		Ext.apply(this.store.baseParams,{id_preingreso:this.maestro.id_preingreso,estado: this.estado});
 		this.preparaComponentes(this.maestro);
 		this.load({params:{start:0, limit:this.tam_pag}});
@@ -594,6 +632,13 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 	onButtonEdit: function (){
 		//Prepara los componentes en función de si el preingreso es para Almacén o para Activos Fijos
 		Phx.vista.PreingresoDetMod.superclass.onButtonEdit.call(this);
+		if (this.Cmp.fecha_conformidad.getValue() == '' || this.Cmp.fecha_conformidad.getValue() == undefined) {
+			this.Cmp.fecha_conformidad.setValue(this.maestro.fecha_conformidad);
+		}
+		
+		if (this.Cmp.c31.getValue() == '' || this.Cmp.c31.getValue() == undefined) {
+			this.Cmp.c31.setValue(this.Cmp.c31.getValue());
+		}
 		this.preparaComponentes(this.maestro)
 	},
 	preparaComponentes: function(pMaestro){
@@ -619,6 +664,10 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.mostrarComponente(this.Cmp.id_lugar);
             this.Cmp.ubicacion.enable();
             this.mostrarComponente(this.Cmp.ubicacion);
+            this.Cmp.c31.enable();
+            this.mostrarComponente(this.Cmp.c31);
+            this.Cmp.fecha_conformidad.enable();
+            this.mostrarComponente(this.Cmp.fecha_conformidad);
             this.mostrarColumna(5);
             this.mostrarColumna(8);
             this.mostrarColumna(9);
@@ -626,6 +675,8 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.mostrarColumna(11);
             this.mostrarColumna(12);
             this.mostrarColumna(13);
+            this.mostrarColumna(14);
+            this.mostrarColumna(15);
 			
 			//Deshabilita componentes
 			this.Cmp.id_almacen.disable();
@@ -663,6 +714,10 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.ocultarComponente(this.Cmp.id_lugar);
             this.Cmp.ubicacion.disable();
             this.ocultarComponente(this.Cmp.ubicacion);
+            this.Cmp.c31.disable();
+            this.ocultarComponente(this.Cmp.c31);
+            this.Cmp.disable.enable();
+            this.ocultarComponente(this.Cmp.fecha_conformidad);
             this.ocultarColumna(5);
             this.ocultarColumna(8);
             this.ocultarColumna(9);
@@ -670,6 +725,8 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.ocultarColumna(11);
             this.ocultarColumna(12);
             this.ocultarColumna(13);
+            this.ocultarColumna(14);
+            this.ocultarColumna(15);
             
         } else {
 			//Setea store del departamento

@@ -171,8 +171,11 @@ BEGIN
         --Verificar que la fecha no sea anterior al ultimo registro finalizado.
         select max(mov.fecha_mov) into v_fecha_mov_ultima
         from alm.tmovimiento mov
+        inner join alm.tmovimiento_tipo mt
+        on mt.id_movimiento_tipo = mov.id_movimiento_tipo
         where mov.estado_mov = 'finalizado'
             and mov.estado_reg = 'activo'
+            and mt.tipo = v_tipo_mov
             and mov.id_almacen = (p_parametros->'id_almacen')::integer;
     	        
         if (date(v_fecha_mov) < date(v_fecha_mov_ultima)) then

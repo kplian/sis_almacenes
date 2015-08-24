@@ -654,3 +654,17 @@ ALTER TABLE alm.tpreingreso_det
   ADD COLUMN ubicacion VARCHAR(255);
 
 /***********************************F-SCP-JRR-ALM-0-04/08/2015*****************************************/
+
+/***********************************I-SCP-JRR-ALM-0-11/08/2015*****************************************/
+
+ALTER TABLE alm.tpreingreso
+  ADD COLUMN c31 VARCHAR(50);
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN c31 VARCHAR(50);
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN fecha_conformidad VARCHAR(50);
+
+
+/***********************************F-SCP-JRR-ALM-0-11/08/2015*****************************************/

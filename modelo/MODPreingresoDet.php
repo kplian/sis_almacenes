@@ -53,6 +53,8 @@ class MODPreingresoDet extends MODbase{
 		$this->captura('id_lugar','integer');
 		$this->captura('nombre_lugar','varchar');
 		$this->captura('ubicacion','varchar');
+		$this->captura('c31','varchar');
+		$this->captura('fecha_conformidad','date');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -86,6 +88,8 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('precio_compra_87','numeric','numeric');
 		$this->setParametro('id_lugar','integer','integer');		
 		$this->setParametro('ubicacion','varchar','varchar');
+		$this->setParametro('c31','c31','varchar');
+		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -120,6 +124,8 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('precio_compra_87','precio_compra_87','numeric');
 		$this->setParametro('id_lugar','id_lugar','integer');		
 		$this->setParametro('ubicacion','ubicacion','varchar');
+		$this->setParametro('c31','c31','varchar');
+		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

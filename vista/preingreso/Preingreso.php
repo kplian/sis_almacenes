@@ -26,16 +26,11 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
                     handler : this.onIngreso,
                     tooltip : '<b>Ingreso</b><br/><b>Generación del Ingreso a Almacén o Activo Fijo</b>'
          });*/
-         this.addButton('btnRevertir',{
-                    text :'Cancelar Preingreso',
-                    iconCls : 'batras',
-                    disabled: true,
-                    handler : this.onRevertir,
-                    tooltip : '<b>Cancelar Preingreso</b><br/><b>Cancela el Preingreso generado</b>'
-         });
+         
          
          this.addButton('btnChequeoDocumentosWf',
             {
+            	grupo:[0,1,2],
                 text: 'Chequear Documentos',
                 iconCls: 'bchecklist',
                 disabled: true,
@@ -44,7 +39,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
             }
         );
         
-        this.addButton('diagrama_gantt',{text:'Gant',iconCls: 'bgantt',disabled:true,handler:diagramGantt,tooltip: '<b>Diagrama Gantt de proceso macro</b>'});
+        this.addButton('diagrama_gantt',{grupo:[0,1,2],text:'Gant',iconCls: 'bgantt',disabled:true,handler:diagramGantt,tooltip: '<b>Diagrama Gantt de proceso macro</b>'});
   
         function diagramGantt(){            
             var data=this.sm.getSelected().data.id_proceso_wf;
@@ -283,7 +278,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 				id_grupo:1,
 				grid:true,
 				form:true,
-				egrid:true
+				egrid:false
 		},
        	{
             config:{
@@ -400,6 +395,37 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 				id_grupo:1,
 				grid:true,
 				form:false
+		},
+		{
+			config:{
+				name: 'c31',
+				fieldLabel: 'C31',
+				allowBlank: true,
+				anchor: '80%',
+				gwidth: 100
+							
+			},
+				type:'TextField',
+				filters:{pfiltro:'preing.c31',type:'date'},
+				id_grupo:1,
+				grid:true,
+				form:false
+		},
+		{
+			config:{
+				name: 'fecha_conformidad',
+				fieldLabel: 'Fecha Conformidad',
+				allowBlank: true,
+				anchor: '80%',
+				gwidth: 100,
+							format: 'd/m/Y', 
+							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+			},
+				type:'DateField',
+				filters:{pfiltro:'preing.fecha_conformidad',type:'date'},
+				id_grupo:1,
+				grid:true,
+				form:false
 		}
 	],
 	tam_pag:50,	
@@ -432,14 +458,16 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
 		{name:'descripcion', type: 'string'},
 		{name:'nro_tramite', type: 'string'},
 		{name:'desc_funcionario1', type: 'string'},
-		{name:'desc_proveedor', type: 'string'}
+		{name:'desc_proveedor', type: 'string'},
+		{name:'c31', type: 'string'},
+		{name:'fecha_conformidad', type: 'date',dateFormat:'Y-m-d'}
 	],
 	sortInfo:{
 		field: 'id_preingreso',
 		direction: 'desc'
 	},
 	bdel:false,
-	bsave:true,
+	bsave:false,
 	bnew:false,
 	south:{
 		  url:'../../../sis_almacenes/vista/preingreso_det/PreingresoDet.php',
@@ -545,6 +573,7 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
         }
    },
    onEnablePanel: function(idPanel, data) {
+   		
         var myPanel
         if (typeof idPanel == 'object') {
             myPanel = idPanel
@@ -570,6 +599,24 @@ Phx.vista.Preingreso=Ext.extend(Phx.gridInterfaz,{
         delete myPanelEast;
 
     },
+    
+    arrayDefaultColumHidden:['id_fecha_reg','id_fecha_mod',
+	'fecha_mod','usr_reg','estado_reg','fecha_reg','usr_mod',
+	'estado','tipo','id_cotizacion','id_moneda'],
+	
+	
+	
+	
+	rowExpander: new Ext.ux.grid.RowExpander({
+		        tpl : new Ext.Template(
+		            '<br>',
+		            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Orden de Compra:&nbsp;&nbsp;</b> {numero_oc}</p>',
+		            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Tipo:&nbsp;&nbsp;</b> {tipo}</p>',	       
+		            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Estado:&nbsp;&nbsp;</b> {estado}</p>',
+		            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Moneda:&nbsp;&nbsp;</b> {codigo_moneda}</p><br>'
+		            
+		        )
+	    }),
     
     RepEst: function (){
 		

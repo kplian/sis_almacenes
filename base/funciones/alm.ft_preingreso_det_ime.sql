@@ -70,7 +70,9 @@ BEGIN
       descripcion,
       precio_compra_87,
       id_lugar,
-      ubicacion
+      ubicacion,
+      c31,
+      fecha_conformidad
             ) values(
       'activo',
       v_parametros.id_preingreso,
@@ -91,7 +93,9 @@ BEGIN
       v_parametros.descripcion,
       v_parametros.precio_compra_87,
       v_parametros.id_lugar,
-      v_parametros.ubicacion
+      v_parametros.ubicacion,
+      v_parametros.c31,
+      v_parametros.fecha_conformidad
               
       )RETURNING id_preingreso_det into v_id_preingreso_det;
       
@@ -130,7 +134,9 @@ BEGIN
         descripcion = v_parametros.descripcion,
         precio_compra_87 = v_parametros.precio_compra_87,
         id_lugar = v_parametros.id_lugar,
-        ubicacion = v_parametros.ubicacion
+        ubicacion = v_parametros.ubicacion,
+        c31 = v_parametros.c31,
+        fecha_conformidad = v_parametros.fecha_conformidad
         where id_preingreso_det=v_parametros.id_preingreso_det;
             
             ---------------------------------------------------------------

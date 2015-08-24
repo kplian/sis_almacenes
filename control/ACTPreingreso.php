@@ -24,7 +24,9 @@ class ACTPreingreso extends ACTbase{
             $this->objParam->addFiltro("preing.tipo = ''activo_fijo''");  
         }
 		
-		
+		if($this->objParam->getParametro('pes_estado')!=''){
+             $this->objParam->addFiltro("preing.estado in (''" . $this->objParam->getParametro('pes_estado') . "'')");
+        }
 		
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);

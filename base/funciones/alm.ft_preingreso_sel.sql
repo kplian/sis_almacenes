@@ -55,7 +55,7 @@ BEGIN
             preing.estado,
             preing.id_moneda,
             preing.tipo,
-            preing.descripcion,
+            sol.justificacion::varchar as descripcion,
             preing.id_usuario_reg,
             preing.fecha_reg,
             preing.id_usuario_mod,
@@ -68,7 +68,9 @@ BEGIN
                         cot.numero_oc,
                         pw.nro_tramite,
                         fun.desc_funcionario1,
-                        pro.desc_proveedor
+                        pro.desc_proveedor,
+                        (select comprobante_sigma from tes.tts_libro_bancos lb where pago.id_int_comprobante =ANY(lb.id_int_comprobante)) as c31,
+                        pp.fecha_conformidad
             from alm.tpreingreso preing
             inner join segu.tusuario usu1 on usu1.id_usuario = preing.id_usuario_reg
             left join segu.tusuario usu2 on usu2.id_usuario = preing.id_usuario_mod
@@ -81,7 +83,13 @@ BEGIN
                         inner join adq.tsolicitud sol on sol.id_solicitud = pcom.id_solicitud
                         inner join orga.vfuncionario fun on fun.id_funcionario = sol.id_funcionario
                         inner join param.vproveedor pro on pro.id_proveedor = cot.id_proveedor
-                where  ';
+                        left join tes.tobligacion_pago op on op.id_obligacion_pago = cot.id_obligacion_pago 
+                        	and op.estado_reg = ''activo'' and op.estado != ''anulado''
+                        left join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago 
+                        	and pp.estado_reg = ''activo'' and pp.estado != ''anulado'' and pp.nro_cuota = 1
+                        left join tes.tplan_pago pago on pago.id_plan_pago_fk = pp.id_plan_pago
+                        
+                where preing.estado != ''cancelado'' and ';
       
       --Definicion de la respuesta
       v_consulta:=v_consulta||v_parametros.filtro;
@@ -116,7 +124,11 @@ BEGIN
                         inner join adq.tsolicitud sol on sol.id_solicitud = pcom.id_solicitud
                         inner join orga.vfuncionario fun on fun.id_funcionario = sol.id_funcionario
                         inner join param.vproveedor pro on pro.id_proveedor = cot.id_proveedor
-              where ';
+                        left join tes.tobligacion_pago op on op.id_obligacion_pago = cot.id_obligacion_pago 
+                        	and op.estado_reg = ''activo'' and op.estado != ''anulado''
+                        left join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago 
+                        	and pp.estado_reg = ''activo'' and pp.estado != ''anulado'' and pp.nro_cuota = 1
+                        where preing.estado != ''cancelado'' and ';
       
       --Definicion de la respuesta        
       v_consulta:=v_consulta||v_parametros.filtro;
