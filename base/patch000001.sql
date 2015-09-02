@@ -664,7 +664,7 @@ ALTER TABLE alm.tpreingreso_det
   ADD COLUMN c31 VARCHAR(50);
   
 ALTER TABLE alm.tpreingreso_det
-  ADD COLUMN fecha_conformidad VARCHAR(50);
+  ADD COLUMN fecha_conformidad DATE;
 
 
 /***********************************F-SCP-JRR-ALM-0-11/08/2015*****************************************/

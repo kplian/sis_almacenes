@@ -69,7 +69,7 @@ BEGIN
                         pw.nro_tramite,
                         fun.desc_funcionario1,
                         pro.desc_proveedor,
-                        (select comprobante_sigma from tes.tts_libro_bancos lb where pago.id_int_comprobante =ANY(lb.id_int_comprobante)) as c31,
+                        (select pxp.list_unique(lb.comprobante_sigma) from tes.tts_libro_bancos lb where pago.id_int_comprobante =lb.id_int_comprobante)::varchar as c31,
                         pp.fecha_conformidad
             from alm.tpreingreso preing
             inner join segu.tusuario usu1 on usu1.id_usuario = preing.id_usuario_reg

@@ -906,9 +906,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			}
 			
 			//Setea el store del funcionario
-			Ext.apply(this.Cmp.id_funcionario.store.baseParams,{id_movimiento_tipo: component.data.id_movimiento_tipo})
-			this.Cmp.id_funcionario.setValue('');
-			this.Cmp.id_funcionario.modificado=true;
+			//Ext.apply(this.Cmp.id_funcionario.store.baseParams,{id_movimiento_tipo: component.data.id_movimiento_tipo})
+			//this.Cmp.id_funcionario.setValue('');
+			//this.Cmp.id_funcionario.modificado=true;
 		},
 		onSolicitanteSelect : function(e, component, index) {
 			if (e.value == 'funcionario') {
