@@ -108,6 +108,7 @@ Phx.vista.MovimientoAlm = {
        
 	successSinc:function(resp){
         Phx.CP.loadingHide();
+        
         var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
         if(!reg.ROOT.error){
             
@@ -160,7 +161,7 @@ Phx.vista.MovimientoAlm = {
            }
            
             if (reg.ROOT.datos.operacion=='cambio_exitoso'){
-            
+              
               this.reload();
               this.wEstado.hide();
             
