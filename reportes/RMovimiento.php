@@ -25,7 +25,7 @@ class CustomReport extends TCPDF {
         $this->SetXY($x, $y);
         $dataSource = $this->getDataSource();
 
-        $this->Image(dirname(__FILE__).$_SESSION['_DIR_LOGO'], 19, 9, 36);
+        $this->Image(dirname(__FILE__).'/../../lib'.$_SESSION['_DIR_LOGO'], 19, 9, 36);
 
         $this->SetFontSize(14);
         $this->SetFont('', 'B');
