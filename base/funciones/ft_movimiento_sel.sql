@@ -250,7 +250,7 @@ BEGIN
                 fun.desc_funcionario1 as nombre_funcionario,
                 prov.desc_proveedor as nombre_proveedor,
                 to_char(mov.fecha_mod,''dd/mm/yyyy'')::varchar as fecha_mod,
-                sum(detval.cantidad) as cantidad_solicitada
+                sum(movdet.cantidad_solicitada) as cantidad_solicitada
             from alm.tmovimiento_det_valorado detval
             inner join alm.tmovimiento_det movdet on movdet.id_movimiento_det = detval.id_movimiento_det
             inner join alm.titem item on item.id_item = movdet.id_item
