@@ -249,8 +249,8 @@ Class RMovimiento extends Report {
             if ($dataSource->getParameter('observaciones') != null && $dataSource->getParameter('observaciones') != '') {
                 $pdf->MultiCell($w = 0, $h = $hMedium, $txt = $dataSource->getParameter('observaciones'), $border = 0, $align = 'L', $fill = false, $ln = 0, $x = '', $y = '', $reseth = true, $stretch = 0, $ishtml = false, $autopadding = true, $maxh = $hMedium, $valign = 'M', $fitcell = false);
             } 
-            
-            if ($dataSource->getParameter('tipoMovimiento') == "salida") {
+           
+            if ($tmpDatos[0]['tipo'] == "salida") {
                 $wMargin = 0;
                 $wColumn1 = 90;
                 $wColumn2 = 90;
@@ -260,8 +260,8 @@ Class RMovimiento extends Report {
                 $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = $dataSource->getParameter('solicitante'), $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 $pdf->Ln();
-                $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = 'SOLICITANTE', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-                $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = 'APROBADOR', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = 'ENTREGUE CONFORME', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = 'RECIBI CONFORME', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 
                 $pdf->Ln();
                 $pdf->Ln();
@@ -271,7 +271,7 @@ Class RMovimiento extends Report {
                 $pdf->Cell($w = $wColumn2, $h = $hGlobal, $txt = '____________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 $pdf->Ln();
                 $pdf->Cell($w = $wColumn1, $h = $hGlobal, $txt = 'Entregado Por: ___________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-                $pdf->Cell($w = $wColumn2, $h = $hGlobal, $txt = 'Entregado A: ___________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn2, $h = $hGlobal, $txt = 'Recibido Por: ___________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             }
         }
 

@@ -1327,6 +1327,10 @@ header("content-type: text/javascript; charset=UTF-8");
         }
     },
     successFinSol:function(resp){
+    	var d= this.sm.getSelected().data;
+    	if (d.estado_mov == 'prefin') {
+    		this.generaReporte();
+    	}
         Phx.CP.loadingHide();
         if(this.winWF){
         	this.winWF.hide();
