@@ -110,6 +110,7 @@ class CustomReport extends TCPDF {
 Class RMovimiento extends Report {
 
     function write($fileName) {
+    	
         $pdf = new CustomReport(PDF_PAGE_ORIENTATION, PDF_UNIT, "LETTER", true, 'UTF-8', false);
         $pdf->headerFistPage=false;
         $pdf->setDataSource($this->getDataSource());
@@ -190,6 +191,7 @@ Class RMovimiento extends Report {
         */
         
         if ($dataSource->getParameter('motivo') == "Inventario Inicial") {
+        	
             $wMargin = 30;
             $wNro = 10;
             $wDetalle = 110;
@@ -238,6 +240,7 @@ Class RMovimiento extends Report {
                 $this->writeClasificationDetail($pdf, $clasificacionDataSource, $dataSource);
             }
         } else {
+        	
             $this->writeGlobalDetail($pdf, $dataSource);
             $pdf->Ln();
             $pdf->SetFont('', 'B');
@@ -312,6 +315,7 @@ Class RMovimiento extends Report {
         $count = 1;
         $pdf->SetFont('', '');
         foreach ($dataSource->getDataset() as $datarow) {
+        	
             $pdf->Cell($w = $wNro-2, $h = $hGlobal, $txt = $count, $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wCodigo, $h = $hGlobal, $txt = $datarow['codigo'], $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wDescripcionItem-10, $h = $hGlobal, $txt = $datarow['nombre'], $border = 1, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
@@ -371,7 +375,9 @@ Class RMovimiento extends Report {
         
         $count = 1;
         $pdf->SetFont('', '');
+		
         foreach ($dataSource->getDataSet() as $datarow) {
+        	
             $pdf->Cell($w = $wNro-2, $h = $hGlobal, $txt = $count, $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wCodigo, $h = $hGlobal, $txt = $datarow['codigo'], $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wDescripcionItem-10, $h = $hGlobal, $txt = $datarow['nombre'], $border = 1, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
