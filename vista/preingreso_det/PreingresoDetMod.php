@@ -445,6 +445,22 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:true
 		},
+		{
+			config:{
+				name: 'fecha_compra',
+				fieldLabel: 'Fecha Compra(factura)',
+				allowBlank: false,
+				anchor: '80%',
+				gwidth: 100,
+							format: 'd/m/Y', 
+							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+			},
+			type:'DateField',
+			filters:{pfiltro:'predet.fecha_compra',type:'date'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
 		
 		
 		{
@@ -561,6 +577,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:false
 		}
+		
 	],
 	tam_pag:50,	
 	title:'Preingreso',
@@ -588,6 +605,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		{name:'id_usuario_mod', type: 'numeric'},
 		{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
 		{name:'fecha_conformidad', type: 'date',dateFormat:'Y-m-d'},
+		{name:'fecha_compra', type: 'date',dateFormat:'Y-m-d'},
 		{name:'c31', type: 'string'},
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
@@ -619,6 +637,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		Phx.vista.PreingresoDetMod.superclass.loadValoresIniciales.call(this);
 		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);
 		this.Cmp.fecha_conformidad.setValue(this.maestro.fecha_conformidad);
+		this.Cmp.fecha_compra.setValue(this.maestro.fecha_conformidad);
 		this.Cmp.c31.setValue(this.Cmp.c31.getValue());
 	},
 	
@@ -634,6 +653,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		Phx.vista.PreingresoDetMod.superclass.onButtonEdit.call(this);
 		if (this.Cmp.fecha_conformidad.getValue() == '' || this.Cmp.fecha_conformidad.getValue() == undefined) {
 			this.Cmp.fecha_conformidad.setValue(this.maestro.fecha_conformidad);
+			this.Cmp.fecha_compra.setValue(this.maestro.fecha_conformidad);
 		}
 		
 		if (this.Cmp.c31.getValue() == '' || this.Cmp.c31.getValue() == undefined) {
@@ -668,6 +688,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.mostrarComponente(this.Cmp.c31);
             this.Cmp.fecha_conformidad.enable();
             this.mostrarComponente(this.Cmp.fecha_conformidad);
+            this.mostrarComponente(this.Cmp.fecha_compra);
             this.mostrarColumna(5);
             this.mostrarColumna(8);
             this.mostrarColumna(9);
@@ -677,6 +698,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.mostrarColumna(13);
             this.mostrarColumna(14);
             this.mostrarColumna(15);
+            this.mostrarColumna(16);
 			
 			//Deshabilita componentes
 			this.Cmp.id_almacen.disable();
@@ -718,6 +740,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.ocultarComponente(this.Cmp.c31);
             this.Cmp.disable.enable();
             this.ocultarComponente(this.Cmp.fecha_conformidad);
+            this.ocultarComponente(this.Cmp.fecha_compra);
             this.ocultarColumna(5);
             this.ocultarColumna(8);
             this.ocultarColumna(9);
@@ -727,6 +750,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.ocultarColumna(13);
             this.ocultarColumna(14);
             this.ocultarColumna(15);
+            this.ocultarColumna(16);
             
         } else {
 			//Setea store del departamento

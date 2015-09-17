@@ -77,7 +77,8 @@ BEGIN
                         lug.nombre as nombre_lugar,
                         predet.ubicacion,
                         predet.c31,
-                        predet.fecha_conformidad
+                        predet.fecha_conformidad,
+                        predet.fecha_compra
                         
             from alm.tpreingreso_det predet
             inner join segu.tusuario usu1 on usu1.id_usuario = predet.id_usuario_reg

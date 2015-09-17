@@ -72,7 +72,8 @@ BEGIN
       id_lugar,
       ubicacion,
       c31,
-      fecha_conformidad
+      fecha_conformidad,
+      fecha_compra
             ) values(
       'activo',
       v_parametros.id_preingreso,
@@ -95,7 +96,8 @@ BEGIN
       v_parametros.id_lugar,
       v_parametros.ubicacion,
       v_parametros.c31,
-      v_parametros.fecha_conformidad
+      v_parametros.fecha_conformidad,
+      v_parametros.fecha_compra
               
       )RETURNING id_preingreso_det into v_id_preingreso_det;
       

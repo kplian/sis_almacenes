@@ -55,6 +55,7 @@ class MODPreingresoDet extends MODbase{
 		$this->captura('ubicacion','varchar');
 		$this->captura('c31','varchar');
 		$this->captura('fecha_conformidad','date');
+		$this->captura('fecha_compra','date');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -90,6 +91,7 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('ubicacion','varchar','varchar');
 		$this->setParametro('c31','c31','varchar');
 		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
+		$this->setParametro('fecha_compra','fecha_compra','date');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -126,6 +128,7 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('ubicacion','ubicacion','varchar');
 		$this->setParametro('c31','c31','varchar');
 		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
+		$this->setParametro('fecha_compra','fecha_compra','date');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
