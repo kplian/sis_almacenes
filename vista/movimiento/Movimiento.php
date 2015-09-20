@@ -467,7 +467,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 gwidth:200,
    				valueField: 'id_funcionario',
    			    gdisplayField: 'nombre_funcionario',
-   			    baseParams: { es_combo_solicitud : 'si',fecha: new Date(), id_movimiento_tipo:0 },
+   			    baseParams: { fecha: new Date(), id_movimiento_tipo:0 },
       			//renderer:function(value, p, record){return String.format('{0}', record.data['nombre_funcionario']);},
       			renderer: function(value, p, record){
 					var aux;
@@ -906,9 +906,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			}
 			
 			//Setea el store del funcionario
-			Ext.apply(this.Cmp.id_funcionario.store.baseParams,{id_movimiento_tipo: component.data.id_movimiento_tipo})
-			this.Cmp.id_funcionario.setValue('');
-			this.Cmp.id_funcionario.modificado=true;
+			//Ext.apply(this.Cmp.id_funcionario.store.baseParams,{id_movimiento_tipo: component.data.id_movimiento_tipo})
+			//this.Cmp.id_funcionario.setValue('');
+			//this.Cmp.id_funcionario.modificado=true;
 		},
 		onSolicitanteSelect : function(e, component, index) {
 			if (e.value == 'funcionario') {
@@ -1327,6 +1327,10 @@ header("content-type: text/javascript; charset=UTF-8");
         }
     },
     successFinSol:function(resp){
+    	var d= this.sm.getSelected().data;
+    	if (d.estado_mov == 'prefin') {
+    		this.generaReporte();
+    	}
         Phx.CP.loadingHide();
         if(this.winWF){
         	this.winWF.hide();

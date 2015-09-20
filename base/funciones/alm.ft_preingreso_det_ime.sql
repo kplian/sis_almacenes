@@ -65,7 +65,15 @@ BEGIN
       id_usuario_reg,
       fecha_reg,
       id_usuario_mod,
-      fecha_mod
+      fecha_mod,
+      nombre,
+      descripcion,
+      precio_compra_87,
+      id_lugar,
+      ubicacion,
+      c31,
+      fecha_conformidad,
+      fecha_compra
             ) values(
       'activo',
       v_parametros.id_preingreso,
@@ -81,7 +89,15 @@ BEGIN
       p_id_usuario,
       now(),
       null,
-      null
+      null,
+      v_parametros.nombre,
+      v_parametros.descripcion,
+      v_parametros.precio_compra_87,
+      v_parametros.id_lugar,
+      v_parametros.ubicacion,
+      v_parametros.c31,
+      v_parametros.fecha_conformidad,
+      v_parametros.fecha_compra
               
       )RETURNING id_preingreso_det into v_id_preingreso_det;
       
@@ -115,7 +131,14 @@ BEGIN
         id_clasificacion = v_parametros.id_clasificacion,
         observaciones = v_parametros.observaciones,
         id_usuario_mod = p_id_usuario,
-        fecha_mod = now()
+        fecha_mod = now(),
+        nombre = v_parametros.nombre,
+        descripcion = v_parametros.descripcion,
+        precio_compra_87 = v_parametros.precio_compra_87,
+        id_lugar = v_parametros.id_lugar,
+        ubicacion = v_parametros.ubicacion,
+        c31 = v_parametros.c31,
+        fecha_conformidad = v_parametros.fecha_conformidad
         where id_preingreso_det=v_parametros.id_preingreso_det;
             
             ---------------------------------------------------------------

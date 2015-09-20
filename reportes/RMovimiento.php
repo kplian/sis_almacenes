@@ -25,7 +25,7 @@ class CustomReport extends TCPDF {
         $this->SetXY($x, $y);
         $dataSource = $this->getDataSource();
 
-        $this->Image(dirname(__FILE__).$_SESSION['_DIR_LOGO'], 19, 9, 36);
+        $this->Image(dirname(__FILE__).'/../../lib'.$_SESSION['_DIR_LOGO'], 19, 9, 36);
 
         $this->SetFontSize(14);
         $this->SetFont('', 'B');
@@ -110,6 +110,7 @@ class CustomReport extends TCPDF {
 Class RMovimiento extends Report {
 
     function write($fileName) {
+    	
         $pdf = new CustomReport(PDF_PAGE_ORIENTATION, PDF_UNIT, "LETTER", true, 'UTF-8', false);
         $pdf->headerFistPage=false;
         $pdf->setDataSource($this->getDataSource());
@@ -190,6 +191,7 @@ Class RMovimiento extends Report {
         */
         
         if ($dataSource->getParameter('motivo') == "Inventario Inicial") {
+        	
             $wMargin = 30;
             $wNro = 10;
             $wDetalle = 110;
@@ -238,6 +240,7 @@ Class RMovimiento extends Report {
                 $this->writeClasificationDetail($pdf, $clasificacionDataSource, $dataSource);
             }
         } else {
+        	
             $this->writeGlobalDetail($pdf, $dataSource);
             $pdf->Ln();
             $pdf->SetFont('', 'B');
@@ -246,8 +249,8 @@ Class RMovimiento extends Report {
             if ($dataSource->getParameter('observaciones') != null && $dataSource->getParameter('observaciones') != '') {
                 $pdf->MultiCell($w = 0, $h = $hMedium, $txt = $dataSource->getParameter('observaciones'), $border = 0, $align = 'L', $fill = false, $ln = 0, $x = '', $y = '', $reseth = true, $stretch = 0, $ishtml = false, $autopadding = true, $maxh = $hMedium, $valign = 'M', $fitcell = false);
             } 
-            
-            if ($dataSource->getParameter('tipoMovimiento') == "salida") {
+           
+            if ($tmpDatos[0]['tipo'] == "salida") {
                 $wMargin = 0;
                 $wColumn1 = 90;
                 $wColumn2 = 90;
@@ -257,8 +260,8 @@ Class RMovimiento extends Report {
                 $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = $dataSource->getParameter('solicitante'), $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 $pdf->Ln();
-                $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = 'SOLICITANTE', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-                $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = 'APROBADOR', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = 'ENTREGUE CONFORME', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = 'RECIBI CONFORME', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 
                 $pdf->Ln();
                 $pdf->Ln();
@@ -268,7 +271,7 @@ Class RMovimiento extends Report {
                 $pdf->Cell($w = $wColumn2, $h = $hGlobal, $txt = '____________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 $pdf->Ln();
                 $pdf->Cell($w = $wColumn1, $h = $hGlobal, $txt = 'Entregado Por: ___________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-                $pdf->Cell($w = $wColumn2, $h = $hGlobal, $txt = 'Entregado A: ___________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn2, $h = $hGlobal, $txt = 'Recibido Por: ___________________________', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             }
         }
 
@@ -312,6 +315,7 @@ Class RMovimiento extends Report {
         $count = 1;
         $pdf->SetFont('', '');
         foreach ($dataSource->getDataset() as $datarow) {
+        	
             $pdf->Cell($w = $wNro-2, $h = $hGlobal, $txt = $count, $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wCodigo, $h = $hGlobal, $txt = $datarow['codigo'], $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wDescripcionItem-10, $h = $hGlobal, $txt = $datarow['nombre'], $border = 1, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
@@ -352,6 +356,7 @@ Class RMovimiento extends Report {
         $wCostoUnitario = 15;
         $wCostoTotal = 20;
         $cantTot=0;
+		$cantTotSoli=0;
         $costoUnitTot=0;
         $pdf->Ln();
         
@@ -371,7 +376,9 @@ Class RMovimiento extends Report {
         
         $count = 1;
         $pdf->SetFont('', '');
+		
         foreach ($dataSource->getDataSet() as $datarow) {
+        	
             $pdf->Cell($w = $wNro-2, $h = $hGlobal, $txt = $count, $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wCodigo, $h = $hGlobal, $txt = $datarow['codigo'], $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
             $pdf->Cell($w = $wDescripcionItem-10, $h = $hGlobal, $txt = $datarow['nombre'], $border = 1, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
@@ -385,6 +392,7 @@ Class RMovimiento extends Report {
             $pdf->Ln();
             $count++;
             $cantTot+=$datarow['cantidad'];
+			$cantTotSoli+=$datarow['cantidad_solicitada'];
             $costoUnitTot+=$datarow['costo_unitario'];
         }
 
@@ -393,7 +401,7 @@ Class RMovimiento extends Report {
         $pdf->Cell($w = $wCodigo, $h = $hGlobal, $txt = '', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
         $pdf->Cell($w = $wDescripcionItem-$wCantidad+10, $h = $hGlobal, $txt = 'Totales', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
         $pdf->Cell($w = $wUnidad, $h = $hGlobal, $txt = '', $border = 1, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->Cell($w = $wCantidad, $h = $hGlobal, $txt = number_format($cantTot,6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = $wCantidad, $h = $hGlobal, $txt = number_format($cantTotSoli,6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
         $pdf->Cell($w = $wCantidad, $h = $hGlobal, $txt = number_format($cantTot,6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
         if($dataSource->getParameter('costos') == 'si'){
             $pdf->Cell($w = $wCostoUnitario, $h = $hGlobal, $txt = number_format($costoUnitTot,6), $border = 1, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');

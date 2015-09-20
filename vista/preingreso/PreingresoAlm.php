@@ -21,7 +21,45 @@ Phx.vista.PreingresoAlm = {
        Phx.vista.PreingresoAlm.superclass.constructor.call(this,config);
        this.store.baseParams={tipo_interfaz:this.nombreVista};
        this.load({params:{start:0, limit:this.tam_pag}});
+       
+       this.addButton('btnIngreso',{
+			text :'Generar Ingreso Almacén',
+	        iconCls : 'badelante',
+	        disabled: true,
+	        handler : this.onIngreso,
+	        tooltip : '<b>Ingreso</b><br/><b>Generación del Ingreso a Almacén</b>'
+	   });
+	   
+	   this.addButton('btnRevertir',{
+                    text :'Cancelar Preingreso',
+                    iconCls : 'batras',
+                    disabled: true,
+                    handler : this.onRevertir,
+                    tooltip : '<b>Cancelar Preingreso</b><br/><b>Cancela el Preingreso generado</b>'
+         });
    },
-    
+   
+    preparaMenu:function(n){
+		var rec = this.getSelectedData();
+      	var tb =this.tbar;
+      	Phx.vista.PreingresoAlm.superclass.preparaMenu.call(this,n);
+      
+      	if(rec.estado=='borrador'){
+      		this.getBoton('btnIngreso').enable();
+      	} else if(rec.estado=='cancelado'||rec.estado=='finalizado'){
+      		this.getBoton('btnIngreso').disable();
+      	} else {
+      		this.getBoton('btnIngreso').disable();
+      	}
+	},
+	
+	liberaMenu:function(){
+		var tb = Phx.vista.PreingresoAlm.superclass.liberaMenu.call(this);
+        if(tb){
+            this.getBoton('btnIngreso').disable();
+         }
+        return tb
+   }
+ 
 };
 </script>

@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.ft_item_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -126,7 +124,8 @@ BEGIN
             /******************/
             --RCM 18/10/2103: Verificación de si se debe filtrar los items por tipo de movimiento, solo para los casos que envien el parametro id_movimiento
             if pxp.f_existe_parametro(p_tabla,'id_movimiento') then
-            	v_resp_global = pxp.f_get_variable_global('alm_filtrar_item_tipomov');
+            	
+                v_resp_global = pxp.f_get_variable_global('alm_filtrar_item_tipomov');
             	if v_resp_global = 'si' then
             		--Verifica que sea una salida y si es asi obtiene el id_movimiento_tipo
             		select
@@ -134,10 +133,10 @@ BEGIN
             		into v_id_movimiento_tipo
             		from alm.tmovimiento mov
             		inner join alm.tmovimiento_tipo movt
-            		on movt.id_movimiento_tipo = mov.id_movimiento_tipo
-            		where id_movimiento = v_parametros.id_movimiento
-            		and tipo = 'salida';
-
+            		on movt.id_movimieov.id_movimiento_tipo
+            		where id_movimiento = v_paramento_tipo = mtros.id_movimiento
+            		and tipo  ='salida';
+					
             		if coalesce(v_id_movimiento_tipo,0)!=0 then
             			--Obtener los id_clasificacion
             			v_ids='';
@@ -230,7 +229,7 @@ BEGIN
             		inner join alm.tmovimiento_tipo movt
             		on movt.id_movimiento_tipo = mov.id_movimiento_tipo
             		where id_movimiento = v_parametros.id_movimiento
-            		and tipo = 'salida';
+            		and tipo in ('ingreso','salida');
 
             		if coalesce(v_id_movimiento_tipo,0)!=0 then
             			--Obtener los id_clasificacion

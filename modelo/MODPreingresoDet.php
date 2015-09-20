@@ -43,10 +43,19 @@ class MODPreingresoDet extends MODbase{
 		$this->captura('desc_depto','text');
 		$this->captura('desc_item','text');
 		$this->captura('desc_clasificacion','text');
-		$this->captura('desc_ingas','varchar');
-		$this->captura('descripcion','text');
+		$this->captura('desc_ingas','varchar');		
 		$this->captura('estado','varchar');
 		$this->captura('tipo','varchar');
+		
+		$this->captura('nombre','varchar');
+		$this->captura('descripcion','text');
+		$this->captura('precio_compra_87','numeric');
+		$this->captura('id_lugar','integer');
+		$this->captura('nombre_lugar','varchar');
+		$this->captura('ubicacion','varchar');
+		$this->captura('c31','varchar');
+		$this->captura('fecha_conformidad','date');
+		$this->captura('fecha_compra','date');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -74,6 +83,15 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('id_clasificacion','id_clasificacion','int4');
 		$this->setParametro('sw_generar','sw_generar','varchar');
 		$this->setParametro('observaciones','observaciones','varchar');
+		
+		$this->setParametro('nombre','varchar','varchar');
+		$this->setParametro('descripcion','text','text');
+		$this->setParametro('precio_compra_87','numeric','numeric');
+		$this->setParametro('id_lugar','integer','integer');		
+		$this->setParametro('ubicacion','varchar','varchar');
+		$this->setParametro('c31','c31','varchar');
+		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
+		$this->setParametro('fecha_compra','fecha_compra','date');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -102,6 +120,15 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('id_clasificacion','id_clasificacion','int4');
 		$this->setParametro('sw_generar','sw_generar','varchar');
 		$this->setParametro('observaciones','observaciones','varchar');
+		
+		$this->setParametro('nombre','nombre','varchar');
+		$this->setParametro('descripcion','descripcion','text');
+		$this->setParametro('precio_compra_87','precio_compra_87','numeric');
+		$this->setParametro('id_lugar','id_lugar','integer');		
+		$this->setParametro('ubicacion','ubicacion','varchar');
+		$this->setParametro('c31','c31','varchar');
+		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
+		$this->setParametro('fecha_compra','fecha_compra','date');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

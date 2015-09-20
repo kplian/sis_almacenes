@@ -636,3 +636,43 @@ ALTER TABLE alm.tpreingreso_det
 COMMENT ON COLUMN alm.tpreingreso_det.estado
 IS 'Indica si el registro es creado desde adquisiciones al generar el preingreso (''orig''), si es modificado desde preingreso (''mod'')';  
 /***********************************F-SCP-RCM-ALM-0-03/05/2015*****************************************/  
+
+/***********************************I-SCP-JRR-ALM-0-04/08/2015*****************************************/
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN nombre VARCHAR(255);
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN descripcion TEXT;
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN precio_compra_87 NUMERIC(18,2);
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN id_lugar INTEGER;
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN ubicacion VARCHAR(255);
+
+/***********************************F-SCP-JRR-ALM-0-04/08/2015*****************************************/
+
+/***********************************I-SCP-JRR-ALM-0-11/08/2015*****************************************/
+
+ALTER TABLE alm.tpreingreso
+  ADD COLUMN c31 VARCHAR(50);
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN c31 VARCHAR(50);
+  
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN fecha_conformidad DATE;
+
+
+/***********************************F-SCP-JRR-ALM-0-11/08/2015*****************************************/
+
+
+/***********************************I-SCP-JRR-ALM-0-16/09/2015*****************************************/
+    
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN fecha_compra DATE;
+
+/***********************************F-SCP-JRR-ALM-0-16/09/2015*****************************************/

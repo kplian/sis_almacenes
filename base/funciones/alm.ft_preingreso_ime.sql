@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.ft_preingreso_ime (
   p_administrador integer,
   p_id_usuario integer,
@@ -38,6 +36,7 @@ DECLARE
     v_id_tipo_proceso		integer;
     v_id_tipo_estado 		integer;
     v_id_estado_actual  	integer;
+    v_estado				varchar;
 			    
 BEGIN
 
@@ -194,18 +193,32 @@ BEGIN
 	elsif(p_transaccion='SAL_INGRES_GEN')then
 
 		begin
-        
+        	
         	--Validación de existencia del registro
             if not exists(select 1 from alm.tpreingreso
             			where id_preingreso = v_parametros.id_preingreso) then
             	raise exception 'Preingreso inexistente';
             end if;
+            
+            select p.estado into v_estado
+            from alm.tpreingreso p
+            where id_preingreso = v_parametros.id_preingreso;
         
-			--Llamada a la función de generación de ingreso
-			v_result = alm.f_generar_ingreso(p_id_usuario,
-                                              v_parametros._id_usuario_ai,
-                                              v_parametros._nombre_usuario_ai, 
-            								  v_parametros.id_preingreso);
+        	if (v_estado = 'borrador') then
+            	raise exception 'llega';
+                --Llamada a la función de generación de ingreso
+                v_result = alm.f_generar_ingreso(p_id_usuario,
+                                                  v_parametros._id_usuario_ai,
+                                                  v_parametros._nombre_usuario_ai, 
+                                                  v_parametros.id_preingreso);
+            elsif (v_estado = 'registrado') then
+            
+            	--Llamada a la función de generación de ingreso
+                v_result = alm.f_generar_alta(p_id_usuario,
+                                                  v_parametros._id_usuario_ai,
+                                                  v_parametros._nombre_usuario_ai, 
+                                                  v_parametros.id_preingreso);
+            end if;
                
 			--Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Detalle Preingreso modificado(a)'); 
@@ -249,26 +262,27 @@ BEGIN
             
             --Obtiene el estado cancelado del WF
             select 
-            te.id_tipo_estado
+            te.id_tipo_estado,te.codigo
             into
-            v_id_tipo_estado
+            v_id_tipo_estado,v_estado
             from wf.tproceso_wf pw 
             inner join wf.ttipo_proceso tp on pw.id_tipo_proceso = tp.id_tipo_proceso
             inner join wf.ttipo_estado te on te.id_tipo_proceso = tp.id_tipo_proceso and te.codigo = 'cancelado'               
             where pw.id_proceso_wf = v_id_proceso_wf;
                
             --Se cancela el WF
-            v_id_estado_actual =  wf.f_registra_estado_wf(v_id_tipo_estado, 
-                                                           NULL, 
-                                                           v_id_estado_wf, 
-                                                           v_id_proceso_wf,
-                                                           p_id_usuario,
-                                                           v_parametros._id_usuario_ai,
-                                                           v_parametros._nombre_usuario_ai,
-                                                           null,
-                                                           'Eliminacion de la preingreso de almacenes ');
-                                                           
-                                                         
+            
+                v_id_estado_actual =  wf.f_registra_estado_wf(v_id_tipo_estado, 
+                                                               NULL, 
+                                                               v_id_estado_wf, 
+                                                               v_id_proceso_wf,
+                                                               p_id_usuario,
+                                                               v_parametros._id_usuario_ai,
+                                                               v_parametros._nombre_usuario_ai,
+                                                               null,
+                                                               'Eliminacion de la preingreso de almacenes ');
+                                                               
+                                                     
             
             --Cancela el movimiento
             update alm.tpreingreso set

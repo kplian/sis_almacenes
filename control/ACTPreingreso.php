@@ -17,14 +17,16 @@ class ACTPreingreso extends ACTbase{
 		
 		//si es un preingreso de almances
 		if($this->objParam->getParametro('tipo_interfaz')=='preingresoAlm'){
-            $this->objParam->addFiltro("tipo = ''almacen''");  
+            $this->objParam->addFiltro("preing.tipo = ''almacen''");  
         }
         //si es un preingreso de activos fijos
         if($this->objParam->getParametro('tipo_interfaz')=='preingresoAct'){
-            $this->objParam->addFiltro("tipo = ''activo_fijo''");  
+            $this->objParam->addFiltro("preing.tipo = ''activo_fijo''");  
         }
 		
-		
+		if($this->objParam->getParametro('pes_estado')!=''){
+             $this->objParam->addFiltro("preing.estado in (''" . $this->objParam->getParametro('pes_estado') . "'')");
+        }
 		
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);

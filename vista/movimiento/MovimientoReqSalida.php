@@ -18,6 +18,7 @@ Phx.vista.MovimientoReqSalida= {
 	constructor: function(config) {
 		this.maestro = config;
     	Phx.vista.MovimientoReqSalida.superclass.constructor.call(this,config);
+    	this.Cmp.id_funcionario.store.baseParams.tipo_filtro = 'usuario';
     	//Botón de finalización
     	this.addButton('fin_requerimiento',{text:'Finalizar',iconCls: 'badelante',disabled:true,handler:this.fin_requerimiento,tooltip: '<b>Finalizar</b>'});
 		//Creación de ventana para workflow
@@ -55,7 +56,15 @@ Phx.vista.MovimientoReqSalida= {
 		this.Cmp.tipo.setValue('salida');
 		this.Cmp.tipo.disable();
 		
-		this.setFiltroMovTipo('salida');      
+		this.setFiltroMovTipo('salida');
+		this.Cmp.id_funcionario.store.load({params:{start:0,limit:this.tam_pag}, 
+           callback : function (r) {
+                if (r.length == 1 ) {                       
+                    this.Cmp.id_funcionario.setValue(r[0].data.id_funcionario);
+                }    
+                                
+            }, scope : this
+        });      
            
     },
     

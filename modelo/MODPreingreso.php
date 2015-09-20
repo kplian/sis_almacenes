@@ -42,6 +42,11 @@ class MODPreingreso extends MODbase{
 		$this->captura('codigo_depto','varchar');
 		$this->captura('codigo_moneda','varchar');
 		$this->captura('numero_oc','varchar');
+		$this->captura('nro_tramite','varchar');
+		$this->captura('desc_funcionario1','text');
+		$this->captura('desc_proveedor','varchar');
+		$this->captura('c31','varchar');
+		$this->captura('fecha_conformidad','date');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();

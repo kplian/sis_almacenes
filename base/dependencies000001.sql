@@ -2808,3 +2808,125 @@ AS
         mov.id_movimiento_tipo;
         
 /***********************************F-DEP-JRR-ALM-0-22/03/2014****************************************/
+
+
+/***********************************I-DEP-JRR-ALM-0-04/08/2015*****************************************/
+ALTER TABLE alm.tpreingreso_det
+  ADD CONSTRAINT fk_tpreingreso_det__id_lugar FOREIGN KEY (id_lugar)
+    REFERENCES param.tlugar(id_lugar)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+/***********************************F-DEP-JRR-ALM-0-04/08/2015*****************************************/
+
+/***********************************I-DEP-JRR-ALM-0-18/09/2015*****************************************/
+ -- object recreation
+DROP VIEW alm.vmovimiento;
+
+CREATE VIEW alm.vmovimiento(
+    codigo_movimiento_tipo,
+    id_usuario_reg,
+    id_usuario_mod,
+    fecha_reg,
+    fecha_mod,
+    estado_reg,
+    id_usuario_ai,
+    usuario_ai,
+    id_movimiento,
+    id_movimiento_tipo,
+    id_almacen,
+    id_funcionario,
+    id_proveedor,
+    id_almacen_dest,
+    fecha_mov,
+    codigo,
+    descripcion,
+    observaciones,
+    estado_mov,
+    id_movimiento_origen,
+    id_proceso_macro,
+    id_estado_wf,
+    id_proceso_wf,
+    id_preingreso,
+    id_salida_grupo,
+    id_int_comprobante,
+    id_depto_conta,
+    id_almacen_gestion_log,
+    desc_funcionario1,
+    detalle_solicitud)
+AS
+  SELECT mt.codigo AS codigo_movimiento_tipo,
+         mov.id_usuario_reg,
+         mov.id_usuario_mod,
+         mov.fecha_reg,
+         mov.fecha_mod,
+         mov.estado_reg,
+         mov.id_usuario_ai,
+         mov.usuario_ai,
+         mov.id_movimiento,
+         mov.id_movimiento_tipo,
+         mov.id_almacen,
+         mov.id_funcionario,
+         mov.id_proveedor,
+         mov.id_almacen_dest,
+         mov.fecha_mov,
+         mov.codigo,
+         mov.descripcion,
+         mov.observaciones,
+         mov.estado_mov,
+         mov.id_movimiento_origen,
+         mov.id_proceso_macro,
+         mov.id_estado_wf,
+         mov.id_proceso_wf,
+         mov.id_preingreso,
+         mov.id_salida_grupo,
+         mov.id_int_comprobante,
+         mov.id_depto_conta,
+         mov.id_almacen_gestion_log,
+         fun.desc_funcionario1,
+         ('<table border="1"><TR> 
+   <TH>Item</TH> 
+   <TH>Cantidad Solicitada</TH>   
+   ' || pxp.html_rows('<td>'::text || it.nombre::text || '</td> <td>'::text || md.cantidad_solicitada::text|| '</td>'::text) ||
+   '</table>')::text as detalle_solicitud
+  FROM alm.tmovimiento mov
+       JOIN alm.tmovimiento_tipo mt ON mt.id_movimiento_tipo =
+         mov.id_movimiento_tipo
+       JOIN orga.vfuncionario fun on fun.id_funcionario = mov.id_funcionario
+       LEFT JOIN alm.tmovimiento_det md on md.id_movimiento = mov.id_movimiento
+         LEFT JOIN alm.titem it on it.id_item = md.id_item
+ group by  mt.codigo,
+         mov.id_usuario_reg,
+         mov.id_usuario_mod,
+         mov.fecha_reg,
+         mov.fecha_mod,
+         mov.estado_reg,
+         mov.id_usuario_ai,
+         mov.usuario_ai,
+         mov.id_movimiento,
+         mov.id_movimiento_tipo,
+         mov.id_almacen,
+         mov.id_funcionario,
+         mov.id_proveedor,
+         mov.id_almacen_dest,
+         mov.fecha_mov,
+         mov.codigo,
+         mov.descripcion,
+         mov.observaciones,
+         mov.estado_mov,
+         mov.id_movimiento_origen,
+         mov.id_proceso_macro,
+         mov.id_estado_wf,
+         mov.id_proceso_wf,
+         mov.id_preingreso,
+         mov.id_salida_grupo,
+         mov.id_int_comprobante,
+         mov.id_depto_conta,
+         mov.id_almacen_gestion_log,
+         fun.desc_funcionario1;
+
+ALTER TABLE alm.vmovimiento
+  OWNER TO postgres;
+
+/***********************************F-DEP-JRR-ALM-0-18/09/2015*****************************************/
