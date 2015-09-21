@@ -60,6 +60,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
             config:{
                     name:'id_unidad_medida',
+                    allowBlank:false,
                     origen:'UNIDADMEDIDA',
                     tinit:true,
                     fieldLabel:'Unidad Medida',
@@ -77,24 +78,55 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 grid:true,
                 form:true
-        }, {
-			config : {
-				name : 'nombre',
-				fieldLabel : 'Nombre',
-				allowBlank : false,
-				width : '100%',
-				gwidth : 150,
-				maxLength : 100
-			},
-			type : 'TextField',
-			filters : {
-				pfiltro : 'item.nombre',
-				type : 'string'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : true
-		}, {
+        }, 
+		
+		{
+            config : {
+                name : 'nombre',
+                fieldLabel : 'Nombre',
+                allowBlank : false,                
+                store : new Ext.data.JsonStore({
+                    url : '../../sis_almacenes/control/Item/listarItem',
+                    id : 'nombre',
+                    root : 'datos',
+                    sortInfo : {
+                        field : 'nombre',
+                        direction : 'ASC'
+                    },
+                    totalProperty : 'total',
+                    fields : ['nombre', 'codigo','descripcion'],
+                    remoteSort : true,
+                    baseParams : {
+                        par_filtro : 'item.nombre#item.descripcion',
+                        start:0,
+                        limit:1000
+                    }
+                }),
+                valueField : 'nombre',
+                displayField : 'nombre',
+                gdisplayField : 'nombre',
+                tpl : '<tpl for="."><div class="x-combo-list-item"><p>Código: {codigo}</p><p>Nombre: {nombre}</p><p>Descripcion: {descripcion}</p></div></tpl>',
+                hiddenName : 'nombre',
+                forceSelection : false,
+                typeAhead : false,
+                hideTrigger : true,
+                lazyRender : true,
+                mode : 'remote',
+                pageSize : 0,
+                queryDelay : 1000,
+                anchor : '100%',
+                gwidth : 150,
+                minChars : 4
+            },
+            type : 'ComboBox',
+            id_grupo : 0,
+            filters : {
+                pfiltro : 'item.nombre',
+                type : 'string'
+            },
+            grid : true,
+            form : true
+        },{
 			config : {
 				name : 'codigo',
 				fieldLabel : 'Código',
@@ -254,7 +286,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			type : 'string'
 		}, {
             name : 'id_unidad_medida',
-            type : 'integer'
+            type : 'string'
         }, {
             name : 'codigo_unidad',
             type : 'string'
