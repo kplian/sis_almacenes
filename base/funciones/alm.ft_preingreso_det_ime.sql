@@ -138,7 +138,8 @@ BEGIN
         id_lugar = v_parametros.id_lugar,
         ubicacion = v_parametros.ubicacion,
         c31 = v_parametros.c31,
-        fecha_conformidad = v_parametros.fecha_conformidad
+        fecha_conformidad = v_parametros.fecha_conformidad,
+        fecha_compra = v_parametros.fecha_compra
         where id_preingreso_det=v_parametros.id_preingreso_det;
             
             ---------------------------------------------------------------

@@ -205,7 +205,7 @@ BEGIN
             where id_preingreso = v_parametros.id_preingreso;
         
         	if (v_estado = 'borrador') then
-            	raise exception 'llega';
+            	
                 --Llamada a la función de generación de ingreso
                 v_result = alm.f_generar_ingreso(p_id_usuario,
                                                   v_parametros._id_usuario_ai,
