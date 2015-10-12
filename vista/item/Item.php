@@ -160,6 +160,47 @@ header("content-type: text/javascript; charset=UTF-8");
 			id_grupo : 1,
 			grid : true,
 			form : true
+		},
+		{
+			config : {
+				name : 'id_almacen',
+				fieldLabel : 'Almacenes habilitados',
+				allowBlank : true,
+				emptyText : 'Almacen...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_almacenes/control/Almacen/listarAlmacen',
+					id : 'id_almacen',
+					root : 'datos',
+					sortInfo : {
+						field : 'nombre',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_almacen', 'nombre'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'alm.nombre'
+					}
+				}),
+				valueField : 'id_almacen',
+				displayField : 'nombre',
+				gdisplayField : 'almacenes_habilitados',
+				hiddenName : 'id_almacen',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,				
+				gwidth : 150,
+				minChars : 2,
+				enableMultiSelect:true,
+			},
+			type : 'AwesomeCombo',
+			id_grupo : 0,			
+			grid : true,
+			form : true
 		}, {
 			config : {
 				name : 'palabras_clave',
@@ -297,6 +338,13 @@ header("content-type: text/javascript; charset=UTF-8");
             name : 'id_moneda',
             type : 'integer'
         }, {
+            name : 'id_almacen',
+            type : 'string'
+        }, {
+            name : 'almacenes_habilitados',
+            type : 'string'
+        }
+        , {
             name : 'desc_moneda',
             type : 'string'
         }],
@@ -402,6 +450,8 @@ header("content-type: text/javascript; charset=UTF-8");
 				width : 800,
 				height : 400
 			}, rec.data, this.idContenedor, 'ItemArchivo');
-		}
+		},
+		fheight:'60%',
+    	fwidth: '60%'
 	}); 
 </script>

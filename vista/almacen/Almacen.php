@@ -202,7 +202,58 @@ header("content-type:text/javascript; charset=UTF-8");
 			},
 			grid : true,
 			form : true
-		}, {
+		},
+		{
+            config : {
+                name : 'id_metodo_val',
+                fieldLabel : 'Método Valoración Def.',
+                allowBlank : false,
+                emptyText : 'Método...',
+                store : new Ext.data.JsonStore({
+                    url : '../../sis_almacenes/control/MetodoVal/listarMetodoVal',
+                    id : 'id_metodo_val',
+                    root : 'datos',
+                    sortInfo : {
+                        field : 'nombre',
+                        direction : 'ASC'
+                    },
+                    totalProperty : 'total',
+                    fields : ['id_metodo_val', 'codigo', 'nombre'],
+                    remoteSort : true,
+                    baseParams : {
+                        par_filtro : 'meval.codigo#meval.nombre'
+                    }
+                }),
+                valueField : 'id_metodo_val',
+                displayField : 'codigo',
+                gdisplayField : 'codigo_metodo_val',
+                tpl : '<tpl for="."><div class="x-combo-list-item"><p>Código: {codigo}</p><p>Nombre: {nombre}</p></div></tpl>',
+                hiddenName : 'id_item',
+                forceSelection : true,
+                typeAhead : false,
+                triggerAction : 'all',
+                lazyRender : true,
+                mode : 'remote',
+                pageSize : 10,
+                queryDelay : 1000,
+                anchor : '100%',
+                gwidth : 100,
+                minChars : 2,
+                renderer : function(value, p, record) {
+                    return String.format('{0}', record.data['codigo_metodo_val']);
+                }
+            },
+            type : 'ComboBox',
+            id_grupo : 0,
+            filters : {
+                pfiltro : 'meval.codigo',
+                type : 'string'
+            },
+            grid : true,
+            form : true
+        }
+		
+		, {
 			config : {
 				name : 'usr_reg',
 				fieldLabel : 'Creado por',
@@ -290,6 +341,9 @@ header("content-type:text/javascript; charset=UTF-8");
 			type : 'string'
 		}, {
 			name : 'localizacion',
+			type : 'string'
+		}, {
+			name : 'codigo_metodo_val',
 			type : 'string'
 		}, {
 			name : 'fecha_reg',

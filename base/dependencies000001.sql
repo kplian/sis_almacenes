@@ -2930,3 +2930,16 @@ ALTER TABLE alm.vmovimiento
   OWNER TO postgres;
 
 /***********************************F-DEP-JRR-ALM-0-18/09/2015*****************************************/
+
+
+/***********************************I-DEP-JRR-ALM-0-08/10/2015*****************************************/
+
+ALTER TABLE alm.talmacen
+  ADD CONSTRAINT fk_talmacen__id_metodo_val FOREIGN KEY (id_metodo_val)
+    REFERENCES alm.tmetodo_val(id_metodo_val)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;    
+
+
+/***********************************F-DEP-JRR-ALM-0-08/10/2015*****************************************/

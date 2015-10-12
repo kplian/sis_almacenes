@@ -32,6 +32,8 @@ class MODItem extends MODbase {
 		$this->captura('precio_ref', 'numeric');
 		$this->captura('id_moneda', 'integer');
 		$this->captura('desc_moneda', 'varchar');
+		$this->captura('id_almacen', 'text');
+		$this->captura('almacenes_habilitados', 'text');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -45,6 +47,7 @@ class MODItem extends MODbase {
         $this->tipo_procedimiento = 'SEL';
 		
 		$this->setParametro('id_movimiento', 'id_movimiento', 'integer');
+		$this->setParametro('id_almacen', 'id_almacen', 'integer');
 
         $this->captura('id_item', 'integer');
         $this->captura('id_clasificacion', 'integer');
@@ -58,6 +61,7 @@ class MODItem extends MODbase {
         $this->captura('numero_serie', 'varchar');
         $this->captura('codigo_unidad', 'varchar');
         $this->captura('precio_ref', 'numeric');
+		
 
         $this->armarConsulta();
 		//echo $this->consulta;exit;
@@ -80,6 +84,7 @@ class MODItem extends MODbase {
         $this->setParametro('numero_serie', 'numero_serie', 'varchar');
         $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
 		$this->setParametro('precio_ref', 'precio_ref', 'numeric');
+		$this->setParametro('id_almacen', 'id_almacen', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -102,6 +107,7 @@ class MODItem extends MODbase {
         $this->setParametro('numero_serie', 'numero_serie', 'varchar');
         $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
 		$this->setParametro('precio_ref', 'precio_ref', 'numeric');
+		$this->setParametro('id_almacen', 'id_almacen', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

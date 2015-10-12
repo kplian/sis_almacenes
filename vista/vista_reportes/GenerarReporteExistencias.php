@@ -296,6 +296,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			}, this);
 			
 			this.getComponente('id_items').disable();
+			this.Cmp.id_almacen.on('select',this.onAlmacenSelect,this);
 			this.Cmp.clasificacion.on('focus',this.bntClasificacion,this);
 			this.Cmp.clasificacion.setReadOnly(true);
 			this.clasificacion = this.Cmp.clasificacion;
@@ -316,6 +317,10 @@ header("content-type: text/javascript; charset=UTF-8");
 				collapsible : true
 			}]
 		}],
+		onAlmacenSelect : function () {
+			this.Cmp.id_item.store.baseParams.id_almacen = this.maestro.id_almacen;
+			this.Cmp.id_item.modificado = true;
+		},
 		bntClasificacion: function(){
 			var data;
 			//Valida que el combo de criterio sea por Clasificación

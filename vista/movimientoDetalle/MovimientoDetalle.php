@@ -430,6 +430,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			
 			//Añade el id_movimiento al  store del item para verifica si se debe filtrar los items por el tipo de movimiento
 			Ext.apply(this.Cmp.id_item.store.baseParams,{id_movimiento: this.maestro.id_movimiento});
+			this.Cmp.id_item.store.baseParams.id_almacen = this.maestro.id_almacen;
+			this.Cmp.id_item.modificado = true;
 			this.Cmp.id_item.tdata={id_movimiento: this.maestro.id_movimiento};
 			//Obliga a que el combo vuelva a la bd cuando se expanda la lista
 			this.Cmp.id_item.modificado=true;

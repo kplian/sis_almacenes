@@ -25,6 +25,7 @@ class MODClasificacion extends MODbase {
         $this->captura('codigo_largo', 'varchar');
 
         $this->armarConsulta();
+		
         $this->ejecutarConsulta();
 
         return $this->respuesta;

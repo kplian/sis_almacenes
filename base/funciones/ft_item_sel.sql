@@ -31,6 +31,7 @@ DECLARE
 	v_resp_global			varchar;
 	v_id_movimiento_tipo	integer;
 	v_ids				varchar;
+	v_from				varchar;
                
 BEGIN
 
@@ -63,7 +64,16 @@ BEGIN
                 	umed.codigo as codigo_unidad,
                 	item.precio_ref,
                 	item.id_moneda,
-                	mon.codigo as desc_moneda
+                	mon.codigo as desc_moneda,
+                	(select pxp.list(alms.id_almacen::varchar) 
+                	from alm.talmacen_stock  alms
+                	where alms.id_item = item.id_item and alms.estado_reg = ''activo''),
+                	(select pxp.list(alm.nombre) 
+                	from alm.talmacen_stock  alms
+                	inner join alm.talmacen alm
+                		on alm.id_almacen = alms.id_almacen
+                	where alms.id_item = item.id_item and alms.estado_reg = ''activo'')
+                	
                 from alm.titem item
                 inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
                 left join param.tmoneda mon on mon.id_moneda = item.id_moneda
@@ -217,6 +227,13 @@ BEGIN
         begin
             
             v_where = '';
+            
+            if (pxp.f_existe_parametro(p_tabla,'id_almacen'))then
+            	v_from = ' inner join alm.talmacen_stock alms on alms.id_item = item.id_item ';
+            else
+            	v_from = '';
+            end if;
+            
             --RCM 21/08/2103: Verificación de si se debe filtrar los items por tipo de movimiento, solo para los casos que envien el parametro id_movimiento
             if pxp.f_existe_parametro(p_tabla,'id_movimiento') then
             	v_resp_global = pxp.f_get_variable_global('alm_filtrar_item_tipomov');
@@ -289,6 +306,7 @@ BEGIN
                 from alm.titem item
                 inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
                 inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+                '  || v_from ||  '
                 where item.estado_reg = ''activo'' and ';
                 
                v_consulta = v_consulta || v_where;
@@ -313,7 +331,11 @@ BEGIN
     elsif(p_transaccion='SAL_ITEMNOTBASE_CONT')then
 
         begin
-        
+        	if (pxp.f_existe_parametro(p_tabla,'id_almacen'))then
+            	v_from = ' inner join alm.talmacen_stock alms on alms.id_item = item.id_item ';
+            else
+            	v_from = '';
+            end if;
         	v_where = '';
             --RCM 21/08/2103: Verificación de si se debe filtrar los items por tipo de movimiento, solo para los casos que envien el parametro id_movimiento
             if pxp.f_existe_parametro(p_tabla,'id_movimiento') then
@@ -375,6 +397,7 @@ BEGIN
                 from alm.titem item
                 inner join alm.tclasificacion cla on item.id_clasificacion = cla.id_clasificacion
                 inner join param.tunidad_medida umed on umed.id_unidad_medida = item.id_unidad_medida
+                '  || v_from ||  '
                 where item.estado_reg = ''activo'' and ';
                 
             v_consulta = v_consulta || v_where;
