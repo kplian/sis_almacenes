@@ -364,22 +364,21 @@ header("content-type: text/javascript; charset=UTF-8");
 		onReloadPage : function(m) {
 			this.getBoton('btnGenerarCodigo').disable();
 			this.maestro = m;
-			var myParams = {
-				start : 0,
-				limit : 50
-			};
+			
 			if (this.maestro.tipo_nodo == 'raiz' || this.maestro.tipo_nodo == 'hijo') {
-				myParams.id_clasificacion = this.maestro.id_clasificacion;
+				this.store.baseParams.id_clasificacion = this.maestro.id_clasificacion;
 				this.tbar.items.get('b-new-' + this.idContenedor).show();
 			} else if (this.maestro.tipo_nodo == 'item') {
-				myParams.id_item = this.maestro.id_item;
+				this.store.baseParams.id_item = this.maestro.id_item;
 				this.tbar.items.get('b-new-' + this.idContenedor).hide();
 			} else {
 				this.tbar.items.get('b-new-' + this.idContenedor).show();
 				myParams.id_clasificacion = 'null';
 			}
+			
 			this.load({
-				params : myParams
+				start : 0,
+				limit : 50
 			});
 		},
 		preparaMenu : function(n) {
