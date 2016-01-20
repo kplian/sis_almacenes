@@ -13,6 +13,104 @@ header("content-type:text/javascript; charset=UTF-8");
 		constructor : function(config) {
 			this.maestro = config;
 			this.description = this.maestro.item;
+			if (this.maestro.mostrar_costos != 'no') {
+				this.Atributos.push({
+					config : {
+						name : 'saldo_val',
+						fieldLabel : 'Saldo Valorado',
+						allowBlank : false,
+						anchor : '100%',
+						gwidth : 150,
+						maxLength : 20
+					},
+					type : 'Field',
+					filters : {
+					    pfiltro : 'saldo_val',
+						type : 'numeric'
+					},
+					id_grupo : 1,
+					grid : true,
+					form : true
+				});
+				this.Atributos.push({
+					config : {
+						name : 'costo_unitario',
+						fieldLabel : 'Costo Unitario',
+						allowBlank : false,
+						anchor : '100%',
+						gwidth : 150,
+						maxLength : 20
+					},
+					type : 'Field',
+					filters : {
+					    pfiltro : 'costo_unitario',
+						type : 'numeric'
+					},
+					id_grupo : 1,
+					grid : true,
+					form : true
+				});
+				
+				this.Atributos.push({
+					config : {
+						name : 'ingreso_val',
+						fieldLabel : 'Valorado Ingreso',
+						allowBlank : false,
+						anchor : '100%',
+						gwidth : 150,
+						maxLength : 20,
+						renderer:function(value, p, record) {
+							var aux;
+							if(record.data.salida>0){
+								aux='<b><font color="brown">';
+							}
+							else {
+								aux='<b><font color="green">';
+							}
+							aux = aux +value+'</font></b>';
+							return String.format('{0}', aux);
+						}
+					},
+					type : 'Field',
+					filters : {
+					    pfiltro : 'ingreso_val',
+						type : 'numeric'
+					},
+					id_grupo : 1,
+					grid : true,
+					form : true
+				});
+				this.Atributos.push({
+					config : {
+						name : 'salida_val',
+						fieldLabel : 'Valorado Salida',
+						allowBlank : false,
+						anchor : '100%',
+						gwidth : 150,
+						maxLength : 20,
+						renderer:function(value, p, record) {
+							var aux;
+							if(record.data.salida>0){
+								aux='<b><font color="brown">';
+							}
+							else {
+								aux='<b><font color="green">';
+							}
+							aux = aux +value+'</font></b>';
+							return String.format('{0}', aux);
+						}
+					},
+					type : 'Field',
+					filters : {
+					    pfiltro : 'salida_val',
+						type : 'numeric'
+					},
+					id_grupo : 1,
+					grid : true,
+					form : true
+				});
+			}		
+		
 			Phx.vista.repKardexItem.superclass.constructor.call(this, config);
 			this.init();
 			this.load({
@@ -199,101 +297,8 @@ header("content-type:text/javascript; charset=UTF-8");
 			id_grupo : 1,
 			grid : true,
 			form : true
-		},
-		{
-			config : {
-				name : 'costo_unitario',
-				fieldLabel : 'Costo Unitario',
-				allowBlank : false,
-				anchor : '100%',
-				gwidth : 150,
-				maxLength : 20
-			},
-			type : 'Field',
-			filters : {
-			    pfiltro : 'costo_unitario',
-				type : 'numeric'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : true
-		},
-		{
-			config : {
-				name : 'ingreso_val',
-				fieldLabel : 'Valorado Ingreso',
-				allowBlank : false,
-				anchor : '100%',
-				gwidth : 150,
-				maxLength : 20,
-				renderer:function(value, p, record) {
-					var aux;
-					if(record.data.salida>0){
-						aux='<b><font color="brown">';
-					}
-					else {
-						aux='<b><font color="green">';
-					}
-					aux = aux +value+'</font></b>';
-					return String.format('{0}', aux);
-				}
-			},
-			type : 'Field',
-			filters : {
-			    pfiltro : 'ingreso_val',
-				type : 'numeric'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : true
-		},
-		{
-			config : {
-				name : 'salida_val',
-				fieldLabel : 'Valorado Salida',
-				allowBlank : false,
-				anchor : '100%',
-				gwidth : 150,
-				maxLength : 20,
-				renderer:function(value, p, record) {
-					var aux;
-					if(record.data.salida>0){
-						aux='<b><font color="brown">';
-					}
-					else {
-						aux='<b><font color="green">';
-					}
-					aux = aux +value+'</font></b>';
-					return String.format('{0}', aux);
-				}
-			},
-			type : 'Field',
-			filters : {
-			    pfiltro : 'salida_val',
-				type : 'numeric'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : true
-		},
-		{
-			config : {
-				name : 'saldo_val',
-				fieldLabel : 'Saldo Valorado',
-				allowBlank : false,
-				anchor : '100%',
-				gwidth : 150,
-				maxLength : 20
-			},
-			type : 'Field',
-			filters : {
-			    pfiltro : 'saldo_val',
-				type : 'numeric'
-			},
-			id_grupo : 1,
-			grid : true,
-			form : true
-		}
+		}	
+		
 		],
 		title : 'Kardex Item',
 		ActList : '../../sis_almacenes/control/Reportes/listarKardexItem',

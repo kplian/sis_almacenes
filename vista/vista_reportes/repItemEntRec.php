@@ -261,7 +261,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			form : true
 		}
 		],
-		title : 'Material Entregado/Recibido',
+		title : 'Material Entregado-Recibido',
 		ActList : '../../sis_almacenes/control/Reportes/listarItemEntRec',
 		id_store : 'id_movimiento_det_valorado',
 		fields : [{
