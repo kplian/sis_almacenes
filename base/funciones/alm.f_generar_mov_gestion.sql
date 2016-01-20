@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION alm.f_generar_mov_gestion (
   p_id_usuario integer,
   p_id_almacen_gestion_log integer,
@@ -212,7 +210,10 @@ BEGIN
                         unidad_medida,
                         clasificacion,
                         cantidad,
-                        costo
+                        costo,
+                        cantidad_min,
+                		cantidad_alerta_amarilla,
+                		cantidad_alerta_roja 
                         from alm.f_existencias_almacen_sel('||v_id_almacen||','''||v_fecha_hasta||''','''||v_where||''','''||' 0 = 0 '||''')
                         as (id_item integer,
                         codigo varchar,
@@ -220,9 +221,12 @@ BEGIN
                         unidad_medida varchar,
                         clasificacion varchar,
                         cantidad numeric,
-                        costo numeric)
+                        costo numeric,
+                        cantidad_min numeric,
+                		cantidad_alerta_amarilla numeric,
+                		cantidad_alerta_roja numeric)
                         where cantidad > 0';  
-                        
+                       
 		for v_rec in execute(v_consulta) loop
         	v_nivel = 0;
             v_sw_det = false;
