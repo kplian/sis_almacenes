@@ -70,6 +70,7 @@ class ACTReportes extends ACTbase {
         $dataSource->putParameter('costoTotal', $costoTotal);
         $dataSource->putParameter('fechaHasta', $fechaHasta);
         $dataSource->putParameter('almacen', $this->objParam->getParametro('almacen'));
+		$dataSource->putParameter('mostrar_costos', $this->objParam->getParametro('mostrar_costos'));
         $dataSource->setDataSet($mainDataSet);
         
         $reporte = new RExistencias();
