@@ -43,6 +43,14 @@ header("content-type:text/javascript; charset=UTF-8");
 				handler : this.onBtnGestion,
 				tooltip : '<b>Administración de Gestiones por almacén</b>'
 			});
+
+			this.addButton('btnStock', {
+				text : 'Stocks predefinidos',
+				iconCls : 'bassign',
+				disabled : true,
+				handler : this.onBtnStock,
+				tooltip : '<b>Predefine stock minimos para todos los items por almacen seleccionado</b>'
+			});
 		},
 		onBtnAlmacenUsuario : function() {
 			var rec = this.sm.getSelected();
@@ -403,12 +411,14 @@ header("content-type:text/javascript; charset=UTF-8");
 			btnSwitchEstado.enable();
 			//Habilita boton  de gestiones
 			this.getBoton('btnGestion').enable();
+			this.getBoton('btnStock').enable();
 		},
 		liberaMenu : function() {
 			Phx.vista.Almacen.superclass.liberaMenu.call(this);
 			this.getBoton('btnAlmacenUsuario').disable();
 			this.getBoton('btnSwitchEstado').disable();
 			this.getBoton('btnGestion').disable();
+			this.getBoton('btnStock').disable();
 		},
 		onBtnGestion: function() {
 			var rec = this.sm.getSelected();
@@ -418,5 +428,24 @@ header("content-type:text/javascript; charset=UTF-8");
 				height : '90%',
 			}, rec.data, this.idContenedor, 'AlmacenGestion');
 		},
+		onBtnStock : function() {
+			var rec = this.sm.getSelected();
+			var data = rec.data;
+			var global = this;
+			Ext.Msg.confirm('Confirmación', '¿Está seguro de predefinir los stocks?', function(btn) {
+				if (btn == "yes") {
+					Ext.Ajax.request({
+						url : '../../sis_almacenes/control/Almacen/defStockAlmacen',
+						params : {
+							'id_almacen' : data.id_almacen
+						},
+						success : global.successSave,
+						failure : global.conexionFailure,
+						timeout : global.timeout,
+						scope : global
+					});
+				}
+			});
+		}
 }); 
 </script>

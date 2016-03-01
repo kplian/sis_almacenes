@@ -97,5 +97,18 @@ class MODAlmacen extends MODbase {
 
         return $this->respuesta;
     }
+
+    function defStockAlmacen() {
+        $this->procedimiento = 'alm.ft_almacen_ime';
+        $this->transaccion = 'SAL_ALMSTO_INS';
+        $this->tipo_procedimiento = 'IME';
+
+        $this->setParametro('id_almacen', 'id_almacen', 'integer');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
 }
 ?>
