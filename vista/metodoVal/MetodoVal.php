@@ -153,7 +153,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			grid : true,
 			form : false
 		}],
-		title : 'Tipo Movimiento',
+		title : 'Metodo de Valoracion',
 		ActSave : '../../sis_almacenes/control/MetodoVal/insertarMetodoVal',
 		ActDel : '../../sis_almacenes/control/MetodoVal/eliminarMetodoVal',
 		ActList : '../../sis_almacenes/control/MetodoVal/listarMetodoVal',
