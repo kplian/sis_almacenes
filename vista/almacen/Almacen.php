@@ -180,7 +180,8 @@ header("content-type:text/javascript; charset=UTF-8");
 					fields : ['id_depto', 'nombre', 'codigo'],
 					remoteSort : true,
 					baseParams : {
-						par_filtro : 'DEPPTO.nombre#DEPPTO.codigo'
+						par_filtro : 'DEPPTO.nombre#DEPPTO.codigo',
+						modulo: 'ALM'
 					}
 				}),
 				valueField : 'id_depto',
