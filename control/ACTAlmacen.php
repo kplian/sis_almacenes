@@ -50,5 +50,12 @@ class ACTAlmacen extends ACTbase {
         $this->res = $this->objFunc->switchEstadoAlmacen();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+
+    function defStockAlmacen() {
+        $this->objFunc = $this->create('MODAlmacen');
+        $this->res = $this->objFunc->defStockAlmacen();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+    
 }
 ?>
