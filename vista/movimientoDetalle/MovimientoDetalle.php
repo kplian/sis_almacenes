@@ -143,7 +143,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 allowBlank : false,
                 anchor : '100%',
                 gwidth : 120,
-                maxLength : 6
+                maxLength : 10,
+                decimalPrecision : 4
             },
             type : 'NumberField',
             filters : {
@@ -158,9 +159,9 @@ header("content-type: text/javascript; charset=UTF-8");
 				fieldLabel : 'Cantidad Real',
 				allowBlank : false,
 				anchor : '100%',
-				gwidth : 120,
-				
-				maxLength : 6
+				gwidth : 120,				
+				maxLength : 10,
+				decimalPrecision : 4
 			},
 			type : 'NumberField',
 			filters : {
