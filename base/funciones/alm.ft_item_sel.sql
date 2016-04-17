@@ -143,8 +143,8 @@ BEGIN
             		into v_id_movimiento_tipo
             		from alm.tmovimiento mov
             		inner join alm.tmovimiento_tipo movt
-            		on movt.id_movimieov.id_movimiento_tipo
-            		where id_movimiento = v_paramento_tipo = mtros.id_movimiento
+            		on movt.id_movimiento_tipo = mov.id_movimiento_tipo
+            		where id_movimiento = v_parametros.id_movimiento
             		and tipo  ='salida';
 					
             		if coalesce(v_id_movimiento_tipo,0)!=0 then
