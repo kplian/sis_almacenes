@@ -436,6 +436,28 @@ BEGIN
             return v_consulta;
                        
         end;
+     /*********************************   
+     #TRANSACCION:  'SAL_ITMSALDO_SEL'
+     #DESCRIPCION:    Consulta de datos
+     #AUTOR:        Ariel Ayaviri Omonte
+     #FECHA:        20-09-2012
+    ***********************************/    
+    elsif(p_transaccion='SAL_ITMSALDO_SEL')then
+                    
+        begin
+            --Sentencia de la consulta
+            v_consulta:='
+            	select 
+                	it.id_item,
+                    it.codigo,
+                    (select alm.f_get_saldo_fisico_item(it.id_item,' || v_parametros.id_almacen || ',now()::date,''si'')::numeric) as saldo
+				from alm.titem it
+                where it.estado_reg = ''activo'' and it.codigo like ''' || v_parametros.codigo||'''';
+            --v_consulta:=v_consulta||v_parametros.filtro;
+           raise notice '%',v_consulta;
+            return v_consulta;
+                       
+        end;
     
     /*********************************   
      #TRANSACCION:  'SAL_ITMSRCHARB_CONT'
