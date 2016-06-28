@@ -258,15 +258,15 @@ Phx.vista.MovimientoTipoItem=Ext.extend(Phx.gridInterfaz,{
 							direction : 'ASC'
 						},
 						totalProperty : 'total',
-						fields : ['id_item', 'nombre', 'codigo', 'desc_clasificacion', 'codigo_unidad'],
+						fields : ['id_item', 'nombre', 'codigo', 'descripcion','desc_clasificacion', 'codigo_unidad'],
 						remoteSort : true,
 						baseParams : {
 							par_filtro : 'item.nombre#item.codigo#cla.nombre'
 						}
 					}),
 					valueField : 'id_item',
-					displayField : 'nombre',
-					tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
+					displayField : 'descripcion',
+					//tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
 					hiddenName : 'id_item_cmb',
 					forceSelection : true,
 					typeAhead : false,
