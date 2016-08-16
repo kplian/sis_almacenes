@@ -69,7 +69,7 @@ BEGIN
                         pw.nro_tramite,
                         fun.desc_funcionario1,
                         pro.desc_proveedor,
-                        (select pxp.list_unique(lb.comprobante_sigma) from tes.tts_libro_bancos lb where pago.id_int_comprobante =lb.id_int_comprobante)::varchar as c31,
+                        comp.c31,
                         pp.fecha_conformidad
             from alm.tpreingreso preing
             inner join segu.tusuario usu1 on usu1.id_usuario = preing.id_usuario_reg
@@ -87,6 +87,7 @@ BEGIN
                         	and op.estado_reg = ''activo'' and op.estado != ''anulado''
                         left join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago 
                         	and pp.estado_reg = ''activo'' and pp.estado != ''anulado'' and pp.nro_cuota = 1
+                        left join sci.tint_comprobante comp on pp.id_int_comprobante = comp.id_int_comprobante
                         left join tes.tplan_pago pago on pago.id_plan_pago_fk = pp.id_plan_pago
                         
                 where preing.estado != ''cancelado'' and ';
@@ -128,6 +129,7 @@ BEGIN
                         	and op.estado_reg = ''activo'' and op.estado != ''anulado''
                         left join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago 
                         	and pp.estado_reg = ''activo'' and pp.estado != ''anulado'' and pp.nro_cuota = 1
+                        left join sci.tint_comprobante comp on pp.id_int_comprobante = comp.id_int_comprobante
                         where preing.estado != ''cancelado'' and ';
       
       --Definicion de la respuesta        
