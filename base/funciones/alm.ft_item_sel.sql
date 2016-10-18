@@ -460,6 +460,37 @@ BEGIN
         end;
     
     /*********************************   
+     #TRANSACCION:  'SAL_ITMSSALDOS_SEL'
+     #DESCRIPCION:    Consulta de datos
+     #AUTOR:        Gonzalo Sarmiento Sejas
+     #FECHA:        14-07-2016
+    ***********************************/
+    elsif(p_transaccion='SAL_ITMSSALDOS_SEL')then
+
+        begin
+            --Sentencia de la consulta
+            /*
+            v_consulta:='
+            	select
+                	it.id_item,
+                    it.codigo,
+                    (select alm.f_get_saldo_fisico_item(it.id_item,' || v_parametros.id_almacen || ',now()::date,''si'')::numeric) as saldo
+				from alm.titem it
+                where it.estado_reg = ''activo'' and it.codigo like ''' || v_parametros.codigo||'''';*/
+            --v_consulta:=v_consulta||v_parametros.filtro;
+            v_consulta:='select it.id_item,
+       							it.codigo,
+                                case when length(nombre)<7 and nombre not in (''Varon'',''Dama'') then it.nombre else '''' end as nombre,
+       							(select alm.f_get_saldo_fisico_item(it.id_item,'||v_parametros.id_almacen||', now() ::date, ''si'') ::numeric) as saldo
+						from alm.titem it
+						where it.estado_reg = ''activo'' and it.codigo like any(string_to_array('''||v_parametros.codigos||''','',''))';
+
+           raise notice '%',v_consulta;
+            return v_consulta;
+
+        end;
+
+    /*********************************
      #TRANSACCION:  'SAL_ITMSRCHARB_CONT'
      #DESCRIPCION:  Conteo de registros
      #AUTOR:        Ariel Ayaviri Omonte

@@ -684,3 +684,23 @@ ALTER TABLE alm.talmacen
   ADD COLUMN id_metodo_val INTEGER;
 
 /***********************************F-SCP-JRR-ALM-0-08/10/2015*****************************************/
+
+/***********************************I-SCP-JRR-ALM-0-23/06/2016*****************************************/
+   
+CREATE TYPE alm.detalle_movimiento AS (
+  codigo_item VARCHAR(50),
+  cantidad NUMERIC(18,6)
+);
+
+/***********************************F-SCP-JRR-ALM-0-23/06/2016*****************************************/
+
+/***********************************I-SCP-GSS-ALM-1-13/07/2016*****************************************/
+
+CREATE TABLE alm.tmovimiento_tipo_almacen (
+  id_movimiento_tipo_almacen SERIAL, 
+  id_movimiento_tipo INTEGER NOT NULL, 
+  id_almacen INTEGER NOT NULL, 
+  PRIMARY KEY(id_movimiento_tipo_almacen)
+) INHERITS (pxp.tbase) WITHOUT OIDS;
+
+/***********************************F-SCP-GSS-ALM-1-13/07/2016*****************************************/

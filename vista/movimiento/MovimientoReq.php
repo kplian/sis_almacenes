@@ -14,7 +14,7 @@ Phx.vista.MovimientoReq = {
 	requireclase:'Phx.vista.Movimiento',
 	title:'Movimiento',	
 	nombreVista: 'movimientoReq',
-	
+		
 	constructor: function(config) {
 		this.maestro = config;
     	Phx.vista.MovimientoReq.superclass.constructor.call(this,config);
@@ -25,7 +25,7 @@ Phx.vista.MovimientoReq = {
     	
 	    this.iniciarEventos();
 		this.store.baseParams={tipo_interfaz:this.nombreVista};
-		this.load({params:{start:0, limit:this.tam_pag,ids:this.ids}});
+		//this.load({params:{start:0, limit:this.tam_pag,ids:this.ids}});
 	},
     
     iniciarEventos:function(){

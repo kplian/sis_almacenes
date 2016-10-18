@@ -15,6 +15,24 @@ Phx.vista.MovimientoReqSalida= {
 	title:'Movimiento',	
 	nombreVista: 'movimientoReqSalida',
 	
+	gruposBarraTareas:[{name:'borrador',title:'<H1 align="center"><i class="fa fa-thumbs-o-down"></i> Borradores</h1>',grupo:0,height:0},
+                       {name:'en_aprobacion',title:'<H1 align="center"><i class="fa fa-eye"></i> En Aprobacion</h1>',grupo:1,height:0},
+                       {name:'en_almacenes',title:'<H1 align="center"><i class="fa fa-eye"></i> En Almacenes</h1>',grupo:2,height:0},
+                       {name:'entregado',title:'<H1 align="center"><i class="fa fa-thumbs-o-up"></i> Entregado</h1>',grupo:3,height:0}],
+		
+	actualizarSegunTab: function(name, indice){		
+		if(this.finCons){
+			 this.store.baseParams.pes_estado = name;
+			 this.load({params:{start:0, limit:this.tam_pag, ids:this.ids, cmb_tipo_movimiento:'salida'}});
+		   }
+	},
+	
+	beditGroups: [0],
+    bdelGroups:  [0],
+    bactGroups:  [0,1,2,3],
+    btestGroups: [0],
+    bexcelGroups: [0,1,2,3],
+	
 	constructor: function(config) {
 		this.maestro = config;
     	Phx.vista.MovimientoReqSalida.superclass.constructor.call(this,config);
@@ -26,6 +44,7 @@ Phx.vista.MovimientoReqSalida= {
     	
 	    this.iniciarEventos();
 		this.store.baseParams={tipo_interfaz:this.nombreVista};
+		this.store.baseParams.pes_estado = 'borrador';
 		this.load({params:{start:0, limit:this.tam_pag,ids:this.ids, cmb_tipo_movimiento:'salida'}});
 		
 		//Setea el tipo de movimiento a salida
@@ -33,6 +52,7 @@ Phx.vista.MovimientoReqSalida= {
 		this.Cmp.tipo.disable();
 		this.cmbMovimientoTipo.disable();
 		
+		this.finCons = true;
 	},
     
     iniciarEventos:function(){

@@ -28,6 +28,7 @@ header("content-type: text/javascript; charset=UTF-8");
 					});
         	
         },
+		
 		constructor : function(config) {
 			this.maestro = config.maestro;
 			this.historico = 'no';
@@ -69,6 +70,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.addButton('btnReport', {
 				text : 'Reporte',
 				iconCls : 'bpdf32',
+				grupo:[0,1,2,3],
 				disabled : true,
 				handler : this.generaReporte,
 				tooltip : '<b>Reporte de Movimiento</b><br/>Generar el reporte del Movimiento Seleccionado.'
@@ -99,6 +101,15 @@ header("content-type: text/javascript; charset=UTF-8");
 				tooltip : '<b>Revertir Preingreso</b><br>En caso de que el Ingreso haya sido generado desde un Preingreso, revierte todo el ingreso'
 			});
 			
+			this.addButton('diagrama_gantt',{
+				text:'',
+				iconCls: 'bgantt',
+				disabled:true,
+				grupo:[0,1,2,3],
+				handler:this.diagramGantt,
+				tooltip: '<b>Diagrama Gantt de proceso macro</b>'
+			});
+			
 			this.Cmp.id_depto_conta.setVisible(false);
 			this.Cmp.id_depto_conta.disable();
 			this.Cmp.id_depto_conta.allowBlank=true;
@@ -126,7 +137,7 @@ header("content-type: text/javascript; charset=UTF-8");
         }, {
 			config : {
 				name : 'tipo',
-				fieldLabel : 'Tipo',
+				fieldLabel : 'Tipo de Movimiento',
 				allowBlank : false,
 				triggerAction : 'all',
 				lazyRender : true,
@@ -209,9 +220,9 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			config : {
 				name : 'id_movimiento_tipo',
-				fieldLabel : 'Movimiento Tipo',
+				fieldLabel : 'Subtipo de Movimiento',
 				allowBlank : false,
-				emptyText : 'Movimiento Tipo...',
+				emptyText : 'Subtipo...',
 				store : new Ext.data.JsonStore({
 					url : '../../sis_almacenes/control/MovimientoTipo/listarMovimientoTipo',
 					id : 'id_movimiento_tipo',
@@ -269,7 +280,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				allowBlank : false,
 				emptyText : 'Almacen...',
 				store : new Ext.data.JsonStore({
-					url : '../../sis_almacenes/control/Almacen/listarAlmacen',
+					url : '../../sis_almacenes/control/MovimientoTipoAlmacen/listarMovimientoTipoAlmacen',
 					id : 'id_almacen',
 					root : 'datos',
 					sortInfo : {
@@ -280,7 +291,7 @@ header("content-type: text/javascript; charset=UTF-8");
 					fields : ['id_almacen', 'nombre'],
 					remoteSort : true,
 					baseParams : {
-						par_filtro : 'alm.nombre'
+						par_filtro : 'al.nombre'
 					}
 				}),
 				valueField : 'id_almacen',
@@ -404,7 +415,7 @@ header("content-type: text/javascript; charset=UTF-8");
         }, {
 			config : {
 				name : 'solicitante',
-				fieldLabel : 'Solicitante',
+				fieldLabel : 'Tipo de Solicitante',
 				allowBlank : false,
 				triggerAction : 'all',
 				lazyRender : true,
@@ -462,12 +473,12 @@ header("content-type: text/javascript; charset=UTF-8");
        		    name:'id_funcionario',
        		    hiddenName: 'id_funcionario',
    				origen:'FUNCIONARIO',
-   				fieldLabel:'Funcionario',
+   				fieldLabel:'Funcionario Solicitante',
    				allowBlank:false,
                 gwidth:200,
    				valueField: 'id_funcionario',
    			    gdisplayField: 'nombre_funcionario',
-   			    baseParams: { fecha: new Date(), id_movimiento_tipo:0 },
+   			    baseParams: { fecha: new Date(), id_movimiento_tipo:0, es_combo_solicitud : 'si'},
       			//renderer:function(value, p, record){return String.format('{0}', record.data['nombre_funcionario']);},
       			renderer: function(value, p, record){
 					var aux;
@@ -829,6 +840,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'codigo_origen',
 			type : 'string'
 		}, {
+			name : 'id_proceso_wf',
+			type : 'numeric'
+		},{
 			name : 'id_estado_wf',
 			type : 'numeric'
 		},{
@@ -909,6 +923,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			//Ext.apply(this.Cmp.id_funcionario.store.baseParams,{id_movimiento_tipo: component.data.id_movimiento_tipo})
 			//this.Cmp.id_funcionario.setValue('');
 			//this.Cmp.id_funcionario.modificado=true;
+			
+			Ext.apply(this.Cmp.id_almacen.store.baseParams,{id_movimiento_tipo: component.data.id_movimiento_tipo})
+			this.Cmp.id_almacen.modificado=true;
+			this.Cmp.id_almacen.setValue('');
 		},
 		onSolicitanteSelect : function(e, component, index) {
 			if (e.value == 'funcionario') {
@@ -933,6 +951,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			var tb = Phx.vista.Movimiento.superclass.preparaMenu.call(this);
 			var data = this.getSelectedData();
 			this.getBoton('btnReport').enable();
+			this.getBoton('diagrama_gantt').enable();
 			
 			if (data.estado_mov == 'finalizado' || data.estado_mov == 'cancelado') {				
 				this.getBoton('btnCancelar').disable();
@@ -1255,10 +1274,15 @@ header("content-type: text/javascript; charset=UTF-8");
         	//Verifica si hay alertas y pregunta si continuar
         	console.log(data);
         	if(data.alertas!=''){
-        		var v_aux = data.alertas+'\n\n¿Desea continuar de todos modos?';
-        		if(!confirm(v_aux)){
-        			return;
-        		}
+				if(data.permitir_sin_saldo == 'si'){
+					var v_aux = data.alertas+'\n\n¿Desea continuar de todos modos?';
+					if(!confirm(v_aux)){
+						return;
+					}
+				}else{
+					alert(data.alertas);
+					return;
+				}
         	}
         	
         	//Obtiene la cantidad de estados posibles en el workflow
@@ -1476,8 +1500,20 @@ header("content-type: text/javascript; charset=UTF-8");
     aplicarFiltros: function(combo, record, index){
         this.store.baseParams.cmb_tipo_movimiento=this.cmbMovimientoTipo.getValue();
         this.load(); 
-    }
-    
+    },
+	
+	diagramGantt:function (){         
+		var data=this.sm.getSelected().data.id_proceso_wf;
+		Phx.CP.loadingShow();
+		Ext.Ajax.request({
+			url:'../../sis_workflow/control/ProcesoWf/diagramaGanttTramite',
+			params:{'id_proceso_wf':data},
+			success:this.successExport,
+			failure: this.conexionFailure,
+			timeout:this.timeout,
+			scope:this
+		});         
+	}    
 
 })
 </script>

@@ -41,8 +41,9 @@ class MODMovimiento extends MODbase {
         $this->captura('descripcion', 'varchar');
         $this->captura('observaciones', 'varchar');
         $this->captura('id_movimiento_origen', 'integer');
-        $this->captura('codigo_origen', 'varchar');
-								$this->captura('id_estado_wf','int4');
+        $this->captura('codigo_origen', 'varchar');		
+		$this->captura('id_proceso_wf','int4');
+		$this->captura('id_estado_wf','int4');
         $this->captura('estado_mov', 'varchar');
         $this->captura('usr_reg', 'varchar');
         $this->captura('fecha_reg', 'timestamp');
@@ -80,6 +81,27 @@ class MODMovimiento extends MODbase {
 
         return $this->respuesta;
     }
+
+	function insertarMovimientoREST(){
+		//Definicion de variables para ejecucion del procedimiento
+		$this->procedimiento='alm.ft_movimiento_ime';
+		$this->transaccion='SAL_MOVREST_INS';
+		$this->tipo_procedimiento='IME';
+		
+		$this->setParametro('id_movimiento_tipo', 'id_movimiento_tipo', 'integer');
+        $this->setParametro('id_almacen', 'id_almacen', 'integer');
+        $this->setParametro('id_funcionario', 'id_funcionario', 'integer');       
+        $this->setParametro('fecha_mov', 'fecha_mov', 'date');
+        $this->setParametro('descripcion', 'descripcion', 'varchar'); 		
+		$this->setParametro('detalle','detalle','text');
+
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
 
     function modificarMovimiento() {
         $this->procedimiento = 'alm.ft_movimiento_ime';

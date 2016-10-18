@@ -87,7 +87,7 @@ BEGIN
                         	and op.estado_reg = ''activo'' and op.estado != ''anulado''
                         left join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago 
                         	and pp.estado_reg = ''activo'' and pp.estado != ''anulado'' and pp.nro_cuota = 1
-                        left join sci.tint_comprobante comp on pp.id_int_comprobante = comp.id_int_comprobante
+                        left join conta.tint_comprobante comp on pp.id_int_comprobante = comp.id_int_comprobante
                         left join tes.tplan_pago pago on pago.id_plan_pago_fk = pp.id_plan_pago
                         
                 where preing.estado != ''cancelado'' and ';
@@ -129,7 +129,7 @@ BEGIN
                         	and op.estado_reg = ''activo'' and op.estado != ''anulado''
                         left join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago 
                         	and pp.estado_reg = ''activo'' and pp.estado != ''anulado'' and pp.nro_cuota = 1
-                        left join sci.tint_comprobante comp on pp.id_int_comprobante = comp.id_int_comprobante
+                        left join conta.tint_comprobante comp on pp.id_int_comprobante = comp.id_int_comprobante
                         where preing.estado != ''cancelado'' and ';
       
       --Definicion de la respuesta        

@@ -32,6 +32,34 @@ class ACTItem extends ACTbase {
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
+	function listarSaldoXItem() {
+        $this->objParam->defecto('ordenacion', 'id_item');
+
+        $this->objParam->defecto('dir_ordenacion', 'asc');
+        if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
+            $this->objReporte = new Reporte($this->objParam, $this);
+            $this->res = $this->objReporte->generarReporteListado('MODItem', 'listarSaldoXItem');
+        } else {            
+            $this->objFunc = $this->create('MODItem');
+            $this->res = $this->objFunc->listarSaldoXItem();
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+	
+	function listarSaldosXItems() {
+        $this->objParam->defecto('ordenacion', 'id_item');
+
+        $this->objParam->defecto('dir_ordenacion', 'asc');
+        if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
+            $this->objReporte = new Reporte($this->objParam, $this);
+            $this->res = $this->objReporte->generarReporteListado('MODItem', 'listarSaldosXItems');
+        } else {            
+            $this->objFunc = $this->create('MODItem');
+            $this->res = $this->objFunc->listarSaldosXItems();
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
     function listarItemNotBase() {
         $this->objParam->defecto('ordenacion', 'id_item');
         $this->objParam->defecto('dir_ordenacion', 'asc');

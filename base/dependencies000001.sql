@@ -2950,3 +2950,21 @@ CREATE UNIQUE INDEX talmacen_stock_idx ON alm.talmacen_stock
   USING btree (id_almacen, id_item);
   
 /***********************************F-DEP-JRR-ALM-0-12/01/2016*****************************************/
+
+/***********************************I-DEP-GSS-ALM-1-13/07/2016*****************************************/
+
+ALTER TABLE alm.tmovimiento_tipo_almacen
+  ADD CONSTRAINT fk_tmovimiento_tipo_almacen__id_movimiento_tipo FOREIGN KEY (id_movimiento_tipo)
+    REFERENCES alm.tmovimiento_tipo(id_movimiento_tipo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+ALTER TABLE alm.tmovimiento_tipo_almacen
+  ADD CONSTRAINT fk_tmovimiento_tipo_almacen__id_almacen FOREIGN KEY (id_almacen)
+    REFERENCES alm.talmacen(id_almacen)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+/***********************************F-DEP-GSS-ALM-1-13/07/2016*****************************************/

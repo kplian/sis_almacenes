@@ -29,6 +29,19 @@ class ACTMovimiento extends ACTbase {
 			$this->objParam->addFiltro("mov.id_movimiento in  (".$this->objParam->getParametro('ids').")");
 		}
 		
+		if($this->objParam->getParametro('pes_estado')=='borrador'){
+             $this->objParam->addFiltro("mov.estado_mov in (''borrador'')");
+        }
+        if($this->objParam->getParametro('pes_estado')=='en_aprobacion'){
+             $this->objParam->addFiltro("mov.estado_mov in (''vbarea'')");
+        }
+        if($this->objParam->getParametro('pes_estado')=='en_almacenes'){
+             $this->objParam->addFiltro("mov.estado_mov in (''prefin'')");
+        }
+		if($this->objParam->getParametro('pes_estado')=='entregado'){
+             $this->objParam->addFiltro("mov.estado_mov in (''finalizado'')");
+        }
+		
         if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
             $this->objReporte = new Reporte($this->objParam, $this);
             $this->res = $this->objReporte->generarReporteListado('MODMovimiento', 'listarMovimiento');
@@ -54,6 +67,12 @@ class ACTMovimiento extends ACTbase {
         } else {
             $this->res = $this->objFunc->modificarMovimiento();
         }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+	function insertarMovimientoREST() {
+        $this->objFunc = $this->create('MODMovimiento');
+        $this->res = $this->objFunc->insertarMovimientoREST();
+        
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 

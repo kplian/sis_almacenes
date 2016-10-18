@@ -1,6 +1,5 @@
---------------- SQL ---------------
-
-CREATE OR REPLACE FUNCTION alm.ft_almacen_usuario_sel (
+----------------------------- SQL ---------------------------------
+CREATE OR REPLACE FUNCTION alm.ft_movimiento_tipo_almacen_sel (
   p_administrador integer,
   p_id_usuario integer,
   p_tabla varchar,
@@ -10,10 +9,10 @@ RETURNS varchar AS
 $body$
 /**************************************************************************
  SISTEMA:		Sistema de Almacenes
- FUNCION: 		alm.ft_almacen_usuario_sel
- DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'alm.talmacen_usuario'
+ FUNCION: 		alm.ft_movimiento_tipo_almacen_sel
+ DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'alm.tmovimiento_tipo_almacen'
  AUTOR: 		Gonzalo Sarmiento Sejas
- FECHA:	        28-11-2012 14:52:50
+ FECHA:	        13-07-2016 19:37:32
  COMENTARIOS:	
 ***************************************************************************
  HISTORIAL DE MODIFICACIONES:
@@ -32,40 +31,39 @@ DECLARE
 			    
 BEGIN
 
-	v_nombre_funcion = 'alm.ft_almacen_usuario_sel';
+	v_nombre_funcion = 'alm.ft_movimiento_tipo_almacen_sel';
     v_parametros = pxp.f_get_record(p_tabla);
 
 	/*********************************    
- 	#TRANSACCION:  'SAL_ALMUSR_SEL'
+ 	#TRANSACCION:  'SAL_TPMOVALM_SEL'
  	#DESCRIPCION:	Consulta de datos
- 	#AUTOR:			Gonzalo Sarmiento Sejas
- 	#FECHA:		28-11-2012 14:52:50
+ 	#AUTOR:		Gonzalo Sarmiento Sejas
+ 	#FECHA:		13-07-2016 19:37:32
 	***********************************/
 
-	if(p_transaccion='SAL_ALMUSR_SEL')then
+	if(p_transaccion='SAL_TPMOVALM_SEL')then
      				
     	begin
     		--Sentencia de la consulta
 			v_consulta:='select
-						almusr.id_almacen_usuario,
-						almusr.id_usuario,
-						usualm.cuenta,
-                        PERSON.nombre_completo2 as desc_person,
-                        almusr.id_almacen,
-                        almusr.tipo,
-						almusr.estado_reg,
-						almusr.id_usuario_reg,
-						almusr.fecha_reg,
-						almusr.fecha_mod,
-						almusr.id_usuario_mod,
+						tpmovalm.id_movimiento_tipo_almacen,
+						tpmovalm.id_movimiento_tipo,
+						tpmovalm.id_almacen,
+                        al.nombre,
+						tpmovalm.estado_reg,
+						tpmovalm.id_usuario_reg,
+						tpmovalm.usuario_ai,
+						tpmovalm.fecha_reg,
+						tpmovalm.id_usuario_ai,
+						tpmovalm.fecha_mod,
+						tpmovalm.id_usuario_mod,
 						usu1.cuenta as usr_reg,
-						usu2.cuenta as usr_mod
-						from alm.talmacen_usuario almusr
-						inner join segu.tusuario usu1 on usu1.id_usuario = almusr.id_usuario_reg
-						left join segu.tusuario usu2 on usu2.id_usuario = almusr.id_usuario_mod
-					    inner join segu.tusuario usualm on usualm.id_usuario = almusr.id_usuario
-                        inner join segu.vpersona PERSON on PERSON.id_persona = usualm.id_persona
-				        where almusr.id_almacen = ' || v_parametros.id_almacen ||' and ';
+						usu2.cuenta as usr_mod	
+						from alm.tmovimiento_tipo_almacen tpmovalm
+                        inner join alm.talmacen al on al.id_almacen=tpmovalm.id_almacen
+						inner join segu.tusuario usu1 on usu1.id_usuario = tpmovalm.id_usuario_reg
+						left join segu.tusuario usu2 on usu2.id_usuario = tpmovalm.id_usuario_mod
+				        where  ';
 			
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -77,23 +75,22 @@ BEGIN
 		end;
 
 	/*********************************    
- 	#TRANSACCION:  'SAL_ALMUSR_CONT'
+ 	#TRANSACCION:  'SAL_TPMOVALM_CONT'
  	#DESCRIPCION:	Conteo de registros
- 	#AUTOR:			Gonzalo Sarmiento Sejas
- 	#FECHA:		28-11-2012 14:52:50
+ 	#AUTOR:		Gonzalo Sarmiento Sejas
+ 	#FECHA:		13-07-2016 19:37:32
 	***********************************/
 
-	elsif(p_transaccion='SAL_ALMUSR_CONT')then
+	elsif(p_transaccion='SAL_TPMOVALM_CONT')then
 
 		begin
 			--Sentencia de la consulta de conteo de registros
-			v_consulta:='select count(id_almacen_usuario)
-					    						from alm.talmacen_usuario almusr
-						inner join segu.tusuario usu1 on usu1.id_usuario = almusr.id_usuario_reg
-						left join segu.tusuario usu2 on usu2.id_usuario = almusr.id_usuario_mod
-					    inner join segu.tusuario usualm on usualm.id_usuario = almusr.id_usuario
-                        inner join segu.vpersona PERSON on PERSON.id_persona = usualm.id_persona
-				        where almusr.id_almacen = ' || v_parametros.id_almacen ||' and ';
+			v_consulta:='select count(id_movimiento_tipo_almacen)
+					    from alm.tmovimiento_tipo_almacen tpmovalm
+                        inner join alm.talmacen al on al.id_almacen=tpmovalm.id_almacen
+					    inner join segu.tusuario usu1 on usu1.id_usuario = tpmovalm.id_usuario_reg
+						left join segu.tusuario usu2 on usu2.id_usuario = tpmovalm.id_usuario_mod
+					    where ';
 			
 			--Definicion de la respuesta		    
 			v_consulta:=v_consulta||v_parametros.filtro;

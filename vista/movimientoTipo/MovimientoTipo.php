@@ -277,6 +277,11 @@ header("content-type:text/javascript; charset=UTF-8");
 			title : 'Cargos permitidos',
 			height : '40%',
 			cls : 'MovimientoTipoUo'
+		},{
+			url : '../../../sis_almacenes/vista/movimiento_tipo_almacen/MovimientoTipoAlmacen.php',
+			title : 'Almacenes permitidos',
+			height : '40%',
+			cls : 'MovimientoTipoAlmacen'
 		}]
 		
 		

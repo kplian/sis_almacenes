@@ -177,6 +177,48 @@ class MODItem extends MODbase {
 
         return $this->respuesta;
     }
+	
+	function listarSaldoXItem() {
+        $this->procedimiento = 'alm.ft_item_sel';
+        $this->transaccion = 'SAL_ITMSALDO_SEL';
+        $this->tipo_procedimiento = 'SEL';
+		$this->setCount(false);
+        
+        $this->setParametro('codigo', 'codigo', 'varchar');
+		$this->setParametro('id_almacen', 'id_almacen', 'integer');
+        
+       
+		$this->captura('id_item', 'int4');       
+        $this->captura('codigo', 'varchar');
+		$this->captura('saldo', 'numeric');
+
+        $this->armarConsulta();
+		
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
+	
+	function listarSaldosXItems() {
+        $this->procedimiento = 'alm.ft_item_sel';
+        $this->transaccion = 'SAL_ITMSSALDOS_SEL';
+        $this->tipo_procedimiento = 'SEL';
+		$this->setCount(false);
+        
+        $this->setParametro('codigos', 'codigos', 'varchar');
+		$this->setParametro('id_almacen', 'id_almacen', 'integer');
+               
+		$this->captura('id_item', 'int4');       
+        $this->captura('codigo', 'varchar');
+        $this->captura('nombre', 'varchar');
+		$this->captura('saldo', 'numeric');
+
+        $this->armarConsulta();
+		
+        $this->ejecutarConsulta();
+		
+        return $this->respuesta;
+    }
 
 }
 ?>
