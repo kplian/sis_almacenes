@@ -81,6 +81,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				text : 'Cancelar',
 				iconCls : 'block',
 				disabled : true,
+				grupo:[0,1,2],
 				handler : this.onBtnCancelar,
 				tooltip : '<b>Cancelar Movimiento</b>'
 			});
@@ -89,6 +90,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				text : 'Revertir a Borrador',
 				iconCls : 'breload2',
 				disabled : true,
+				grupo:[3],
 				handler : this.onBtnRevertir,
 				tooltip : '<b>Revertir Movimiento</b><br>Revierte un movimiento finalizado a Borrador'
 			});
