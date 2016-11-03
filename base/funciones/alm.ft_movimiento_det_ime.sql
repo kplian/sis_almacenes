@@ -28,6 +28,7 @@ DECLARE
   v_existencias			numeric;
   v_id_almacen			integer;
   v_estado_mov			varchar;
+  v_fecha_mov			  date;
   
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_det_ime';
@@ -41,7 +42,7 @@ BEGIN
     ***********************************/
 	if(p_transaccion='SAL_MOVDET_INS') then
     begin
-    	select mov.estado_mov into v_estado_mov
+    	select mov.estado_mov, mov.fecha_mov::date into v_estado_mov, v_fecha_mov
         from alm.tmovimiento mov
         where mov.id_movimiento = v_parametros.id_movimiento;
         
@@ -56,15 +57,13 @@ BEGIN
         where mov.id_movimiento = v_parametros.id_movimiento;
         
         --si es salida, revisas las existencias, ingresos - salidas
-        /*
+
         if (v_tipo_movimiento = 'salida') then
-        	v_existencias = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_id_almacen);
-            
-            if (v_existencias < v_parametros.cantidad_item) then
-            	raise exception '%', 'No existen suficientes unidades de este item en el almacen seleccionado';
+        	v_existencias = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_id_almacen, v_fecha_mov);
+            if (v_existencias < v_parametros.cantidad_solicitada) then
+            	raise exception '%', 'No existen suficientes unidades de este item en el almacen seleccionado (Disponible: '||v_existencias::integer||'; Total solicitado:'||v_parametros.cantidad_solicitada||')';
             end if;
         end if;
-        */
         
 		insert into alm.tmovimiento_det(
             id_usuario_reg,

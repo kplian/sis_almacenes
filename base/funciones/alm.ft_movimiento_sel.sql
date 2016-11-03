@@ -118,7 +118,8 @@ BEGIN
             	usu2.cuenta as usr_mod,
             	mov.fecha_mod,
             	mov.id_depto_conta,
-            	dpto.nombre as nombre_depto
+            	dpto.nombre as nombre_depto,
+            	mov.comail
             FROM alm.tmovimiento mov
             INNER JOIN alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen

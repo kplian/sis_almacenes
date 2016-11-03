@@ -53,20 +53,7 @@ header("content-type: text/javascript; charset=UTF-8");
                }];
 			this.initButtons=[this.cmbMovimientoTipo];
 			Phx.vista.Movimiento.superclass.constructor.call(this, config);
-			this.init();
-			//this.load({params:{start:0, limit:this.tam_pag}})
 
-			//Eventos
-			this.Cmp.tipo.on('select', this.onTipoSelect, this);
-			this.Cmp.id_movimiento_tipo.on('select', this.onMovimientoTipoSelect, this);
-			this.Cmp.solicitante.on('select', this.onSolicitanteSelect, this);
-			this.cmbMovimientoTipo.on('select', function(){
-			    if(this.validarFiltros()){
-	                  this.aplicarFiltros();
-	           	}},this
-			);
-			this.Cmp.id_proveedor.hide();
-			
 			this.addButton('btnReport', {
 				text : 'Reporte',
 				iconCls : 'bpdf32',
@@ -75,7 +62,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				handler : this.generaReporte,
 				tooltip : '<b>Reporte de Movimiento</b><br/>Generar el reporte del Movimiento Seleccionado.'
 			});
-	
+
 			//Botones
 			this.addButton('btnCancelar', {
 				text : 'Cancelar',
@@ -102,7 +89,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				handler : this.onBtnRevertirPreing,
 				tooltip : '<b>Revertir Preingreso</b><br>En caso de que el Ingreso haya sido generado desde un Preingreso, revierte todo el ingreso'
 			});
-			
+
 			this.addButton('diagrama_gantt',{
 				text:'',
 				iconCls: 'bgantt',
@@ -111,6 +98,29 @@ header("content-type: text/javascript; charset=UTF-8");
 				handler:this.diagramGantt,
 				tooltip: '<b>Diagrama Gantt de proceso macro</b>'
 			});
+
+			this.addButton('comail',{
+				text:'',
+				iconCls: 'bsendmail',
+				disabled:false,
+				grupo:[3],
+				handler:this.onRegistrarComail,
+				tooltip: '<b>Agregar numero comail</b>'
+			});
+
+			this.init();
+			//this.load({params:{start:0, limit:this.tam_pag}})
+
+			//Eventos
+			this.Cmp.tipo.on('select', this.onTipoSelect, this);
+			this.Cmp.id_movimiento_tipo.on('select', this.onMovimientoTipoSelect, this);
+			this.Cmp.solicitante.on('select', this.onSolicitanteSelect, this);
+			this.cmbMovimientoTipo.on('select', function(){
+			    if(this.validarFiltros()){
+	                  this.aplicarFiltros();
+	           	}},this
+			);
+			this.Cmp.id_proveedor.hide();
 			
 			this.Cmp.id_depto_conta.setVisible(false);
 			this.Cmp.id_depto_conta.disable();
@@ -714,7 +724,29 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			grid : true,
 			form : true
-		}, 
+		},
+		{
+			config:{
+				name: 'comail',
+				fieldLabel: 'Comail',
+				allowBlank: true,
+				anchor: '50%',
+				gwidth: 150,
+				maxLength:100,
+				/*renderer : function (value, p, record){
+					if(record.data['saldo_deposito']==0)
+						return String.format('{0}', '<h2 style="background-color:#B9BBC9;"><b>'+value+'</b></h2>');
+					else
+						return String.format('{0}', value);
+				}*/
+			},
+			type:'TextField',
+			filters:{pfiltro:'mov.comail',type:'string'},
+			bottom_filter: true,
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
         {
 			config : {
 				name : 'usr_reg',
@@ -866,6 +898,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			dateFormat : 'Y-m-d H:i:s'
 		},
 		{name : 'id_depto_conta',type : 'numeric'},
+		{name : 'comail',type : 'numeric'},
 		{name : 'nombre_depto',type : 'string'},
 			],
 		sortInfo : {
@@ -1029,6 +1062,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		onButtonEdit : function() {
 			Phx.vista.Movimiento.superclass.onButtonEdit.call(this);
 			this.Cmp.tipo.disable();
+
 			if (this.Cmp.tipo.value == 'salida') {
 				this.Cmp.solicitante.enable();
 				this.Cmp.solicitante.setVisible(true);

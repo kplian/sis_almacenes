@@ -159,7 +159,7 @@ BEGIN
       from alm.tmovimiento mov
       where mov.id_movimiento = v_parametros.id_movimiento;
         
-      if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
+      if (v_estado_mov = 'cancelado') then
           raise exception '%', 'El movimiento actual no puede ser modificado';
       end if;
        
@@ -177,7 +177,8 @@ BEGIN
             id_movimiento_origen = v_parametros.id_movimiento_origen,
             id_depto_conta = v_parametros.id_depto_conta,
             id_usuario_ai = v_parametros._id_usuario_ai,
-            usuario_ai = v_parametros._nombre_usuario_ai
+            usuario_ai = v_parametros._nombre_usuario_ai,
+            comail = v_parametros.comail
         where id_movimiento = v_parametros.id_movimiento;
         
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento modificado con exito');

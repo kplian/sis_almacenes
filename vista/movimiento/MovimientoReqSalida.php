@@ -35,13 +35,15 @@ Phx.vista.MovimientoReqSalida= {
 	
 	constructor: function(config) {
 		this.maestro = config;
+
     	Phx.vista.MovimientoReqSalida.superclass.constructor.call(this,config);
+
     	this.Cmp.id_funcionario.store.baseParams.tipo_filtro = 'usuario';
     	//Botón de finalización
     	this.addButton('fin_requerimiento',{text:'Finalizar',iconCls: 'badelante',disabled:true,handler:this.fin_requerimiento,tooltip: '<b>Finalizar</b>'});
 		//Creación de ventana para workflow
 		this.crearVentanaWF();
-    	
+
 	    this.iniciarEventos();
 		this.store.baseParams={tipo_interfaz:this.nombreVista};
 		this.store.baseParams.pes_estado = 'borrador';
@@ -59,7 +61,15 @@ Phx.vista.MovimientoReqSalida= {
         
         this.cmpFechaMov = this.getComponente('fecha_mov');
         this.cmpIdGestion = this.getComponente('id_gestion');
-        
+        this.cmpMovimientoTipo = this.getComponente('tipo');
+        this.cmpSubtipoMovimiento = this.getComponente('id_movimiento_tipo');
+        this.cmpAlmacen = this.getComponente('id_almacen');
+        this.cmpDescripcion = this.getComponente('descripcion');
+        this.cmpTipoSolicitante = this.getComponente('solicitante');
+        this.cmpFuncionario = this.getComponente('id_funcionario');
+        this.cmpObservaciones = this.getComponente('observaciones');
+        this.cmpComail = this.getComponente('comail');
+
         //inicio de eventos 
         this.cmpFechaMov.on('change',function(f){
              this.obtenerGestion(this.cmpFechaMov);
@@ -68,8 +78,15 @@ Phx.vista.MovimientoReqSalida= {
     },
          
     onButtonNew:function(){
-       Phx.vista.MovimientoReqSalida.superclass.onButtonNew.call(this); 
-              
+       Phx.vista.MovimientoReqSalida.superclass.onButtonNew.call(this);
+        this.mostrarComponente(this.cmpMovimientoTipo);
+        this.mostrarComponente(this.cmpFechaMov);
+        this.mostrarComponente(this.cmpSubtipoMovimiento);
+        this.mostrarComponente(this.cmpAlmacen);
+        this.mostrarComponente(this.cmpDescripcion);
+        this.mostrarComponente(this.cmpObservaciones);
+        this.ocultarComponente(this.cmpComail);
+
        //this.Cmp.fecha_mov.setValue(new Date());
        this.Cmp.fecha_mov.fireEvent('change');
        //Setea el tipo de movimiento a salida
@@ -125,7 +142,34 @@ Phx.vista.MovimientoReqSalida= {
              this.getBoton('del').disable();  
         }
         return tb;
-     }, 
+     },
+
+     onRegistrarComail:function(){
+
+         this.onButtonEdit();
+         this.ocultarComponente(this.cmpMovimientoTipo);
+         this.ocultarComponente(this.cmpFechaMov);
+         this.ocultarComponente(this.cmpSubtipoMovimiento);
+         this.ocultarComponente(this.cmpAlmacen);
+         this.ocultarComponente(this.cmpDescripcion);
+         this.ocultarComponente(this.cmpObservaciones);
+         this.ocultarComponente(this.cmpTipoSolicitante);
+         this.ocultarComponente(this.cmpFuncionario);
+         this.mostrarComponente(this.cmpComail);
+     },
+
+    onButtonEdit:function(){
+
+        var tb = Phx.vista.MovimientoReqSalida.superclass.onButtonEdit.call(this);
+        this.mostrarComponente(this.cmpMovimientoTipo);
+        this.mostrarComponente(this.cmpFechaMov);
+        this.mostrarComponente(this.cmpSubtipoMovimiento);
+        this.mostrarComponente(this.cmpAlmacen);
+        this.mostrarComponente(this.cmpDescripcion);
+        this.mostrarComponente(this.cmpObservaciones);
+        this.ocultarComponente(this.cmpComail);
+    },
+
      liberaMenu:function(){
         var tb = Phx.vista.MovimientoReqSalida.superclass.liberaMenu.call(this);
         if(tb){
