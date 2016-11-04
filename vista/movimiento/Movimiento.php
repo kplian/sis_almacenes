@@ -99,15 +99,6 @@ header("content-type: text/javascript; charset=UTF-8");
 				tooltip: '<b>Diagrama Gantt de proceso macro</b>'
 			});
 
-			this.addButton('comail',{
-				text:'',
-				iconCls: 'bsendmail',
-				disabled:false,
-				grupo:[3],
-				handler:this.onRegistrarComail,
-				tooltip: '<b>Agregar numero comail</b>'
-			});
-
 			this.init();
 			//this.load({params:{start:0, limit:this.tam_pag}})
 
@@ -1549,7 +1540,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			timeout:this.timeout,
 			scope:this
 		});         
-	}    
+	}
 
 })
 </script>

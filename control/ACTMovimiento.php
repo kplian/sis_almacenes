@@ -108,6 +108,9 @@ class ACTMovimiento extends ACTbase {
 
     function generarReporteMovimiento() {
         $idMovimiento = $this->objParam->getParametro('id_movimiento');
+
+        $idProcesoWf= $this->objParam->getParametro('id_proceso_wf');
+
 		$costos = $this->objParam->getParametro('costos');
         $tipoMovimiento = $this->objParam->getParametro('tipo');
         $tipoPersonalizado = $this->objParam->getParametro('nombre_movimiento_tipo');
@@ -121,7 +124,11 @@ class ACTMovimiento extends ACTbase {
         $nombreProveedor = $this->objParam->getParametro('nombre_proveedor');
         
         $dataSource = new DataSource();
-        $this->objParam->addParametroConsulta('filtro', ' movdet.id_movimiento = ' . $idMovimiento);
+        if($idMovimiento == ''){
+            $this->objParam->addParametroConsulta('filtro', ' mov.id_proceso_wf = ' . $idProcesoWf);
+        }else{
+            $this->objParam->addParametroConsulta('filtro', ' movdet.id_movimiento = ' . $idMovimiento);
+        }
         //$this->objParam->addParametroConsulta('ordenacion', 'cla.id_clasificacion');
         $this->objParam->addParametroConsulta('ordenacion', 'item.codigo');
         $this->objParam->addParametroConsulta('dir_ordenacion', 'asc');
@@ -131,7 +138,6 @@ class ACTMovimiento extends ACTbase {
         $resultRepMovimiento = $this->objFunc->listarReporteMovimiento($this->objParam);
         
         $resultData = $resultRepMovimiento->getDatos();
-		
         //1. En caso de que el movimiento sea un inventario Inicial
         if ($tipoMovimiento == "ingreso" && $tipoPersonalizado == "Inventario Inicial") {
             	
