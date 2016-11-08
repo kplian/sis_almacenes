@@ -715,6 +715,29 @@ header("content-type: text/javascript; charset=UTF-8");
 			},
 			grid : true,
 			form : true
+		},{
+			config : {
+				name : 'fecha_salida',
+				fieldLabel : 'Fecha Salida',
+				allowBlank : true,
+				gwidth : 100,
+				format : 'd/m/Y',
+				renderer: function(value, p, record){
+					if(value == null)
+						value = '';
+					else
+						value = value.dateFormat('d/m/Y');
+					return String.format('{0}',value);
+				}
+			},
+			type : 'DateField',
+			filters : {
+				pfiltro : 'mov.fecha_salida',
+				type : 'date'
+			},
+			id_grupo : 1,
+			grid : true,
+			form : true
 		},
 		{
 			config:{
@@ -723,15 +746,9 @@ header("content-type: text/javascript; charset=UTF-8");
 				allowBlank: true,
 				anchor: '50%',
 				gwidth: 150,
-				maxLength:100,
-				/*renderer : function (value, p, record){
-					if(record.data['saldo_deposito']==0)
-						return String.format('{0}', '<h2 style="background-color:#B9BBC9;"><b>'+value+'</b></h2>');
-					else
-						return String.format('{0}', value);
-				}*/
+				maxLength:100
 			},
-			type:'TextField',
+			type:'NumberField',
 			filters:{pfiltro:'mov.comail',type:'string'},
 			bottom_filter: true,
 			id_grupo:1,
@@ -887,6 +904,10 @@ header("content-type: text/javascript; charset=UTF-8");
 			name : 'fecha_mod',
 			type : 'date',
 			dateFormat : 'Y-m-d H:i:s'
+		},{
+			name : 'fecha_salida',
+			type : 'date',
+			dateFormat : 'Y-m-d'
 		},
 		{name : 'id_depto_conta',type : 'numeric'},
 		{name : 'comail',type : 'numeric'},
@@ -1053,7 +1074,8 @@ header("content-type: text/javascript; charset=UTF-8");
 		onButtonEdit : function() {
 			Phx.vista.Movimiento.superclass.onButtonEdit.call(this);
 			this.Cmp.tipo.disable();
-
+			this.Cmp.comail.setVisible(false);
+			this.Cmp.fecha_salida.setVisible(false);
 			if (this.Cmp.tipo.value == 'salida') {
 				this.Cmp.solicitante.enable();
 				this.Cmp.solicitante.setVisible(true);
@@ -1111,7 +1133,8 @@ header("content-type: text/javascript; charset=UTF-8");
 			Phx.vista.Movimiento.superclass.onButtonNew.call(this);
 			//valor por defecto
 			this.Cmp.solicitante.setValue('Funcionario')
-			
+			this.Cmp.comail.setVisible(false);
+			this.Cmp.fecha_salida.setVisible(false);
 			this.Cmp.tipo.enable();
 			this.Cmp.solicitante.enable();
 			this.Cmp.solicitante.setVisible(true);

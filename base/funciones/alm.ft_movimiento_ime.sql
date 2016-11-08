@@ -178,7 +178,8 @@ BEGIN
             id_depto_conta = v_parametros.id_depto_conta,
             id_usuario_ai = v_parametros._id_usuario_ai,
             usuario_ai = v_parametros._nombre_usuario_ai,
-            comail = v_parametros.comail
+            comail = v_parametros.comail,
+            fecha_salida = v_parametros.fecha_salida
         where id_movimiento = v_parametros.id_movimiento;
         
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Movimiento modificado con exito');

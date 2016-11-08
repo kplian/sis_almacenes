@@ -42,20 +42,20 @@ Phx.vista.MovimientoReqSalida= {
         this.addButton('btnChequeoDocumentosWf', {
             text: 'Documentos',
             iconCls: 'bchecklist',
-            disabled: false,
+            disabled: true,
             grupo:[0,3],
             handler: this.loadCheckDocumentosSolWf,
             tooltip: '<b>Documentos de la Solicitud</b><br/>Subir los documentos requeridos en la solicitud seleccionada.'
         });
 
-        this.addButton('comail',{
+        /*this.addButton('comail',{
             text:'',
             iconCls: 'bsendmail',
             disabled:false,
             grupo:[3],
             handler:this.onRegistrarComail,
             tooltip: '<b>Agregar numero comail</b>'
-        });
+        });*/
         
     	//Botón de finalización
     	this.addButton('fin_requerimiento',{text:'Finalizar',iconCls: 'badelante',disabled:true,handler:this.fin_requerimiento,tooltip: '<b>Finalizar</b>'});
@@ -76,17 +76,18 @@ Phx.vista.MovimientoReqSalida= {
 	},
     
     iniciarEventos:function(){
-        
+
         this.cmpFechaMov = this.getComponente('fecha_mov');
         this.cmpIdGestion = this.getComponente('id_gestion');
-        this.cmpMovimientoTipo = this.getComponente('tipo');
+        this.cmpComail = this.getComponente('comail');
+        /*this.cmpMovimientoTipo = this.getComponente('tipo');
         this.cmpSubtipoMovimiento = this.getComponente('id_movimiento_tipo');
         this.cmpAlmacen = this.getComponente('id_almacen');
         this.cmpDescripcion = this.getComponente('descripcion');
         this.cmpTipoSolicitante = this.getComponente('solicitante');
         this.cmpFuncionario = this.getComponente('id_funcionario');
         this.cmpObservaciones = this.getComponente('observaciones');
-        this.cmpComail = this.getComponente('comail');
+        */
 
         //inicio de eventos 
         this.cmpFechaMov.on('change',function(f){
@@ -97,13 +98,13 @@ Phx.vista.MovimientoReqSalida= {
          
     onButtonNew:function(){
        Phx.vista.MovimientoReqSalida.superclass.onButtonNew.call(this);
-        this.mostrarComponente(this.cmpMovimientoTipo);
+        /*this.mostrarComponente(this.cmpMovimientoTipo);
         this.mostrarComponente(this.cmpFechaMov);
         this.mostrarComponente(this.cmpSubtipoMovimiento);
         this.mostrarComponente(this.cmpAlmacen);
         this.mostrarComponente(this.cmpDescripcion);
         this.mostrarComponente(this.cmpObservaciones);
-        this.ocultarComponente(this.cmpComail);
+        this.ocultarComponente(this.cmpComail);*/
 
        //this.Cmp.fecha_mov.setValue(new Date());
        this.Cmp.fecha_mov.fireEvent('change');
@@ -153,15 +154,17 @@ Phx.vista.MovimientoReqSalida= {
 	    Phx.vista.MovimientoReqSalida.superclass.preparaMenu.call(this,n);
         if(data['estado_mov']== 'borrador' || data['estado_mov']=='Borrador'){
            this.getBoton('fin_requerimiento').enable();
+           this.getBoton('btnChequeoDocumentosWf').enable();
          }
         else{
              this.getBoton('fin_requerimiento').disable();
              this.getBoton('edit').disable();
              this.getBoton('del').disable();  
+             this.getBoton('btnChequeoDocumentosWf').enable();
         }
         return tb;
      },
-
+/*
      onRegistrarComail:function(){
 
          this.onButtonEdit();
@@ -174,7 +177,7 @@ Phx.vista.MovimientoReqSalida= {
          this.ocultarComponente(this.cmpTipoSolicitante);
          this.ocultarComponente(this.cmpFuncionario);
          this.mostrarComponente(this.cmpComail);
-     },
+     },*/
 
     loadCheckDocumentosSolWf:function() {
         var rec=this.sm.getSelected();
@@ -191,7 +194,7 @@ Phx.vista.MovimientoReqSalida= {
         )
     },
 
-    onButtonEdit:function(){
+    /*onButtonEdit:function(){
 
         var tb = Phx.vista.MovimientoReqSalida.superclass.onButtonEdit.call(this);
         this.mostrarComponente(this.cmpMovimientoTipo);
@@ -201,7 +204,7 @@ Phx.vista.MovimientoReqSalida= {
         this.mostrarComponente(this.cmpDescripcion);
         this.mostrarComponente(this.cmpObservaciones);
         this.ocultarComponente(this.cmpComail);
-    },
+    },*/
 
      liberaMenu:function(){
         var tb = Phx.vista.MovimientoReqSalida.superclass.liberaMenu.call(this);

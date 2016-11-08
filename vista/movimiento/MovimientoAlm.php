@@ -22,18 +22,61 @@ Phx.vista.MovimientoAlm = {
 	constructor: function(config) {
 	    this.maestro=config.maestro;
     	Phx.vista.MovimientoAlm.superclass.constructor.call(this,config);
-    	this.addButton('ini_estado',{argument: {operacion: 'inicio'},text:'Dev. a Borrador',iconCls: 'batras',disabled:true,handler:this.retroceder,tooltip: '<b>Retorna Movimiento al estado borrador</b>'});
+        this.addButton('ini_estado',{argument: {operacion: 'inicio'},text:'Dev. a Borrador',iconCls: 'batras',disabled:true,handler:this.retroceder,tooltip: '<b>Retorna Movimiento al estado borrador</b>'});
 	    this.addButton('ant_estado',{argument: {operacion: 'anterior'},text:'Anterior',iconCls: 'batras',disabled:true,handler:this.retroceder,tooltip: '<b>Pasar al Anterior Estado</b>'});
     	this.addButton('sig_estado',{text:'Finalizar',iconCls: 'badelante',disabled:true,handler:this.fin_requerimiento,tooltip: '<b>Finalizar Registro</b>'});
-		this.getBoton('btnRevertir').hide();
+        this.addButton('comail',{text:'Comail y Fecha Salida',iconCls: 'bsendmail',disabled:true,handler:this.onRegistrarComail,tooltip: '<b>Agregar numero comail y fecha salida</b>'});
+        this.getBoton('btnRevertir').hide();
 	    this.getBoton('btnCancelar').hide();
-	    this.store.baseParams={tipo_interfaz:this.nombreVista};
+        this.store.baseParams={tipo_interfaz:this.nombreVista};
 	    this.load({params:{start:0, limit:this.tam_pag}});
-	    
+	    this.iniciarEventos();
 	    //Creación de ventana para workflow
 		this.crearVentanaWF();
 	},
-    
+
+    iniciarEventos:function(){
+
+        this.cmpFechaMov = this.getComponente('fecha_mov');
+        this.cmpIdGestion = this.getComponente('id_gestion');
+        this.cmpMovimientoTipo = this.getComponente('tipo');
+        this.cmpSubtipoMovimiento = this.getComponente('id_movimiento_tipo');
+        this.cmpAlmacen = this.getComponente('id_almacen');
+        this.cmpDescripcion = this.getComponente('descripcion');
+        this.cmpTipoSolicitante = this.getComponente('solicitante');
+        this.cmpFuncionario = this.getComponente('id_funcionario');
+        this.cmpObservaciones = this.getComponente('observaciones');
+        this.cmpComail = this.getComponente('comail');
+        this.cmpFechaSalida = this.getComponente('fecha_salida');
+    },
+
+    onRegistrarComail:function(){
+
+        this.onButtonEdit();
+        this.ocultarComponente(this.cmpMovimientoTipo);
+        this.ocultarComponente(this.cmpFechaMov);
+        this.ocultarComponente(this.cmpSubtipoMovimiento);
+        this.ocultarComponente(this.cmpAlmacen);
+        this.ocultarComponente(this.cmpDescripcion);
+        this.ocultarComponente(this.cmpObservaciones);
+        this.ocultarComponente(this.cmpTipoSolicitante);
+        this.ocultarComponente(this.cmpFuncionario);
+        this.mostrarComponente(this.cmpComail);
+        this.mostrarComponente(this.cmpFechaSalida);
+    },
+
+    onButtonEdit:function(){
+
+        var tb = Phx.vista.MovimientoAlm.superclass.onButtonEdit.call(this);
+        /*this.mostrarComponente(this.cmpMovimientoTipo);
+        this.mostrarComponente(this.cmpFechaMov);
+        this.mostrarComponente(this.cmpSubtipoMovimiento);
+        this.mostrarComponente(this.cmpAlmacen);
+        this.mostrarComponente(this.cmpDescripcion);
+        this.mostrarComponente(this.cmpObservaciones);
+        this.ocultarComponente(this.cmpComail);*/
+    },
+
     sigEstado:function(){                   
 		var d= this.sm.getSelected().data;
            
@@ -189,6 +232,7 @@ Phx.vista.MovimientoAlm = {
             this.getBoton('ini_estado').enable();            
             this.getBoton('ant_estado').enable();
             this.getBoton('sig_estado').enable();
+            this.getBoton('comail').enable();
         }
        
         return tb 

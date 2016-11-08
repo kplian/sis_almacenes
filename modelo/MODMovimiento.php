@@ -52,6 +52,7 @@ class MODMovimiento extends MODbase {
 		$this->captura('id_depto_conta', 'integer');
         $this->captura('nombre_depto', 'varchar');
         $this->captura('comail', 'integer');
+        $this->captura('fecha_salida', 'date');
 
         $this->armarConsulta();
 		//echo $this->consulta;exit;
@@ -121,6 +122,7 @@ class MODMovimiento extends MODbase {
         $this->setParametro('id_movimiento_origen', 'id_movimiento_origen', 'integer');
 		$this->setParametro('id_depto_conta', 'id_depto_conta', 'integer');
 		$this->setParametro('comail', 'comail', 'integer');
+		$this->setParametro('fecha_salida', 'fecha_salida', 'date');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
