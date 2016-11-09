@@ -182,7 +182,9 @@ class ACTMovimiento extends ACTbase {
             foreach($resultData as $row) {
                 $costoTotal += $row['costo_total'];
 
-                $nombreFuncionario = $row['nombre_funcionario'];
+                $nombreSolicitante = $row['nombre_funcionario'];
+                $comail = $row['comail'];
+                $fechaSalida = $row['fecha_salida'];
             }
             $dataSource->setDataSet($resultData);
             $dataSource->putParameter('totalCosto', $costoTotal);
@@ -197,6 +199,9 @@ class ACTMovimiento extends ACTbase {
         $dataSource->putParameter('fechaRemision', $fechaRegMovimiento);
         $dataSource->putParameter('fechaMovimiento', $fechaMovimiento);
 		$dataSource->putParameter('costos', $costos);
+		$dataSource->putParameter('funcionario_solicitante', $nombreSolicitante);
+		$dataSource->putParameter('comail', $comail);
+		$dataSource->putParameter('fechaSalida',$fechaSalida);
 
         if ($nombreFuncionario != null && $nombreFuncionario != '') {
             $dataSource->putParameter('solicitante', $nombreFuncionario);

@@ -223,6 +223,7 @@ class MODMovimiento extends MODbase {
         $this->captura('costo_total', 'numeric');
 		
 		$this->captura('codigo_mov', 'varchar');
+		$this->captura('comail', 'integer');
 		$this->captura('nombre_almacen', 'varchar');
         $this->captura('tipo', 'varchar');
         $this->captura('nombre_movimiento_tipo', 'varchar');
@@ -233,6 +234,7 @@ class MODMovimiento extends MODbase {
         $this->captura('nombre_proveedor', 'varchar');
         $this->captura('fecha_mod', 'varchar');
 		$this->captura('cantidad_solicitada', 'numeric');
+        $this->captura('fecha_salida', 'varchar');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

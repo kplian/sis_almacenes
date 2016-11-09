@@ -18,7 +18,7 @@ class CustomReport extends TCPDF {
     public function Header() {
         $height = 6;
         $midHeight = 9;
-        $longHeight = 18;
+        $longHeight = 24;
 
         $x = $this->GetX();
         $y = $this->GetY();
@@ -69,8 +69,16 @@ class CustomReport extends TCPDF {
         $this->Cell($width1, $height, 'Página:', "B", 0, '', false, '', 0, false, 'T', 'C');
         $this->SetFont('', 'B');
         $this->Cell($w = $width2, $h = $height, $txt = $this->getAliasNumPage() . ' de ' . $this->getAliasNbPages(), $border = "B", $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        
-        
+
+
+        $this->SetFont('', '');
+        $y += $height;
+        $this->SetXY($x, $y);
+        $this->setCellPaddings(2);
+        $this->Cell($width1, $height, 'Comail:', "B", 0, '', false, '', 0, false, 'T', 'C');
+        $this->SetFont('', 'B');
+        $this->Cell($w = $width2, $h = $height, $dataSource->getParameter('comail'), $border = "B", $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+
         $wNro = 10;
         $wCodigo = 15;
         $wDescripcionItem = 90;
@@ -156,7 +164,7 @@ Class RMovimiento extends Report {
         //$hMedium
         $pdf->Cell($w = 30, $h = 1, $txt = 'SOLICITANTE: ', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
         $pdf->SetFont('', '');
-        $pdf->Cell($w = 60, $h = 1, $txt = $tmpDatos[0]['nombre_funcionario'], $border = 0, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Cell($w = 60, $h = 1, $txt = $dataSource->getParameter('funcionario_solicitante'), $border = 0, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
         $pdf->Ln();
         $pdf->Ln();
 
@@ -183,14 +191,14 @@ Class RMovimiento extends Report {
         } else {
             $pdf->Ln();
         }
-        
-        //Fecha del movimiento
-        $pdf->SetFont('', 'B');
-        $pdf->Cell($w = 30, $h = $hMedium, $txt = 'FECHA ' . strtoupper($tmpDatos[0]['tipo']) . ':', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        $pdf->SetFont('', '');
-        //$fechaMovimiento = new DateTime($dataSource->getParameter('fechaMovimiento'));
-        $pdf->Cell($w = 60, $h = $hMedium, $txt = $tmpDatos[0]['fecha_mov'], $border = 0, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
-        
+
+        if ($tmpDatos[0]['tipo'] == "salida") {
+            //Fecha del movimiento
+            $pdf->SetFont('', 'B');
+            $pdf->Cell($w = 30, $h = $hMedium, $txt = 'FECHA ' . strtoupper($tmpDatos[0]['tipo']) . ':', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+            $pdf->SetFont('', '');
+            $pdf->Cell($w = 60, $h = $hMedium, $txt = $dataSource->getParameter('fechaSalida'), $border = 0, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        }
         //Fecha de la ultima modificacion
         /*$pdf->SetFont('', 'B');
         $pdf->Cell($w = 30, $h = $hMedium, $txt = 'FECHA REMISION: ', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
