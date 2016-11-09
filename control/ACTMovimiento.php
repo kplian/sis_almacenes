@@ -33,7 +33,7 @@ class ACTMovimiento extends ACTbase {
              $this->objParam->addFiltro("mov.estado_mov in (''borrador'')");
         }
         if($this->objParam->getParametro('pes_estado')=='en_aprobacion'){
-             $this->objParam->addFiltro("mov.estado_mov in (''vbarea'')");
+             $this->objParam->addFiltro("mov.estado_mov in (''vbarea'',''autorizacion'')");
         }
         if($this->objParam->getParametro('pes_estado')=='en_almacenes'){
              $this->objParam->addFiltro("mov.estado_mov in (''prefin'')");
@@ -136,8 +136,9 @@ class ACTMovimiento extends ACTbase {
         $this->objParam->addParametroConsulta('puntero', 0);
         $this->objFunc = $this->create('MODMovimiento');
         $resultRepMovimiento = $this->objFunc->listarReporteMovimiento($this->objParam);
-        
+
         $resultData = $resultRepMovimiento->getDatos();
+
         //1. En caso de que el movimiento sea un inventario Inicial
         if ($tipoMovimiento == "ingreso" && $tipoPersonalizado == "Inventario Inicial") {
             	
@@ -148,7 +149,6 @@ class ACTMovimiento extends ACTbase {
             $totalCostoClasificacion = 0;
             $mainDataSet = array();
             $costoTotal = 0;
-			
             foreach ($resultData as $row) {
                 if ($row['nombre_clasificacion'] != $lastNombreClasificacion) {
                     $costoTotal += $totalCostoClasificacion;
@@ -181,6 +181,8 @@ class ACTMovimiento extends ACTbase {
             $costoTotal = 0;
             foreach($resultData as $row) {
                 $costoTotal += $row['costo_total'];
+
+                $nombreFuncionario = $row['nombre_funcionario'];
             }
             $dataSource->setDataSet($resultData);
             $dataSource->putParameter('totalCosto', $costoTotal);
@@ -195,8 +197,7 @@ class ACTMovimiento extends ACTbase {
         $dataSource->putParameter('fechaRemision', $fechaRegMovimiento);
         $dataSource->putParameter('fechaMovimiento', $fechaMovimiento);
 		$dataSource->putParameter('costos', $costos);
-		
-        
+
         if ($nombreFuncionario != null && $nombreFuncionario != '') {
             $dataSource->putParameter('solicitante', $nombreFuncionario);
         } else {

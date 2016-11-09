@@ -154,6 +154,15 @@ Class RMovimiento extends Report {
         $pdf->SetFontSize(7.5);
         $pdf->SetFont('', 'B');
         //$hMedium
+        $pdf->Cell($w = 30, $h = 1, $txt = 'SOLICITANTE: ', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->SetFont('', '');
+        $pdf->Cell($w = 60, $h = 1, $txt = $tmpDatos[0]['nombre_funcionario'], $border = 0, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+        $pdf->Ln();
+        $pdf->Ln();
+
+        $pdf->SetFontSize(7.5);
+        $pdf->SetFont('', 'B');
+        //$hMedium
         $pdf->Cell($w = 30, $h = 1, $txt = 'MOTIVO: ', $border = 0, $ln = 0, $align = 'R', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
         $pdf->SetFont('', '');
         $pdf->Cell($w = 60, $h = 1, $txt = $tmpDatos[0]['nombre_movimiento_tipo'], $border = 0, $ln = 0, $align = 'L', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
@@ -257,8 +266,8 @@ Class RMovimiento extends Report {
                 
                 $pdf->Ln();
                 $pdf->Ln();
-                $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = $dataSource->getParameter('solicitante'), $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = '', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
+                $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = $dataSource->getParameter('solicitante'), $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 $pdf->Ln();
                 $pdf->Cell($w = $wColumn1, $h = $hMin, $txt = 'ENTREGUE CONFORME', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
                 $pdf->Cell($w = $wColumn2, $h = $hMin, $txt = 'RECIBI CONFORME', $border = 0, $ln = 0, $align = 'C', $fill = false, $link = '', $stretch = 0, $ignore_min_height = false, $calign = 'T', $valign = 'M');
