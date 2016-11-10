@@ -99,6 +99,15 @@ header("content-type: text/javascript; charset=UTF-8");
 				tooltip: '<b>Diagrama Gantt de proceso macro</b>'
 			});
 
+			this.addButton('btnChequeoDocumentosWf', {
+				text: 'Documentos',
+				iconCls: 'bchecklist',
+				disabled: true,
+				grupo:[0,3],
+				handler: this.loadCheckDocumentosSolWf,
+				tooltip: '<b>Documentos de la Solicitud</b><br/>Subir los documentos requeridos en la solicitud seleccionada.'
+			});
+
 			this.init();
 			//this.load({params:{start:0, limit:this.tam_pag}})
 
@@ -227,7 +236,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				allowBlank : false,
 				emptyText : 'Subtipo...',
 				store : new Ext.data.JsonStore({
-					url : '../../sis_almacenes/control/MovimientoTipo/listarMovimientoTipo',
+					url : '../../sis_almacenes/control/MovimientoTipo/listarMovimientoTipoCargo',
 					id : 'id_movimiento_tipo',
 					root : 'datos',
 					sortInfo : {
@@ -975,6 +984,23 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.id_almacen.modificado=true;
 			this.Cmp.id_almacen.setValue('');
 		},
+
+
+		loadCheckDocumentosSolWf:function() {
+			var rec=this.sm.getSelected();
+			rec.data.nombreVista = this.nombreVista;
+			Phx.CP.loadWindows('../../../sis_workflow/vista/documento_wf/DocumentoWf.php',
+					'Chequear documento del WF',
+					{
+						width:'90%',
+						height:500
+					},
+					rec.data,
+					this.idContenedor,
+					'DocumentoWf'
+			)
+		},
+
 		onSolicitanteSelect : function(e, component, index) {
 			if (e.value == 'funcionario') {
 				this.getComponente('id_proveedor').disable();
@@ -999,6 +1025,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			var data = this.getSelectedData();
 			this.getBoton('btnReport').enable();
 			this.getBoton('diagrama_gantt').enable();
+			this.getBoton('btnChequeoDocumentosWf').enable();
 			
 			if (data.estado_mov == 'finalizado' || data.estado_mov == 'cancelado') {				
 				this.getBoton('btnCancelar').disable();

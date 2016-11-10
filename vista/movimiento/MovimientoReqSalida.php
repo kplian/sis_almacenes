@@ -39,14 +39,6 @@ Phx.vista.MovimientoReqSalida= {
     	Phx.vista.MovimientoReqSalida.superclass.constructor.call(this,config);
 
     	this.Cmp.id_funcionario.store.baseParams.tipo_filtro = 'usuario';
-        this.addButton('btnChequeoDocumentosWf', {
-            text: 'Documentos',
-            iconCls: 'bchecklist',
-            disabled: true,
-            grupo:[0,3],
-            handler: this.loadCheckDocumentosSolWf,
-            tooltip: '<b>Documentos de la Solicitud</b><br/>Subir los documentos requeridos en la solicitud seleccionada.'
-        });
 
         /*this.addButton('comail',{
             text:'',
@@ -154,13 +146,11 @@ Phx.vista.MovimientoReqSalida= {
 	    Phx.vista.MovimientoReqSalida.superclass.preparaMenu.call(this,n);
         if(data['estado_mov']== 'borrador' || data['estado_mov']=='Borrador'){
            this.getBoton('fin_requerimiento').enable();
-           this.getBoton('btnChequeoDocumentosWf').enable();
          }
         else{
              this.getBoton('fin_requerimiento').disable();
              this.getBoton('edit').disable();
              this.getBoton('del').disable();  
-             this.getBoton('btnChequeoDocumentosWf').enable();
         }
         return tb;
      },
@@ -178,21 +168,6 @@ Phx.vista.MovimientoReqSalida= {
          this.ocultarComponente(this.cmpFuncionario);
          this.mostrarComponente(this.cmpComail);
      },*/
-
-    loadCheckDocumentosSolWf:function() {
-        var rec=this.sm.getSelected();
-        rec.data.nombreVista = this.nombreVista;
-        Phx.CP.loadWindows('../../../sis_workflow/vista/documento_wf/DocumentoWf.php',
-            'Chequear documento del WF',
-            {
-                width:'90%',
-                height:500
-            },
-            rec.data,
-            this.idContenedor,
-            'DocumentoWf'
-        )
-    },
 
     /*onButtonEdit:function(){
 
