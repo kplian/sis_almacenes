@@ -30,6 +30,26 @@ class MODClasificacion extends MODbase {
 
         return $this->respuesta;
     }
+	
+	
+	function listarClasificacionRopaTrabajo() {
+        $this->procedimiento = 'alm.ft_clasificacion_sel';
+        $this->transaccion = 'ALM_ITEMRTRAB_SEL';
+        $this->tipo_procedimiento = 'SEL';
+		
+		$this->captura('id_clasificacion', 'integer');
+        $this->captura('codigo', 'varchar');
+        $this->captura('nombre', 'varchar');
+        $this->captura('descripcion', 'varchar');
+		$this->captura('tiene_genero', 'varchar');
+		$this->captura('tiene_tamano', 'varchar');
+
+        $this->armarConsulta();		
+		
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
 
     function listarClasificacionArb() {
         $this->procedimiento = 'alm.ft_clasificacion_sel';

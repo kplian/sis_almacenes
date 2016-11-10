@@ -21,6 +21,20 @@ class ACTClasificacion extends ACTbase {
         $this->res = $this->objFunc->listarClasificacion();
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+	
+	function listarClasificacionRopaTrabajo() {
+        $this->objParam->defecto('ordenacion', 'codigo');
+
+        $this->objParam->defecto('dir_ordenacion', 'asc');
+        if ($this->objParam->getParametro('filtro') != '') {
+            $this->objParam->addFiltro(" (lower(it.nombre) like ''%" . str_replace(' ', '%', strtolower($this->objParam->getParametro('filtro')))  ."%'' or lower(it.descripcion) like ''%" . str_replace(' ', '%', strtolower($this->objParam->getParametro('filtro')))  ."%'')");
+        }
+		
+        $this->objFunc = $this->create('MODClasificacion');
+        
+        $this->res = $this->objFunc->listarClasificacionRopaTrabajo();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
     function listarClasificacionArb() {
         $node = $this->objParam->getParametro('node');
