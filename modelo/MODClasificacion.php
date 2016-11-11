@@ -51,6 +51,22 @@ class MODClasificacion extends MODbase {
         return $this->respuesta;
     }
 
+    function listarClasificacionRopaTrabajoTalla() {
+        $this->procedimiento = 'alm.ft_clasificacion_sel';
+        $this->transaccion = 'ALM_ITEMRTMED_SEL';
+        $this->tipo_procedimiento = 'SEL';
+
+        $this->captura('id_clasificacion', 'integer');
+        $this->captura('codigo', 'varchar');
+        $this->captura('nombre', 'varchar');
+
+        $this->armarConsulta();
+
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
+
     function listarClasificacionArb() {
         $this->procedimiento = 'alm.ft_clasificacion_sel';
         $this->setCount(false);

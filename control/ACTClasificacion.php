@@ -36,6 +36,19 @@ class ACTClasificacion extends ACTbase {
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
+    function listarClasificacionRopaTrabajoTalla() {
+        $this->objParam->defecto('ordenacion', 'codigo');
+
+        $this->objParam->defecto('dir_ordenacion', 'asc');
+        if ($this->objParam->getParametro('filtro') != '') {
+            $this->objParam->addFiltro(" (it.codigo) similar to ''%(" . str_replace(',', '|', strtolower($this->objParam->getParametro('filtro')))  .")%''");
+        }
+
+        $this->objFunc = $this->create('MODClasificacion');
+        $this->res = $this->objFunc->listarClasificacionRopaTrabajoTalla();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+    
     function listarClasificacionArb() {
         $node = $this->objParam->getParametro('node');
 		$clasificacion = $this->objParam->getParametro('clasificacion');								
@@ -87,7 +100,8 @@ class ACTClasificacion extends ACTbase {
         array_push($arreglo, array('nombre' => 'cls', 'valor' => 'nombre'));
         array_push($arreglo, array('nombre' => 'qtip', 'valores' => '<b>#codigo#</b><br/>#nombre#'));
 
-        $this->res->addNivelArbol('tipo_nodo', 'item_codificado', array('leaf' => true, 'draggable' => false, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo,$arreglo_valores);        $this->res->addNivelArbol('tipo_nodo', 'item', array('leaf' => true,
+        $this->res->addNivelArbol('tipo_nodo', 'item_codificado', array('leaf' => true, 'draggable' => false, 'allowDelete' => false, 'allowEdit' => false, 'cls' => 'folder', 'tipo_nodo' => 'item', 'icon' => '../../../lib/imagenes/gear.png'), $arreglo,$arreglo_valores);
+        $this->res->addNivelArbol('tipo_nodo', 'item', array('leaf' => true,
         												'draggable' => true,
         												'allowDelete' => false,
         												'allowEdit' => false,
