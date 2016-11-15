@@ -258,5 +258,12 @@ class ACTMovimiento extends ACTbase {
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
+    function decimalesSolicitud() {
+
+        $this->objFunc = $this->create('MODMovimiento');
+        $this->res = $this->objFunc->decimalesSolicitud();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 }
 ?>

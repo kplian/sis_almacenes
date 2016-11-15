@@ -704,3 +704,14 @@ CREATE TABLE alm.tmovimiento_tipo_almacen (
 ) INHERITS (pxp.tbase) WITHOUT OIDS;
 
 /***********************************F-SCP-GSS-ALM-1-13/07/2016*****************************************/
+
+
+/***********************************I-SCP-GSS-ALM-1-14/11/2016*****************************************/
+
+ALTER TABLE alm.titem
+  ADD COLUMN cantidad_max_sol INTEGER;
+
+COMMENT ON COLUMN alm.titem.cantidad_max_sol
+IS 'cantidad maxima por solicitud';
+
+/***********************************F-SCP-GSS-ALM-1-14/11/2016*****************************************/

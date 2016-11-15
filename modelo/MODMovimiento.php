@@ -61,6 +61,23 @@ class MODMovimiento extends MODbase {
         return $this->respuesta;
     }
 
+    function decimalesSolicitud() {
+        $this->procedimiento = 'alm.ft_movimiento_sel';
+        $this->transaccion = 'SAL_DECSOL_SEL';
+        $this->tipo_procedimiento = 'SEL';
+
+        $this->setParametro('cd_cantidad_decimales','cd_cantidad_decimales','varchar');
+
+        $this->captura('variable', 'varchar');
+        $this->captura('valor', 'varchar');
+        $this->captura('descripcion', 'varchar');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        return $this->respuesta;
+    }
+
     function insertarMovimiento() {
         $this->procedimiento = 'alm.ft_movimiento_ime';
         $this->transaccion = 'SAL_MOV_INS';

@@ -505,6 +505,38 @@ BEGIN
 			return v_consulta;
      end;
 
+  /*********************************
+     #TRANSACCION:  'SAL_DECSOL_SEL'
+     #DESCRIPCION:  Consulta de datos
+     #AUTOR:        Gonzalo Sarmiento
+     #FECHA:        14-11-2016
+    ***********************************/
+
+  elsif(p_transaccion='SAL_DECSOL_SEL')then
+      begin
+
+          v_consulta:='select vg.variable, vg.valor, vg.descripcion
+                      from pxp.variable_global vg
+                      where variable='''||v_parametros.cd_cantidad_decimales||'''';
+          return v_consulta;
+      end;
+
+  /*********************************
+     #TRANSACCION:  'SAL_DECSOL_CONT'
+     #DESCRIPCION:  Consulta de datos
+     #AUTOR:        Gonzalo Sarmiento
+     #FECHA:        14-11-2016
+    ***********************************/
+
+  elsif(p_transaccion='SAL_DECSOL_CONT')then
+      begin
+
+          v_consulta:='select count(id_variable_global)
+                      from pxp.variable_global vg
+                      where variable='''||v_parametros.cd_cantidad_decimales||'''';
+          return v_consulta;
+      end;
+
   else
 
       raise exception 'Procedimiento no encontrado';

@@ -1101,6 +1101,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		onButtonEdit : function() {
 			Phx.vista.Movimiento.superclass.onButtonEdit.call(this);
 			this.Cmp.tipo.disable();
+			this.Cmp.id_movimiento_tipo.disable();
 			this.Cmp.comail.setVisible(false);
 			this.Cmp.fecha_salida.setVisible(false);
 			if (this.Cmp.tipo.value == 'salida') {

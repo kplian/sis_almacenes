@@ -30,6 +30,7 @@ class MODItem extends MODbase {
         $this->captura('id_unidad_medida', 'integer');
         $this->captura('codigo_unidad', 'varchar');
 		$this->captura('precio_ref', 'numeric');
+        $this->captura('cantidad_max_sol', 'numeric');
 		$this->captura('id_moneda', 'integer');
 		$this->captura('desc_moneda', 'varchar');
 		$this->captura('id_almacen', 'text');
@@ -85,6 +86,7 @@ class MODItem extends MODbase {
         $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
 		$this->setParametro('precio_ref', 'precio_ref', 'numeric');
 		$this->setParametro('id_almacen', 'id_almacen', 'varchar');
+        $this->setParametro('cantidad_max_sol', 'cantidad_max_sol', 'numeric');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -108,6 +110,7 @@ class MODItem extends MODbase {
         $this->setParametro('id_unidad_medida', 'id_unidad_medida', 'integer');
 		$this->setParametro('precio_ref', 'precio_ref', 'numeric');
 		$this->setParametro('id_almacen', 'id_almacen', 'varchar');
+        $this->setParametro('cantidad_max_sol', 'cantidad_max_sol', 'numeric');
 
         $this->armarConsulta();
         $this->ejecutarConsulta();

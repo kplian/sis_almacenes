@@ -14,6 +14,9 @@ header("content-type: text/javascript; charset=UTF-8");
 		constructor: function(config) {
 			this.maestro = config.maestro;
 			Phx.vista.MovimientoDetalle.superclass.constructor.call(this, config);
+
+			this.obtenerVariableGlobalCantidad();
+			
 			this.init();
 			this.grid.getTopToolbar().disable();
 			this.grid.getBottomToolbar().disable();
@@ -483,6 +486,35 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.Cmp.costo_unitario.allowBlank=true;
 			}
 		},
+
+		obtenerVariableGlobalCantidad:function(){
+			Phx.CP.loadingShow();
+			Ext.Ajax.request({
+				url:'../../sis_almacenes/control/Movimiento/DecimalesSolicitud',
+				params:{cd_cantidad_decimales:'cd_cantidad_decimales'},
+				success:this.successVariable,
+				failure: this.conexionFailure,
+				timeout:this.timeout,
+				scope:this
+			});
+		},
+
+		successVariable:function(resp){
+			Phx.CP.loadingHide();
+			var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+			if(reg.total !== '0'){
+				console.log(reg.datos[0].valor);
+				console.log(this.Cmp.cantidad_solicitada.allowDecimals);
+				if (reg.datos[0].valor == 'no')
+					this.Cmp.cantidad_solicitada.allowDecimals=false;
+				else
+					this.Cmp.cantidad_solicitada.allowDecimals=true;
+			}else{
+				alert('Ocurrió al obtener la variable decimales solicitud')
+			}
+			console.log(this.Cmp.cantidad_solicitada.allowDecimals);
+		},
+
 		onButtonNew : function() {
 			Phx.vista.MovimientoDetalle.superclass.onButtonNew.call(this);
 			this.Cmp.fecha_caducidad.disable();								
@@ -513,6 +545,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				this.Cmp.costo_unitario.setVisible(false);
 				this.Cmp.costo_unitario.allowBlank=true;
 			}
+
 		}
 	})
 </script>

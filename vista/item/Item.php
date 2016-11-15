@@ -284,6 +284,20 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid:true,
 			form:true
 		},{
+				config:{
+					name: 'cantidad_max_sol',
+					fieldLabel: 'Cantidad Maxima por Solicitud',
+					allowBlank: false,
+					anchor: '80%',
+					gwidth: 100,
+					maxLength:10
+				},
+				type:'NumberField',
+				filters:{pfiltro:'item.cantidad_max_sol',type:'numeric'},
+				id_grupo:1,
+				grid:true,
+				form:true
+		},{
 			config:{
 				name: 'id_moneda',
 				fieldLabel: 'Moneda',
@@ -334,7 +348,10 @@ header("content-type: text/javascript; charset=UTF-8");
         },{
 			name : 'precio_ref',
 			type : 'numeric'
-		}, {
+		},{
+			name : 'cantidad_max_sol',
+			type : 'integer'
+		},{
             name : 'id_moneda',
             type : 'integer'
         }, {
