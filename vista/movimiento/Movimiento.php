@@ -341,6 +341,34 @@ header("content-type: text/javascript; charset=UTF-8");
 			grid : true,
 			form : true
 		}, {
+				config : {
+					name : 'nro_tramite',
+					fieldLabel : 'Nro Tramite',
+					allowBlank : true,
+					anchor : '100%',
+					gwidth : 160,
+					maxLength : 30,
+					renderer: function(value, p, record){
+						var aux;
+						if(record.data.tipo=='salida'){
+							aux='<b><font color="brown">';
+						}
+						else {
+							aux='<b><font color="green">';
+						}
+						aux = aux +value+'</font></b>';
+						return String.format('{0}', aux);
+					}
+				},
+				type : 'TextField',
+				filters : {
+					pfiltro : 'mov.nro_tramite',
+					type : 'string'
+				},
+				id_grupo : 1,
+				grid : true,
+				form : false
+			},{
 			config : {
 				name : 'codigo',
 				fieldLabel : 'Código',
@@ -878,6 +906,9 @@ header("content-type: text/javascript; charset=UTF-8");
 			dateFormat : 'Y-m-d H:i:s'
 		}, {
 			name : 'codigo',
+			type : 'string'
+		}, {
+			name : 'nro_tramite',
 			type : 'string'
 		}, {
 			name : 'descripcion',

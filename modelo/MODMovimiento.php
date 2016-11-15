@@ -53,6 +53,7 @@ class MODMovimiento extends MODbase {
         $this->captura('nombre_depto', 'varchar');
         $this->captura('comail', 'integer');
         $this->captura('fecha_salida', 'date');
+        $this->captura('nro_tramite', 'varchar');
 
         $this->armarConsulta();
 		//echo $this->consulta;exit;

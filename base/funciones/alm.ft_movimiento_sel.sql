@@ -121,13 +121,15 @@ BEGIN
             	mov.id_depto_conta,
             	dpto.nombre as nombre_depto,
                 mov.comail,
-                mov.fecha_salida
+                mov.fecha_salida,
+                pw.nro_tramite
             FROM alm.tmovimiento mov
             INNER JOIN alm.tmovimiento_tipo movtip on movtip.id_movimiento_tipo = mov.id_movimiento_tipo
             INNER JOIN alm.talmacen almo on almo.id_almacen = mov.id_almacen
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
 
             LEFT JOIN wf.testado_wf ew on  ew.id_estado_wf = mov.id_estado_wf and ew.estado_reg = ''activo''
+            LEFT JOIN wf.tproceso_wf pw on pw.id_proceso_wf=mov.id_proceso_wf
 
             LEFT JOIN orga.vfuncionario fun on fun.id_funcionario = mov.id_funcionario
             LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
@@ -208,6 +210,7 @@ BEGIN
             INNER JOIN segu.tusuario usu1 on usu1.id_usuario = mov.id_usuario_reg
 
             LEFT JOIN wf.testado_wf ew on  ew.id_estado_wf = mov.id_estado_wf and ew.estado_reg = ''activo''
+            LEFT JOIN wf.tproceso_wf pw on pw.id_proceso_wf=mov.id_proceso_wf
 
             LEFT JOIN orga.vfuncionario fun on fun.id_funcionario = mov.id_funcionario
             LEFT JOIN param.vproveedor pro on pro.id_proveedor = mov.id_proveedor
