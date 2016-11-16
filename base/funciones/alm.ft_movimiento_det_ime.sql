@@ -28,13 +28,17 @@ DECLARE
   v_existencias			numeric;
   v_id_almacen			integer;
   v_estado_mov			varchar;
-  v_fecha_mov			  date;
-  
+  v_fecha_mov			date;
+  v_total_cantidad_sol	numeric;
+  v_nombre_item			varchar;
+  v_cantidad_max_sol	numeric;
+  v_cantidad_anterior	numeric;
+
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_det_ime';
   v_parametros=pxp.f_get_record(p_tabla);
-  
-  /*********************************    
+
+  /*********************************
      #TRANSACCION:  'SAL_MOVDET_INS'
      #DESCRIPCION:  Insercion de registros
      #AUTOR:        Ariel Ayaviri Omonte
@@ -45,26 +49,42 @@ BEGIN
     	select mov.estado_mov, mov.fecha_mov::date into v_estado_mov, v_fecha_mov
         from alm.tmovimiento mov
         where mov.id_movimiento = v_parametros.id_movimiento;
-        
+
         if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
         	raise exception '%', 'No se pueden hacer modificaciones a las depencias del movimiento actual';
         end if;
-    	
+
     	--revisar q tipo de movimiento es: ingreso o salida
     	select movtip.tipo, mov.id_almacen into v_tipo_movimiento, v_id_almacen
         from alm.tmovimiento_tipo movtip
         inner join alm.tmovimiento mov on mov.id_movimiento_tipo = movtip.id_movimiento_tipo
         where mov.id_movimiento = v_parametros.id_movimiento;
-        
+
         --si es salida, revisas las existencias, ingresos - salidas
 
         if (v_tipo_movimiento = 'salida') then
-        	v_existencias = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_id_almacen, v_fecha_mov);
-            if (v_existencias < v_parametros.cantidad_solicitada) then
-            	raise exception '%', 'No existen suficientes unidades de este item en el almacen seleccionado (Disponible: '||v_existencias::integer||'; Total solicitado:'||v_parametros.cantidad_solicitada||')';
+        	select sum(cantidad_solicitada) into v_total_cantidad_sol
+            from alm.tmovimiento_det
+            where id_movimiento=v_parametros.id_movimiento
+            and id_item=v_parametros.id_item;
+
+            v_total_cantidad_sol = COALESCE(v_total_cantidad_sol,0) + v_parametros.cantidad_solicitada;
+
+            select nombre, cantidad_max_sol into v_nombre_item, v_cantidad_max_sol
+            from alm.titem
+            where id_item=v_parametros.id_item;
+
+            IF v_total_cantidad_sol > v_cantidad_max_sol AND v_cantidad_max_sol IS NOT NULL THEN
+            	raise exception 'El monto solicitado % del item " % " excede el maximo de cantidad solicitada por item %', v_total_cantidad_sol, v_nombre_item, v_cantidad_max_sol;
+            END IF;
+
+            v_existencias = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_id_almacen, v_fecha_mov);
+            if (v_existencias < v_total_cantidad_sol) then
+            	raise exception '%', 'No existen suficientes unidades de este item en el almacen seleccionado (Disponible: '||v_existencias::integer||'; Total solicitado:'||v_total_cantidad_sol||')';
             end if;
         end if;
-        
+
+
 		insert into alm.tmovimiento_det(
             id_usuario_reg,
             fecha_reg,
@@ -90,7 +110,7 @@ BEGIN
             v_parametros.observaciones,
             v_parametros.id_concepto_ingas
         ) RETURNING id_movimiento_det into v_id_movimiento_det;
-        
+
         insert into alm.tmovimiento_det_valorado (
             id_usuario_reg,
             fecha_reg,
@@ -108,13 +128,13 @@ BEGIN
             v_parametros.costo_unitario,
             v_parametros.cantidad_item
         );
-        
+
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'mensaje','Detalle de movimiento almacenado(a) con exito (id_movimiento_det'||v_id_movimiento_det||')');
         v_respuesta=pxp.f_agrega_clave(v_respuesta,'id_movimiento_det',v_id_movimiento_det::varchar);
         return v_respuesta;
-		
+
     end;
-    /*********************************    
+    /*********************************
      #TRANSACCION:  'SAL_MOVDET_MOD'
      #DESCRIPCION:  Modificacion de registros
      #AUTOR:        Ariel Ayaviri Omonte
@@ -122,13 +142,49 @@ BEGIN
     ***********************************/
     elseif (p_transaccion='SAL_MOVDET_MOD') then
     begin
-    	
-    	select mov.estado_mov into v_estado_mov
+
+    	select mov.estado_mov, mov.fecha_mov into v_estado_mov, v_fecha_mov
         from alm.tmovimiento mov
         where mov.id_movimiento = v_parametros.id_movimiento;
-        
+
         if (v_estado_mov = 'cancelado' or v_estado_mov = 'finalizado') then
         	raise exception '%', 'El detalle de movimiento actual no puede ser modificado';
+        end if;
+
+        --revisar q tipo de movimiento es: ingreso o salida
+    	select movtip.tipo, mov.id_almacen into v_tipo_movimiento, v_id_almacen
+        from alm.tmovimiento_tipo movtip
+        inner join alm.tmovimiento mov on mov.id_movimiento_tipo = movtip.id_movimiento_tipo
+        where mov.id_movimiento = v_parametros.id_movimiento;
+
+        --si es salida, revisas las existencias, ingresos - salidas
+
+        if (v_tipo_movimiento = 'salida') then
+        	select sum(cantidad_solicitada) into v_total_cantidad_sol
+            from alm.tmovimiento_det
+            where id_movimiento=v_parametros.id_movimiento
+            and id_item=v_parametros.id_item;
+
+            select cantidad_solicitada into v_cantidad_anterior
+            from alm.tmovimiento_det
+            where id_movimiento_det=v_parametros.id_movimiento_det;
+
+            v_total_cantidad_sol = COALESCE(v_total_cantidad_sol,0) + v_parametros.cantidad_solicitada - v_cantidad_anterior;
+
+            select nombre, cantidad_max_sol into v_nombre_item, v_cantidad_max_sol
+            from alm.titem
+            where id_item=v_parametros.id_item;
+
+            IF v_total_cantidad_sol > v_cantidad_max_sol THEN
+            	raise exception 'El monto solicitado % del item " % " excede el maximo de cantidad solicitada por item %', v_total_cantidad_sol, v_nombre_item, v_cantidad_max_sol;
+            END IF;
+
+            v_existencias = alm.f_get_saldo_fisico_item(v_parametros.id_item, v_id_almacen, v_fecha_mov);
+
+            if (v_existencias < v_total_cantidad_sol) then
+            	raise exception '%', 'No existen suficientes unidades de este item en el almacen seleccionado (Disponible: '||v_existencias::integer||'; Total solicitado:'||v_total_cantidad_sol||')';
+            end if;
+
         end if;
         
     	update alm.tmovimiento_det set

@@ -491,7 +491,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			Phx.CP.loadingShow();
 			Ext.Ajax.request({
 				url:'../../sis_almacenes/control/Movimiento/DecimalesSolicitud',
-				params:{cd_cantidad_decimales:'cd_cantidad_decimales'},
+				params:{alm_cantidad_decimales:'alm_cantidad_decimales'},
 				success:this.successVariable,
 				failure: this.conexionFailure,
 				timeout:this.timeout,

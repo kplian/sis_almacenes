@@ -63,6 +63,7 @@ BEGIN
                     item.id_unidad_medida,
                 	umed.codigo as codigo_unidad,
                 	item.precio_ref,
+                	item.cantidad_max_sol,
                 	item.id_moneda,
                 	mon.codigo as desc_moneda,
                 	(select pxp.list(alms.id_almacen::varchar) 

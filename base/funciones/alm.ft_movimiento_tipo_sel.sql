@@ -23,6 +23,7 @@ DECLARE
   v_parametros 		record;
   v_respuesta		varchar;
   v_filtro			varchar;
+  v_tipo_movimiento_cargo	varchar;
 BEGIN
   v_nombre_funcion='alm.ft_movimiento_tipo_sel';
   v_parametros=pxp.f_get_record(p_tabla);
@@ -84,8 +85,9 @@ BEGIN
     ***********************************/
 	elsif(p_transaccion='SAL_MOVTIPCAR_SEL')then
   	begin
+    	v_tipo_movimiento_cargo = pxp.f_get_variable_global('alm_tipo_movimiento_segun_cargo');
 
-    	IF p_administrador !=1 THEN
+    	IF p_administrador !=1 AND v_tipo_movimiento_cargo = 'si' THEN
            v_filtro = 'inner join alm.tmovimiento_tipo_uo mtuo on mtuo.id_movimiento_tipo = movtip.id_movimiento_tipo
            			   inner join orga.vfuncionario_cargo fun on fun.id_uo=mtuo.id_uo and fun.id_funcionario='||v_parametros.id_funcionario_usu||'';
          ELSE
