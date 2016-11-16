@@ -67,7 +67,7 @@ class MODMovimiento extends MODbase {
         $this->transaccion = 'SAL_DECSOL_SEL';
         $this->tipo_procedimiento = 'SEL';
 
-        $this->setParametro('cd_cantidad_decimales','cd_cantidad_decimales','varchar');
+        $this->setParametro('alm_cantidad_decimales','alm_cantidad_decimales','varchar');
 
         $this->captura('variable', 'varchar');
         $this->captura('valor', 'varchar');

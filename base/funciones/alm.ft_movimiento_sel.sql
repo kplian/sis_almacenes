@@ -520,7 +520,7 @@ BEGIN
 
           v_consulta:='select vg.variable, vg.valor, vg.descripcion
                       from pxp.variable_global vg
-                      where variable='''||v_parametros.cd_cantidad_decimales||'''';
+                      where variable='''||v_parametros.alm_cantidad_decimales||'''';
           return v_consulta;
       end;
 
@@ -536,7 +536,7 @@ BEGIN
 
           v_consulta:='select count(id_variable_global)
                       from pxp.variable_global vg
-                      where variable='''||v_parametros.cd_cantidad_decimales||'''';
+                      where variable='''||v_parametros.alm_cantidad_decimales||'''';
           return v_consulta;
       end;
 
