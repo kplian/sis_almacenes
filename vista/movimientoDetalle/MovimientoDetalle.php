@@ -15,7 +15,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.maestro = config.maestro;
 			Phx.vista.MovimientoDetalle.superclass.constructor.call(this, config);
 
-			this.obtenerVariableGlobalCantidad();
+			//this.obtenerVariableGlobalCantidad();
 			
 			this.init();
 			this.grid.getTopToolbar().disable();
@@ -503,8 +503,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			Phx.CP.loadingHide();
 			var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
 			if(reg.total !== '0'){
-				console.log(reg.datos[0].valor);
-				console.log(this.Cmp.cantidad_solicitada.allowDecimals);
 				if (reg.datos[0].valor == 'no')
 					this.Cmp.cantidad_solicitada.allowDecimals=false;
 				else
@@ -512,7 +510,6 @@ header("content-type: text/javascript; charset=UTF-8");
 			}else{
 				alert('Ocurrió al obtener la variable decimales solicitud')
 			}
-			console.log(this.Cmp.cantidad_solicitada.allowDecimals);
 		},
 
 		onButtonNew : function() {

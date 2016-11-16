@@ -20,29 +20,35 @@ DECLARE
   v_parametros 		record;
   v_consulta 		varchar;
   v_respuesta 		varchar;
+  v_cant_sol		varchar;
 BEGIN
   v_nombre_funcion = 'alm.ft_movimiento_det_sel';
   v_parametros = pxp.f_get_record(p_tabla);
-  
-  /*********************************    
+
+  /*********************************
      #TRANSACCION:  'SAL_MOVDET_SEL'
      #DESCRIPCION:  Consulta de datos
      #AUTOR:        Ariel Ayaviri Omonte
      #FECHA:        19-02-2013
-    ***********************************/ 
-    
+    ***********************************/
+
 	if(p_transaccion='SAL_MOVDET_SEL') then
   	begin
+    	IF pxp.f_get_variable_global('alm_cantidad_decimales') = 'no' THEN
+        	v_cant_sol = ' round(movdet.cantidad) as cantidad_item, round(movdet.cantidad_solicitada), ';
+        ELSE
+        	v_cant_sol = ' movdet.cantidad as cantidad_item, movdet.cantidad_solicitada, ';
+        END IF;
+
     	v_consulta:='
-	    select 
+	    select
      		movdet.id_movimiento_det,
                 movdet.id_movimiento,
-                movdet.id_item,                    
+                movdet.id_item,
                 item.nombre as nombre_item,
-                umed.codigo as codigo_unidad,
-                movdet.cantidad as cantidad_item,
-		movdet.cantidad_solicitada,
-                movdet.costo_unitario,
+                umed.codigo as codigo_unidad,'
+                ||v_cant_sol||
+                'movdet.costo_unitario,
                 movdet.fecha_caducidad,
                 usu1.cuenta as usr_reg,
                 movdet.fecha_reg,
