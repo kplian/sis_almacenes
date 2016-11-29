@@ -170,7 +170,7 @@ BEGIN
         end if;
 
         --Verificar que la fecha no sea anterior al ultimo registro finalizado.
-        select COALESCE(max(mov.fecha_salida),CURRENT_DATE) into v_fecha_mov_ultima
+        select COALESCE(max(mov.fecha_salida),v_fecha_salida) into v_fecha_mov_ultima
         from alm.tmovimiento mov
         inner join alm.tmovimiento_tipo mt
         on mt.id_movimiento_tipo = mov.id_movimiento_tipo
@@ -179,13 +179,24 @@ BEGIN
             and mt.tipo = v_tipo_mov
             and mov.id_almacen = (p_parametros->'id_almacen')::integer;
 
-    	IF v_fecha_salida is NULL and va_codigo_estado[1] = 'finalizado' THEN
-        	raise exception 'Debe ingresar fecha de salida';
-        END IF;
+    	  IF v_tipo_mov = 'salida' THEN
+        
+        	IF v_codigo_mov_tipo = 'SALTRNSF' THEN
+            	v_fecha_salida = v_fecha_mov;
+            END IF;
 
-        if (date(v_fecha_salida) < date(v_fecha_mov_ultima)) and va_codigo_estado[1] = 'finalizado' then
-          raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
-        end if;
+        	IF v_fecha_salida is NULL and va_codigo_estado[1] = 'finalizado' THEN
+        		raise exception 'Debe ingresar fecha de salida';
+        	END IF;
+
+            if (date(v_fecha_salida) < date(v_fecha_mov_ultima)) and va_codigo_estado[1] = 'finalizado' then
+          		raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
+        	end if;
+        ELSE
+        	if (date(v_fecha_mov) < date(v_fecha_mov_ultima)) and va_codigo_estado[1] = 'finalizado' then
+          		raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
+        	end if;
+        END IF;
 
         --Verificación de existencias y algunos errores
         select po_errores, po_contador, po_alertas, po_saldo_total

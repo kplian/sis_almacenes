@@ -84,16 +84,16 @@ header("content-type: text/javascript; charset=UTF-8");
 						direction : 'ASC'
 					},
 					totalProperty : 'total',
-					fields : ['id_item', 'nombre', 'codigo', 'desc_clasificacion', 'codigo_unidad'],
+					fields : ['id_item', 'nombre', 'codigo', 'desc_clasificacion', 'codigo_unidad', 'descripcion'],
 					remoteSort : true,
 					baseParams : {
-						par_filtro : 'item.nombre#item.codigo#cla.nombre'
+						par_filtro : 'item.nombre#item.codigo#cla.nombre#item.descripcion'
 					}
 				}),
 				valueField : 'id_item',
 				displayField : 'nombre',
 				gdisplayField : 'nombre_item',
-				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
+				tpl : '<tpl for="."><div class="x-combo-list-item"><p>Nombre: {nombre}</p><p>Descripcion.: {descripcion}</p><p>Código: {codigo}</p><p>Clasif.: {desc_clasificacion}</p></div></tpl>',
 				hiddenName : 'id_item',
 				forceSelection : true,
 				typeAhead : false,
