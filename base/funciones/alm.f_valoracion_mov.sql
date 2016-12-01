@@ -178,7 +178,7 @@ BEGIN
                 v_saldo_cantidad = v_saldo_cantidad - v_cantidad_valorada;
                 
                 if v_cont > 100 then
-                	raise exception 'Error al valorar: bucle infinito';
+                	raise exception 'Error al valorar: bucle infinito. Revisar el saldo de existencias del item %', g_registros.nombre_item;
                 end if;
                 
                 v_cont = v_cont +1;
