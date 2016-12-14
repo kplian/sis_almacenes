@@ -1413,3 +1413,12 @@ from alm.tpreingreso pre
 where alm.tpreingreso_det.id_preingreso = pre.id_preingreso
 and pre.estado = 'borrador';
 /***********************************F-DAT-RCM-ALM-0-05/05/2015****************************************/
+
+/***********************************I-DAT-GSS-ALM-0-14/12/2016****************************************/
+
+INSERT INTO pxp.variable_global ("variable", "valor", "descripcion")
+VALUES (E'alm_habilitar_fecha_tope', E'no', E'bandera para indicar si estara activo o no la fecha tope de solcitudes de salidas de almacen');
+INSERT INTO pxp.variable_global ("variable", "valor", "descripcion")
+VALUES (E'alm_fecha_tope_solicitudes', E'13-12-2016', E'fecha tope de solicitudes de salida de almacenes');
+
+/***********************************F-DAT-GSS-ALM-0-14/12/2016****************************************/

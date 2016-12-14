@@ -112,6 +112,8 @@ DECLARE
     v_id_movimiento_det				integer;
     v_id_tipo_estado_wf				integer;
     v_id_funcionario_wf				integer;
+    v_tipo_movimiento	varchar;
+    v_codigo_movimiento	varchar;
 
 BEGIN
 
@@ -291,13 +293,22 @@ BEGIN
   elseif(p_transaccion='SAL_MOV_MOD')then
     begin
 
-      select mov.estado_mov into v_estado_mov
+      select mov.estado_mov, mvt.tipo, mvt.codigo into v_estado_mov, v_tipo_movimiento, v_codigo_movimiento
       from alm.tmovimiento mov
+      inner join alm.tmovimiento_tipo mvt on mvt.id_movimiento_tipo=mov.id_movimiento_tipo
       where mov.id_movimiento = v_parametros.id_movimiento;
 
       if (v_estado_mov = 'cancelado') then
           raise exception '%', 'El movimiento actual no puede ser modificado';
       end if;
+
+      IF pxp.f_get_variable_global('alm_habilitar_fecha_tope') = 'si' THEN
+      	IF v_parametros.fecha_mov::date > pxp.f_get_variable_global('alm_fecha_tope_solicitudes')::date THEN
+          IF v_tipo_movimiento = 'salida' AND v_codigo_movimiento != 'SALNORSERB' THEN
+              raise exception 'No se permite hacer solicitudes de salidas de almacenes, debido a que se realiza cierre de gestion';
+          END IF;
+      	END IF;
+      END IF;
 
       update alm.tmovimiento set
           id_usuario_mod = p_id_usuario,
