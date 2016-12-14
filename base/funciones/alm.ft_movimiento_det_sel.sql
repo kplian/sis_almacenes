@@ -56,7 +56,7 @@ BEGIN
                 movdet.fecha_mod,
                 item.codigo as codigo_item,
                 (movdet.cantidad*movdet.costo_unitario) as costo_total,
-                item.observaciones,
+                movdet.observaciones,
                 movdet.id_concepto_ingas,
                 cig.desc_ingas as desc_concepto_ingas
             from alm.tmovimiento_det movdet
