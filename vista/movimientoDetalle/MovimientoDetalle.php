@@ -462,7 +462,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.fecha_caducidad.disable();
 			this.Cmp.fecha_caducidad.setVisible(false);
 			this.Cmp.cantidad_solicitada.setVisible(true);
-			this.Cmp.observaciones.setVisible(false);
+			this.Cmp.observaciones.setVisible(true);
 
 			
 			//Habilita concpto ingas solo para ingresos
@@ -519,7 +519,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.Cmp.fecha_caducidad.setVisible(false);								
 			this.Cmp.cantidad_item.setVisible(false);
 			this.Cmp.cantidad_solicitada.setVisible(true);
-			this.Cmp.observaciones.setVisible(false);
+			this.Cmp.observaciones.setVisible(true);
 			
 			//Habilita concpto ingas solo para ingresos
 			if(this.maestro.tipo=='ingreso'){
