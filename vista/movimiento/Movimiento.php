@@ -362,10 +362,11 @@ header("content-type: text/javascript; charset=UTF-8");
 				},
 				type : 'TextField',
 				filters : {
-					pfiltro : 'mov.nro_tramite',
+					pfiltro : 'pw.nro_tramite',
 					type : 'string'
 				},
 				id_grupo : 1,
+				bottom_filter: true,
 				grid : true,
 				form : false
 			},{
@@ -394,6 +395,7 @@ header("content-type: text/javascript; charset=UTF-8");
 				type : 'string'
 			},
 			id_grupo : 1,
+			bottom_filter: true,
 			grid : true,
 			form : false
 		}, {
@@ -755,7 +757,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		},{
 			config : {
 				name : 'fecha_salida',
-				fieldLabel : 'Fecha Salida',
+				fieldLabel : 'Fecha Ingreso/Salida',
 				allowBlank : true,
 				gwidth : 100,
 				format : 'd/m/Y',

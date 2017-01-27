@@ -25,7 +25,7 @@ Phx.vista.MovimientoAlm = {
         this.addButton('ini_estado',{argument: {operacion: 'inicio'},text:'Dev. a Borrador',iconCls: 'batras',disabled:true,handler:this.retroceder,tooltip: '<b>Retorna Movimiento al estado borrador</b>'});
 	    this.addButton('ant_estado',{argument: {operacion: 'anterior'},text:'Anterior',iconCls: 'batras',disabled:true,handler:this.retroceder,tooltip: '<b>Pasar al Anterior Estado</b>'});
     	this.addButton('sig_estado',{text:'Finalizar',iconCls: 'badelante',disabled:true,handler:this.fin_requerimiento,tooltip: '<b>Finalizar Registro</b>'});
-        this.addButton('comail',{text:'Comail y Fecha Salida',iconCls: 'bsendmail',disabled:true,handler:this.onRegistrarComail,tooltip: '<b>Agregar numero comail y fecha salida</b>'});
+        this.addButton('comail',{text:'Comail y Fecha Ingreso/Salida',iconCls: 'bsendmail',disabled:true,handler:this.onRegistrarComail,tooltip: '<b>Agregar numero comail y fecha ingreso/salida</b>'});
         this.getBoton('btnRevertir').hide();
 	    this.getBoton('btnCancelar').hide();
         this.store.baseParams={tipo_interfaz:this.nombreVista};

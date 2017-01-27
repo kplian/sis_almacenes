@@ -179,9 +179,9 @@ BEGIN
             and mt.tipo = v_tipo_mov
             and mov.id_almacen = (p_parametros->'id_almacen')::integer;
 
-    	  IF v_tipo_mov = 'salida' THEN
-        
-        	IF v_codigo_mov_tipo = 'SALTRNSF' THEN
+    	IF v_tipo_mov = 'salida' THEN
+
+        	IF v_codigo_mov_tipo = 'SALTRNSF' OR v_codigo_mov_tipo= 'INVFIN' THEN
             	v_fecha_salida = v_fecha_mov;
             END IF;
 
@@ -190,14 +190,13 @@ BEGIN
         	END IF;
 
             if (date(v_fecha_salida) < date(v_fecha_mov_ultima)) and va_codigo_estado[1] = 'finalizado' then
-          		raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
+          		raise exception 'La fecha de salida no debe ser anterior a la fecha de salida del ultimo movimiento finalizado %',v_fecha_mov_ultima;
         	end if;
         ELSE
-        	if (date(v_fecha_mov) < date(v_fecha_mov_ultima)) and va_codigo_estado[1] = 'finalizado' then
-          		raise exception '%', 'La fecha del movimiento no debe ser anterior al ultimo movimiento finalizado';
+        	if (date(v_fecha_salida) < date(v_fecha_mov_ultima)) and va_codigo_estado[1] = 'finalizado' then
+          		raise exception 'La fecha de ingreso no debe ser anterior a la fecha de ingreso del ultimo movimiento finalizado %',v_fecha_mov_ultima;
         	end if;
         END IF;
-
         --Verificación de existencias y algunos errores
         select po_errores, po_contador, po_alertas, po_saldo_total
         into v_errores, v_contador, v_alertas_exis, v_saldo_total
