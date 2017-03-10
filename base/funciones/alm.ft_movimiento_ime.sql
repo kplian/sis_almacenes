@@ -169,7 +169,7 @@ BEGIN
     	select
         v_parametros.id_movimiento_tipo,
         v_parametros.id_almacen,
-        v_parametros.id_funcionario,
+        v_parametros.id_funcionario_aprobador as id_funcionario,
         NULL,
         NULL,
         v_parametros.fecha_mov,

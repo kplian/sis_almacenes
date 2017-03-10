@@ -41,7 +41,9 @@ BEGIN
 	        	select 
 				itm.id_item,
 				itm.codigo,
-				itm.nombre,
+				case when itm.codigo like ''3.4.1%'' then itm.descripcion
+		    	when itm.codigo like ''3.4.2%'' then itm.descripcion
+            	else itm.nombre end as nombre,
 				umed.codigo unidad_medida,
 				(alm.f_get_codigo_clasificacion_rec(itm.id_clasificacion,''padres'') || '' - ''||cla.nombre)::varchar clasificacion,
 				alm.f_get_saldo_fisico_item(itm.id_item, '||p_id_almacen||', date('''|| p_fecha_hasta||''')) cantidad,

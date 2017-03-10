@@ -83,9 +83,9 @@ BEGIN
         elsif lower(v_parametros.tipo_interfaz) = 'movimientovb' then
         	if p_administrador !=1 then
             	v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' )
-            				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+            				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'',''pendiente'') and ';
             else
-            	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
+            	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'',''pendiente'') and ';
             end if;
 
         end if;

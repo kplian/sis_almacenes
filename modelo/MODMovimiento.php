@@ -114,6 +114,7 @@ class MODMovimiento extends MODbase {
         $this->setParametro('fecha_mov', 'fecha_mov', 'date');
         $this->setParametro('descripcion', 'descripcion', 'varchar'); 		
 		$this->setParametro('detalle','detalle','text');
+		$this->setParametro('id_funcionario_aprobador','id_funcionario_aprobador','integer');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
