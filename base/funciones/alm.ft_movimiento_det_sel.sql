@@ -46,6 +46,7 @@ BEGIN
                 movdet.id_movimiento,
                 movdet.id_item,
                 item.nombre as nombre_item,
+                item.descripcion,
                 umed.codigo as codigo_unidad,'
                 ||v_cant_sol||
                 'movdet.costo_unitario,

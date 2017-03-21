@@ -24,6 +24,7 @@ class MODMovimientoDetalle extends MODbase {
         $this->captura('id_movimiento', 'int4');
         $this->captura('id_item', 'int4');
         $this->captura('nombre_item', 'varchar');
+        $this->captura('descripcion', 'varchar');
         $this->captura('codigo_unidad', 'varchar');
         $this->captura('cantidad_item', 'numeric');
         $this->captura('cantidad_solicitada', 'numeric');
