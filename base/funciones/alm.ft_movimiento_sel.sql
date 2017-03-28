@@ -243,6 +243,7 @@ BEGIN
         	select
             	item.codigo,
                 item.nombre,
+                item.descripcion as descripcion_item,
                 umed.codigo as unidad_medida,
                 item.id_clasificacion,
                 cla.nombre as nombre_clasificacion,
@@ -277,6 +278,7 @@ BEGIN
     	v_consulta:=v_consulta||v_parametros.filtro;
         v_consulta = v_consulta || ' group by item.codigo,
                 item.nombre,
+                item.descripcion,
                 umed.codigo,
                 item.id_clasificacion,
                 cla.nombre,

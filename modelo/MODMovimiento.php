@@ -234,6 +234,7 @@ class MODMovimiento extends MODbase {
 
         $this->captura('codigo', 'varchar');
         $this->captura('nombre', 'varchar');
+        $this->captura('descripcion_item', 'varchar');
         $this->captura('unidad_medida', 'varchar');
         $this->captura('id_clasificacion', 'integer');
         $this->captura('nombre_clasificacion', 'varchar');
