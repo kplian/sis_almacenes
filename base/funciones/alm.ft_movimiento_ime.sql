@@ -165,11 +165,10 @@ BEGIN
         from param.tgestion g
         where g.gestion = to_char(v_parametros.fecha_mov,'YYYY')::integer;
 
-
     	select
         v_parametros.id_movimiento_tipo,
         v_parametros.id_almacen,
-        v_parametros.id_funcionario_aprobador as id_funcionario,
+        v_parametros.id_funcionario,
         NULL,
         NULL,
         v_parametros.fecha_mov,
@@ -240,6 +239,34 @@ BEGIN
                     v_registros.cantidad
                 );
         end loop;
+
+		select
+        v_id_movimiento as id_movimiento,
+        v_parametros.id_almacen as id_almacen,
+        'verificar'::varchar as operacion,
+        NULL as id_funcionario_wf,
+        NULL as fecha_mov,
+        NULL as id_tipo_estado,
+        NULL as obs
+        into g_registros;
+
+        --Llama a la función de registro del movimiento
+        v_respuesta = alm.f_movimiento_workflow_principal(p_id_usuario,hstore(g_registros));
+
+        v_id_tipo_estado_wf = pxp.f_obtiene_clave_valor(v_respuesta,'id_tipo_estado_wf','','nada','valor')::integer;
+
+        select
+        v_id_movimiento as id_movimiento,
+        v_parametros.id_almacen as id_almacen,
+        'siguiente'::varchar as operacion,
+        v_parametros.id_funcionario_aprobador as id_funcionario_wf,
+        NULL as fecha_mov,
+        v_id_tipo_estado_wf as id_tipo_estado,
+        NULL as obs
+        into g_registros;
+
+        --Llama a la función de registro del movimiento
+        v_respuesta = alm.f_movimiento_workflow_principal(p_id_usuario,hstore(g_registros));
 
         select
         v_id_movimiento as id_movimiento,
