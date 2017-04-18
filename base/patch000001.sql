@@ -724,8 +724,16 @@ IS 'cantidad maxima por solicitud';
 
 --------------- SQL --------------- se olvidaron agregar esta columna
 
+--------------- SQL ---------------
+
 ALTER TABLE alm.tmovimiento
-  ADD COLUMN comail VARCHAR;  
+  ADD COLUMN comail INTEGER;
+  
+  --------------- SQL ---------------
+
+ALTER TABLE alm.tmovimiento
+  ADD COLUMN fecha_salida DATE;
+  
 
 /***********************************F-SCP-RAC-ALM-1-14/04/2017*****************************************/
 
