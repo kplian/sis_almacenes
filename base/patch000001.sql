@@ -690,7 +690,7 @@ ALTER TABLE alm.talmacen
 CREATE TYPE alm.detalle_movimiento AS (
   codigo_item VARCHAR(50),
   cantidad NUMERIC(18,6)
-);
+);  
 
 /***********************************F-SCP-JRR-ALM-0-23/06/2016*****************************************/
 
@@ -711,7 +711,21 @@ CREATE TABLE alm.tmovimiento_tipo_almacen (
 ALTER TABLE alm.titem
   ADD COLUMN cantidad_max_sol INTEGER;
 
-COMMENT ON COLUMN alm.titem.cantidad_max_sol
+COMMENT ON COLUMN alm.titem.cantidad_max_sol 
 IS 'cantidad maxima por solicitud';
 
 /***********************************F-SCP-GSS-ALM-1-14/11/2016*****************************************/
+
+
+
+
+/***********************************I-SCP-RAC-ALM-1-14/04/2017*****************************************/
+
+
+--------------- SQL --------------- se olvidaron agregar esta columna
+
+ALTER TABLE alm.tmovimiento
+  ADD COLUMN comail VARCHAR;  
+
+/***********************************F-SCP-RAC-ALM-1-14/04/2017*****************************************/
+
