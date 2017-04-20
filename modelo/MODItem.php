@@ -30,11 +30,13 @@ class MODItem extends MODbase {
         $this->captura('id_unidad_medida', 'integer');
         $this->captura('codigo_unidad', 'varchar');
 		$this->captura('precio_ref', 'numeric');
-        $this->captura('cantidad_max_sol', 'numeric');
+        $this->captura('cantidad_max_sol', 'INTEGER');
 		$this->captura('id_moneda', 'integer');
 		$this->captura('desc_moneda', 'varchar');
 		$this->captura('id_almacen', 'text');
 		$this->captura('almacenes_habilitados', 'text');
+		
+		
 
         $this->armarConsulta();
         $this->ejecutarConsulta();
