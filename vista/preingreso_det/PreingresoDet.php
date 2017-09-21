@@ -538,6 +538,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 		this.maestro=m;	
 		Ext.apply(this.store.baseParams,{id_preingreso:this.maestro.id_preingreso,estado: this.estado});
 		this.load({params:{start:0, limit:this.tam_pag}});
+		console.log('onreload');
 	},
 	onButtonEdit: function (){
 		//Prepara los componentes en función de si el preingreso es para Almacén o para Activos Fijos
@@ -602,7 +603,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
            this.getBoton('btnAgTodos').disable();
        	}
 	},
-   east: {
+    east: {
 		url : '../../../sis_almacenes/vista/preingreso_det/PreingresoDetMod.php',
 		title : 'Preingreso',
 		width : '50%',

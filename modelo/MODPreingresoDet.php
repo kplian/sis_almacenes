@@ -253,6 +253,58 @@ class MODPreingresoDet extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
+
+	function listarPreingresoDetV2(){
+		//Definicion de variables para ejecucion del procedimientp
+		$this->procedimiento='alm.ft_preingreso_det_sel';
+		$this->transaccion='SAL_PREDETV2_SEL';
+		$this->tipo_procedimiento='SEL';//tipo de transaccion
+									
+		//Definicion de la lista del resultado del query
+		$this->captura('id_preingreso_det','int4');
+		$this->captura('estado_reg','varchar');
+		$this->captura('id_preingreso','int4');
+		$this->captura('id_cotizacion_det','int4');
+		$this->captura('id_item','int4');
+		$this->captura('id_almacen','int4');
+		$this->captura('cantidad_det','numeric');
+		$this->captura('precio_compra','numeric');
+		$this->captura('id_depto','int4');
+		$this->captura('id_clasificacion','int4');
+		$this->captura('sw_generar','varchar');
+		$this->captura('observaciones','varchar');
+		$this->captura('id_usuario_reg','int4');
+		$this->captura('fecha_reg','timestamp');
+		$this->captura('id_usuario_mod','int4');
+		$this->captura('fecha_mod','timestamp');
+		$this->captura('usr_reg','varchar');
+		$this->captura('usr_mod','varchar');
+		
+		$this->captura('desc_almacen','text');
+		$this->captura('desc_depto','text');
+		$this->captura('desc_item','text');
+		$this->captura('desc_clasificacion','text');
+		$this->captura('desc_ingas','varchar');		
+		$this->captura('estado','varchar');
+		$this->captura('tipo','varchar');
+		
+		$this->captura('nombre','varchar');
+		$this->captura('descripcion','text');
+		$this->captura('precio_compra_87','numeric');
+		$this->captura('id_lugar','integer');
+		$this->captura('nombre_lugar','varchar');
+		$this->captura('ubicacion','varchar');
+		$this->captura('c31','varchar');
+		$this->captura('fecha_conformidad','date');
+		$this->captura('fecha_compra','date');
+		
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
 			
 }
 ?>

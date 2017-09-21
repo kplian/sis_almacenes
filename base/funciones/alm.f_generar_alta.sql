@@ -204,7 +204,8 @@ BEGIN
             
 
         else
-          raise exception 'TODO: implementar ingreso a Activos Fijos de PXP';
+          --raise exception 'TODO: implementar ingreso a Activos Fijos de PXP';
+          v_resp = kaf.f_i_alm_preingreso__genera_alta_af(p_id_usuario,p_id_preingreso);
         end if;
 
     end if;

@@ -82,6 +82,28 @@ class ACTPreingresoDet extends ACTbase{
 		$this->res=$this->objFunc->quitaPreingresoAll($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+
+	function listarPreingresoDetV2(){
+		$this->objParam->defecto('ordenacion','id_preingreso_det');
+		$this->objParam->defecto('dir_ordenacion','asc');
+		
+		if($this->objParam->getParametro('id_preingreso')!=''){
+			$this->objParam->addFiltro("predet.id_preingreso = ".$this->objParam->getParametro('id_preingreso'));	
+		}
+		
+		if($this->objParam->getParametro('estado')!=''){
+			$this->objParam->addFiltro("predet.estado = ''".$this->objParam->getParametro('estado')."''");	
+		}
+		
+		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+			$this->objReporte = new Reporte($this->objParam,$this);
+			$this->res = $this->objReporte->generarReporteListado('MODPreingresoDet','listarPreingresoDetV2');
+		} else{
+			$this->objFunc=$this->create('MODPreingresoDet');
+			$this->res=$this->objFunc->listarPreingresoDetV2($this->objParam);
+		}
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
 			
 }
 

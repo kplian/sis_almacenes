@@ -247,13 +247,13 @@ BEGIN
                               pdet.observaciones, sdet.id_concepto_ingas
                               from alm.tpreingreso_det pdet
                               inner join adq.tcotizacion_det cdet on cdet.id_cotizacion_det = pdet.id_cotizacion_det
-                    inner join adq.tsolicitud_det sdet on sdet.id_solicitud_det = cdet.id_solicitud_det
+                              inner join adq.tsolicitud_det sdet on sdet.id_solicitud_det = cdet.id_solicitud_det
                               where pdet.id_preingreso = v_rec.id_preingreso
                               and pdet.id_almacen = v_rec_det.id_almacen
                               and pdet.sw_generar = 'si'
                               and pdet.estado = 'mod') loop
                               
-              insert into alm.tmovimiento_det(
+                insert into alm.tmovimiento_det(
                 id_usuario_reg, fecha_reg, estado_reg,
                 id_movimiento, id_item, cantidad, costo_unitario, cantidad_solicitada,
                 observaciones, id_concepto_ingas
@@ -278,20 +278,18 @@ BEGIN
     
     
     elsif v_rec.tipo = 'activo_fijo' then
-     
-   
     
       --Verificación de destino de generación de ingreso a activos fijos
         if pxp.f_get_variable_global('alm_migrar_af_endesis')='si' then
-          --Llama ala funcion de ENDESIS para generar el ingreso de activos fijos
+            --Llama ala funcion de ENDESIS para generar el ingreso de activos fijos
             --funcion para obtener cadena de conexion
-      v_cadena_cnx =  migra.f_obtener_cadena_conexion();
+            v_cadena_cnx =  migra.f_obtener_cadena_conexion();
             
             v_consulta = 'select migracion.f_af_genera_registro_af('||
                           p_id_usuario ||',' ||
                           COALESCE(v_rec.id_preingreso::varchar,'NULL')||')';
                           
-      --Abre una conexion con dblink para ejecutar la consulta
+            --Abre una conexion con dblink para ejecutar la consulta
             v_resp =  (SELECT dblink_connect(v_cadena_cnx));
            
             
@@ -306,15 +304,12 @@ BEGIN
             
 
         else
-          raise exception 'TODO: implementar ingreso a Activos Fijos de PXP';
+          --Ingreso a Activos Fijos de PXP;
+          v_resp = kaf.f_i_alm_preingreso__genera_registro_af(p_id_usuario,v_rec.id_preingreso);
         end if;
 
     end if;
-    
-   
 
-    
-  
     ------------
     --RESPUESTA
     ------------

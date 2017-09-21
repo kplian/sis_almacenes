@@ -1,23 +1,20 @@
 <?php
 /**
 *@package pXP
-*@file gen-PreingresoDet.php
-*@author  (admin)
-*@date 07-10-2013 17:46:04
+*@file PreingresoDetModActV2.php
+*@author  RCM
+*@date 08/08/2017
 *@description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
 */
-
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
-	
+Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 	estado: 'mod',
-
 	constructor:function(config){
 		this.maestro=config.maestro;
     	//llama al constructor de la clase padre
-		Phx.vista.PreingresoDetMod.superclass.constructor.call(this,config);
+		Phx.vista.PreingresoDetModActV2.superclass.constructor.call(this,config);
 		this.grid.getTopToolbar().disable();
 		this.grid.getBottomToolbar().disable();
 		this.grid.addListener('cellclick', this.oncellclick,this);
@@ -25,12 +22,12 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		
 		//Se agrega el botón para adicionar todos
 		this.addButton('btnAgTodos', {
-				text : 'Quitar Todos',
-				iconCls : 'bleft-all',
-				disabled : true,
-				handler : this.quitarTodos,
-				tooltip : '<b>Quitar Todos</b><br/>Quita todos los items del preingreso.'
-			});
+			text : 'Quitar Todos',
+			iconCls : 'bleft-all',
+			disabled : true,
+			handler : this.quitarTodos,
+			tooltip : '<b>Quitar Todos</b><br/>Quita todos los items del preingreso.'
+		});
 	},
 			
 	Atributos:[
@@ -245,20 +242,22 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: false,
 				emptyText: 'Elija una opción...',
 				store: new Ext.data.JsonStore({
-					url: '../../sis_activos_fijos/control/Clasificacion/listarClasificacion',
-					id: 'id_clasificacion',
-					root: 'datos',
-					sortInfo: {
-						field: 'clas.codigo',
-						direction: 'ASC'
-					},
-					totalProperty: 'total',
-					fields: ['id_clasificacion', 'descripcion', 'codigo'],
-					remoteSort: true,
-					baseParams: {par_filtro: 'clas.descripcion#clas.codigo', tipo: 'subtipo'}
-				}),
+                    url: '../../sis_kactivos_fijos/control/Clasificacion/ListarClasificacionTree',
+                    id: 'id_clasificacion',
+                    root: 'datos',
+                    sortInfo: {
+                        field: 'orden',
+                        direction: 'ASC'
+                    },
+                    totalProperty: 'total',
+                    fields: ['id_clasificacion','clasificacion', 'id_clasificacion_fk','tipo_activo','depreciable','vida_util',''],
+                    remoteSort: true,
+                    baseParams: {
+                        par_filtro:'claf.clasificacion'
+                    }
+                }),
 				valueField: 'id_clasificacion',
-				displayField: 'descripcion',
+				displayField: 'clasificacion',
 				gdisplayField: 'desc_clasificacion',
 				hiddenName: 'id_clasificacion',
 				forceSelection: true,
@@ -270,11 +269,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 				queryDelay: 1000,
 				anchor: '100%',
 				gwidth: 150,
-				minChars: 2,
-				renderer : function(value, p, record) {
-					return String.format('{0}', record.data['desc_clasificacion']);
-				},
-				tpl:'<tpl for="."><div class="x-combo-list-item"><p>Código: {codigo}</p><p>Descripción: {descripcion}</p></div></tpl>',
+				minChars: 2
 			},
 			type: 'ComboBox',
 			id_grupo: 0,
@@ -583,7 +578,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 	title:'Preingreso',
 	ActSave:'../../sis_almacenes/control/PreingresoDet/insertarPreingresoDetPreparacion',
 	ActDel:'../../sis_almacenes/control/PreingresoDet/eliminarPreingresoDetPreparacion',
-	ActList:'../../sis_almacenes/control/PreingresoDet/listarPreingresoDet',
+	ActList:'../../sis_almacenes/control/PreingresoDet/listarPreingresoDetV2',
 	id_store:'id_preingreso_det',
 	fields: [
 		{name:'id_preingreso_det', type: 'numeric'},
@@ -629,12 +624,12 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 	bnew:true,
 	bedit:true,
 	preparaMenu:function(n){
-       	Phx.vista.PreingresoDetMod.superclass.preparaMenu.call(this,n);
+       	Phx.vista.PreingresoDetModActV2.superclass.preparaMenu.call(this,n);
 		this.preparaComponentes(this.maestro)
 	},
 	
 	loadValoresIniciales:function(){
-		Phx.vista.PreingresoDetMod.superclass.loadValoresIniciales.call(this);
+		Phx.vista.PreingresoDetModActV2.superclass.loadValoresIniciales.call(this);
 		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);
 		this.Cmp.fecha_conformidad.setValue(this.maestro.fecha_conformidad);
 		this.Cmp.fecha_compra.setValue(this.maestro.fecha_conformidad);
@@ -650,7 +645,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 	},
 	onButtonEdit: function (){
 		//Prepara los componentes en función de si el preingreso es para Almacén o para Activos Fijos
-		Phx.vista.PreingresoDetMod.superclass.onButtonEdit.call(this);
+		Phx.vista.PreingresoDetModActV2.superclass.onButtonEdit.call(this);
 		if (this.Cmp.fecha_conformidad.getValue() == '' || this.Cmp.fecha_conformidad.getValue() == undefined) {
 			this.Cmp.fecha_conformidad.setValue(this.maestro.fecha_conformidad);
 			this.Cmp.fecha_compra.setValue(this.maestro.fecha_conformidad);
@@ -666,7 +661,7 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
 		
 		if(pMaestro.tipo=='activo_fijo'){
 			//Setea store del departamento
-			codSis='AF';
+			codSis='KAF';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});			
 			
 			//Habilita componentes
@@ -738,7 +733,6 @@ Phx.vista.PreingresoDetMod=Ext.extend(Phx.gridInterfaz,{
             this.ocultarComponente(this.Cmp.ubicacion);
             this.Cmp.c31.disable();
             this.ocultarComponente(this.Cmp.c31);
-            this.Cmp.disable.enable();
             this.ocultarComponente(this.Cmp.fecha_conformidad);
             this.ocultarComponente(this.Cmp.fecha_compra);
             this.ocultarColumna(5);
