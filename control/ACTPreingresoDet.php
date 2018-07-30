@@ -104,6 +104,12 @@ class ACTPreingresoDet extends ACTbase{
 		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+
+	function desglosaRegistro(){
+		$this->objFunc=$this->create('MODPreingresoDet');	
+		$this->res=$this->objFunc->desglosaRegistro($this->objParam);
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
 			
 }
 

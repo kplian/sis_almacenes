@@ -28,6 +28,15 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			handler : this.quitarTodos,
 			tooltip : '<b>Quitar Todos</b><br/>Quita todos los items del preingreso.'
 		});
+
+		//Se agrega el botón para adicionar todos
+		this.addButton('btnDesgl', {
+			text : 'Desglosar',
+			iconCls : 'bgear',
+			disabled : true,
+			handler : this.desglosar,
+			tooltip : '<b>Desglosar registro</b><br/>Desglosa el registro en la cantidad comprada'
+		});
 	},
 			
 	Atributos:[
@@ -407,20 +416,38 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:true
 		},
-		
+		{
+            config:{
+                name: 'id_centro_costo',
+                origen: 'CENTROCOSTO',
+                allowBlank: false,
+                fieldLabel: 'Centro de Costo',
+                gdisplayField: 'codigo_tcc',//mapea al store del grid
+                gwidth: 150,
+                url: '../../sis_parametros/control/CentroCosto/listarCentroCostoFiltradoXUsuaio',
+                renderer: function (value, p, record){return String.format('{0}', record.data['codigo_tcc']);},
+                baseParams:{filtrar:'grupo_ep'}
+             },
+            type: 'ComboRec',
+            id_grupo: 1,
+            filters: { pfiltro:'cc.descripcion_tcc',type:'string'},
+            grid: true,
+            form: true
+        },
 		{
 			config:{
 				name: 'c31',
 				fieldLabel: 'C31',
-				allowBlank: false,
+				allowBlank: true,
 				anchor: '100%',
 				gwidth: 180,
-				maxLength:255
+				maxLength:255,
+				hidden: true
 			},
 			type:'TextField',
 			filters:{pfiltro:'predet.c31',type:'string'},
 			id_grupo:1,
-			grid:true,
+			grid:false,
 			form:true
 		},
 		
@@ -431,8 +458,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+				format: 'd/m/Y', 
+				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
 			filters:{pfiltro:'predet.fecha_conformidad',type:'date'},
@@ -447,8 +474,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+				format: 'd/m/Y', 
+				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
 			filters:{pfiltro:'predet.fecha_compra',type:'date'},
@@ -456,8 +483,6 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:true
 		},
-		
-		
 		{
 			config: {
 				name: 'sw_generar',
@@ -469,8 +494,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 				gdisplayField: 'sw_generar',
 				gwidth: 100,
 				baseParams:{
-						cod_subsistema:'PARAM',
-						catalogo_tipo:'tgral__bandera_min'
+					cod_subsistema:'PARAM',
+					catalogo_tipo:'tgral__bandera_min'
 				},
 				renderer:function (value, p, record){return String.format('{0}', record.data['sw_generar']);}
 			},
@@ -496,6 +521,154 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			form:true
 		},
 		{
+			config : {
+				name : 'id_ubicacion',
+				fieldLabel : 'Local',
+				allowBlank : false,
+				emptyText : 'Local...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_kactivos_fijos/control/Ubicacion/listarUbicacion',
+					id : 'id_ubicacion',
+					root : 'datos',
+					sortInfo : {
+						field : 'nombre',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_ubicacion', 'nombre', 'codigo'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'ubi.nombre#ubi.codigo'
+					}
+				}),
+				valueField : 'id_ubicacion',
+				displayField : 'nombre',
+				gdisplayField : 'desc_ubicacion',
+				hiddenName : 'id_ubicacion',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '100%',
+				gwidth : 100,
+				minChars : 2,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['desc_ubicacion']);
+				}
+			},
+			type: 'ComboBox',
+			id_grupo: 0,
+			filters: {
+				pfiltro : 'ubi.nombre#ubi.codigo',
+				type : 'string'
+			},
+			grid : true,
+			form : true
+		},
+		{
+			config : {
+				name : 'id_grupo',
+				fieldLabel : 'Agrupador AE',
+				allowBlank : false,
+				emptyText : 'Agrupador...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_kactivos_fijos/control/Grupo/listarGrupo',
+					id : 'id_grupo',
+					root : 'datos',
+					sortInfo : {
+						field : 'nombre',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_grupo', 'nombre', 'codigo'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'gru.nombre#gru.codigo',
+						tipo: 'grupo'
+					}
+				}),
+				valueField : 'id_grupo',
+				displayField : 'nombre',
+				gdisplayField : 'desc_grupo',
+				tpl:'<tpl for="."><div class="x-combo-list-item"><p>{codigo} - {nombre}</p> </div></tpl>',
+				hiddenName : 'id_grupo',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '100%',
+				gwidth : 100,
+				minChars : 2,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['desc_grupo']);
+				}
+			},
+			type: 'ComboBox',
+			id_grupo: 0,
+			filters: {
+				pfiltro : 'gru.nombre#gru.codigo',
+				type : 'string'
+			},
+			grid : true,
+			form : true
+		},
+		{
+			config : {
+				name : 'id_grupo_clasif',
+				fieldLabel : 'Clasificador AE',
+				allowBlank : false,
+				emptyText : 'Clasificador...',
+				store : new Ext.data.JsonStore({
+					url : '../../sis_kactivos_fijos/control/Grupo/listarGrupo',
+					id : 'id_grupo',
+					root : 'datos',
+					sortInfo : {
+						field : 'nombre',
+						direction : 'ASC'
+					},
+					totalProperty : 'total',
+					fields : ['id_grupo', 'nombre', 'codigo'],
+					remoteSort : true,
+					baseParams : {
+						par_filtro : 'gru1.nombre#gru1.codigo',
+						tipo: 'clasificacion'
+					}
+				}),
+				valueField : 'id_grupo',
+				displayField : 'nombre',
+				gdisplayField : 'desc_grupo_clasif',
+				tpl:'<tpl for="."><div class="x-combo-list-item"><p>{codigo} - {nombre}</p> </div></tpl>',
+				hiddenName : 'id_grupo_clasif',
+				forceSelection : true,
+				typeAhead : false,
+				triggerAction : 'all',
+				lazyRender : true,
+				mode : 'remote',
+				pageSize : 10,
+				queryDelay : 1000,
+				anchor : '100%',
+				gwidth : 100,
+				minChars : 2,
+				renderer : function(value, p, record) {
+					return String.format('{0}', record.data['desc_grupo_clasif']);
+				}
+			},
+			type: 'ComboBox',
+			id_grupo: 0,
+			filters: {
+				pfiltro : 'gru1.nombre#gru1.codigo',
+				type : 'string'
+			},
+			grid : true,
+			form : true
+		},
+		{
 			config:{
 				name: 'estado_reg',
 				fieldLabel: 'Estado Reg.',
@@ -509,6 +682,36 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			id_grupo:1,
 			grid:true,
 			form:false
+		},
+		{
+			config:{
+				name: 'nro_serie',
+				fieldLabel: 'Nro.Serie',
+				allowBlank: true,
+				anchor: '100%',
+				gwidth: 75,
+				maxLength:50
+			},
+			type:'TextField',
+			filters:{pfiltro:'predet.nro_serie',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
+		{
+			config:{
+				name: 'marca',
+				fieldLabel: 'Marca',
+				allowBlank: true,
+				anchor: '100%',
+				gwidth: 75,
+				maxLength:200
+			},
+			type:'TextField',
+			filters:{pfiltro:'predet.marca',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:true
 		},
 		{
 			config:{
@@ -532,8 +735,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+				format: 'd/m/Y', 
+				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
 			filters:{pfiltro:'predet.fecha_reg',type:'date'},
@@ -563,8 +766,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+				format: 'd/m/Y', 
+				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
 			filters:{pfiltro:'predet.fecha_mod',type:'date'},
@@ -574,12 +777,12 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 		}
 		
 	],
-	tam_pag:50,	
-	title:'Preingreso',
-	ActSave:'../../sis_almacenes/control/PreingresoDet/insertarPreingresoDetPreparacion',
-	ActDel:'../../sis_almacenes/control/PreingresoDet/eliminarPreingresoDetPreparacion',
-	ActList:'../../sis_almacenes/control/PreingresoDet/listarPreingresoDetV2',
-	id_store:'id_preingreso_det',
+	tam_pag: 50,	
+	title: 'Preingreso',
+	ActSave: '../../sis_almacenes/control/PreingresoDet/insertarPreingresoDetPreparacion',
+	ActDel: '../../sis_almacenes/control/PreingresoDet/eliminarPreingresoDetPreparacion',
+	ActList: '../../sis_almacenes/control/PreingresoDet/listarPreingresoDetV2',
+	id_store: 'id_preingreso_det',
 	fields: [
 		{name:'id_preingreso_det', type: 'numeric'},
 		{name:'estado_reg', type: 'string'},
@@ -613,7 +816,17 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 		{name:'ubicacion', type: 'string'},
 		{name:'descripcion', type: 'string'},
 		{name:'estado', type: 'string'},
-		{name:'tipo', type: 'string'}
+		{name:'tipo', type: 'string'},
+		{name:'id_centro_costo', type: 'numeric'},
+		{name:'id_ubicacion', type: 'numeric'},
+		{name:'id_grupo', type: 'numeric'},
+		{name:'id_grupo_clasif', type: 'numeric'},
+		{name:'codigo_tcc', type: 'string'},
+		{name:'desc_ubicacion', type: 'string'},
+		{name:'desc_grupo', type: 'string'},
+		{name:'desc_grupo_clasif', type: 'string'},
+		{name:'nro_serie', type: 'string'},
+		{name:'marca', type: 'string'}
 	],
 	sortInfo:{
 		field: 'id_preingreso_det',
@@ -623,8 +836,16 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 	bsave:false,
 	bnew:true,
 	bedit:true,
-	preparaMenu:function(n){
+	preparaMenu: function(n){
        	Phx.vista.PreingresoDetModActV2.superclass.preparaMenu.call(this,n);
+       	var data = this.getSelectedData();
+
+       	this.getBoton('btnDesgl').disable()
+
+       	if(data&&data.estado_reg=='activo'&&data.cantidad_det>1){
+			this.getBoton('btnDesgl').enable()       		
+       	}
+       	
 		this.preparaComponentes(this.maestro)
 	},
 	
@@ -633,7 +854,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);
 		this.Cmp.fecha_conformidad.setValue(this.maestro.fecha_conformidad);
 		this.Cmp.fecha_compra.setValue(this.maestro.fecha_conformidad);
-		this.Cmp.c31.setValue(this.Cmp.c31.getValue());
+		//this.Cmp.c31.setValue(this.Cmp.c31.getValue());
 	},
 	
 	onReloadPage:function(m){
@@ -651,14 +872,13 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			this.Cmp.fecha_compra.setValue(this.maestro.fecha_conformidad);
 		}
 		
-		if (this.Cmp.c31.getValue() == '' || this.Cmp.c31.getValue() == undefined) {
+		/*if (this.Cmp.c31.getValue() == '' || this.Cmp.c31.getValue() == undefined) {
 			this.Cmp.c31.setValue(this.Cmp.c31.getValue());
-		}
+		}*/
 		this.preparaComponentes(this.maestro)
 	},
 	preparaComponentes: function(pMaestro){
 		var codSis;
-		
 		if(pMaestro.tipo=='activo_fijo'){
 			//Setea store del departamento
 			codSis='KAF';
@@ -679,8 +899,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
             this.mostrarComponente(this.Cmp.id_lugar);
             this.Cmp.ubicacion.enable();
             this.mostrarComponente(this.Cmp.ubicacion);
-            this.Cmp.c31.enable();
-            this.mostrarComponente(this.Cmp.c31);
+            //this.Cmp.c31.enable();
+            //this.mostrarComponente(this.Cmp.c31);
             this.Cmp.fecha_conformidad.enable();
             this.mostrarComponente(this.Cmp.fecha_conformidad);
             this.mostrarComponente(this.Cmp.fecha_compra);
@@ -731,8 +951,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
             this.ocultarComponente(this.Cmp.id_lugar);
             this.Cmp.ubicacion.disable();
             this.ocultarComponente(this.Cmp.ubicacion);
-            this.Cmp.c31.disable();
-            this.ocultarComponente(this.Cmp.c31);
+            //this.Cmp.c31.disable();
+            //this.ocultarComponente(this.Cmp.c31);
             this.ocultarComponente(this.Cmp.fecha_conformidad);
             this.ocultarComponente(this.Cmp.fecha_compra);
             this.ocultarColumna(5);
@@ -819,6 +1039,44 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 		var myPanel = Phx.CP.getPagina(this.idContenedorPadre);
 		myPanel.onReloadPage(this.maestro);
 		delete myPanel;
+	},
+
+	desglosar: function(){
+		//Verifica si se seleccionó un registro activo
+		var data = this.getSelectedData();
+
+		if(data&&data.estado_reg=='activo'&&data.cantidad_det>1){
+			Ext.Msg.show({
+			   title:'Confirmación',
+			   msg: '¿Está seguro de desglosar el registro en '+data.cantidad_det+'?',
+			   buttons: Ext.Msg.YESNO,
+			   fn: function(a,b,c){
+			   		if(a=='yes'){
+			   			var myPanel = Phx.CP.getPagina(this.idContenedorPadre);
+						Phx.CP.loadingShow();
+						Ext.Ajax.request({
+							url: '../../sis_almacenes/control/PreingresoDet/desglosaRegistro',
+							params: {
+								id_preingreso_det: data.id_preingreso_det,
+								cantidad_det: data.cantidad_det
+							},
+							success: function(a,b,c){
+								Phx.CP.loadingHide();
+								this.reload();
+								//Carga datos del panel derecho
+								myPanel.onReloadPage(this.maestro);
+								delete myPanel;
+							},
+							failure: this.conexionFailure,
+							timeout: this.timeout,
+							scope: this
+						});	
+			   		}
+			   },
+			   icon: Ext.MessageBox.QUESTION,
+			   scope: this
+			});
+		}
 	},
 	
 	oncellclick : function(grid, rowIndex, columnIndex, e) {

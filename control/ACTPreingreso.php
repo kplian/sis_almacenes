@@ -20,7 +20,7 @@ class ACTPreingreso extends ACTbase{
             $this->objParam->addFiltro("preing.tipo = ''almacen''");  
         }
         //si es un preingreso de activos fijos
-        if($this->objParam->getParametro('tipo_interfaz')=='preingresoAct'){
+        if($this->objParam->getParametro('tipo_interfaz')=='preingresoAct'||$this->objParam->getParametro('tipo_interfaz')=='preingresoActV2'){
             $this->objParam->addFiltro("preing.tipo = ''activo_fijo''");  
         }
 		

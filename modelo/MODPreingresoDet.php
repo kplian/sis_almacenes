@@ -56,6 +56,16 @@ class MODPreingresoDet extends MODbase{
 		$this->captura('c31','varchar');
 		$this->captura('fecha_conformidad','date');
 		$this->captura('fecha_compra','date');
+		$this->captura('id_centro_costo','integer');
+		$this->captura('id_ubicacion','integer');
+		$this->captura('id_grupo','integer');
+		$this->captura('id_grupo_clasif','integer');
+		$this->captura('codigo_tcc','varchar');
+		$this->captura('desc_ubicacion','varchar');
+        $this->captura('desc_grupo','varchar');
+        $this->captura('desc_grupo_clasif','varchar');
+        $this->captura('nro_serie','varchar');
+        $this->captura('marca','varchar');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -92,6 +102,12 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('c31','c31','varchar');
 		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
 		$this->setParametro('fecha_compra','fecha_compra','date');
+		$this->setParametro('id_centro_costo','id_centro_costo','integer');
+		$this->setParametro('id_ubicacion','id_ubicacion','integer');
+		$this->setParametro('id_grupo','id_grupo','integer');
+		$this->setParametro('id_grupo_clasif','id_grupo_clasif','integer');
+		$this->setParametro('nro_serie','nro_serie','varchar');
+		$this->setParametro('marca','marca','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -129,6 +145,12 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('c31','c31','varchar');
 		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
 		$this->setParametro('fecha_compra','fecha_compra','date');
+		$this->setParametro('id_centro_costo','id_centro_costo','integer');
+		$this->setParametro('id_ubicacion','id_ubicacion','integer');
+		$this->setParametro('id_grupo','id_grupo','integer');
+		$this->setParametro('id_grupo_clasif','id_grupo_clasif','integer');
+		$this->setParametro('nro_serie','nro_serie','varchar');
+		$this->setParametro('marca','marca','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -297,9 +319,39 @@ class MODPreingresoDet extends MODbase{
 		$this->captura('c31','varchar');
 		$this->captura('fecha_conformidad','date');
 		$this->captura('fecha_compra','date');
+
+		$this->captura('id_centro_costo','integer');
+		$this->captura('id_ubicacion','integer');
+		$this->captura('id_grupo','integer');
+		$this->captura('id_grupo_clasif','integer');
+		$this->captura('codigo_tcc','varchar');
+		$this->captura('desc_ubicacion','varchar');
+        $this->captura('desc_grupo','varchar');
+        $this->captura('desc_grupo_clasif','varchar');
+        $this->captura('nro_serie','varchar');
+        $this->captura('marca','varchar');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
+
+	function desglosaRegistro(){
+		//Definicion de variables para ejecucion del procedimiento
+		$this->procedimiento='alm.ft_preingreso_det_ime';
+		$this->transaccion='SAL_DESGL_MOD';
+		$this->tipo_procedimiento='IME';
+				
+		//Define los parametros para la funcion
+		$this->setParametro('id_preingreso_det','id_preingreso_det','int4');
+		$this->setParametro('cantidad_det','cantidad_det','numeric');
+
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		//echo $this->consulta;exit;
 		$this->ejecutarConsulta();
 
 		//Devuelve la respuesta
