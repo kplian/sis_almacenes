@@ -8,17 +8,17 @@
 */
 
 class MODPreingresoDet extends MODbase{
-	
+
 	function __construct(CTParametro $pParam){
 		parent::__construct($pParam);
 	}
-			
+
 	function listarPreingresoDet(){
 		//Definicion de variables para ejecucion del procedimientp
 		$this->procedimiento='alm.ft_preingreso_det_sel';
 		$this->transaccion='SAL_PREDET_SEL';
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-									
+
 		//Definicion de la lista del resultado del query
 		$this->captura('id_preingreso_det','int4');
 		$this->captura('estado_reg','varchar');
@@ -38,15 +38,15 @@ class MODPreingresoDet extends MODbase{
 		$this->captura('fecha_mod','timestamp');
 		$this->captura('usr_reg','varchar');
 		$this->captura('usr_mod','varchar');
-		
+
 		$this->captura('desc_almacen','text');
 		$this->captura('desc_depto','text');
 		$this->captura('desc_item','text');
 		$this->captura('desc_clasificacion','text');
-		$this->captura('desc_ingas','varchar');		
+		$this->captura('desc_ingas','varchar');
 		$this->captura('estado','varchar');
 		$this->captura('tipo','varchar');
-		
+
 		$this->captura('nombre','varchar');
 		$this->captura('descripcion','text');
 		$this->captura('precio_compra_87','numeric');
@@ -66,7 +66,8 @@ class MODPreingresoDet extends MODbase{
         $this->captura('desc_grupo_clasif','varchar');
         $this->captura('nro_serie','varchar');
         $this->captura('marca','varchar');
-		
+        $this->captura('vida_util','integer');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -74,13 +75,13 @@ class MODPreingresoDet extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 	function insertarPreingresoDet(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='alm.ft_preingreso_det_ime';
 		$this->transaccion='SAL_PREDET_INS';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('estado_reg','estado_reg','varchar');
 		$this->setParametro('id_preingreso','id_preingreso','int4');
@@ -93,11 +94,11 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('id_clasificacion','id_clasificacion','int4');
 		$this->setParametro('sw_generar','sw_generar','varchar');
 		$this->setParametro('observaciones','observaciones','varchar');
-		
+
 		$this->setParametro('nombre','varchar','varchar');
 		$this->setParametro('descripcion','text','text');
 		$this->setParametro('precio_compra_87','numeric','numeric');
-		$this->setParametro('id_lugar','integer','integer');		
+		$this->setParametro('id_lugar','integer','integer');
 		$this->setParametro('ubicacion','varchar','varchar');
 		$this->setParametro('c31','c31','varchar');
 		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
@@ -108,6 +109,7 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('id_grupo_clasif','id_grupo_clasif','integer');
 		$this->setParametro('nro_serie','nro_serie','varchar');
 		$this->setParametro('marca','marca','varchar');
+		$this->setParametro('vida_util','vida_util','integer');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -116,13 +118,13 @@ class MODPreingresoDet extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 	function modificarPreingresoDet(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='alm.ft_preingreso_det_ime';
 		$this->transaccion='SAL_PREDET_MOD';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_preingreso_det','id_preingreso_det','int4');
 		$this->setParametro('estado_reg','estado_reg','varchar');
@@ -136,11 +138,11 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('id_clasificacion','id_clasificacion','int4');
 		$this->setParametro('sw_generar','sw_generar','varchar');
 		$this->setParametro('observaciones','observaciones','varchar');
-		
+
 		$this->setParametro('nombre','nombre','varchar');
 		$this->setParametro('descripcion','descripcion','text');
 		$this->setParametro('precio_compra_87','precio_compra_87','numeric');
-		$this->setParametro('id_lugar','id_lugar','integer');		
+		$this->setParametro('id_lugar','id_lugar','integer');
 		$this->setParametro('ubicacion','ubicacion','varchar');
 		$this->setParametro('c31','c31','varchar');
 		$this->setParametro('fecha_conformidad','fecha_conformidad','date');
@@ -151,6 +153,7 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('id_grupo_clasif','id_grupo_clasif','integer');
 		$this->setParametro('nro_serie','nro_serie','varchar');
 		$this->setParametro('marca','marca','varchar');
+		$this->setParametro('vida_util','vida_util','integer');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -160,13 +163,13 @@ class MODPreingresoDet extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 	function eliminarPreingresoDet(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='alm.ft_preingreso_det_ime';
 		$this->transaccion='SAL_PREDET_ELI';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_preingreso_det','id_preingreso_det','int4');
 
@@ -183,7 +186,7 @@ class MODPreingresoDet extends MODbase{
 		$this->procedimiento='alm.ft_preingreso_det_ime';
 		$this->transaccion='SAL_PREPPRE_MOD';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_preingreso_det','id_preingreso_det','int4');
 
@@ -195,13 +198,13 @@ class MODPreingresoDet extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-	
+
 	function insertarPreingresoDetPreparacion(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='alm.ft_preingreso_det_ime';
 		$this->transaccion='SAL_PREPPRE_INS';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('estado_reg','estado_reg','varchar');
 		$this->setParametro('id_preingreso','id_preingreso','int4');
@@ -214,6 +217,7 @@ class MODPreingresoDet extends MODbase{
 		$this->setParametro('id_clasificacion','id_clasificacion','int4');
 		$this->setParametro('sw_generar','sw_generar','varchar');
 		$this->setParametro('observaciones','observaciones','varchar');
+		$this->setParametro('vida_util','vida_util','integer');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -228,7 +232,7 @@ class MODPreingresoDet extends MODbase{
 		$this->procedimiento='alm.ft_preingreso_det_ime';
 		$this->transaccion='SAL_PREDETPRE_ELI';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_preingreso_det','id_preingreso_det','int4');
 
@@ -239,13 +243,13 @@ class MODPreingresoDet extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-	
+
 	function preparaPreingresoAll(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='alm.ft_preingreso_det_ime';
 		$this->transaccion='SAL_PREPPREALL_MOD';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_preingreso','id_preingreso','int4');
 
@@ -257,13 +261,13 @@ class MODPreingresoDet extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-	
+
 	function quitaPreingresoAll(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='alm.ft_preingreso_det_ime';
 		$this->transaccion='SAL_QUITAPREALL_MOD';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_preingreso','id_preingreso','int4');
 
@@ -281,7 +285,7 @@ class MODPreingresoDet extends MODbase{
 		$this->procedimiento='alm.ft_preingreso_det_sel';
 		$this->transaccion='SAL_PREDETV2_SEL';
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-									
+
 		//Definicion de la lista del resultado del query
 		$this->captura('id_preingreso_det','int4');
 		$this->captura('estado_reg','varchar');
@@ -301,15 +305,15 @@ class MODPreingresoDet extends MODbase{
 		$this->captura('fecha_mod','timestamp');
 		$this->captura('usr_reg','varchar');
 		$this->captura('usr_mod','varchar');
-		
+
 		$this->captura('desc_almacen','text');
 		$this->captura('desc_depto','text');
 		$this->captura('desc_item','text');
 		$this->captura('desc_clasificacion','text');
-		$this->captura('desc_ingas','varchar');		
+		$this->captura('desc_ingas','varchar');
 		$this->captura('estado','varchar');
 		$this->captura('tipo','varchar');
-		
+
 		$this->captura('nombre','varchar');
 		$this->captura('descripcion','text');
 		$this->captura('precio_compra_87','numeric');
@@ -330,7 +334,8 @@ class MODPreingresoDet extends MODbase{
         $this->captura('desc_grupo_clasif','varchar');
         $this->captura('nro_serie','varchar');
         $this->captura('marca','varchar');
-		
+        $this->captura('vida_util','integer');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -344,7 +349,7 @@ class MODPreingresoDet extends MODbase{
 		$this->procedimiento='alm.ft_preingreso_det_ime';
 		$this->transaccion='SAL_DESGL_MOD';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_preingreso_det','id_preingreso_det','int4');
 		$this->setParametro('cantidad_det','cantidad_det','numeric');
@@ -357,6 +362,6 @@ class MODPreingresoDet extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 }
 ?>

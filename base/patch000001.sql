@@ -17,7 +17,7 @@ CREATE TABLE alm.tclasificacion (
     codigo_largo varchar(20),
     CONSTRAINT pk_tclasificacion__id_clasificacion
     PRIMARY KEY (id_clasificacion)
-) 
+)
 INHERITS (pxp.tbase) WITHOUT OIDS;
 
 --
@@ -110,23 +110,23 @@ INHERITS (pxp.tbase) WITHOUT OIDS;
 
 
 CREATE TABLE alm.talmacen_usuario (
-  id_almacen_usuario SERIAL, 
-  id_usuario INTEGER, 
+  id_almacen_usuario SERIAL,
+  id_usuario INTEGER,
   CONSTRAINT pk_talmacen_usuario__id_almacen_usuario PRIMARY KEY(id_almacen_usuario)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
 
 ALTER TABLE alm.talmacen
   ADD COLUMN id_almacen_usuario INTEGER;
-  
-    
+
+
 CREATE TABLE alm.talmacen_correlativo (
-  id_almacen_correl SERIAL, 
-  id_almacen INTEGER, 
-  id_movimiento_tipo INTEGER, 
-  periodo VARCHAR, 
-  correl_act INTEGER DEFAULT 0, 
-  correl_sig INTEGER DEFAULT 1, 
+  id_almacen_correl SERIAL,
+  id_almacen INTEGER,
+  id_movimiento_tipo INTEGER,
+  periodo VARCHAR,
+  correl_act INTEGER DEFAULT 0,
+  correl_sig INTEGER DEFAULT 1,
   CONSTRAINT pk_talmacen_correlativo__id_almacen_correl PRIMARY KEY(id_almacen_correl)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
@@ -153,7 +153,7 @@ ALTER TABLE alm.talmacen_usuario
 
 /***********************************I-SCP-AAO-ALM-14-06/02/2013****************************************/
 CREATE TABLE alm.titem_reemplazo (
-  id_item_reemplazo SERIAL NOT NULL, 
+  id_item_reemplazo SERIAL NOT NULL,
   id_item INTEGER,
   id_item_r INTEGER,
   PRIMARY KEY(id_item_reemplazo)
@@ -166,11 +166,11 @@ ALTER TABLE alm.titem_reemplazo
 
 /***********************************I-SCP-AAO-ALM-15-06/02/2013****************************************/
 CREATE TABLE alm.titem_archivo (
-  id_item_archivo SERIAL NOT NULL, 
-  nombre VARCHAR(50), 
-  descripcion VARCHAR(150), 
-  extension VARCHAR(10), 
-  archivo BYTEA, 
+  id_item_archivo SERIAL NOT NULL,
+  nombre VARCHAR(50),
+  descripcion VARCHAR(150),
+  extension VARCHAR(10),
+  archivo BYTEA,
   id_item INTEGER,
   PRIMARY KEY(id_item_archivo)
 ) INHERITS (pxp.tbase)
@@ -195,10 +195,10 @@ ALTER TABLE alm.tmovimiento_tipo
 /***********************************I-SCP-AAO-ALM-24-14/02/2013****************************************/
 
 CREATE TABLE alm.tmetodo_val (
-  id_metodo_val SERIAL NOT NULL, 
-  codigo VARCHAR(20), 
-  nombre VARCHAR(50), 
-  descripcion VARCHAR(150), 
+  id_metodo_val SERIAL NOT NULL,
+  codigo VARCHAR(20),
+  nombre VARCHAR(50),
+  descripcion VARCHAR(150),
   PRIMARY KEY(id_metodo_val)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
@@ -217,10 +217,10 @@ ALTER TABLE alm.tmovimiento_det
   DROP COLUMN costo_unitario;
 
 CREATE TABLE alm.tmovimiento_det_valorado (
-  id_movimiento_det_valorado SERIAL NOT NULL, 
-  id_movimiento_det INTEGER, 
-  cantidad NUMERIC(18,6), 
-  costo_unitario NUMERIC(18,6), 
+  id_movimiento_det_valorado SERIAL NOT NULL,
+  id_movimiento_det INTEGER,
+  cantidad NUMERIC(18,6),
+  costo_unitario NUMERIC(18,6),
   aux_saldo_fisico NUMERIC(18,6),
   PRIMARY KEY(id_movimiento_det_valorado)
 ) INHERITS (pxp.tbase)
@@ -263,7 +263,7 @@ ALTER TABLE alm.titem
 /***********************************I-SCP-AAO-ALM-35-04/03/2013****************************************/
 ALTER TABLE alm.talmacen
   ALTER COLUMN codigo TYPE VARCHAR(20);
-  
+
 ALTER TABLE alm.titem
   ALTER COLUMN codigo TYPE VARCHAR(30);
 /***********************************F-SCP-AAO-ALM-35-04/03/2013****************************************/
@@ -271,7 +271,7 @@ ALTER TABLE alm.titem
 /***********************************I-SCP-AAO-ALM-41-05/03/2013*****************************************/
 ALTER TABLE alm.titem_archivo
   ALTER COLUMN descripcion TYPE VARCHAR(1000);
-  
+
 ALTER TABLE alm.tmetodo_val
   ALTER COLUMN descripcion TYPE VARCHAR(1000);
 /***********************************F-SCP-AAO-ALM-41-05/03/2013*****************************************/
@@ -282,7 +282,7 @@ ALTER TABLE alm.tmovimiento_tipo
 
 ALTER TABLE alm.tmovimiento_tipo
   ALTER COLUMN read_only SET DEFAULT FALSE;
-  
+
 ALTER TABLE alm.tmetodo_val
   ADD COLUMN read_only BOOLEAN;
 
@@ -292,14 +292,14 @@ ALTER TABLE alm.tmetodo_val
 
 /***********************************I-SCP-AAO-ALM-45-14/03/2013*****************************************/
 CREATE TABLE alm.tinventario (
-  id_inventario SERIAL, 
-  id_almacen INTEGER NOT NULL, 
-  id_usuario_resp INTEGER NOT NULL, 
-  fecha_inv_planif TIMESTAMP WITHOUT TIME ZONE, 
-  fecha_inv_ejec TIMESTAMP WITHOUT TIME ZONE, 
-  observaciones VARCHAR(1000), 
-  completo VARCHAR(2) NOT NULL, 
-  estado VARCHAR(20), 
+  id_inventario SERIAL,
+  id_almacen INTEGER NOT NULL,
+  id_usuario_resp INTEGER NOT NULL,
+  fecha_inv_planif TIMESTAMP WITHOUT TIME ZONE,
+  fecha_inv_ejec TIMESTAMP WITHOUT TIME ZONE,
+  observaciones VARCHAR(1000),
+  completo VARCHAR(2) NOT NULL,
+  estado VARCHAR(20),
   CONSTRAINT tinventario_pkey PRIMARY KEY(id_inventario)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
@@ -311,20 +311,20 @@ ALTER TABLE alm.tinventario
 /***********************************I-SCP-AAO-ALM-45-15/03/2013*****************************************/
 
 CREATE TABLE alm.tinventario_det (
-  id_inventario_det SERIAL NOT NULL, 
-  id_inventario INTEGER, 
-  id_item INTEGER, 
-  cantidad_sistema NUMERIC(18,2), 
-  cantidad_real NUMERIC(18,2), 
+  id_inventario_det SERIAL NOT NULL,
+  id_inventario INTEGER,
+  id_item INTEGER,
+  cantidad_sistema NUMERIC(18,2),
+  cantidad_real NUMERIC(18,2),
   diferencia NUMERIC(18,2),
-  observaciones VARCHAR(1000), 
+  observaciones VARCHAR(1000),
   PRIMARY KEY(id_inventario_det)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
 
 ALTER TABLE alm.tinventario_det
   OWNER TO postgres;
-  
+
 /***********************************F-SCP-AAO-ALM-45-15/03/2013*****************************************/
 
 /***********************************I-SCP-AAO-ALM-9-18/03/2013*****************************************/
@@ -334,7 +334,7 @@ ALTER TABLE alm.talmacen_stock
 
 ALTER TABLE alm.titem_reemplazo
   ALTER COLUMN id_item SET NOT NULL;
- 
+
 ALTER TABLE alm.titem_reemplazo
   ALTER COLUMN id_item_r SET NOT NULL;
 
@@ -343,7 +343,7 @@ ALTER TABLE alm.tmovimiento_det
 /***********************************F-SCP-AAO-ALM-9-18/03/2013*****************************************/
 
 /***********************************I-SCP-AAO-ALM-70-21/03/2013*****************************************/
-ALTER TABLE alm.tmovimiento_det 
+ALTER TABLE alm.tmovimiento_det
   ADD COLUMN cantidad_solicitada numeric(18,6);
 /***********************************F-SCP-AAO-ALM-70-21/03/2013*****************************************/
 
@@ -370,13 +370,13 @@ WITHOUT OIDS;
 
 ALTER TABLE alm.tmovimiento
   ADD COLUMN id_proceso_macro INTEGER;
-  
+
 ALTER TABLE alm.tmovimiento
   ADD COLUMN id_estado_wf INTEGER;
-  
+
 ALTER TABLE alm.tmovimiento
   ADD COLUMN id_proceso_wf INTEGER;
-  
+
 ALTER TABLE alm.tmovimiento_tipo
   ADD COLUMN id_proceso_macro INTEGER;
 
@@ -415,7 +415,7 @@ WITHOUT OIDS;
 /***********************************I-SCP-GSS-ALM-90-25/07/2013*****************************************/
 
 ALTER TABLE alm.tmovimiento_det
-  ADD COLUMN observaciones VARCHAR(1000);  
+  ADD COLUMN observaciones VARCHAR(1000);
 
 /***********************************F-SCP-GSS-ALM-90-25/07/2013*****************************************/
 
@@ -423,18 +423,18 @@ ALTER TABLE alm.tmovimiento_det
 
 ALTER TABLE alm.tinventario
   ADD COLUMN id_usuario_asis INTEGER;
-  
+
 /***********************************F-SCP-GSS-ALM-86-26/07/2013*****************************************/
 
 
 /***********************************I-SCP-GSS-ALM-87-26/07/2013*****************************************/
 
 CREATE TABLE alm.tmovimiento_tipo_item (
-  id_movimiento_tipo_item SERIAL, 
-  id_movimiento_tipo INTEGER, 
-  id_item INTEGER, 
+  id_movimiento_tipo_item SERIAL,
+  id_movimiento_tipo INTEGER,
+  id_item INTEGER,
   CONSTRAINT pk_tmovimiento_tipo_item__id_movimiento_tipo_item PRIMARY KEY(id_movimiento_tipo_item)
-) INHERITS(pxp.tbase) 
+) INHERITS(pxp.tbase)
 WITHOUT OIDS;
 
 /***********************************F-SCP-GSS-ALM-87-26/07/2013*****************************************/
@@ -446,11 +446,11 @@ add column id_clasificacion integer;
 
 /***********************************I-SCP-RCM-ALM-95-22/08/2013*****************************************/
 CREATE TABLE alm.tmovimiento_tipo_uo (
-  id_movimiento_tipo_uo SERIAL, 
-  id_movimiento_tipo INTEGER, 
-  id_uo INTEGER, 
+  id_movimiento_tipo_uo SERIAL,
+  id_movimiento_tipo INTEGER,
+  id_uo INTEGER,
   CONSTRAINT pk_tmovimiento_tipo_uo__id_movimiento_tipo_uo PRIMARY KEY(id_movimiento_tipo_uo)
-) INHERITS(pxp.tbase) 
+) INHERITS(pxp.tbase)
 WITHOUT OIDS;
 /***********************************F-SCP-RCM-ALM-95-22/08/2013*****************************************/
 
@@ -465,43 +465,43 @@ ALTER TABLE alm.tpreingreso
   ADD COLUMN estado varchar(50);
 ALTER TABLE alm.tpreingreso
   ADD COLUMN id_moneda INTEGER;
-  
+
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN id_depto INTEGER;
-  
+
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN id_clasificacion INTEGER;
-  
+
 CREATE TABLE alm.titem_clasif_ingas (
-  id_item_clasif_ingas SERIAL, 
-  id_concepto_ingas INTEGER, 
-  id_item INTEGER, 
+  id_item_clasif_ingas SERIAL,
+  id_concepto_ingas INTEGER,
+  id_item INTEGER,
   id_clasificacion INTEGER,
   contador integer,
   CONSTRAINT pk_titem_clasif_ingas__id_item_clasif_ingas PRIMARY KEY(id_item_clasif_ingas)
-) INHERITS(pxp.tbase) 
+) INHERITS(pxp.tbase)
 WITHOUT OIDS;
 
 drop table alm.titem_concepto;
 
 ALTER TABLE alm.tpreingreso
   ADD COLUMN tipo VARCHAR(15) NOT NULL;
-  
+
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN sw_generar VARCHAR(2);
 
 ALTER TABLE alm.tpreingreso_det
   ALTER COLUMN sw_generar SET DEFAULT 'no';
-  
+
 ALTER TABLE alm.tpreingreso
   ADD COLUMN descripcion VARCHAR(1000);
-  
+
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN observaciones VARCHAR(1000);
-  
+
 ALTER TABLE alm.tmovimiento
   ADD COLUMN id_preingreso INTEGER;
-  
+
   ALTER TABLE alm.tpreingreso_det
   RENAME COLUMN cantidad TO cantidad_det;
 /***********************************F-SCP-RCM-ALM-82-01/10/2013*****************************************/
@@ -522,10 +522,10 @@ CREATE TABLE alm.tsalida_grupo (
   id_movimiento_tipo integer,
   descripcion varchar(1000),
   observaciones varchar(1000),
-  estado varchar(15), 
+  estado varchar(15),
   fecha date,
   CONSTRAINT pk_tsalida_grupo__id_salida_grupo PRIMARY KEY(id_salida_grupo)
-) INHERITS(pxp.tbase) 
+) INHERITS(pxp.tbase)
 WITHOUT OIDS;
 
 CREATE TABLE alm.tsalida_grupo_item (
@@ -535,7 +535,7 @@ CREATE TABLE alm.tsalida_grupo_item (
   cantidad_sol numeric(18,2),
   observaciones varchar(1000),
   CONSTRAINT pk_tsalida_grupo_item__id_salida_grupo_item PRIMARY KEY(id_salida_grupo_item)
-) INHERITS(pxp.tbase) 
+) INHERITS(pxp.tbase)
 WITHOUT OIDS;
 
 CREATE TABLE alm.tsalida_grupo_fun (
@@ -546,7 +546,7 @@ CREATE TABLE alm.tsalida_grupo_fun (
   observaciones varchar(1000),
   CONSTRAINT pk_tsalida_grupo_fun__id_salida_grupo_fun PRIMARY KEY(id_salida_grupo_fun),
   CONSTRAINT uq_tsalida_grupo_fun__id_funcionario UNIQUE (id_salida_grupo_item,id_funcionario)
-) INHERITS(pxp.tbase) 
+) INHERITS(pxp.tbase)
 WITHOUT OIDS;
 
 alter table alm.tmovimiento
@@ -561,11 +561,11 @@ CREATE TABLE alm.tmovimiento_grupo (
   id_int_comprobante integer,
   id_depto_conta INTEGER,
   descripcion varchar(1000),
-  estado varchar(15), 
+  estado varchar(15),
   fecha_ini date,
   fecha_fin date,
   CONSTRAINT pk_tmovimiento_grupo__id_movimiento_grupo PRIMARY KEY(id_movimiento_grupo)
-) INHERITS(pxp.tbase) 
+) INHERITS(pxp.tbase)
 WITHOUT OIDS;
 
 CREATE TABLE alm.tmovimiento_grupo_det (
@@ -573,7 +573,7 @@ CREATE TABLE alm.tmovimiento_grupo_det (
   id_movimiento_grupo integer,
   id_movimiento integer,
   CONSTRAINT pk_tmovimiento_grupo_det__id_movimiento_grupo_det PRIMARY KEY(id_movimiento_grupo_det)
-) INHERITS(pxp.tbase) 
+) INHERITS(pxp.tbase)
 WITHOUT OIDS;
 
 alter table alm.tpreingreso
@@ -587,8 +587,8 @@ ALTER TABLE alm.tmovimiento
 ALTER TABLE alm.tmovimiento
   ADD COLUMN id_depto_conta integer;
 ALTER TABLE alm.tmovimiento_det
-  ADD COLUMN id_concepto_ingas integer;  
-  
+  ADD COLUMN id_concepto_ingas integer;
+
 /***********************************F-SCP-RCM-ALM-0-31/10/2013*****************************************/
 
 /***********************************I-SCP-RCM-ALM-0-20/11/2013*****************************************/
@@ -598,10 +598,10 @@ ALTER TABLE alm.tmovimiento
 
 /***********************************I-SCP-RCM-ALM-0-30/12/2013*****************************************/
 CREATE TABLE alm.talmacen_gestion (
-  id_almacen_gestion SERIAL, 
-  id_almacen INTEGER, 
-  id_gestion INTEGER, 
-  estado VARCHAR, 
+  id_almacen_gestion SERIAL,
+  id_almacen INTEGER,
+  id_gestion INTEGER,
+  estado VARCHAR,
   PRIMARY KEY(id_almacen_gestion)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
@@ -609,9 +609,9 @@ WITHOUT OIDS;
 
 /***********************************I-SCP-RCM-ALM-0-31/12/2013*****************************************/
 CREATE TABLE alm.talmacen_gestion_log (
-  id_almacen_gestion_log SERIAL, 
-  id_almacen_gestion INTEGER, 
-  estado VARCHAR, 
+  id_almacen_gestion_log SERIAL,
+  id_almacen_gestion INTEGER,
+  estado VARCHAR,
   PRIMARY KEY(id_almacen_gestion_log)
 ) INHERITS (pxp.tbase)
 WITHOUT OIDS;
@@ -627,15 +627,15 @@ ALTER TABLE alm.tmovimiento
 
 ALTER TABLE alm.tmovimiento_det
   ADD COLUMN id_movimiento_det_ingreso INTEGER;
-  
+
 /***********************************F-SCP-JRR-ALM-0-21/03/2015*****************************************/
 
 /***********************************I-SCP-RCM-ALM-0-03/05/2015*****************************************/
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN estado VARCHAR(10);
 COMMENT ON COLUMN alm.tpreingreso_det.estado
-IS 'Indica si el registro es creado desde adquisiciones al generar el preingreso (''orig''), si es modificado desde preingreso (''mod'')';  
-/***********************************F-SCP-RCM-ALM-0-03/05/2015*****************************************/  
+IS 'Indica si el registro es creado desde adquisiciones al generar el preingreso (''orig''), si es modificado desde preingreso (''mod'')';
+/***********************************F-SCP-RCM-ALM-0-03/05/2015*****************************************/
 
 /***********************************I-SCP-JRR-ALM-0-04/08/2015*****************************************/
 ALTER TABLE alm.tpreingreso_det
@@ -643,10 +643,10 @@ ALTER TABLE alm.tpreingreso_det
 
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN descripcion TEXT;
-  
+
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN precio_compra_87 NUMERIC(18,2);
-  
+
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN id_lugar INTEGER;
 
@@ -659,10 +659,10 @@ ALTER TABLE alm.tpreingreso_det
 
 ALTER TABLE alm.tpreingreso
   ADD COLUMN c31 VARCHAR(50);
-  
+
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN c31 VARCHAR(50);
-  
+
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN fecha_conformidad DATE;
 
@@ -671,7 +671,7 @@ ALTER TABLE alm.tpreingreso_det
 
 
 /***********************************I-SCP-JRR-ALM-0-16/09/2015*****************************************/
-    
+
 ALTER TABLE alm.tpreingreso_det
   ADD COLUMN fecha_compra DATE;
 
@@ -679,27 +679,27 @@ ALTER TABLE alm.tpreingreso_det
 
 
 /***********************************I-SCP-JRR-ALM-0-08/10/2015*****************************************/
-    
+
 ALTER TABLE alm.talmacen
   ADD COLUMN id_metodo_val INTEGER;
 
 /***********************************F-SCP-JRR-ALM-0-08/10/2015*****************************************/
 
 /***********************************I-SCP-JRR-ALM-0-23/06/2016*****************************************/
-   
+
 CREATE TYPE alm.detalle_movimiento AS (
   codigo_item VARCHAR(50),
   cantidad NUMERIC(18,6)
-);  
+);
 
 /***********************************F-SCP-JRR-ALM-0-23/06/2016*****************************************/
 
 /***********************************I-SCP-GSS-ALM-1-13/07/2016*****************************************/
 
 CREATE TABLE alm.tmovimiento_tipo_almacen (
-  id_movimiento_tipo_almacen SERIAL, 
-  id_movimiento_tipo INTEGER NOT NULL, 
-  id_almacen INTEGER NOT NULL, 
+  id_movimiento_tipo_almacen SERIAL,
+  id_movimiento_tipo INTEGER NOT NULL,
+  id_almacen INTEGER NOT NULL,
   PRIMARY KEY(id_movimiento_tipo_almacen)
 ) INHERITS (pxp.tbase) WITHOUT OIDS;
 
@@ -711,7 +711,7 @@ CREATE TABLE alm.tmovimiento_tipo_almacen (
 ALTER TABLE alm.titem
   ADD COLUMN cantidad_max_sol INTEGER;
 
-COMMENT ON COLUMN alm.titem.cantidad_max_sol 
+COMMENT ON COLUMN alm.titem.cantidad_max_sol
 IS 'cantidad maxima por solicitud';
 
 /***********************************F-SCP-GSS-ALM-1-14/11/2016*****************************************/
@@ -728,12 +728,75 @@ IS 'cantidad maxima por solicitud';
 
 ALTER TABLE alm.tmovimiento
   ADD COLUMN comail INTEGER;
-  
+
   --------------- SQL ---------------
 
 ALTER TABLE alm.tmovimiento
   ADD COLUMN fecha_salida DATE;
-  
+
 
 /***********************************F-SCP-RAC-ALM-1-14/04/2017*****************************************/
 
+/***********************************I-SCP-RCM-ALM-1-17/07/2018*****************************************/
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN id_centro_costo INTEGER;
+
+COMMENT ON COLUMN alm.tpreingreso_det.id_centro_costo
+IS 'Centro de costo, caso activos fijos: usado para la depreciación';
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN id_ubicacion INTEGER;
+
+COMMENT ON COLUMN alm.tpreingreso_det.id_ubicacion
+IS 'Ubicación Activos Fijos';
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN id_grupo INTEGER;
+
+COMMENT ON COLUMN alm.tpreingreso_det.id_grupo
+IS 'Agrupador AE para caso activos fijos';
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN id_grupo_clasif INTEGER;
+
+COMMENT ON COLUMN alm.tpreingreso_det.id_grupo_clasif
+IS 'Clasificador AE para caso activos fijos';
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN nro_serie VARCHAR(50);
+
+COMMENT ON COLUMN alm.tpreingreso_det.nro_serie
+IS 'Número de serie del activo fijo';
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN marca VARCHAR(200);
+
+COMMENT ON COLUMN alm.tpreingreso_det.marca
+IS 'Marca del activo fijo';
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN generado VARCHAR(2) DEFAULT 'si' NOT NULL;
+
+COMMENT ON COLUMN alm.tpreingreso_det.generado
+IS 'Bandera que define si el registro fue generado por el sistema o fue registrado manualmente';
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN tipo_reg VARCHAR(10) DEFAULT 'normal' NOT NULL;
+
+COMMENT ON COLUMN alm.tpreingreso_det.tipo_reg
+IS 'Define el tipo del registro, Normal (normal) o si fue Desglosado (desglose)';
+
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN id_preingreso_det_padre INTEGER;
+
+COMMENT ON COLUMN alm.tpreingreso_det.id_preingreso_det_padre
+IS 'Id del pasdre del registro cuando se haga un desglose';
+/***********************************F-SCP-RCM-ALM-1-17/07/2018*****************************************/
+
+/***********************************I-SCP-RCM-ALM-1-05/09/2018*****************************************/
+ALTER TABLE alm.tpreingreso_det
+  ADD COLUMN vida_util INTEGER;
+
+COMMENT ON COLUMN alm.tpreingreso_det.vida_util
+IS 'Vida util en meses';
+/***********************************F-SCP-RCM-ALM-1-05/09/2018*****************************************/

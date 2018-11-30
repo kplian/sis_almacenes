@@ -19,7 +19,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 		this.grid.getBottomToolbar().disable();
 		this.grid.addListener('cellclick', this.oncellclick,this);
 		this.init();
-		
+
 		//Se agrega el botón para adicionar todos
 		this.addButton('btnAgTodos', {
 			text : 'Quitar Todos',
@@ -38,7 +38,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			tooltip : '<b>Desglosar registro</b><br/>Desglosa el registro en la cantidad comprada'
 		});
 	},
-			
+
 	Atributos:[
 		{
 			//configuracion del componente
@@ -48,7 +48,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_preingreso_det'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},
 		{
 			config:{
@@ -57,7 +57,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_preingreso'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},
 		{
             config:{
@@ -67,7 +67,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
                 anchor: '80%',
                 gwidth: 50,
                 scope: this,
-                renderer:function (value, p, record, rowIndex, colIndex){  
+                renderer:function (value, p, record, rowIndex, colIndex){
 					return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Quitar' src = '../../../lib/imagenes/icono_awesome/awe_left_arrow.png' align='center' width='30' height='30'></div>";
                 }
             },
@@ -84,7 +84,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
                 anchor: '80%',
                 gwidth: 50,
                 scope: this,
-                renderer:function (value, p, record, rowIndex, colIndex){  
+                renderer:function (value, p, record, rowIndex, colIndex){
 					return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' src = '../../../lib/imagenes/icono_awesome/awe_ok.png' align='center' width='30' height='30'></div>";
                 }
             },
@@ -123,7 +123,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:true
 		},
-		
+
 		{
 			config:{
 				name: 'precio_compra_87',
@@ -450,7 +450,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			grid:false,
 			form:true
 		},
-		
+
 		{
 			config:{
 				name: 'fecha_conformidad',
@@ -458,7 +458,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
-				format: 'd/m/Y', 
+				format: 'd/m/Y',
 				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
@@ -474,7 +474,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
-				format: 'd/m/Y', 
+				format: 'd/m/Y',
 				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
@@ -715,6 +715,22 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 		},
 		{
 			config:{
+				name: 'vida_util',
+				fieldLabel: 'Vida Útil (meses)',
+				allowBlank: false,
+				anchor: '80%',
+				gwidth: 55,
+				maxLength:200,
+				disabled:true
+			},
+			type:'NumberField',
+			filters:{pfiltro:'predet.vida_util',type:'numeric'},
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
+		{
+			config:{
 				name: 'usr_reg',
 				fieldLabel: 'Creado por',
 				allowBlank: true,
@@ -735,7 +751,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-				format: 'd/m/Y', 
+				format: 'd/m/Y',
 				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
@@ -766,7 +782,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-				format: 'd/m/Y', 
+				format: 'd/m/Y',
 				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
@@ -775,9 +791,9 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:false
 		}
-		
+
 	],
-	tam_pag: 50,	
+	tam_pag: 50,
 	title: 'Preingreso',
 	ActSave: '../../sis_almacenes/control/PreingresoDet/insertarPreingresoDetPreparacion',
 	ActDel: '../../sis_almacenes/control/PreingresoDet/eliminarPreingresoDetPreparacion',
@@ -826,7 +842,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 		{name:'desc_grupo', type: 'string'},
 		{name:'desc_grupo_clasif', type: 'string'},
 		{name:'nro_serie', type: 'string'},
-		{name:'marca', type: 'string'}
+		{name:'marca', type: 'string'},
+		{name:'vida_util', type: 'numeric'}
 	],
 	sortInfo:{
 		field: 'id_preingreso_det',
@@ -843,12 +860,12 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
        	this.getBoton('btnDesgl').disable()
 
        	if(data&&data.estado_reg=='activo'&&data.cantidad_det>1){
-			this.getBoton('btnDesgl').enable()       		
+			this.getBoton('btnDesgl').enable()
        	}
-       	
+
 		this.preparaComponentes(this.maestro)
 	},
-	
+
 	loadValoresIniciales:function(){
 		Phx.vista.PreingresoDetModActV2.superclass.loadValoresIniciales.call(this);
 		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);
@@ -856,10 +873,10 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 		this.Cmp.fecha_compra.setValue(this.maestro.fecha_conformidad);
 		//this.Cmp.c31.setValue(this.Cmp.c31.getValue());
 	},
-	
+
 	onReloadPage:function(m){
-		this.maestro=m;	
-		
+		this.maestro=m;
+
 		Ext.apply(this.store.baseParams,{id_preingreso:this.maestro.id_preingreso,estado: this.estado});
 		//this.preparaComponentes(this.maestro);
 		this.load({params:{start:0, limit:this.tam_pag}});
@@ -871,7 +888,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			this.Cmp.fecha_conformidad.setValue(this.maestro.fecha_conformidad);
 			this.Cmp.fecha_compra.setValue(this.maestro.fecha_conformidad);
 		}
-		
+
 		/*if (this.Cmp.c31.getValue() == '' || this.Cmp.c31.getValue() == undefined) {
 			this.Cmp.c31.setValue(this.Cmp.c31.getValue());
 		}*/
@@ -882,8 +899,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 		if(pMaestro.tipo=='activo_fijo'){
 			//Setea store del departamento
 			codSis='KAF';
-			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});			
-			
+			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
+
 			//Habilita componentes
 			this.Cmp.precio_compra_87.enable();
             this.mostrarComponente(this.Cmp.precio_compra_87);
@@ -904,6 +921,8 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
             this.Cmp.fecha_conformidad.enable();
             this.mostrarComponente(this.Cmp.fecha_conformidad);
             this.mostrarComponente(this.Cmp.fecha_compra);
+            this.Cmp.vida_util.enable();
+            this.mostrarComponente(this.Cmp.vida_util);
             this.mostrarColumna(5);
             this.mostrarColumna(8);
             this.mostrarColumna(9);
@@ -914,7 +933,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
             this.mostrarColumna(14);
             this.mostrarColumna(15);
             this.mostrarColumna(16);
-			
+
 			//Deshabilita componentes
 			this.Cmp.id_almacen.disable();
             this.ocultarComponente(this.Cmp.id_almacen);
@@ -922,12 +941,12 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
             this.ocultarComponente(this.Cmp.id_item);
             this.ocultarColumna(5);
             this.ocultarColumna(6);
-			
+
 		} else if(pMaestro.tipo=='almacen'){
 			//Setea store del departamento
 			codSis='ALM';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
-			
+
 			//Habilita componentes
 			this.Cmp.id_almacen.enable();
             this.mostrarComponente(this.Cmp.id_almacen);
@@ -935,7 +954,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
             this.mostrarComponente(this.Cmp.id_item);
             this.mostrarColumna(5);
             this.mostrarColumna(6);
-			
+
 			//Deshabilita componentes
 			this.Cmp.precio_compra_87.disable();
             this.ocultarComponente(this.Cmp.precio_compra_87);
@@ -955,6 +974,9 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
             //this.ocultarComponente(this.Cmp.c31);
             this.ocultarComponente(this.Cmp.fecha_conformidad);
             this.ocultarComponente(this.Cmp.fecha_compra);
+            this.Cmp.vida_util.disable();
+            this.ocultarComponente(this.Cmp.vida_util);
+
             this.ocultarColumna(5);
             this.ocultarColumna(8);
             this.ocultarColumna(9);
@@ -965,7 +987,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
             this.ocultarColumna(14);
             this.ocultarColumna(15);
             this.ocultarColumna(16);
-            
+
         } else {
 			//Setea store del departamento
 			codSis='error';
@@ -975,9 +997,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
             this.ocultarColumna(7);
 			this.ocultarColumna(8);
 		}
-		
-		console.log(pMaestro.estado);
-		
+
 		//Habilita los componentes
 		if(pMaestro.estado=='borrador'){
            this.getBoton('new').enable();
@@ -989,12 +1009,12 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
            this.getBoton('btnAgTodos').disable();
        	}
 	},
-	
+
 	aplicarFiltro: function(){
 		this.store.baseParams.estado=this.estado;
-        this.load(); 
+        this.load();
 	},
-	
+
 	quitarTodos: function(){
 		//Verifica si el grid tiene registros cargados
 		if(this.store.getTotalCount()>0){
@@ -1021,20 +1041,20 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 							failure: this.conexionFailure,
 							timeout: this.timeout,
 							scope: this
-						});	
+						});
 			   		}
 			   },
 			   icon: Ext.MessageBox.QUESTION,
 			   scope: this
 			});
-			
+
 		}
 	},
-	
+
 	successDel:function(resp){
 		Phx.CP.loadingHide();
 		this.reload();
-		
+
 		//Recarga al padre
 		var myPanel = Phx.CP.getPagina(this.idContenedorPadre);
 		myPanel.onReloadPage(this.maestro);
@@ -1070,7 +1090,7 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 							failure: this.conexionFailure,
 							timeout: this.timeout,
 							scope: this
-						});	
+						});
 			   		}
 			   },
 			   icon: Ext.MessageBox.QUESTION,
@@ -1078,16 +1098,16 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 			});
 		}
 	},
-	
-	oncellclick : function(grid, rowIndex, columnIndex, e) {
-		
+
+	oncellclick: function(grid, rowIndex, columnIndex, e) {
+
 	    var record = this.store.getAt(rowIndex),
 	        fieldName = grid.getColumnModel().getDataIndex(columnIndex); // Get field name
-	    
+
 		if (fieldName == 'quitar') {
-    	
+
 			var myPanel = Phx.CP.getPagina(this.idContenedorPadre);
-			
+
 			if(this.maestro.estado == 'finalizado'){
 				Ext.Msg.alert('Acción no permitida','El preingreso ya fue finalizado, no puede hacerse ninguna modificación.');
 			} else {
@@ -1110,12 +1130,10 @@ Phx.vista.PreingresoDetModActV2=Ext.extend(Phx.gridInterfaz,{
 					scope : this
 				});
 			}
-	    	
+
 	    }
-		
+
 	}
-	
+
 })
 </script>
-		
-		

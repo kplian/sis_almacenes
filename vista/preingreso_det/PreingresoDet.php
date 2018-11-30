@@ -11,7 +11,7 @@ header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
 Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
-	
+
 	estado: 'orig',
 
 	constructor:function(config){
@@ -22,7 +22,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 		this.grid.getBottomToolbar().disable();
 		this.grid.addListener('cellclick', this.oncellclick,this);
 		this.init();
-		
+
 		//Se agrega el botón para adicionar todos
 		this.addButton('btnAgTodos', {
 				text : 'Agregar Todos',
@@ -32,7 +32,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 				tooltip : '<b>Agregar Todos</b><br/>Agrega todos los items para el preingreso.'
 			});
 	},
-			
+
 	Atributos:[
 		{
 			//configuracion del componente
@@ -42,7 +42,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_preingreso_det'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},
 		{
 			config:{
@@ -51,7 +51,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_preingreso'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},
 		{
             config:{
@@ -61,7 +61,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
                 anchor: '80%',
                 gwidth: 50,
                 scope: this,
-                renderer:function (value, p, record, rowIndex, colIndex){  
+                renderer:function (value, p, record, rowIndex, colIndex){
 					return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Agregar' src = '../../../lib/imagenes/icono_awesome/awe_rigth_arrow.png' align='center' width='30' height='30'></div>";
                 }
             },
@@ -434,7 +434,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
+							format: 'd/m/Y',
 							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
@@ -465,7 +465,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
+							format: 'd/m/Y',
 							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
@@ -475,7 +475,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 			form:false
 		}
 	],
-	tam_pag:50,	
+	tam_pag:50,
 	title:'Adquisiciones',
 	ActSave:'../../sis_almacenes/control/PreingresoDet/insertarPreingresoDet',
 	ActDel:'../../sis_almacenes/control/PreingresoDet/eliminarPreingresoDet',
@@ -507,7 +507,16 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 		{name:'desc_ingas', type: 'string'},
 		{name:'descripcion', type: 'string'},
 		{name:'estado', type: 'string'},
-		{name:'tipo', type: 'string'}
+		{name:'tipo', type: 'string'},
+		{name:'id_centro_costo', type: 'numeric'},
+		{name:'id_ubicacion', type: 'numeric'},
+		{name:'id_grupo', type: 'numeric'},
+		{name:'id_grupo_clasif', type: 'numeric'},
+		{name:'codigo_tcc', type: 'string'},
+		{name:'desc_ubicacion', type: 'string'},
+		{name:'desc_grupo', type: 'string'},
+		{name:'desc_grupo_clasif', type: 'string'},
+		{name:'vida_util', type: 'numeric'}
 	],
 	sortInfo:{
 		field: 'id_preingreso_det',
@@ -518,7 +527,7 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 	bnew:false,
 	bedit:false,
 	/*preparaMenu:function(n){
-	    
+
 	       Phx.vista.PreingresoDet.superclass.preparaMenu.call(this,n);
 	       if(this.maestro.estado=='borrador'){
 	           this.getBoton('edit').enable();
@@ -526,16 +535,16 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 	       else{
 	           this.getBoton('edit').disable();
 	       }
-      
+
 	},*/
-	
-	
+
+
 	loadValoresIniciales:function(){
 		Phx.vista.PreingresoDet.superclass.loadValoresIniciales.call(this);
 		this.getComponente('id_preingreso').setValue(this.maestro.id_preingreso);
 	},
 	onReloadPage:function(m){
-		this.maestro=m;	
+		this.maestro=m;
 		Ext.apply(this.store.baseParams,{id_preingreso:this.maestro.id_preingreso,estado: this.estado});
 		this.load({params:{start:0, limit:this.tam_pag}});
 		console.log('onreload');
@@ -549,50 +558,50 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 		var codSis;
 		//Oculta concepto de gasto
 		this.Cmp.id_cotizacion_det.disable();
-		
+
 		if(pMaestro.tipo=='activo_fijo'){
 			//Setea store del departamento
 			codSis='AF';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
-			
-			
+
+
 			//Habilita componentes
 			this.Cmp.id_clasificacion.enable();
             this.mostrarComponente(this.Cmp.id_clasificacion);
             this.Cmp.id_depto.enable();
             this.mostrarComponente(this.Cmp.id_depto);
-			
-			
+
+
 			//Deshabilita componentes
 			this.Cmp.id_almacen.disable();
             this.ocultarComponente(this.Cmp.id_almacen);
             this.Cmp.id_item.disable();
             this.ocultarComponente(this.Cmp.id_item);
-			
+
 		} else if(pMaestro.tipo=='almacen'){
 			//Setea store del departamento
 			codSis='ALM';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
 			console.log(this.Cmp.id_almacen)
-			
+
 			//Habilita componentes
 			this.Cmp.id_almacen.enable();
             this.mostrarComponente(this.Cmp.id_almacen);
             this.Cmp.id_item.enable();
             this.mostrarComponente(this.Cmp.id_item);
-			
+
 			//Deshabilita componentes
 			this.Cmp.id_clasificacion.disable();
             this.ocultarComponente(this.Cmp.id_clasificacion);
             this.Cmp.id_depto.disable();
             this.ocultarComponente(this.Cmp.id_depto);
-            
+
         } else {
 			//Setea store del departamento
 			codSis='error';
 			Ext.apply(this.Cmp.id_depto.store.baseParams,{codigo_subsistema:codSis});
 		}
-		
+
 		if(pMaestro.estado=='borrador'){
            this.getBoton('new').enable();
            this.getBoton('edit').enable();
@@ -608,22 +617,22 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 		title : 'Preingreso',
 		width : '50%',
 		cls : 'PreingresoDetMod'
-	}, 
-	
+	},
+
 	aplicarFiltro: function(){
 		this.store.baseParams.estado=this.estado;
-        this.load(); 
+        this.load();
 	},
-	
+
 	oncellclick : function(grid, rowIndex, columnIndex, e) {
-		
+
 	    var record = this.store.getAt(rowIndex),
 	        fieldName = grid.getColumnModel().getDataIndex(columnIndex); // Get field name
-	        
+
 	    if (fieldName == 'agregar') {
-	    	
+
 			var myPanelEast = Phx.CP.getPagina(this.idContenedor+'-east');
-			
+
 			if(this.maestro.estado == 'finalizado'){
 				Ext.Msg.alert('Acción no permitida','El preingreso ya fue finalizado, no puede hacerse ninguna modificación.');
 			} else {
@@ -647,10 +656,10 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 					});
 			}
 
-	    } 
-		
+	    }
+
 	},
-	
+
 	agregarTodos: function(){
 		//Verifica si el grid tiene registros cargados
 		if(this.store.getTotalCount()>0){
@@ -677,31 +686,26 @@ Phx.vista.PreingresoDet=Ext.extend(Phx.gridInterfaz,{
 							failure: this.conexionFailure,
 							timeout: this.timeout,
 							scope: this
-						});	
+						});
 			   		}
 			   },
 			   icon: Ext.MessageBox.QUESTION,
 			   scope: this
-			});	
+			});
 		}
 
-		
-		
-
 	},
-	
+
 	DisableSelect: function(n) {
         this.liberaMenu(n)
    	},
-   
+
    	EnableSelect: function(n,extra) {
 		var data = this.getSelectedData();
         Ext.apply(data,extra);
        	this.preparaMenu(n);
     }
-	
-	
+
 })
 </script>
-		
-		
+

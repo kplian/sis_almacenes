@@ -31,7 +31,7 @@ DECLARE
     v_id_estado_wf_cot integer;
     v_codigo_estado_cot varchar;
     v_id_proceso_macro_cot integer;
-    
+
     va_id_tipo_estado integer [];
     va_codigo_estado varchar [];
     va_disparador varchar [];
@@ -42,11 +42,11 @@ DECLARE
     v_cadena_cnx    varchar;
     v_consulta      varchar;
     v_res_cone      varchar;
-    
+
 BEGIN
 
   v_nombre_funcion = 'alm.f_generar_ingreso';
- 
+
   ---------------------
     --OBTENCION DE DATOS
     ---------------------
@@ -59,15 +59,15 @@ BEGIN
     inner join adq.tproceso_compra pro on pro.id_proceso_compra = cot.id_proceso_compra
     inner join adq.tsolicitud sol on sol.id_solicitud = pro.id_solicitud
     where id_preingreso = p_id_preingreso;
-    
+
     --Movimiento tipo para Ingresos del sistema de Adquisiciones
     select id_movimiento_tipo
     into v_id_movimiento_tipo
     from alm.tmovimiento_tipo
     where codigo = 'INADQ';
-    
+
     --Datos de WF para el Ingreso
-    select tp.codigo, pm.id_proceso_macro 
+    select tp.codigo, pm.id_proceso_macro
     into v_codigo_tipo_proceso, v_id_proceso_macro
     from  alm.tmovimiento_tipo mt
     inner join wf.tproceso_macro pm on pm.id_proceso_macro =  mt.id_proceso_macro
@@ -75,18 +75,18 @@ BEGIN
     where mt.id_movimiento_tipo = v_id_movimiento_tipo
     and tp.estado_reg = 'activo'
     and tp.inicio = 'si';
-    
+
     --Gestión
     select id_gestion
     into v_id_gestion
     from param.tgestion
     where gestion = to_char(now(),'yyyy')::integer;
-    
+
     --Datos WF del Preingreso
     select
     pre.id_proceso_wf, pre.id_estado_wf, pre.estado,
     sol.id_proceso_macro
-    into 
+    into
     v_id_proceso_wf_cot, v_id_estado_wf_cot, v_codigo_estado_cot,
     v_id_proceso_macro_cot
     from alm.tpreingreso pre
@@ -94,10 +94,10 @@ BEGIN
     inner join adq.tproceso_compra pro on pro.id_proceso_compra = cot.id_proceso_compra
     inner join adq.tsolicitud sol on sol.id_solicitud = pro.id_solicitud
     where pre.id_preingreso = p_id_preingreso;
-    
-    
+
+
     ---------------
-    --VALIDACIONES 
+    --VALIDACIONES
     ---------------
     --Existencia del preingreso
     if v_rec.id_preingreso is null then
@@ -142,7 +142,7 @@ BEGIN
                 where pdet.id_preingreso = v_rec.id_preingreso
                 and pdet.sw_generar = 'si'
                 and ping.tipo='almacen'
-                and pdet.id_item is null 
+                and pdet.id_item is null
                 and pdet.id_almacen is null) then
       raise exception 'Datos incompletos, defina el Item y el Almacén destino';
     end if;
@@ -152,16 +152,17 @@ BEGIN
                 where pdet.id_preingreso = v_rec.id_preingreso
                 and pdet.sw_generar = 'si'
                 and ping.tipo='activo_fijo'
-                and pdet.id_clasificacion is null 
-                and pdet.id_depto is null) then
+                and pdet.id_clasificacion is null
+                and pdet.id_depto is null
+                and pdet.estado_reg = 'activo') then
       raise exception 'Datos incompletos, defina la Clasificación y el Depto. destino';
     end if;
-    
+
      -------------------------
     --Finaliza el Preingreso
     -------------------------
     --Obtener siguiente estado correpondiente al proceso del WF del preingreso
-    SELECT 
+    SELECT
     ps_id_tipo_estado, ps_codigo_estado, ps_disparador, ps_regla, ps_prioridad
     into
     va_id_tipo_estado, va_codigo_estado, va_disparador, va_regla, va_prioridad
@@ -171,16 +172,16 @@ BEGIN
     if va_id_tipo_estado[2] is not null then
         raise exception 'El proceso se encuentra mal parametrizado dentro de Work Flow, la finalizacion del Preingreso solo admite un estado siguiente';
     end if;
-          
+
     if  va_id_tipo_estado[1] is  null  then
       raise exception ' El proceso de Work Flow esta mal parametrizado, no tiene un estado siguiente para la finalizacion';
     end if;
-    
+
    -- raise exception '%  -  %',va_id_tipo_estado[1],va_codigo_estado[1];
-   
-    v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1], 
-                                                 NULL, 
-                                                 v_id_estado_wf_cot, 
+
+    v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1],
+                                                 NULL,
+                                                 v_id_estado_wf_cot,
                                                  v_id_proceso_wf_cot,
                                                  p_id_usuario,
                                                  p_id_usuario_ai,
@@ -191,37 +192,37 @@ BEGIN
                                                  'Preingreso');
 
     --Actualiza estado en preingreso
-    update alm.tpreingreso set 
+    update alm.tpreingreso set
     id_estado_wf =  v_id_estado_actual,
     estado = va_codigo_estado[1],
     id_usuario_mod=p_id_usuario,
     fecha_mod=now()
     where id_preingreso = v_rec.id_preingreso;
-    
-    
-    
+
+
+
     ---------------------------------------------------
-    --GENERACION DE INGRESOS A ALMACEN O ACTIVOS FIJOS 
+    --GENERACION DE INGRESOS A ALMACEN O ACTIVOS FIJOS
     ---------------------------------------------------
     if v_rec.tipo = 'almacen' then
-    
+
       for v_rec_det in (select distinct id_almacen
                           from alm.tpreingreso_det
                           where id_preingreso = v_rec.id_preingreso
                           and sw_generar = 'si'
                           and estado = 'mod') loop
-                          
+
           --Inicio del tramite en el sistema de WF
-            select 
-            ps_num_tramite, ps_id_proceso_wf, ps_id_estado_wf, ps_codigo_estado 
+            select
+            ps_num_tramite, ps_id_proceso_wf, ps_id_estado_wf, ps_codigo_estado
             into
-            v_num_tramite, v_id_proceso_wf, v_id_estado_wf, v_codigo_estado   
+            v_num_tramite, v_id_proceso_wf, v_id_estado_wf, v_codigo_estado
             from wf.f_inicia_tramite(
-               p_id_usuario, 
+               p_id_usuario,
                p_id_usuario_ai,
                p_usuario,
                v_id_gestion,
-               v_codigo_tipo_proceso, 
+               v_codigo_tipo_proceso,
                v_rec.id_funcionario,
             NULL,
             'Generación de ingreso a almacén',
@@ -240,10 +241,10 @@ BEGIN
             v_rec.descripcion, v_id_proceso_macro, v_id_estado_wf, v_id_proceso_wf,
             v_codigo_estado, v_rec.id_preingreso, v_rec.id_depto_conta, p_id_usuario_ai, p_usuario
             ) returning id_movimiento into v_id_movimiento;
-            
+
             --Detalle del ingreso
             for v_rec_val in (select
-                              pdet.id_item, pdet.cantidad_det, pdet.precio_compra, 
+                              pdet.id_item, pdet.cantidad_det, pdet.precio_compra,
                               pdet.observaciones, sdet.id_concepto_ingas
                               from alm.tpreingreso_det pdet
                               inner join adq.tcotizacion_det cdet on cdet.id_cotizacion_det = pdet.id_cotizacion_det
@@ -252,7 +253,7 @@ BEGIN
                               and pdet.id_almacen = v_rec_det.id_almacen
                               and pdet.sw_generar = 'si'
                               and pdet.estado = 'mod') loop
-                              
+
                 insert into alm.tmovimiento_det(
                 id_usuario_reg, fecha_reg, estado_reg,
                 id_movimiento, id_item, cantidad, costo_unitario, cantidad_solicitada,
@@ -262,7 +263,7 @@ BEGIN
                 v_id_movimiento, v_rec_val.id_item, v_rec_val.cantidad_det, v_rec_val.precio_compra,v_rec_val.cantidad_det,
                 v_rec_val.observaciones, v_rec_val.id_concepto_ingas
                 ) returning id_movimiento_det into v_id_movimiento_det;
-                
+
                 --Detalle valorado
                 insert into alm.tmovimiento_det_valorado (
                 id_usuario_reg,fecha_reg,estado_reg,id_movimiento_det,
@@ -271,37 +272,37 @@ BEGIN
                 p_id_usuario,now(),'activo',v_id_movimiento_det,
                 v_rec_val.cantidad_det, v_rec_val.precio_compra
                 );
-                
+
             end loop;
 
         end loop;
-    
-    
+
+
     elsif v_rec.tipo = 'activo_fijo' then
-    
+
       --Verificación de destino de generación de ingreso a activos fijos
         if pxp.f_get_variable_global('alm_migrar_af_endesis')='si' then
             --Llama ala funcion de ENDESIS para generar el ingreso de activos fijos
             --funcion para obtener cadena de conexion
             v_cadena_cnx =  migra.f_obtener_cadena_conexion();
-            
+
             v_consulta = 'select migracion.f_af_genera_registro_af('||
                           p_id_usuario ||',' ||
                           COALESCE(v_rec.id_preingreso::varchar,'NULL')||')';
-                          
+
             --Abre una conexion con dblink para ejecutar la consulta
             v_resp =  (SELECT dblink_connect(v_cadena_cnx));
-           
-            
-                       
+
+
+
             if (v_resp!='OK') THEN
-                --Error al abrir la conexión  
+                --Error al abrir la conexión
                 raise exception 'FALLA CONEXION A LA BASE DE DATOS CON DBLINK';
             else
                 PERFORM * FROM dblink(v_consulta,true) AS (resp varchar);
                 v_res_cone=(select dblink_disconnect());
             end if;
-            
+
 
         else
           --Ingreso a Activos Fijos de PXP;
