@@ -1,4 +1,5 @@
-------------------------------- SQL -------------------------------
+--------------- SQL ---------------
+
 CREATE OR REPLACE FUNCTION alm.ft_movimiento_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -83,9 +84,9 @@ BEGIN
         elsif lower(v_parametros.tipo_interfaz) = 'movimientovb' then
         	if p_administrador !=1 then
             	v_filtro = '(ew.id_funcionario='||v_parametros.id_funcionario_usu::varchar||' )
-            				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'',''pendiente'') and ';
+            				and lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
             else
-            	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'',''pendiente'') and ';
+            	v_filtro = 'lower(mov.estado_mov) not in (''borrador'' ,''finalizado'',''cancelado'',''prefin'') and ';
             end if;
 
         end if;
@@ -243,7 +244,6 @@ BEGIN
         	select
             	item.codigo,
                 item.nombre,
-                item.descripcion as descripcion_item,
                 umed.codigo as unidad_medida,
                 item.id_clasificacion,
                 cla.nombre as nombre_clasificacion,
@@ -278,7 +278,6 @@ BEGIN
     	v_consulta:=v_consulta||v_parametros.filtro;
         v_consulta = v_consulta || ' group by item.codigo,
                 item.nombre,
-                item.descripcion,
                 umed.codigo,
                 item.id_clasificacion,
                 cla.nombre,
