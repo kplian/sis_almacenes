@@ -186,7 +186,7 @@ ALTER TABLE alm.tinventario_det
 /***********************************F-DEP-AAO-ALM-45-15/03/2013*****************************************/
 
 /***********************************I-DEP-AAO-ALM-72-23/04/2013*****************************************/
-/*
+
 select pxp.f_insert_testructura_gui ('ALCRAL.2.2', 'ALCRAL.2');
 select pxp.f_insert_testructura_gui ('ALREMA.1.2', 'ALREMA.1');
 select pxp.f_insert_testructura_gui ('ALCLMA.1.1.2', 'ALCLMA.1.1');
@@ -297,7 +297,6 @@ select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'ALM_CLA_
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ARB_SEL', 'INVMAIN.2.1');
 select pxp.f_insert_trol_procedimiento_gui ('Administrador Almacenes', 'SAL_ITMSRCHARB_SEL', 'INVMAIN.2.1');
 
-*/
 
 
 /***********************************F-DEP-AAO-ALM-72-23/04/2013*****************************************/
