@@ -14,24 +14,24 @@ $body$
  SISTEMA ENDESIS - SISTEMA DE ...
 ***************************************************************************
  SCRIPT: 		tes.f_lista_funcionario_jefe_superior_wf_sel
- DESCRIPCI”N: 	Lista los fucionarios jefes superiores del funcionario
+ DESCRIPCI√ìN: 	Lista los fucionarios jefes superiores del funcionario
  AUTOR: 		Gonzalo Sarmiento Sejas
  FECHA:			19/04/2016
  COMENTARIOS:
 ***************************************************************************
  HISTORIA DE MODIFICACIONES:
 
- DESCRIPCI”N:
+ DESCRIPCI√ìN:
  AUTOR:
  FECHA:
 
 ***************************************************************************/
 
 -------------------------
--- CUERPO DE LA FUNCI”N --
+-- CUERPO DE LA FUNCI√ìN --
 --------------------------
 
--- PAR¡METROS FIJOS
+-- PAR√ÅMETROS FIJOS
 /*
 
 
