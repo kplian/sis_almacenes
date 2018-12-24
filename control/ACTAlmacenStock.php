@@ -19,8 +19,8 @@ class ACTAlmacenStock extends ACTbase{
         } else{
             $this->objFunc=$this->create('MODAlmacenStock');    
             $this->res=$this->objFunc->listarAlmacenItem();
-            $this->res->imprimirRespuesta($this->res->generarJson());
         }
+		$this->res->imprimirRespuesta($this->res->generarJson());
     }
                 
     function insertarAlmacenItem(){
