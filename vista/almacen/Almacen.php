@@ -5,6 +5,11 @@
  * @author 	Gonzalo Sarmiento
  * @date	21-09-2012
  * @description	Archivo con la interfaz de usuario que permite la ejecucion de las funcionales del sistema
+
+***************************************************************************
+ ISSUE  SIS       EMPRESA       FECHA       AUTOR       DESCRIPCION
+ #2     ALM       ETR           11/06/2019  RCM         Se añade interfaz hijo para parametrización de relaciones contables de Almacén
+***************************************************************************
  */
 header("content-type:text/javascript; charset=UTF-8");
 ?>
@@ -35,7 +40,7 @@ header("content-type:text/javascript; charset=UTF-8");
 				handler : this.onBtnSwitchEstado,
 				tooltip : '<b>Activar o Inactivar Almacen</b>'
 			});
-			
+
 			this.addButton('btnGestion', {
 				text : 'Gestiones',
 				iconCls : 'bassign',
@@ -261,7 +266,7 @@ header("content-type:text/javascript; charset=UTF-8");
             grid : true,
             form : true
         }
-		
+
 		, {
 			config : {
 				name : 'usr_reg',
@@ -436,17 +441,37 @@ header("content-type:text/javascript; charset=UTF-8");
 			Ext.Msg.confirm('Confirmación', '¿Está seguro de predefinir los stocks?', function(btn) {
 				if (btn == "yes") {
 					Ext.Ajax.request({
-						url : '../../sis_almacenes/control/Almacen/defStockAlmacen',
-						params : {
-							'id_almacen' : data.id_almacen
+						url: '../../sis_almacenes/control/Almacen/defStockAlmacen',
+						params: {
+							id_almacen: data.id_almacen
 						},
-						success : global.successSave,
-						failure : global.conexionFailure,
-						timeout : global.timeout,
-						scope : global
+						success: global.successSave,
+						failure: global.conexionFailure,
+						timeout: global.timeout,
+						scope: global
 					});
 				}
 			});
+		},
+	//Inicio #2:
+	east: {
+		url: '../../../sis_contabilidad/vista/relacion_contable/RelacionContableTabla.php',
+		title: 'Relacion Contable',
+		width: '50%',
+		cls: 'RelacionContableTabla',
+		params: {
+			nombre_tabla: 'alm.talmacen',
+			tabla_id: 'id_almacen'
 		}
-}); 
+   },
+
+   EnableSelect: function (n, extra) {
+        var miExtra = {codigos_tipo_relacion:''};
+        if (extra != null && typeof extra === 'object') {
+            miExtra = Ext.apply(extra, miExtra)
+        }
+      Phx.vista.Almacen.superclass.EnableSelect.call(this, n, miExtra);
+   }
+   //Fin #2
+});
 </script>
