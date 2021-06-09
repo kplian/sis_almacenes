@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION alm.ft_preingreso_det_ime (
 )
 RETURNS varchar AS
 $body$
-/**************************************************************************
+/*
+*************************************************************************
  SISTEMA:   Sistema de Almacenes
  FUNCION:     alm.ft_preingreso_det_ime
  DESCRIPCION:   Funcion que gestiona las operaciones basicas (inserciones, modificaciones, eliminaciones de la tabla 'alm.tpreingreso_det'
@@ -17,7 +18,7 @@ $body$
  ISSUE      SIS     EMPRESA  FECHA        AUTOR       DESCRIPCION
  #ETR-4195  KAF     ETR      09/06/2021   RCM         Actualización de bandera 'generado' para no incluirlo posteriormente para altas parciales
 ***************************************************************************
-* /
+*/
 
 DECLARE
 
