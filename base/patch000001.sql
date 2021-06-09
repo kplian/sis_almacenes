@@ -800,3 +800,7 @@ ALTER TABLE alm.tpreingreso_det
 COMMENT ON COLUMN alm.tpreingreso_det.vida_util
 IS 'Vida util en meses';
 /***********************************F-SCP-RCM-ALM-1-05/09/2018*****************************************/
+ 
+/***********************************I-DAT-RCM-ALM-ETR-4195-09/06/2021****************************************/
+ ALTER TABLE alm.tpreingreso_det ALTER COLUMN generado SET DEFAULT 'no'::character varying;
+/***********************************F-DAT-RCM-ALM-ETR-4195-09/06/2021****************************************/

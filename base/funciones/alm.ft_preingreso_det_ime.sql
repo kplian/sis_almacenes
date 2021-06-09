@@ -14,12 +14,10 @@ $body$
  FECHA:         07-10-2013 17:46:04
  COMENTARIOS:
 ***************************************************************************
- HISTORIAL DE MODIFICACIONES:
-
- DESCRIPCION:
- AUTOR:
- FECHA:
-***************************************************************************/
+ ISSUE      SIS     EMPRESA  FECHA        AUTOR       DESCRIPCION
+ #ETR-4195  KAF     ETR      09/06/2021   RCM         Actualización de bandera 'generado' para no incluirlo posteriormente para altas parciales
+***************************************************************************
+* /
 
 DECLARE
 
@@ -134,6 +132,15 @@ BEGIN
     elsif(p_transaccion='SAL_PREDET_MOD')then
 
         begin
+
+            --Inicio #ETR-4195
+            IF EXISTS (SELECT 1
+                    FROM alm.tpreingreso_det
+                    WHERE id_preingreso_det = v_parametros.id_preingreso_det
+                    AND generado = 'si') THEN
+                RAISE EXCEPTION 'Este registro ya fue activado/ingresado y no es posible modificarlo';
+            END IF;
+            --Fin #ETR-4195
 
             --Sentencia de la modificacion
             update alm.tpreingreso_det set
@@ -354,6 +361,15 @@ BEGIN
     elsif(p_transaccion='SAL_PREDETPRE_ELI')then
 
         begin
+            --Inicio #ETR-4195
+            IF EXISTS (SELECT 1
+                    FROM alm.tpreingreso_det
+                    WHERE id_preingreso_det = v_parametros.id_preingreso_det
+                    AND generado = 'si') THEN
+                RAISE EXCEPTION 'Este registro ya fue activado/ingresado y no es posible modificarlo';
+            END IF;
+            --Fin #ETR-4195
+
             --Sentencia de la eliminacion
             update alm.tpreingreso_det set
             estado = 'orig',
@@ -382,7 +398,8 @@ BEGIN
             update alm.tpreingreso_det set
             sw_generar = 'si',
             estado = 'mod'
-            where id_preingreso=v_parametros.id_preingreso;
+            where id_preingreso=v_parametros.id_preingreso
+            and generado <> 'si'; --#ETR-4195
 
             --Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Preingreso preparado, agregados todos');
@@ -406,7 +423,8 @@ BEGIN
             update alm.tpreingreso_det set
             sw_generar = 'no',
             estado = 'orig'
-            where id_preingreso=v_parametros.id_preingreso;
+            where id_preingreso=v_parametros.id_preingreso
+            and generado <> 'si'; --#ETR-4195
 
             --Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Items de preingreso quitados');
@@ -432,6 +450,15 @@ BEGIN
                         where id_preingreso_det = v_parametros.id_preingreso_det) then
                 raise exception 'Registro para desglosar no encontrado';
             end if;
+
+            --Inicio #ETR-4195
+            IF EXISTS (SELECT 1
+                    FROM alm.tpreingreso_det
+                    WHERE id_preingreso_det = v_parametros.id_preingreso_det
+                    AND generado = 'si') THEN
+                RAISE EXCEPTION 'Este registro ya fue activado/ingresado y no es posible modificarlo';
+            END IF;
+            --Fin #ETR-4195
 
             --Se crean nuevos registros basados en el original en la cantidad definida
             if v_parametros.cantidad_det > 1 then

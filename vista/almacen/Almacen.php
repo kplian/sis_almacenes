@@ -454,7 +454,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			});
 		},
 	//Inicio #2:
-	east: {
+	/*east: {
 		url: '../../../sis_contabilidad/vista/relacion_contable/RelacionContableTabla.php',
 		title: 'Relacion Contable',
 		width: '50%',
@@ -463,7 +463,7 @@ header("content-type:text/javascript; charset=UTF-8");
 			nombre_tabla: 'alm.talmacen',
 			tabla_id: 'id_almacen'
 		}
-   },
+   },*/
 
    EnableSelect: function (n, extra) {
         var miExtra = {codigos_tipo_relacion:''};

@@ -99,7 +99,7 @@ BEGIN
             left join alm.talmacen alm on alm.id_almacen = predet.id_almacen
             left join param.tdepto depto on depto.id_depto = predet.id_depto
             left join alm.titem ite on ite.id_item = predet.id_item
-            left join af.tclasificacion clas on clas.id_clasificacion = predet.id_clasificacion
+            left join kaf.tclasificacion clas on clas.id_clasificacion = predet.id_clasificacion
             left join param.tlugar lug on lug.id_lugar = predet.id_lugar
             inner join alm.tpreingreso pre on pre.id_preingreso = predet.id_preingreso
             left join param.vcentro_costo cc on cc.id_centro_costo = predet.id_centro_costo
@@ -138,7 +138,7 @@ BEGIN
                     left join alm.talmacen alm on alm.id_almacen = predet.id_almacen
                     left join param.tdepto depto on depto.id_depto = predet.id_depto
                     left join alm.titem ite on ite.id_item = predet.id_item
-                    left join af.tclasificacion clas on clas.id_clasificacion = predet.id_clasificacion
+                    left join kaf.tclasificacion clas on clas.id_clasificacion = predet.id_clasificacion
                     left join param.tlugar lug on lug.id_lugar = predet.id_lugar
                     inner join alm.tpreingreso pre on pre.id_preingreso = predet.id_preingreso
                     left join param.vcentro_costo cc on cc.id_centro_costo = predet.id_centro_costo

@@ -10,6 +10,10 @@ $body$
 Autor: RCM
 Fecha: 04/10/2013
 Descripción: Genera el ingreso a Almacén o a Activos Fijos a partir de un preingreso
+***************************************************************************
+ ISSUE      SIS     EMPRESA  FECHA        AUTOR       DESCRIPCION
+ #ETR-4195  KAF     ETR      09/06/2021   RCM         Solo pasar al estado siguiente cuando todo el detalle haya sido ingresado/activado
+***************************************************************************
 */
 DECLARE
 
@@ -158,48 +162,53 @@ BEGIN
       raise exception 'Datos incompletos, defina la Clasificación y el Depto. destino';
     end if;
 
-     -------------------------
+    -------------------------
     --Finaliza el Preingreso
     -------------------------
-    --Obtener siguiente estado correpondiente al proceso del WF del preingreso
-    SELECT
-    ps_id_tipo_estado, ps_codigo_estado, ps_disparador, ps_regla, ps_prioridad
-    into
-    va_id_tipo_estado, va_codigo_estado, va_disparador, va_regla, va_prioridad
-    FROM wf.f_obtener_estado_wf(v_id_proceso_wf_cot, v_id_estado_wf_cot,NULL,'siguiente');
+    --Inicio #ETR-4195
+    IF NOT EXISTS(SELECT 1 
+                FROM alm.tpreingreso_det pdet
+                WHERE pdet.id_preingreso = v_rec.id_preingreso
+                AND pdet.sw_generar = 'no') THEN
 
-    --Validaciones
-    if va_id_tipo_estado[2] is not null then
-        raise exception 'El proceso se encuentra mal parametrizado dentro de Work Flow, la finalizacion del Preingreso solo admite un estado siguiente';
-    end if;
+        --Obtener siguiente estado correpondiente al proceso del WF del preingreso
+        SELECT
+        ps_id_tipo_estado, ps_codigo_estado, ps_disparador, ps_regla, ps_prioridad
+        into
+        va_id_tipo_estado, va_codigo_estado, va_disparador, va_regla, va_prioridad
+        FROM wf.f_obtener_estado_wf(v_id_proceso_wf_cot, v_id_estado_wf_cot,NULL,'siguiente');
 
-    if  va_id_tipo_estado[1] is  null  then
-      raise exception ' El proceso de Work Flow esta mal parametrizado, no tiene un estado siguiente para la finalizacion';
-    end if;
+        --Validaciones
+        if va_id_tipo_estado[2] is not null then
+            raise exception 'El proceso se encuentra mal parametrizado dentro de Work Flow, la finalizacion del Preingreso solo admite un estado siguiente';
+        end if;
 
-   -- raise exception '%  -  %',va_id_tipo_estado[1],va_codigo_estado[1];
+        if  va_id_tipo_estado[1] is  null  then
+          raise exception ' El proceso de Work Flow esta mal parametrizado, no tiene un estado siguiente para la finalizacion';
+        end if;
 
-    v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1],
-                                                 NULL,
-                                                 v_id_estado_wf_cot,
-                                                 v_id_proceso_wf_cot,
-                                                 p_id_usuario,
-                                                 p_id_usuario_ai,
-                                                 p_usuario,
-                                                 NULL,
-                                                 'Preingreso realizado',
-                                                 '',
-                                                 'Preingreso');
+        v_id_estado_actual =  wf.f_registra_estado_wf(va_id_tipo_estado[1],
+                                                     NULL,
+                                                     v_id_estado_wf_cot,
+                                                     v_id_proceso_wf_cot,
+                                                     p_id_usuario,
+                                                     p_id_usuario_ai,
+                                                     p_usuario,
+                                                     NULL,
+                                                     'Preingreso realizado',
+                                                     '',
+                                                     'Preingreso');
 
-    --Actualiza estado en preingreso
-    update alm.tpreingreso set
-    id_estado_wf =  v_id_estado_actual,
-    estado = va_codigo_estado[1],
-    id_usuario_mod=p_id_usuario,
-    fecha_mod=now()
-    where id_preingreso = v_rec.id_preingreso;
-
-
+        --Actualiza estado en preingreso
+        update alm.tpreingreso set
+        id_estado_wf =  v_id_estado_actual,
+        estado = va_codigo_estado[1],
+        id_usuario_mod=p_id_usuario,
+        fecha_mod=now()
+        where id_preingreso = v_rec.id_preingreso;
+        
+    END IF;
+    --Fin #ETR-4195
 
     ---------------------------------------------------
     --GENERACION DE INGRESOS A ALMACEN O ACTIVOS FIJOS
