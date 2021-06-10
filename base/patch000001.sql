@@ -803,4 +803,13 @@ IS 'Vida util en meses';
  
 /***********************************I-DAT-RCM-ALM-ETR-4195-09/06/2021****************************************/
  ALTER TABLE alm.tpreingreso_det ALTER COLUMN generado SET DEFAULT 'no'::character varying;
+
+UPDATE alm.tpreingreso_det pd SET
+generado = 'no'
+FROM alm.tpreingreso p
+WHERE p.id_preingreso = pd.id_preingreso 
+AND p.estado = 'borrador'
+AND pd.sw_generar = 'no'
+AND pd.generado = 'si'
+AND pd.estado = 'orig';
 /***********************************F-DAT-RCM-ALM-ETR-4195-09/06/2021****************************************/
