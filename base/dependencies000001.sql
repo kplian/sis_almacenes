@@ -35,9 +35,6 @@ ALTER TABLE ONLY alm.tmovimiento
     ADD CONSTRAINT fk_tmovimiento__id_almacen_dest
     FOREIGN KEY (id_almacen_dest) REFERENCES alm.talmacen(id_almacen);
     
-ALTER TABLE ONLY alm.tmovimiento_det
-    ADD CONSTRAINT fk_tmovimiento_det__id_movimiento
-    FOREIGN KEY (id_movimiento) REFERENCES alm.tmovimiento(id_movimiento);
     
 ALTER TABLE ONLY alm.tmovimiento_det
     ADD CONSTRAINT fk_tmovimiento_det__id_item
@@ -49,13 +46,13 @@ add CONSTRAINT fk_talmacen_usuario__id_usuario FOREIGN KEY (id_usuario)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
-    
+/*    
 ALTER TABLE alm.talmacen
 ADD CONSTRAINT fk_talmacen__id_almacen_usuario FOREIGN KEY (id_almacen_usuario)
     REFERENCES alm.talmacen_usuario(id_almacen_usuario)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
-    NOT DEFERRABLE;
+    NOT DEFERRABLE;*/
     
 ALTER TABLE alm.talmacen
 add CONSTRAINT fk_talmacen__id_almacen FOREIGN KEY (id_almacen)
@@ -65,22 +62,8 @@ add CONSTRAINT fk_talmacen__id_almacen FOREIGN KEY (id_almacen)
     NOT DEFERRABLE; 
   
 
-ALTER TABLE alm.talmacen_correlativo
-add CONSTRAINT fk_tmovimiento_tipo__id_movimiento_tipo FOREIGN KEY (id_movimiento_tipo)
-    REFERENCES alm.tmovimiento_tipo(id_movimiento_tipo)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-    NOT DEFERRABLE;
-    
 /***********************************F-DEP-RCM-ALM-0-11/01/2013*****************************************/
 
-/***********************************I-DEP-AAO-ALM-6-04/02/2013*****************************************/
-ALTER TABLE alm.talmacen_correlativo
-  DROP CONSTRAINT fk_tmovimiento_tipo__id_movimiento_tipo RESTRICT;
-  
-ALTER TABLE alm.talmacen
-  DROP COLUMN id_almacen_usuario;
-/***********************************F-DEP-AAO-ALM-6-04/02/2013*****************************************/
 
 /***********************************I-DEP-AAO-ALM-12-06/02/2013*****************************************/
 ALTER TABLE alm.talmacen_usuario
@@ -126,14 +109,6 @@ ALTER TABLE alm.talmacen_stock
     NOT DEFERRABLE;
 /***********************************F-DEP-AAO-ALM-24-14/02/2013*****************************************/
 
-/***********************************I-DEP-AAO-ALM-25-21/02/2013*****************************************/
-ALTER TABLE alm.tmovimiento_det_valorado
-  ADD CONSTRAINT fk_tmovimiento_det_valorado__id_movimiento_det FOREIGN KEY (id_movimiento_det)
-    REFERENCES alm.tmovimiento_det(id_movimiento_det)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-    NOT DEFERRABLE;
-/***********************************F-DEP-AAO-ALM-25-21/02/2013*****************************************/
 
 /***********************************I-DEP-AAO-ALM-26-25/02/2013*****************************************/
 ALTER TABLE alm.talmacen
@@ -398,8 +373,7 @@ ALTER TABLE alm.tpreingreso
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
     
-ALTER TABLE alm.tpreingreso
-  ADD CONSTRAINT chk_tpreingreso__tipo CHECK (tipo in ('almacen','activo_fijo'));
+
 /***********************************F-DEP-RCM-ALM-82-01/10/2013*****************************************/
 
 
@@ -484,7 +458,8 @@ SELECT mgru.id_movimiento_grupo, (((((('Salida del Almacén: '::text ||
         desc_almacen, mgru.id_almacen
 FROM alm.tmovimiento_grupo mgru
    JOIN alm.talmacen alm ON alm.id_almacen = mgru.id_almacen;
-   
+  -------------------
+
 CREATE VIEW alm.vcbte_salida_det (
     id_movimiento_grupo,
     cantidad,
@@ -513,7 +488,7 @@ FROM (
     ) tab
 GROUP BY tab.id_movimiento_grupo, tab.id_clasificacion, tab.codigo_largo,
     tab.nombre, tab.descripcion;
-    
+ ---------------   
 CREATE VIEW alm.vcbte_salida_det_alm (
     id_movimiento_grupo,
     cantidad,
@@ -562,7 +537,7 @@ FROM alm.tmovimiento mov
    JOIN alm.tmovimiento_tipo mtip ON mtip.id_movimiento_tipo = mov.id_movimiento_tipo
 WHERE mov.id_int_comprobante IS NULL;
 
-
+---------------
   
 CREATE OR REPLACE VIEW alm.vcbte_ingreso_det(
     id_movimiento_det,
@@ -597,7 +572,7 @@ AS
   WHERE mov.id_int_comprobante IS NULL;
   
   
-
+-------------
 CREATE VIEW alm.vcbte_ingreso_det_alm (
     id_movimiento,
     cantidad,
@@ -626,14 +601,6 @@ ALTER TABLE alm.talmacen_gestion
     NOT DEFERRABLE;
 /***********************************F-DEP-RCM-ALM-0-30/12/2013*****************************************/
 
-/***********************************I-DEP-RCM-ALM-0-31/12/2013*****************************************/
-ALTER TABLE alm.talmacen_gestion_log
-  ADD CONSTRAINT fk_talmacen_gestion_log__id_almacen_gestion FOREIGN KEY (id_almacen_gestion)
-    REFERENCES alm.talmacen_gestion(id_almacen_gestion)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-    NOT DEFERRABLE;
-/***********************************F-DEP-RCM-ALM-0-31/12/2013*****************************************/
 
 /***********************************I-DEP-RCM-ALM-0-02/01/2014*****************************************/
 
@@ -641,8 +608,6 @@ CREATE TRIGGER tr_talmacen_gestion BEFORE DELETE
 ON alm.talmacen_gestion FOR EACH ROW 
 EXECUTE PROCEDURE alm.f_tri_talmacen_gestion();
 
-ALTER TABLE alm.talmacen_gestion_log
-  DROP CONSTRAINT fk_talmacen_gestion_log__id_almacen_gestion RESTRICT;
 
 ALTER TABLE alm.talmacen_gestion_log
   ADD CONSTRAINT fk_talmacen_gestion_log__id_almacen_gestion FOREIGN KEY (id_almacen_gestion)
@@ -654,8 +619,8 @@ ALTER TABLE alm.talmacen_gestion_log
 /***********************************F-DEP-RCM-ALM-0-02/01/2014*****************************************/
 
 /***********************************I-DEP-RCM-ALM-0-15/01/2014*****************************************/
-ALTER TABLE alm.tmovimiento_det_valorado
-  DROP CONSTRAINT fk_tmovimiento_det_valorado__id_movimiento_det RESTRICT;
+
+
 
 ALTER TABLE alm.tmovimiento_det_valorado
   ADD CONSTRAINT fk_tmovimiento_det_valorado__id_movimiento_det FOREIGN KEY (id_movimiento_det)
@@ -664,8 +629,6 @@ ALTER TABLE alm.tmovimiento_det_valorado
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
     
-ALTER TABLE alm.tmovimiento_det
-  DROP CONSTRAINT fk_tmovimiento_det__id_movimiento RESTRICT;
 
 ALTER TABLE alm.tmovimiento_det
   ADD CONSTRAINT fk_tmovimiento_det__id_movimiento FOREIGN KEY (id_movimiento)
@@ -806,85 +769,6 @@ select pxp.f_insert_testructura_gui ('ALSALID.3.1.1.1.1', 'ALSALID.3.1.1.1');
 
 /***********************************I-DEP-JRR-ALM-0-22/03/2014****************************************/
 
-CREATE OR REPLACE VIEW alm.vmovimiento(
-    codigo_movimiento_tipo,
-    id_usuario_reg,
-    id_usuario_mod,
-    fecha_reg,
-    fecha_mod,
-    estado_reg,
-    id_usuario_ai,
-    usuario_ai,
-    id_movimiento,
-    id_movimiento_tipo,
-    id_almacen,
-    id_funcionario,
-    id_proveedor,
-    id_almacen_dest,
-    fecha_mov,
-    codigo,
-    descripcion,
-    observaciones,
-    estado_mov,
-    id_movimiento_origen,
-    id_proceso_macro,
-    id_estado_wf,
-    id_proceso_wf,
-    id_preingreso,
-    id_salida_grupo,
-    id_int_comprobante,
-    id_depto_conta,
-    id_almacen_gestion_log)
-AS
-  SELECT mt.codigo AS codigo_movimiento_tipo,
-         mov.id_usuario_reg,
-         mov.id_usuario_mod,
-         mov.fecha_reg,
-         mov.fecha_mod,
-         mov.estado_reg,
-         mov.id_usuario_ai,
-         mov.usuario_ai,
-         mov.id_movimiento,
-         mov.id_movimiento_tipo,
-         mov.id_almacen,
-         mov.id_funcionario,
-         mov.id_proveedor,
-         mov.id_almacen_dest,
-         mov.fecha_mov,
-         mov.codigo,
-         mov.descripcion,
-         mov.observaciones,
-         mov.estado_mov,
-         mov.id_movimiento_origen,
-         mov.id_proceso_macro,
-         mov.id_estado_wf,
-         mov.id_proceso_wf,
-         mov.id_preingreso,
-         mov.id_salida_grupo,
-         mov.id_int_comprobante,
-         mov.id_depto_conta,
-         mov.id_almacen_gestion_log
-  FROM alm.tmovimiento mov
-       JOIN alm.tmovimiento_tipo mt ON mt.id_movimiento_tipo =
-        mov.id_movimiento_tipo;
-        
-/***********************************F-DEP-JRR-ALM-0-22/03/2014****************************************/
-
-
-/***********************************I-DEP-JRR-ALM-0-04/08/2015*****************************************/
-ALTER TABLE alm.tpreingreso_det
-  ADD CONSTRAINT fk_tpreingreso_det__id_lugar FOREIGN KEY (id_lugar)
-    REFERENCES param.tlugar(id_lugar)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-    NOT DEFERRABLE;
-
-/***********************************F-DEP-JRR-ALM-0-04/08/2015*****************************************/
-
-/***********************************I-DEP-JRR-ALM-0-18/09/2015*****************************************/
- -- object recreation
-DROP VIEW alm.vmovimiento;
-
 CREATE VIEW alm.vmovimiento(
     codigo_movimiento_tipo,
     id_usuario_reg,
@@ -989,8 +873,19 @@ AS
 
 ALTER TABLE alm.vmovimiento
   OWNER TO postgres;
+        
+/***********************************F-DEP-JRR-ALM-0-22/03/2014****************************************/
 
-/***********************************F-DEP-JRR-ALM-0-18/09/2015*****************************************/
+
+/***********************************I-DEP-JRR-ALM-0-04/08/2015*****************************************/
+ALTER TABLE alm.tpreingreso_det
+  ADD CONSTRAINT fk_tpreingreso_det__id_lugar FOREIGN KEY (id_lugar)
+    REFERENCES param.tlugar(id_lugar)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+/***********************************F-DEP-JRR-ALM-0-04/08/2015*****************************************/
 
 
 /***********************************I-DEP-JRR-ALM-0-08/10/2015*****************************************/
